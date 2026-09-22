@@ -1,0 +1,22 @@
+
+=== CODEX WORKLOAD PROFILE ===
+
+Commands executed:       20
+Failed commands:         9
+File changes:            10
+Agent messages:          3
+
+Command output bytes:    69,112
+
+Input tokens:            1,598,392
+Cached input tokens:     1,528,576
+Fresh input tokens:      69,816
+Cache reuse rate:        95.63%
+Output tokens:           16,912
+Reasoning output tokens: 6,332
+
+Task duration:           698.05s
+Time to first token:     6.71s
+
+Command types:
+  /bin/bash            20

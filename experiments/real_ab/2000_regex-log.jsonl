@@ -1,0 +1,7 @@
+{"type": "run_config", "agent_version": "0.2.0", "model": "gpt-5.6-terra", "max_turns": 30, "max_tool_output_chars": 2000, "tool_timeout_sec": 120}
+{"type": "inference", "turn": 1, "latency_ms": 32280.53, "input_tokens": 357, "cached_input_tokens": 0, "output_tokens": 2095, "tool_calls": 1}
+{"type": "tool", "turn": 1, "call_id": "call_kwf59vwkVrM7bM2MurvpDc3c", "tool": "bash", "duration_ms": 281.97, "output_bytes": 56, "success": false}
+{"type": "inference", "turn": 2, "latency_ms": 1777.91, "input_tokens": 2482, "cached_input_tokens": 0, "output_tokens": 54, "tool_calls": 1}
+{"type": "tool", "turn": 2, "call_id": "call_CkTOQhiGGqDM3GkrwHaNmvuj", "tool": "bash", "duration_ms": 213.74, "output_bytes": 457, "success": true}
+{"type": "inference", "turn": 3, "latency_ms": 4511.8, "input_tokens": 2852, "cached_input_tokens": 2479, "output_tokens": 237, "tool_calls": 0}
+{"type": "task_summary", "agent_version": "0.2.0", "stop_reason": "no_tool_calls", "agent_completed": true, "model_calls": 3, "tool_calls": 2, "tool_failures": 1, "total_input_tokens": 5691, "total_cached_input_tokens": 2479, "total_output_tokens": 2386, "fresh_input_tokens": 3212, "model_latency_ms": 38570.24, "tool_latency_ms": 495.71, "wall_time_ms": 39079.07, "max_tool_output_chars": 2000, "tool_timeout_sec": 120}

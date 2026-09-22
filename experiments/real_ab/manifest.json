@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "harbor_version": "0.23.0",
+  "runs": [
+    {
+      "run_id": "20000_extract-elf",
+      "task": "terminal-bench/extract-elf",
+      "cap_chars": 20000,
+      "trace": "20000_extract-elf.jsonl",
+      "trace_sha256": "dd9543426328b1f5f8f73ad96e99ff83cecc09d8193bf784889d90ae0e8c3557",
+      "job_name": "2026-09-21__01-23-26",
+      "trial_name": "extract-elf__ocFoCMh",
+      "task_checksum": "642b0321f77002c7c9a70acb825b31295d0a6baf07a5c3880ca5b30461fbbdcb",
+      "task_id": {
+        "org": "terminal-bench",
+        "name": "extract-elf",
+        "ref": "latest"
+      },
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.2.0",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "reward": 1.0,
+      "exception_type": null,
+      "job_started_at": "2026-09-21T01:23:27.991327",
+      "job_finished_at": "2026-09-21T01:25:00.772575",
+      "job_runtime_s": 92.781248
+    },
+    {
+      "run_id": "20000_regex-log",
+      "task": "terminal-bench/regex-log",
+      "cap_chars": 20000,
+      "trace": "20000_regex-log.jsonl",
+      "trace_sha256": "c478e50dd179babca009a75b200b410af5b3dee59ef31f0ceca46389c350a389",
+      "job_name": "2026-09-21__01-20-35",
+      "trial_name": "regex-log__hTa7PSd",
+      "task_checksum": "31dc6115c061b96539a5287090ce41a7a89d3201c291b9b843bd70e416f35c39",
+      "task_id": {
+        "org": "terminal-bench",
+        "name": "regex-log",
+        "ref": "latest"
+      },
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.2.0",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "reward": 1.0,
+      "exception_type": null,
+      "job_started_at": "2026-09-21T01:20:36.590901",
+      "job_finished_at": "2026-09-21T01:23:23.923827",
+      "job_runtime_s": 167.332926
+    },
+    {
+      "run_id": "20000_sanitize-git-repo",
+      "task": "terminal-bench/sanitize-git-repo",
+      "cap_chars": 20000,
+      "trace": "20000_sanitize-git-repo.jsonl",
+      "trace_sha256": "41e9068b2963b400d9bf99d1728f57b3e89b141b98adfe7f2a82e29a14557910",
+      "job_name": "2026-09-21__01-25-03",
+      "trial_name": "sanitize-git-repo__Jd9VkeW",
+      "task_checksum": "b2e4391be7422fb3cf8686964979a57704aae85a36bccd2df40e22c049f58e13",
+      "task_id": {
+        "org": "terminal-bench",
+        "name": "sanitize-git-repo",
+        "ref": "latest"
+      },
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.2.0",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "reward": 1.0,
+      "exception_type": null,
+      "job_started_at": "2026-09-21T01:25:04.759067",
+      "job_finished_at": "2026-09-21T01:27:44.651884",
+      "job_runtime_s": 159.892817
+    },
+    {
+      "run_id": "2000_extract-elf",
+      "task": "terminal-bench/extract-elf",
+      "cap_chars": 2000,
+      "trace": "2000_extract-elf.jsonl",
+      "trace_sha256": "5ecb70e168ab4183da62a4b092225928033039809062d5e0fabd5258115520a0",
+      "job_name": "2026-09-21__01-29-24",
+      "trial_name": "extract-elf__WmPip4W",
+      "task_checksum": "642b0321f77002c7c9a70acb825b31295d0a6baf07a5c3880ca5b30461fbbdcb",
+      "task_id": {
+        "org": "terminal-bench",
+        "name": "extract-elf",
+        "ref": "latest"
+      },
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.2.0",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "reward": 1.0,
+      "exception_type": null,
+      "job_started_at": "2026-09-21T01:29:26.083828",
+      "job_finished_at": "2026-09-21T01:31:31.339476",
+      "job_runtime_s": 125.255648
+    },
+    {
+      "run_id": "2000_regex-log",
+      "task": "terminal-bench/regex-log",
+      "cap_chars": 2000,
+      "trace": "2000_regex-log.jsonl",
+      "trace_sha256": "a79dbf05a487260faad45e21211185013019119bb3f1b0121a0e9e4b4ca703d9",
+      "job_name": "2026-09-21__01-27-47",
+      "trial_name": "regex-log__8AnZWTy",
+      "task_checksum": "31dc6115c061b96539a5287090ce41a7a89d3201c291b9b843bd70e416f35c39",
+      "task_id": {
+        "org": "terminal-bench",
+        "name": "regex-log",
+        "ref": "latest"
+      },
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.2.0",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "reward": 1.0,
+      "exception_type": null,
+      "job_started_at": "2026-09-21T01:27:48.541460",
+      "job_finished_at": "2026-09-21T01:29:20.822393",
+      "job_runtime_s": 92.280933
+    },
+    {
+      "run_id": "2000_sanitize-git-repo",
+      "task": "terminal-bench/sanitize-git-repo",
+      "cap_chars": 2000,
+      "trace": "2000_sanitize-git-repo.jsonl",
+      "trace_sha256": "5cf097f7c1bae4b13442dae149eedb6570bbadbfdfcaf8108ec453e7b22daa50",
+      "job_name": "2026-09-21__01-31-34",
+      "trial_name": "sanitize-git-repo__PUNfhfM",
+      "task_checksum": "b2e4391be7422fb3cf8686964979a57704aae85a36bccd2df40e22c049f58e13",
+      "task_id": {
+        "org": "terminal-bench",
+        "name": "sanitize-git-repo",
+        "ref": "latest"
+      },
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.2.0",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "reward": 1.0,
+      "exception_type": null,
+      "job_started_at": "2026-09-21T01:31:35.564726",
+      "job_finished_at": "2026-09-21T01:33:44.147646",
+      "job_runtime_s": 128.58292
+    }
+  ],
+  "provenance": "Exported from local Harbor job/trial records and unchanged metric-only traces. Full jobs and model/tool text are excluded.",
+  "historical_source_commit": null
+}

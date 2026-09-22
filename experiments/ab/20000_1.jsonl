@@ -1,0 +1,13 @@
+{"type": "inference", "turn": 1, "latency_ms": 2990.07, "input_tokens": 169, "cached_input_tokens": 0, "output_tokens": 35, "tool_calls": 1}
+{"type": "tool", "turn": 1, "tool": "bash", "duration_ms": 328.31, "output_bytes": 9019, "success": false}
+{"type": "inference", "turn": 2, "latency_ms": 2283.48, "input_tokens": 1924, "cached_input_tokens": 0, "output_tokens": 114, "tool_calls": 1}
+{"type": "tool", "turn": 2, "tool": "bash", "duration_ms": 158.14, "output_bytes": 305, "success": false}
+{"type": "inference", "turn": 3, "latency_ms": 2449.26, "input_tokens": 2152, "cached_input_tokens": 1921, "output_tokens": 85, "tool_calls": 3}
+{"type": "tool", "turn": 3, "tool": "read_file", "duration_ms": 156.52, "output_bytes": 242, "success": true}
+{"type": "tool", "turn": 3, "tool": "read_file", "duration_ms": 106.61, "output_bytes": 220, "success": true}
+{"type": "tool", "turn": 3, "tool": "read_file", "duration_ms": 102.76, "output_bytes": 149, "success": true}
+{"type": "inference", "turn": 4, "latency_ms": 1458.65, "input_tokens": 2437, "cached_input_tokens": 2149, "output_tokens": 97, "tool_calls": 1}
+{"type": "tool", "turn": 4, "tool": "write_file", "duration_ms": 136.81, "output_bytes": 29, "success": true}
+{"type": "inference", "turn": 5, "latency_ms": 1071.52, "input_tokens": 2549, "cached_input_tokens": 2434, "output_tokens": 21, "tool_calls": 1}
+{"type": "tool", "turn": 5, "tool": "bash", "duration_ms": 270.81, "output_bytes": 8211, "success": true}
+{"type": "inference", "turn": 6, "latency_ms": 2878.81, "input_tokens": 4102, "cached_input_tokens": 2546, "output_tokens": 84, "tool_calls": 0}

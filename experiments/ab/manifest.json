@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "harbor_version": "0.23.0",
+  "runs": [
+    {
+      "run_id": "20000_1",
+      "task": "noisy-bugfix",
+      "cap_chars": 20000,
+      "trace": "20000_1.jsonl",
+      "trace_sha256": "3c747ad8e9cfb5a22cad04ad7293680f4e998ec4bf837ce95a18b243d51bf4ea",
+      "job_name": "2026-09-21__00-41-06",
+      "trial_name": "noisy-bugfix__5bmtcxM",
+      "task_checksum": "4e6cc12d01729c49fa3f77559ddaaa13a5a565eafd26948e3daf68044e96b734",
+      "task_id": {
+        "local_task": "evals/noisy-bugfix"
+      },
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.1.0",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "reward": 1.0,
+      "exception_type": null,
+      "job_started_at": "2026-09-21T00:41:07.613564",
+      "job_finished_at": "2026-09-21T00:41:30.874144",
+      "job_runtime_s": 23.26058
+    },
+    {
+      "run_id": "20000_2",
+      "task": "noisy-bugfix",
+      "cap_chars": 20000,
+      "trace": "20000_2.jsonl",
+      "trace_sha256": "79191e46568378814fae6bea678de354d95a11e4fcdbd5b76b84b4010e66117d",
+      "job_name": "2026-09-21__00-41-33",
+      "trial_name": "noisy-bugfix__XULeTUe",
+      "task_checksum": "4e6cc12d01729c49fa3f77559ddaaa13a5a565eafd26948e3daf68044e96b734",
+      "task_id": {
+        "local_task": "evals/noisy-bugfix"
+      },
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.1.0",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "reward": 1.0,
+      "exception_type": null,
+      "job_started_at": "2026-09-21T00:41:34.228805",
+      "job_finished_at": "2026-09-21T00:41:55.788675",
+      "job_runtime_s": 21.55987
+    },
+    {
+      "run_id": "20000_3",
+      "task": "noisy-bugfix",
+      "cap_chars": 20000,
+      "trace": "20000_3.jsonl",
+      "trace_sha256": "0de1bd027412a9d11bb9f423edc7985c2fa90e11bbd639d92add59e1862d81ed",
+      "job_name": "2026-09-21__00-41-58",
+      "trial_name": "noisy-bugfix__KkWPTWq",
+      "task_checksum": "4e6cc12d01729c49fa3f77559ddaaa13a5a565eafd26948e3daf68044e96b734",
+      "task_id": {
+        "local_task": "evals/noisy-bugfix"
+      },
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.1.0",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "reward": 1.0,
+      "exception_type": null,
+      "job_started_at": "2026-09-21T00:41:59.047643",
+      "job_finished_at": "2026-09-21T00:42:22.741360",
+      "job_runtime_s": 23.693717
+    },
+    {
+      "run_id": "2000_1",
+      "task": "noisy-bugfix",
+      "cap_chars": 2000,
+      "trace": "2000_1.jsonl",
+      "trace_sha256": "a193a0e1d81625b778a894c7cf1338ee38ee7c6a5dc807c7a1695f1f99bf18e3",
+      "job_name": "2026-09-21__00-42-25",
+      "trial_name": "noisy-bugfix__LMecNoj",
+      "task_checksum": "4e6cc12d01729c49fa3f77559ddaaa13a5a565eafd26948e3daf68044e96b734",
+      "task_id": {
+        "local_task": "evals/noisy-bugfix"
+      },
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.1.0",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "reward": 1.0,
+      "exception_type": null,
+      "job_started_at": "2026-09-21T00:42:25.790645",
+      "job_finished_at": "2026-09-21T00:42:47.554992",
+      "job_runtime_s": 21.764347
+    },
+    {
+      "run_id": "2000_2",
+      "task": "noisy-bugfix",
+      "cap_chars": 2000,
+      "trace": "2000_2.jsonl",
+      "trace_sha256": "7e31abc1d587a50ed3058cc1bfe2ead5d15b6f1b2d708d0acc1483130d70aea4",
+      "job_name": "2026-09-21__00-42-50",
+      "trial_name": "noisy-bugfix__92Hwvcc",
+      "task_checksum": "4e6cc12d01729c49fa3f77559ddaaa13a5a565eafd26948e3daf68044e96b734",
+      "task_id": {
+        "local_task": "evals/noisy-bugfix"
+      },
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.1.0",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "reward": 1.0,
+      "exception_type": null,
+      "job_started_at": "2026-09-21T00:42:50.510805",
+      "job_finished_at": "2026-09-21T00:43:11.847758",
+      "job_runtime_s": 21.336953
+    },
+    {
+      "run_id": "2000_3",
+      "task": "noisy-bugfix",
+      "cap_chars": 2000,
+      "trace": "2000_3.jsonl",
+      "trace_sha256": "42736cee3f6058c65e061b8c7af1307036d7a6a4c55772efb4931371aaa20455",
+      "job_name": "2026-09-21__00-43-14",
+      "trial_name": "noisy-bugfix__jYdR7Yn",
+      "task_checksum": "4e6cc12d01729c49fa3f77559ddaaa13a5a565eafd26948e3daf68044e96b734",
+      "task_id": {
+        "local_task": "evals/noisy-bugfix"
+      },
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.1.0",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "reward": 1.0,
+      "exception_type": null,
+      "job_started_at": "2026-09-21T00:43:14.859931",
+      "job_finished_at": "2026-09-21T00:43:34.778362",
+      "job_runtime_s": 19.918431
+    }
+  ],
+  "provenance": "Exported from local Harbor job/trial records and unchanged metric-only traces. Full jobs and model/tool text are excluded.",
+  "historical_source_commit": null
+}

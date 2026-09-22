@@ -1,0 +1,35 @@
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+auth.json
+credentials.json
+credentials/
+.codex/
+.claude/
+*.pem
+*.key
+
+# Runtime outputs: explicitly curated evidence lives in experiments/.
+jobs/
+workspace/
+runs/
+trace.jsonl
+*.job
+*.log
+
+# Python / tooling / OS
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+.DS_Store
+.idea/
+.vscode/

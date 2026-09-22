@@ -1,0 +1,17 @@
+{"type": "run_config", "agent_version": "0.2.0", "model": "gpt-5.6-terra", "max_turns": 30, "max_tool_output_chars": 20000, "tool_timeout_sec": 120}
+{"type": "inference", "turn": 1, "latency_ms": 2281.07, "input_tokens": 279, "cached_input_tokens": 0, "output_tokens": 48, "tool_calls": 1}
+{"type": "tool", "turn": 1, "call_id": "call_P3KVxiw4rmjfEGQFH9Rf7TfO", "tool": "bash", "duration_ms": 164.65, "output_bytes": 246, "success": false}
+{"type": "inference", "turn": 2, "latency_ms": 2279.35, "input_tokens": 450, "cached_input_tokens": 0, "output_tokens": 77, "tool_calls": 1}
+{"type": "tool", "turn": 2, "call_id": "call_k3eKByiclmpHiNwgeBhE2fXv", "tool": "bash", "duration_ms": 281.45, "output_bytes": 7096, "success": true}
+{"type": "inference", "turn": 3, "latency_ms": 4432.33, "input_tokens": 3229, "cached_input_tokens": 0, "output_tokens": 188, "tool_calls": 1}
+{"type": "tool", "turn": 3, "call_id": "call_ef29atVkeaOAwsGmwrHWyQbm", "tool": "bash", "duration_ms": 303.4, "output_bytes": 3481, "success": true}
+{"type": "inference", "turn": 4, "latency_ms": 17099.58, "input_tokens": 4717, "cached_input_tokens": 3226, "output_tokens": 943, "tool_calls": 1}
+{"type": "tool", "turn": 4, "call_id": "call_FwPhsKnQFpTsjLbAPF16WLHe", "tool": "bash", "duration_ms": 458.91, "output_bytes": 4249, "success": true}
+{"type": "inference", "turn": 5, "latency_ms": 21082.04, "input_tokens": 7443, "cached_input_tokens": 4714, "output_tokens": 1742, "tool_calls": 1}
+{"type": "tool", "turn": 5, "call_id": "call_gFee5SstDxCOmnjiZy2XBR8r", "tool": "write_file", "duration_ms": 511.78, "output_bytes": 34, "success": true}
+{"type": "inference", "turn": 6, "latency_ms": 4185.01, "input_tokens": 9203, "cached_input_tokens": 7440, "output_tokens": 261, "tool_calls": 1}
+{"type": "tool", "turn": 6, "call_id": "call_C4NAS2GmeCfG6OP6msQaUFUz", "tool": "bash", "duration_ms": 1405.67, "output_bytes": 257, "success": true}
+{"type": "inference", "turn": 7, "latency_ms": 11097.73, "input_tokens": 9604, "cached_input_tokens": 9200, "output_tokens": 634, "tool_calls": 1}
+{"type": "tool", "turn": 7, "call_id": "call_8inONaXIWFCwtfqdPbJbjsay", "tool": "bash", "duration_ms": 340.61, "output_bytes": 65, "success": true}
+{"type": "inference", "turn": 8, "latency_ms": 2426.05, "input_tokens": 10278, "cached_input_tokens": 9601, "output_tokens": 98, "tool_calls": 0}
+{"type": "task_summary", "agent_version": "0.2.0", "stop_reason": "no_tool_calls", "agent_completed": true, "model_calls": 8, "tool_calls": 7, "tool_failures": 1, "total_input_tokens": 45203, "total_cached_input_tokens": 34181, "total_output_tokens": 3991, "fresh_input_tokens": 11022, "model_latency_ms": 64883.16, "tool_latency_ms": 3466.47, "wall_time_ms": 68372.02, "max_tool_output_chars": 20000, "tool_timeout_sec": 120}

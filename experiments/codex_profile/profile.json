@@ -1,0 +1,29 @@
+{
+  "task": "terminal-bench/make-mips-interpreter",
+  "agent_info": {
+    "name": "codex",
+    "version": "0.155.1",
+    "model_info": {
+      "name": "gpt-5.6-terra",
+      "provider": "openai"
+    }
+  },
+  "reward": 0.0,
+  "exception_type": null,
+  "task_checksum": "f7e68fab72321eeaf465b53a98a4c3aaf7b66d57a3d3465708a15ed2c9f55f70",
+  "job_name": "2026-09-20__22-37-14",
+  "trial_name": "make-mips-interpreter__h4TyqEf",
+  "session_sha256": "390cead73f32045daa623f8ee2e28a26ecc590dd005be8e5682dc8485a34cbdf",
+  "commands": 20,
+  "failed_commands": 9,
+  "file_change_events": 10,
+  "agent_messages": 3,
+  "command_output_bytes": 69112,
+  "input_tokens": 1598392,
+  "cached_input_tokens": 1528576,
+  "fresh_input_tokens": 69816,
+  "output_tokens": 16912,
+  "reasoning_output_tokens": 6332,
+  "task_duration_ms": 698055,
+  "reported_time_to_first_token_ms": 6709
+}
