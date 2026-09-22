@@ -2,9 +2,22 @@
 
 A small coding-agent harness with tool execution, per-call tracing, and Harbor integration.
 
-I built ReedCode to study how decisions in the harness affect the workload sent to the model. The first experiment compares two limits on tool output: 20,000 and 2,000 characters. Shorter observations mean less text in subsequent requests, but they can also hide useful information and change what the agent does next.
+Built after becoming interested in the harness ↔ inference boundary in long-running coding agents.
 
-Both settings passed the three Terminal-Bench tasks tested here. The 2K runs used 61.3% fewer cumulative input tokens and had 19.8% lower average model latency. There was only one run per task at each setting, and one task got slower. The results are small-sample observations, not a reliable speedup estimate.
+## Key result
+
+Reducing the tool-output cap from 20,000 to 2,000 characters across three Terminal-Bench tasks:
+
+| Metric | 20K → 2K cap |
+| --- | ---: |
+| Tasks passed | **3/3 → 3/3** |
+| Input tokens | **−61.3%** |
+| Fresh input tokens | **−53.5%** |
+| Model latency | **−19.8%** |
+
+Token and latency changes compare per-task means. One run per task at each setting; one task got slower. These are preliminary observations, not a reliable speedup estimate.
+
+Shorter tool observations mean less text in subsequent requests, but they can also hide useful information and change what the agent does next. This experiment measures that tradeoff.
 
 ## How it works
 
@@ -103,6 +116,12 @@ There are two useful counterexamples in the per-task results. `extract-elf` used
 Three tasks and one run per setting are not enough to separate the cap's effect from stochastic trajectories and changing service conditions. More tasks and repeated, interleaved runs would be needed. These results do not establish 2K as an optimal cap or demonstrate equivalent accuracy across Terminal-Bench.
 
 The synthetic runs used 0.1.0, whose source snapshot was not saved. The current harness is 0.2.0. Real tasks were fetched at `latest`; their checksums are recorded, but task contents and model aliases can change. See [experiment records](experiments/README.md) for the saved traces and reproduction limits.
+
+## Next experiments
+
+- Repeat and interleave runs across more tasks to separate the cap's effect from run-to-run variation.
+- Compare keeping the beginning and end of tool output (head+tail) with semantic retention of relevant errors, test results, and code.
+- Eventually, test harness-provided lifecycle hints to an inference scheduler, such as when an agent starts a tool call and expects to need the model again.
 
 ## Codex profile
 
