@@ -32,9 +32,6 @@ with open(path) as f:
         event_type = event.get("type")
         payload = event.get("payload", {})
 
-        # -------------------------
-        # COMPLETED AGENT ITEMS
-        # -------------------------
         if (
             event_type == "event_msg"
             and payload.get("type") == "item_completed"
@@ -68,9 +65,6 @@ with open(path) as f:
             elif item_type == "AgentMessage":
                 agent_messages += 1
 
-        # -------------------------
-        # TOKEN USAGE
-        # -------------------------
         elif event_type == "token_usage_record":
             # This is cumulative for the entire thread.
             usage = payload.get("thread_token_usage", {})
@@ -89,9 +83,6 @@ with open(path) as f:
                 reasoning_output_tokens,
             )
 
-        # -------------------------
-        # TASK COMPLETE
-        # -------------------------
         elif (
             event_type == "event_msg"
             and payload.get("type") == "task_complete"

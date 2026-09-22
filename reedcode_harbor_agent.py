@@ -73,13 +73,12 @@ TOOLS = [
 
 
 def add_usage(total, value):
-    # Missing telemetry is unknown, not zero.
+    # Propagate missing usage through the totals.
     return None if total is None or value is None else total + value
 
 
 def bound_output(text: str) -> str:
-    # Character cap, not a token/byte cap.
-    # Preserve the original A/B truncation policy.
+    # Keep the first N characters, as in the recorded experiments.
     if len(text) > MAX_TOOL_OUTPUT:
         return text[:MAX_TOOL_OUTPUT] + "\n...[output truncated]"
     return text
@@ -210,7 +209,6 @@ class ReedCodeAgent(BaseAgent):
                     for call in tool_calls:
                         start_tool = time.perf_counter()
 
-                        # Decode JSON inside the guarded dispatcher.
                         result, success = await self.execute_tool(
                             environment,
                             call.name,
@@ -231,7 +229,7 @@ class ReedCodeAgent(BaseAgent):
                             "call_id": call.call_id,
                             "tool": call.name,
                             "duration_ms": round(tool_ms, 2),
-                            # Bytes returned AFTER truncation.
+                            # UTF-8 bytes after truncation and formatting.
                             "output_bytes": len(result.encode("utf-8")),
                             "success": success,
                         })
@@ -255,7 +253,6 @@ class ReedCodeAgent(BaseAgent):
                 "type": "agent_error",
                 "error_type": type(exc).__name__,
             })
-            # Keep API/infrastructure/programming failures visible.
             raise
 
         finally:
@@ -268,7 +265,7 @@ class ReedCodeAgent(BaseAgent):
             summary = {
                 "agent_version": self.version(),
                 "stop_reason": stop_reason,
-                # Completion is NOT a verifier reward.
+                # Harbor records the verifier reward separately.
                 "agent_completed": stop_reason == "no_tool_calls",
                 "model_calls": model_calls,
                 "tool_calls": tool_calls_total,
@@ -301,7 +298,7 @@ class ReedCodeAgent(BaseAgent):
         name: str,
         arguments: str | dict,
     ) -> tuple[str, bool]:
-        # Invalid model arguments become observations, not crashes.
+        # Return argument errors so the model can retry.
         try:
             args = (
                 json.loads(arguments)
@@ -374,7 +371,6 @@ class ReedCodeAgent(BaseAgent):
             if str(exc).startswith("Command timed out after "):
                 return bound_output(f"ERROR: {exc}"), False
 
-            # Do not disguise unrelated infrastructure failures.
             raise
 
         text, success = self.format_result(result)
@@ -398,9 +394,7 @@ class ReedCodeAgent(BaseAgent):
         return text, result.return_code == 0
 
     def safe_path(self, path: str) -> str:
-        # Lexical path guard only: not symlink-safe.
-        # The bash tool is NOT confined by this check.
-        # Run this agent only in isolated benchmark containers.
+        # This checks path syntax only. Symlinks and bash can escape it.
         if (
             not isinstance(path, str)
             or not path.strip()

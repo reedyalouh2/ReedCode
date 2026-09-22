@@ -1,4 +1,4 @@
-"""Run the historical A/B protocol into a new directory, retaining failed attempts."""
+"""Run both output caps and save a manifest of the results."""
 
 import argparse
 from datetime import datetime, timezone
@@ -77,7 +77,7 @@ def main():
     tasks = REAL_TASKS if args.suite == "real" else ("1", "2", "3")
     env = dict(os.environ)
     env["PYTHONPATH"] = str(ROOT) + os.pathsep + env.get("PYTHONPATH", "")
-    # Explicit defaults keep inherited shell settings from silently changing the protocol.
+    # Use the same turn limit and timeout in both conditions.
     env.update(MAX_TURNS="30", TOOL_TIMEOUT="120")
     for cap in (20000, 2000):
         for task in tasks:

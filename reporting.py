@@ -1,4 +1,4 @@
-"""Summarize curated or newly exported metrics without importing the agent."""
+"""Read experiment manifests and summarize their traces."""
 
 import argparse
 import hashlib
@@ -86,7 +86,7 @@ def summarize(directory):
               f"exceptions: {sum(r.get('exception_type') is not None for r in group)}")
         for key in metrics:
             print(f"  {key:23} {display(average(group, key))}")
-    # Do not imply a paired comparison if a task is missing on either side.
+    # Compare only matching task and repetition counts.
     task_counts = lambda group: sorted(r['task'] for r in group)
     if not groups[20000] or task_counts(groups[20000]) != task_counts(groups[2000]):
         print("\nRelative changes unavailable: unmatched task/repetition sets.")

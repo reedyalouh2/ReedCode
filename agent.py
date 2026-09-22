@@ -187,10 +187,6 @@ def run_agent(task: str):
     for turn in range(MAX_TURNS):
         print(f"\n--- TURN {turn + 1} ---")
 
-        # =========================
-        # MODEL INFERENCE
-        # =========================
-
         inference_start = time.perf_counter()
 
         response = client.responses.create(
@@ -266,10 +262,6 @@ def run_agent(task: str):
         # Preserve model output in context.
         history += response.output
 
-        # =========================
-        # AGENT FINISHED
-        # =========================
-
         if not tool_calls:
             wall_time_ms = (
                 time.perf_counter() - task_start
@@ -305,10 +297,6 @@ def run_agent(task: str):
             print(json.dumps(summary, indent=2))
 
             return
-
-        # =========================
-        # TOOL EXECUTION
-        # =========================
 
         for call in tool_calls:
             arguments = json.loads(call.arguments)
