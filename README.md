@@ -8,6 +8,22 @@ Both settings passed the three Terminal-Bench tasks tested here. The 2K runs use
 
 ## How it works
 
+```mermaid
+flowchart TD
+    H[Harbor loads the task and starts Docker] --> A[ReedCode calls the model with task and history]
+    A --> D{Tool calls?}
+    D -->|Yes| T[ReedCode executes tools in Docker]
+    T --> O[Cap tool output and append to history]
+    O -->|Next turn| A
+    D -->|No| V[Harbor runs the task verifier]
+    O -->|Turn limit reached| V
+    V --> R[Verifier reward]
+    A -.-> L[Token usage and timing logs]
+    T -.-> L
+```
+
+Harbor manages the task's setup, deadline, and verification. ReedCode manages the model calls, tools, and history. Errors can end a run early; Harbor records evaluation exceptions separately from rewards.
+
 [`reedcode_harbor_agent.py`](reedcode_harbor_agent.py) calls the Responses API with a task, conversation history, and three tools: `read_file`, `write_file`, and `bash`. After each response, it executes any tool calls and appends their results to the history. It stops when the model returns without a tool call or reaches the turn limit.
 
 The harness runs on the host. Commands run in a Docker task environment through Harbor's [`BaseEnvironment`](https://docs.harborframework.com/core-concepts/agents/custom-agents). Harbor runs the verifier after the agent finishes; the model saying it is done does not determine the reward.
