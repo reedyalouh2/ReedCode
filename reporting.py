@@ -45,7 +45,7 @@ def valid_server_window(window):
         if not isinstance(item, dict) or item.get("status") in ("counter_reset", "server_restarted", "series_changed"):
             return False
     finished = counters.get("requests_finished", {})
-    # A valid completion delta also establishes that both boundary scrapes succeeded.
+    # A valid completion delta requires both boundary scrapes.
     return (finished.get("status") == "ok" and finite_nonnegative(finished.get("value"))
             and finished["value"] == 1)
 
@@ -178,7 +178,6 @@ def summarize(directory):
               f"exceptions: {sum(r.get('exception_type') is not None for r in group)}")
         for key in metrics:
             print(f"  {key:23} {display(average(group, key))}")
-    # Compare only matching task and repetition counts.
     task_counts = lambda group: sorted(r['task'] for r in group)
     if not groups[20000] or task_counts(groups[20000]) != task_counts(groups[2000]):
         print("\nRelative changes unavailable: unmatched task/repetition sets.")
@@ -190,7 +189,7 @@ def summarize(directory):
         print(f"  {key:23} {change}")
 
 def paired_estimate(values, bootstrap_samples=10000, seed=0):
-    """Percentile bootstrap of block-level differences; no interval below five pairs."""
+    """Bootstrap paired differences within a task; require five pairs for an interval."""
     if not values:
         return {"pairs": 0, "mean_delta": None, "ci95": None,
                 "ci95_status": "insufficient_pairs"}
@@ -207,12 +206,11 @@ def paired_estimate(values, bootstrap_samples=10000, seed=0):
 
 
 def pair_exclusion(a, b, metric):
-    """Return one reason per excluded pair, in the order checked here."""
     if a is None or b is None:
         return "missing_run"
     if a.get("exception_type") or b.get("exception_type"):
         return "exception"
-    # Aborted call totals understate cost; retain them in raw rows only.
+    # Partial call totals would understate cost in a comparison.
     if metric != "reward" and not (a.get("telemetry_complete") and b.get("telemetry_complete")):
         return "incomplete_telemetry"
     if a.get(metric) is None or b.get(metric) is None:
@@ -257,7 +255,7 @@ def paired_results(rows, plan, server_metrics_enabled=False):
 
 
 def pooled_results(per_task_results, bootstrap_samples=10000, seed=0):
-    """Average task means equally, then resample tasks rather than individual trials."""
+    """Resample task means so repeated runs do not count as independent tasks."""
     groups = {}
     for result in per_task_results:
         key = (result["baseline"], result["candidate"], result["metric"])

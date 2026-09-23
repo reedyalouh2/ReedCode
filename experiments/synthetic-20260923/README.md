@@ -1,8 +1,8 @@
 # Synthetic retention study, September 23, 2026
 
-Fifteen hosted-model trials on the revised `noisy-bugfix` task: five repetitions of three retention conditions, interleaved within task/repetition blocks. All 15 scheduled trials passed the pristine eight-test verifier. No attempts were retried or omitted. There were no Harbor exceptions, missing rewards, incomplete traces, excluded pairs, or output-token limit hits; all 15 limit outcomes are known. The oracle also passed all eight tests before model calls began.
+I ran 15 hosted-model trials on the revised `noisy-bugfix` task. All passed the pristine eight-test verifier. The oracle passed all eight tests first. Every planned trial is included, with no retries, exceptions, missing rewards, incomplete traces, excluded pairs, or output-token limit hits. All 15 limit outcomes are known.
 
-At the same 2K budget, head+tail used fewer fresh input tokens, more total input, and more tool calls than head-only. Mean API latency was lower, but its interval spans zero. This run does not establish that retaining the tail reduces work or improves accuracy.
+At 2K, head+tail used fewer fresh tokens, more total input, and more tool calls than head-only. Its mean API latency was lower.
 
 ## Configuration
 
@@ -21,9 +21,9 @@ At the same 2K budget, head+tail used fewer fresh input tokens, more total input
 | SDK / Harbor retries | 0 / 0 |
 | Server metrics | Disabled; no GPU measurements |
 
-The runner saved the schedule before execution and checked the task snapshot before each trial. The five repetition blocks ran in order 2, 4, 3, 1, 5. The three conditions stayed adjacent within each block, with varied order. All source hashes, snapshot hashes, and trace hashes match the manifest. Every run ended with `no_tool_calls`.
+The five repetition blocks ran in order 2, 4, 3, 1, 5, following the saved schedule. Every run ended with `no_tool_calls`. Source hashes refer to the commit above; the saved task and trace hashes match the manifest. See the [protocol](../PROTOCOL.md) for scheduling and analysis.
 
-The date in this directory is UTC. Harbor's original job timestamps have no timezone offset and are preserved unchanged; the host used America/Los_Angeles (September 22 locally).
+This directory's date is UTC. Harbor timestamps are preserved without timezone offsets. The host used America/Los_Angeles, where it was September 22.
 
 ## Condition means
 
@@ -40,13 +40,13 @@ The date in this directory is UTC. Harbor's original job timestamps have no time
 | Harbor job runtime, seconds | 19.127 | 20.623 | 19.454 |
 | Returned tool bytes | 20,190.0 | 5,827.8 | 6,282.6 |
 
-There were 0/32 truncated tool calls at 20K, 9/32 at head 2K, and 12/35 at head+tail 2K. Every 2K trial contained truncation. Total input fell 58.4% for head 2K and 51.4% for head+tail 2K relative to 20K. Neither 2K condition had lower mean API latency than 20K.
+Truncation affected 0/32 tool calls at 20K, 9/32 at head 2K, and 12/35 at head+tail 2K. Every 2K trial had truncation. Compared with 20K, input fell 58.4% for head and 51.4% for head+tail. Both 2K conditions had higher mean API latency than 20K.
 
-The study used 149,146 input tokens, including 90,913 cached tokens, and 5,895 output tokens across 89 model calls. These are API usage totals, not a billing estimate.
+API usage totaled 149,146 input tokens, including 90,913 cached tokens, and 5,895 output tokens across 89 model calls.
 
 ## Primary paired comparison
 
-Head+tail 2K minus head 2K, with all five planned pairs included:
+Head+tail 2K minus head 2K, using all five planned pairs:
 
 | Metric | Mean difference | Exploratory 95% interval |
 | --- | ---: | ---: |
@@ -58,15 +58,11 @@ Head+tail 2K minus head 2K, with all five planned pairs included:
 | Tool calls | +0.6 | [+0.2, +1.0] |
 | Output-limit hit indicator | 0.0 | [0.0, 0.0], degenerate |
 
-Intervals use 10,000 bootstrap resamples of the five paired differences, seed 0. The [paired report](paired_report.json) also contains both comparisons against 20K and the pooled estimates. With one task, the pooled point estimate is the same as the task estimate, and no across-task interval is reported.
-
-Five repetitions on an easy repair cannot establish equivalent success rates or generalize to other tasks. The agent can inspect the implementation and visible tests even when pytest output is hidden. All 2K runs used six model calls; head+tail used seven tool calls in every run, while head-only used six or seven. These traces record counts and output sizes, not commands or model reasoning, so they do not label particular calls as recovery actions.
-
-Fresh input favors head+tail here, alongside more reported cached input (4,553.2 versus 2,895.8 tokens per trial). Hosted cache state was not reset between calls. This study does not separate cache effects from trajectory differences or measure prefill, decode, or GPU time. Model identifiers are aliases, not immutable deployment versions. The saved task is fixed, but its Docker base tag remains mutable.
+The intervals use 10,000 bootstrap resamples with seed 0. The [paired report](paired_report.json) also includes both comparisons against 20K. With one task, the pooled point estimate equals the task estimate.
 
 ## Every trial
 
-Rows follow actual execution order. Every row has reward 1, no exception, complete telemetry, and no output-limit hit.
+Rows follow execution order. Each has reward 1 and complete telemetry.
 
 | Block | Repeat | Condition | Input | Fresh | Output | Model calls | Tool calls | API seconds | Truncated calls |
 | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -88,12 +84,12 @@ Rows follow actual execution order. Every row has reward 1, no exception, comple
 
 ## Artifacts and reproduction
 
-- [Manifest](manifest.json): original schedule, run outcomes, oracle result, source hashes, task checksum, and trace hashes.
-- Fifteen `b*.jsonl` files: unchanged per-call metric traces exported from Harbor.
-- [Task snapshot](tasks/noisy-bugfix/noisy-bugfix): exact task files copied before the study. Its tree hash is in the manifest.
-- [Paired report](paired_report.json): unchanged runner output, recomputed and checked against the traces.
+- [Manifest](manifest.json): schedule, outcomes, oracle result, source hashes, task checksum, and trace hashes.
+- Fifteen `b*.jsonl` files: unchanged Harbor metric traces.
+- [Task snapshot](tasks/noisy-bugfix/noisy-bugfix): the files copied before the study, with a tree hash in the manifest.
+- [Paired report](paired_report.json): the runner's report, reproduced from the saved traces.
 
-The exported verifier rewards were checked against the original Harbor trial results, reward files, and pytest stdout; all matched. Raw Harbor jobs and local configuration remain outside the repository. No API credentials are included in these artifacts.
+I checked exported rewards against Harbor's trial results, reward files, and pytest output. All matched. See [experiment records](../README.md) for what is included in the repository.
 
 Recompute the report from the repository root without Docker or an API key:
 
@@ -101,7 +97,7 @@ Recompute the report from the repository root without Docker or an API key:
 python3 summarize_ab.py experiments/synthetic-20260923
 ```
 
-To start a separate study using model credits, check out the source commit above, install its locked dependencies, start Docker, and provide `OPENAI_API_KEY` in the environment. Match the configuration above. This command clears endpoint and output-budget overrides and creates a new output directory:
+To run it again using model credits, check out the source commit above, install the locked dependencies, start Docker, and set `OPENAI_API_KEY`. Match the recorded configuration. This command clears endpoint and output-budget overrides and creates a new study:
 
 ```bash
 env -u OPENAI_BASE_URL -u VLLM_METRICS_URL -u MAX_OUTPUT_TOKENS \
@@ -110,4 +106,8 @@ env -u OPENAI_BASE_URL -u VLLM_METRICS_URL -u MAX_OUTPUT_TOKENS \
   --output runs/synthetic-new
 ```
 
-New model runs will have different trajectories, cache behavior, and service latency. The ten-task study and self-hosted vLLM measurements remain unrun.
+## Limitations
+
+There are five pairs on one easy repair. The latency interval spans zero, and equal rewards leave success-rate differences unresolved. There is no across-task interval. See the [protocol's limitations](../PROTOCOL.md#limitations) for the bootstrap assumptions and interpretation of call counts.
+
+Hosted cache state was not reset. Fresh-input differences mix cache behavior and trajectory changes. The model identifier is an alias and the Docker base tag can change. These runs collected no prefill, decode, or GPU measurements; the ten-task and self-hosted studies are still pending.

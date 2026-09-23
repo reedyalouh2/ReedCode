@@ -1,3 +1,3 @@
 # Local prototype
 
-`agent.py` predates the Harbor integration. It runs shell commands directly on the host and is kept only for reference. The supported harness is `reedcode_harbor_agent.py`, which executes tools through Harbor task environments.
+`agent.py` is the early version from before Harbor. It runs shell commands on the host. I kept it for reference; use `reedcode_harbor_agent.py` to run tools in Harbor task environments.

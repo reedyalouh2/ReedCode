@@ -12,7 +12,6 @@ command_output_bytes = 0
 
 command_types = Counter()
 
-# Final cumulative usage
 input_tokens = 0
 cached_input_tokens = 0
 output_tokens = 0
@@ -66,7 +65,7 @@ with open(path) as f:
                 agent_messages += 1
 
         elif event_type == "token_usage_record":
-            # This is cumulative for the entire thread.
+            # Each record is cumulative, so adding records would double-count usage.
             usage = payload.get("thread_token_usage", {})
 
             input_tokens = usage.get("input_tokens", input_tokens)

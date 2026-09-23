@@ -1,10 +1,10 @@
 # Measuring a vLLM server
 
-The harness can use vLLM's Chat Completions endpoint and sample its Prometheus metrics during each model call. This path has protocol and collector tests, but no GPU results have been collected yet.
+ReedCode can call vLLM through Chat Completions and sample its Prometheus metrics during inference. The adapter and collector have tests. GPU measurements and the sampler overhead check are still pending.
 
 ## Start the server
 
-Use a dedicated Linux machine with an NVIDIA GPU. Install `vllm==0.30.0` in a separate environment on that machine, then run:
+Use a dedicated Linux machine with an NVIDIA GPU. Install `vllm==0.30.0` in a separate environment, then run:
 
 ```bash
 vllm serve Qwen/Qwen3-8B \
@@ -14,9 +14,9 @@ vllm serve Qwen/Qwen3-8B \
   --reasoning-parser qwen3
 ```
 
-The model and parsers follow [Qwen's deployment instructions](https://qwen.readthedocs.io/en/latest/deployment/vllm.html). Record the resolved model revision, vLLM version, GPU model/count, driver, dtype, context limit, and prefix-cache settings with the run. Keep them fixed across conditions. Use an SSH tunnel if ReedCode runs on another machine; the example binds to localhost.
+The model and parsers follow [Qwen's deployment instructions](https://qwen.readthedocs.io/en/latest/deployment/vllm.html). Record the resolved model revision, vLLM version, GPU model/count, driver, dtype, context limit, and prefix-cache settings. Keep them fixed across conditions. The example binds to localhost; use an SSH tunnel from another machine.
 
-Check `/v1/models` and `/metrics` before running. The API model name must match the `model_name` label in the metrics. Use a server with no other clients. Server-wide counters cannot reliably separate this experiment from unrelated requests.
+Check `/v1/models` and `/metrics` first. The API model name must match the metrics' `model_name` label. Keep other clients off the server so their requests don't enter the counters.
 
 ## Run the synthetic study
 
@@ -32,17 +32,13 @@ uv run python run_experiments.py synthetic \
   --max-output-tokens 4096
 ```
 
-`unused` is only for a local server started without API authentication. Use the server's credential if authentication is enabled. The model API key is never forwarded to the metrics endpoint. Avoid exposing either endpoint publicly.
+`unused` works for a local server with authentication disabled. Otherwise, use the server's credential. The model key is never sent to the metrics endpoint. Keep both endpoints private.
 
-This runs five repetitions of all three retention policies, with an oracle check first. It is a separate study from the hosted-model pilot. Do not attribute differences between different models or servers to retention.
-
-The 4,096-token budget can stop a reasoning response early. The harness records that stop and its usage, skips tools from the cut-off response, and lets Harbor verify the workspace. Check the limit-hit rate beside the pass rate. Keep the same budget across conditions; if it is too restrictive, start a separate study with a larger budget.
+This runs an oracle check followed by five repetitions of all three policies. Keep it separate from hosted-model studies. The 4,096-token budget may stop a reasoning response early; the [protocol](../experiments/PROTOCOL.md#output-token-limits) explains how those trials are scored. Check the limit-hit rate alongside passes. If the budget is too low, use a larger one in a new study.
 
 ## Read the measurements
 
-Each inference event contains a `server_metrics` object. The paired report compares summed prefill/decode seconds and the largest KV fraction sampled during inference; only windows with valid attribution checks contribute. A missing or invalid call makes that run's corresponding aggregate unknown. Collection uses a scrape before the API request, samples during it, and a final scrape afterward. Client API latency excludes the boundary scrapes; the background collector still adds some observer overhead. Check the overhead before using small latency differences as evidence.
-
-For that check, warm the server and replay fixed requests with collection alternately disabled and enabled. Hold the model, generation settings, cache policy, and workload fixed; repeat and vary the order. Compare client API latency and total elapsed time separately. Different agent trajectories are not a clean measure of sampler overhead. This check has not been run yet.
+Each inference event has a `server_metrics` object. Collection scrapes before the request, samples during it, and scrapes once more afterward. Client API latency excludes the boundary scrapes.
 
 | Measurement | Source and meaning |
 | --- | --- |
@@ -53,8 +49,22 @@ For that check, warm the server and replay fixed requests with collection altern
 | KV cache usage | Before/after values and largest value sampled during the call, as a fraction of cache capacity |
 | Running/waiting requests | Sampled gauges used to flag occupied boundaries or possible concurrent traffic |
 
-These are server phase wall times and cache occupancy, not GPU kernel timings, HBM traffic, or FLOPs. The sampled KV maximum can miss the actual peak. With multiple engines, the collector takes the largest reported engine fraction, not a capacity-weighted fraction for the whole server. Prompt-token totals do not isolate newly computed KV tokens. Prefix-cache hits describe reuse; they do not directly quantify saved compute. Metric definitions come from the [vLLM metrics documentation](https://docs.vllm.ai/en/latest/usage/metrics/).
+The paired report compares summed prefill/decode seconds and the largest sampled KV fraction. Every call needs valid attribution checks; a missing or invalid measurement makes the corresponding run total unknown. KV comparisons also require an in-flight sample on every call.
 
-Missing series, counter resets, restarts, failed scrapes, and unexpected completion counts are recorded. Missing values remain unknown. Only interpret per-call deltas when the server was dedicated and idle at the boundaries; samples alone cannot prove exclusivity. Histograms published after the final scrape may also prevent attribution.
+The collector records missing series, counter resets, restarts, failed scrapes, and unexpected completion counts. Use per-call deltas only with a dedicated server that was idle at both boundaries. Metric definitions are in the [vLLM documentation](https://docs.vllm.ai/en/latest/usage/metrics/).
 
-Keep one cache policy for the entire study and record it. A persistent warm cache is a different experiment from restarting or clearing the cache between trials. Do not mix them in one comparison. For a first run, keep the server running throughout and report that the cache carries across trials. Run a separate controlled cold-cache study if needed.
+## Check sampler overhead
+
+Warm the server, then replay fixed requests with collection alternately off and on. Keep the model, generation settings, cache policy, and workload fixed. Repeat the requests and vary the order. Compare client API latency and total elapsed time separately. Fixed requests keep agent trajectory changes out of this comparison.
+
+## Cache policy
+
+For a first study, keep the server running and report that its cache carries across trials. Record that policy and use it for every condition. Test restarting or clearing the cache in a separate cold-cache study.
+
+## Limitations
+
+These measurements cover server phase wall times and sampled cache occupancy. GPU kernel time, HBM traffic, and FLOPs are outside their scope. Prompt-token counters don't isolate newly computed KV tokens, and cache hits don't directly measure saved compute.
+
+Sampling can miss the KV peak. With multiple engines, the collector reports the largest engine fraction; engine capacities are not used as weights. Idle boundary samples cannot prove exclusive use, and histograms published after the last scrape can prevent attribution.
+
+The background sampler adds overhead. Complete the fixed-request check before interpreting small latency differences. Changing models, servers, or cache policies introduces differences beyond retention.

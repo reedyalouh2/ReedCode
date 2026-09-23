@@ -66,7 +66,6 @@ TOOLS = [
 
 
 def add_usage(total, value):
-    # Propagate missing usage through the totals.
     return None if total is None or value is None else total + value
 
 
@@ -211,7 +210,7 @@ class ReedCodeAgent(BaseAgent):
                             f"Model response status: {response.status}"
                         )
 
-                    # Preserve reasoning items, messages and tool calls.
+                    # Later turns need the reasoning items and tool-call IDs.
                     history.extend(response.output)
 
                     if not tool_calls:
@@ -246,7 +245,6 @@ class ReedCodeAgent(BaseAgent):
                             "call_id": call.call_id,
                             "tool": call.name,
                             "duration_ms": round(tool_ms, 2),
-                            # UTF-8 bytes after truncation and formatting.
                             "output_bytes": len(result.text.encode("utf-8")),
                             "success": result.success,
                             **result.retention,
@@ -262,7 +260,7 @@ class ReedCodeAgent(BaseAgent):
 
         except asyncio.CancelledError:
             stop_reason = "cancelled_or_task_timeout"
-            # Allow Harbor to enforce its overall task deadline.
+            # Harbor uses cancellation to enforce the task deadline.
             raise
 
         except Exception as exc:
@@ -283,7 +281,7 @@ class ReedCodeAgent(BaseAgent):
             summary = {
                 "agent_version": self.version(),
                 "stop_reason": stop_reason,
-                # Harbor records the verifier reward separately.
+                # Finishing the agent loop says nothing about the verifier reward.
                 "agent_completed": stop_reason == "no_tool_calls",
                 "output_limit_hit": (
                     stop_reason == "max_output_tokens"
@@ -297,7 +295,7 @@ class ReedCodeAgent(BaseAgent):
                 "total_cached_input_tokens": total_cached,
                 "total_output_tokens": total_output,
                 "fresh_input_tokens": fresh_tokens,
-                # On aborted runs, totals cover completed calls only.
+                # An aborted call can leave its cost out of these totals.
                 "model_latency_ms": round(model_ms, 2),
                 "tool_latency_ms": round(tool_ms_total, 2),
                 "wall_time_ms": round(
@@ -406,7 +404,7 @@ class ReedCodeAgent(BaseAgent):
                            prefix=f"EXIT CODE: {result.return_code}\n")
 
     def safe_path(self, path: str) -> str:
-        # This checks path syntax only. Symlinks and bash can escape it.
+        # Symlinks and bash can bypass this lexical path check.
         if (
             not isinstance(path, str)
             or not path.strip()

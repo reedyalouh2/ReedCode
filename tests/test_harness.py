@@ -115,7 +115,7 @@ class HarnessTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(context.metadata["fresh_input_tokens"])
 
     async def test_output_limit_is_a_normal_stop_with_usage_and_no_tool_execution(self):
-        # Even a complete-looking command in the cut-off response must not execute.
+        # A cut-off response is unsafe even when its command looks complete.
         call = NS(type="function_call", name="bash", arguments='{"command":"touch unexpected"}', call_id="c")
         reply = response([call], status="incomplete")
         reply.incomplete_details = NS(reason="max_output_tokens")

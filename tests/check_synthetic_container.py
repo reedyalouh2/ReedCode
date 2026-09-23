@@ -1,4 +1,4 @@
-"""Check diagnostic visibility using real pytest output, without model calls.
+"""Check which pytest diagnostics survive each retention policy.
 
 Run from the repo root after building reedcode-noisy-bugfix-v2.
 """
@@ -42,7 +42,7 @@ def main():
             reports.append({"fixed": fixed, "condition": name, "signal_visible": expected,
                             **metadata})
     for fixed in (False, True):
-        # A changed visible suite must not let the broken implementation pass verification.
+        # Editing visible tests must not bypass the verifier.
         command = "printf 'def test_fake(): pass\n' > /app/test_pricing.py; "
         if fixed:
             command += "bash /solution/solve.sh; "

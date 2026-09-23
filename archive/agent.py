@@ -259,7 +259,6 @@ def run_agent(task: str):
         print("\nINFERENCE METRICS:")
         print(json.dumps(inference_trace, indent=2))
 
-        # Preserve model output in context.
         history += response.output
 
         if not tool_calls:
@@ -351,7 +350,6 @@ def run_agent(task: str):
                 }
             )
 
-    # Hit MAX_TURNS without natural completion.
     wall_time_ms = (
         time.perf_counter() - task_start
     ) * 1000

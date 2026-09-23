@@ -35,7 +35,7 @@ def chat_messages(instructions: str, history: list) -> list[dict]:
     messages = [{"role": "system", "content": instructions}]
     for item in history:
         if isinstance(item, ChatMessage):
-            # Retain both vLLM reasoning field names across server versions.
+            # vLLM versions use different names for reasoning.
             messages.append({
                 key: value for key, value in item.message.items()
                 if key in {"role", "content", "tool_calls", "reasoning", "reasoning_content"}
@@ -91,7 +91,7 @@ async def create_response(
     message = choice.message
     status = "completed" if choice.finish_reason in {"stop", "tool_calls"} else "incomplete"
     output = [ChatMessage(message.model_dump(exclude_none=True))]
-    # Incomplete tool calls can lack IDs or contain partial arguments. Never execute them.
+    # A cut-off response may have missing IDs or unfinished arguments.
     for call in (message.tool_calls or []) if status == "completed" else []:
         if call.type != "function" or not call.id:
             raise RuntimeError("Chat completion contains an unsupported tool call")

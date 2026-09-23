@@ -1,7 +1,6 @@
-"""Sample a dedicated vLLM server during one model call.
+"""Collect vLLM phase times and cache samples around a model call.
 
 Metric definitions: https://docs.vllm.ai/en/latest/usage/metrics/
-These are server wall times and sampled occupancy, not GPU kernel timings.
 """
 
 from __future__ import annotations
@@ -44,7 +43,7 @@ LABEL = re.compile(r'\s*([a-zA-Z_][a-zA-Z0-9_]*)="((?:[^"\\]|\\[\\"n])*)"\s*(?:,
 
 
 def parse_metrics(body: str, model_name: str | None = None) -> dict:
-    """Read only the known numeric series from Prometheus text exposition."""
+    """Read the numeric Prometheus series used by this collector."""
     metrics: dict = {}
     for line in body.splitlines():
         match = SAMPLE.fullmatch(line.strip())
@@ -99,16 +98,16 @@ def _gauge(snapshot: dict | None, aliases: tuple[str, ...], maximum: bool = Fals
     values = next((snapshot[name].values() for name in aliases if snapshot.get(name)), None)
     if values is None:
         return None
-    # Cache fractions cannot be summed across engines of unknown capacity.
+    # Engine capacities are unknown, so adding their cache fractions is meaningless.
     return max(values) if maximum else sum(values)
 
 
 class ServerMetricsWindow:
-    """Use around one inference await; read ``result`` after leaving the context.
+    """Wrap one awaited inference call; read ``result`` after the context exits.
 
-    Only the explicitly supplied URL is queried. No request body, API key, URL,
-    label value, or raw exception message is written to the returned report.
-    An idle dedicated server is required for attribution to the model call.
+    Attribution needs a dedicated server idle at both boundaries. Only the
+    supplied URL is queried. Reports omit request bodies, keys, URLs, label
+    values, and raw exceptions to keep credentials out of saved traces.
     """
 
     def __init__(self, url: str | None, *, model_name: str | None = None,

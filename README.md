@@ -1,12 +1,8 @@
 # ReedCode
 
-A small coding-agent harness with tool execution, per-call tracing, and Harbor integration.
+ReedCode is a small coding-agent harness that runs tools through Harbor and logs token use and timing. I built it to study tool-output retention. [TODO: why I started this]
 
-Built after becoming interested in the harness ↔ inference boundary in long-running coding agents.
-
-ReedCode studies how much tool output a coding agent needs to keep. It compares head-only and head+tail retention, records the text budget used at each step, and separates model usage from tool execution and verifier results.
-
-The first [interleaved synthetic study](#interleaved-synthetic-results) is complete: 15 trials, five per condition. All passed. Both 2K policies used less input than 20K; head+tail did not reduce call counts compared with head-only at the same budget. Earlier pilot results are kept separately below.
+All 15 trials in the latest study passed. Both 2K policies used less input than 20K. Head+tail used fewer fresh tokens than head-only, but took more tool calls.
 
 ## How it works
 
@@ -24,23 +20,13 @@ flowchart TD
     T -.-> L
 ```
 
-Harbor manages the task's setup, deadline, and verification. ReedCode manages the model calls, tools, and history. Errors can end a run early; Harbor records evaluation exceptions separately from rewards.
+Harbor handles setup, deadlines, and verification. [`reedcode_harbor_agent.py`](reedcode_harbor_agent.py) calls the model and runs `read_file`, `write_file`, and `bash` in Docker, one at a time. Results stay in the history for later calls.
 
-[`reedcode_harbor_agent.py`](reedcode_harbor_agent.py) calls the model with a task, conversation history, and three tools: `read_file`, `write_file`, and `bash`. After each complete response, it executes any tool calls and appends their results to the history. It stops when the model returns without a tool call or reaches a turn or output-token limit.
-
-The harness runs on the host. Commands run in a Docker task environment through Harbor's [`BaseEnvironment`](https://docs.harborframework.com/core-concepts/agents/custom-agents). Harbor runs the verifier after the agent finishes; the model saying it is done does not determine the reward.
-
-Instructions and tool schemas stay fixed across calls. History includes the model's full output, including reasoning items and tool-call IDs. Tools run sequentially. There is no context compaction or parallel-agent scheduler.
-
-Malformed arguments, invalid file paths, command failures, and recognized timeouts are returned to the model as tool results. API errors and other infrastructure failures propagate to Harbor. Cancellation also propagates so Harbor can enforce the task deadline.
-
-An output-token limit is a normal budget stop. Its usage stays in the trace, tools from the cut-off response are skipped, and Harbor verifies the current workspace. The trial stays in the analysis with its verifier reward. Reports show limit-hit counts and rates alongside passes; hitting the limit does not automatically mean the repair failed.
-
-The file tools check paths lexically, including absolute paths inside the workspace. This does not prevent symlink escape, and `bash` can access the rest of the container. Run the agent in disposable containers without sensitive mounts. The earlier host prototype is kept in [`archive/`](archive/README.md).
+The agent stops on a final response or budget limit, then Harbor grades the workspace. Tool errors go back to the model; API failures go to Harbor.
 
 ## Measurements
 
-The harness writes a JSONL trace with token usage and latency for each model call, duration, original and retained output sizes, policy, and a `truncated` flag for each tool call, and a final task summary. Harbor records the verifier reward separately.
+JSONL traces record model usage, tool timing, output sizes, and truncation. Harbor supplies the reward.
 
 | Metric | Definition |
 | --- | --- |
@@ -51,13 +37,7 @@ The harness writes a JSONL trace with token usage and latency for each model cal
 | Tool-output bytes | UTF-8 bytes returned to the model after truncation, including formatting |
 | Harbor job runtime | Time from job start to finish, including setup and verification |
 
-Model latency includes network, service, and SDK overhead. It does not separate prefill from decode. Hosted-API traces do not measure GPU time, server queue time, TTFT, ITL, or KV residency. The optional vLLM collector adds server phase times and sampled cache occupancy, described below. Reported cached tokens are useful workload data, but they do not tell us how much GPU compute was saved.
-
-`MAX_TOOL_OUTPUT` limits retained content to N characters. `OUTPUT_POLICY=head` keeps the beginning; `head_tail` splits the budget evenly between the beginning and end (the extra character goes to the head for odd budgets). The exit-code prefix and truncation marker add a little beyond that limit. Output is collected before truncation, so this setting does not bound subprocess memory use. Head-only retention can cut off diagnostics at the end. The exit code remains visible under both policies. Sizes before retention refer to the observation text, excluding the exit-code prefix; returned bytes include all formatting.
-
-## Experiment method
-
-Three conditions use the same model, tools, turn limit, timeout, and task snapshot:
+## Retention conditions
 
 | Condition | Retained characters |
 | --- | --- |
@@ -65,19 +45,13 @@ Three conditions use the same model, tools, turn limit, timeout, and task snapsh
 | `head_2k` | First 2,000 |
 | `head_tail_2k` | First 1,000 and last 1,000 |
 
-The real-suite schedule has ten tasks, five repetitions, and all three conditions: 150 trials. Each task/repetition is a block with its conditions run next to each other in varied order. The runner saves the schedule before running, downloads each task once, and checks its snapshot before every trial. Oracle checks must pass on every snapshot before any model calls begin. The schedule seed controls ordering, not model randomness.
-
-Reports show passes, exceptions, truncation counts, and paired differences in tokens, latency, model calls, and tool calls. They also report an overall estimate: average the differences within each task, then give each task equal weight. Its 95% interval resamples tasks, rather than treating repeated runs as independent tasks.
-
-Missing tasks and pairs remain visible. Per-task intervals need at least five usable pairs; the pooled interval needs at least five tasks. A single synthetic task cannot provide an across-task interval. The primary retention comparison is `head_tail_2k` against `head_2k`. Five repetitions are a starting point, not a guarantee of precision. See the [protocol](experiments/PROTOCOL.md) for task selection and interpretation.
-
-The revised synthetic study has been run with a hosted model. The ten-task study remains unrun. Model and tool call differences measure extra work; they do not identify individual recovery calls.
+Exit codes stay visible. The [protocol](experiments/PROTOCOL.md) covers scheduling, task checks, and analysis.
 
 ## Interleaved synthetic results
 
-September 23, 2026 UTC, harness 0.4.1, `gpt-5.6-terra` through the Responses API. One revised `noisy-bugfix` task, five repetitions, three conditions per block. All 15 scheduled trials finished and passed the eight-test verifier. There were no exceptions, missing rewards, excluded pairs, or output-token limit hits. The generation budget was the provider default, with no explicit token cap.
+I ran `noisy-bugfix` on September 23, 2026 UTC with harness 0.4.1 and `gpt-5.6-terra` through the Responses API, using the provider's default generation budget. All trials passed the eight-test verifier. The [study record](experiments/synthetic-20260923/README.md) includes every attempt and its outcome.
 
-Token, call, and latency values below are means per trial.
+Token, call, and latency values are means per trial.
 
 | Metric | Head 20K | Head 2K | Head+tail 2K |
 | --- | ---: | ---: | ---: |
@@ -90,9 +64,9 @@ Token, call, and latency values below are means per trial.
 | Model API latency | 10.03 s | 11.73 s | 10.43 s |
 | Truncated / total tool calls | 0/32 | 9/32 | 12/35 |
 
-Both 2K policies reduced total input compared with 20K: 58.4% for head-only and 51.4% for head+tail. Neither had lower mean API latency than 20K in this run.
+Compared with 20K, input fell 58.4% for head-only and 51.4% for head+tail. Mean API latency was higher under both 2K policies.
 
-The primary comparison is **head+tail minus head-only at 2K**, paired within each repetition:
+The paired comparison below is **head+tail minus head-only at 2K**.
 
 | Metric | Mean difference | Exploratory 95% interval |
 | --- | ---: | ---: |
@@ -102,21 +76,15 @@ The primary comparison is **head+tail minus head-only at 2K**, paired within eac
 | Model calls | 0.0 | [0.0, 0.0], degenerate |
 | Tool calls | +0.6 | [+0.2, +1.0] |
 
-Head+tail used fewer fresh tokens but more total input and more tool calls. Its reported cached input was higher: 4,553.2 versus 2,895.8 tokens per trial. Hosted cache state was not reset between calls, and fresh input is not a GPU-compute measurement. The latency interval spans zero; these data do not establish a speedup from retaining the tail.
-
-This is one easy repair with visible source and tests. All policies succeeded, and retaining the tail did not reduce calls. Five-pair bootstrap intervals are exploratory; identical rewards do not establish equal success rates, and one task provides no across-task interval. The metric traces do not identify individual recovery actions.
-
-The [study record](experiments/synthetic-20260923/README.md) includes every trial, the unchanged task snapshot and traces, the saved schedule, and the [paired report](experiments/synthetic-20260923/paired_report.json). No GPU measurements were collected.
+Head+tail had more cached input: 4,553.2 versus 2,895.8 tokens per trial. See the full [paired report](experiments/synthetic-20260923/paired_report.json).
 
 ## Pilot results
 
-Both suites used `gpt-5.6-terra`, with the same tools and verifiers within each suite. All 20K runs happened before the 2K runs. Oracle runs passed the local tasks and the three selected Terminal-Bench tasks before the comparisons.
+Both earlier suites used `gpt-5.6-terra`. Their oracle checks passed before the model runs.
 
 ### Synthetic bugfix
 
-The original task, preserved in [`evals/noisy-bugfix-pilot`](evals/noisy-bugfix-pilot), prints 150 diagnostic lines before a failing pricing test. At a 2K head-only cap the agent cannot see the pytest diagnostics or summary. Agents can inspect the source or rerun a more focused command; the current harness also keeps the exit code visible. Passing this task shows that the agent can work around hidden diagnostics; it does not establish that important information was safely discarded. The original verifier checked three assertions rather than running pytest.
-
-There were three runs per cap, using harness 0.1.0. All six passed.
+The [original task](evals/noisy-bugfix-pilot) prints 150 diagnostic lines before pytest. Its verifier checked three assertions. All six trials passed: three per cap, harness 0.1.0.
 
 | Mean per run | 20K cap | 2K cap | Change |
 | --- | ---: | ---: | ---: |
@@ -130,9 +98,7 @@ There were three runs per cap, using harness 0.1.0. All six passed.
 
 ### Terminal-Bench
 
-The aggregate input difference was −61.3%, but the cap cannot explain the whole change: `regex-log` never hit either cap. With one run per task and all 20K runs first, the cap effect cannot be separated from trajectory variation or service conditions.
-
-The first batch exposed problems with absolute workspace paths, command timeouts, and reporting failed trials. After fixing those, I ran each task once per cap with harness 0.2.0. All six final runs passed, with no Harbor exceptions.
+After fixing path, timeout, and reporting bugs, I ran each task once per cap with harness 0.2.0. All six passed without Harbor exceptions.
 
 | Task | Cap | Input tokens | Fresh tokens | Model latency |
 | --- | ---: | ---: | ---: | ---: |
@@ -155,30 +121,15 @@ The first batch exposed problems with absolute workspace paths, command timeouts
 | Model calls | 12.00 | 9.33 | -22.2% |
 | Tool calls | 11.00 | 9.33 | -15.2% |
 
-Total Harbor job runtime fell from 420.01 to 346.12 seconds (17.6%), including setup and verification.
+Total Harbor job runtime fell from 420.01 to 346.12 seconds (17.6%), including setup and verification. `sanitize-git-repo` accounts for most of the input difference. `extract-elf` used fewer input tokens at 2K but generated more output and took longer.
 
-`sanitize-git-repo` accounts for most of the absolute input-token difference. There are also two counterexamples in the per-task results. `extract-elf` used fewer input tokens at 2K but generated more output tokens and took longer. Neither `regex-log` run even hit the smaller cap: the largest returned observations were 426 and 457 bytes. Its large improvement cannot be attributed to truncation.
+## Server measurements and next experiments
 
-Three tasks and one run per setting are not enough to separate the cap's effect from stochastic trajectories and changing service conditions. More tasks and repeated, interleaved runs would be needed. These results do not establish 2K as an optimal cap or demonstrate equivalent accuracy across Terminal-Bench.
-
-The pilot synthetic runs used 0.1.0, whose source snapshot was not saved. These pilot results have not been rerun with the current harness; the 0.4.1 synthetic study above uses a revised task and a different protocol. Real pilot tasks were fetched at `latest`; their checksums are recorded, but task contents and model aliases can change. See [experiment records](experiments/README.md) for the saved traces and reproduction limits.
-
-## Server measurements
-
-The harness also supports a self-hosted vLLM model through Chat Completions. With a metrics endpoint configured, each model call records server-side prefill and decode times, prefix-cache counters, and sampled KV cache occupancy. These are separate from client API latency. The report includes phase-time differences and sampled KV maxima when the collection windows pass the attribution checks.
-
-The adapter and collector have offline tests. GPU measurements still need a dedicated server; none are reported here yet. See [the vLLM setup](docs/self-hosted.md) for the command, metric definitions, and cache policy.
-
-## Next experiments
-
-- Run the prepared ten-task study. The synthetic study did not show fewer calls from head+tail; check whether tasks with harder diagnostics behave differently.
-- Run a separate study on a dedicated vLLM server, including the fixed-request sampler overhead check described in the setup guide.
-- Use the results to decide whether semantic retention of errors, test results, and code warrants another condition.
-- Eventually, test harness-provided lifecycle hints to an inference scheduler, such as when an agent starts a tool call and expects to need the model again.
+Next are the ten-task and [vLLM studies](docs/self-hosted.md), followed by retaining specific errors and test results. Later, I'd like to test whether lifecycle hints from the harness help an inference scheduler.
 
 ## Codex profile
 
-I also profiled a separate Codex run on `terminal-bench/make-mips-interpreter` with `gpt-5.6-terra`. It made progress on a MIPS interpreter but failed the verifier, with reward 0 and no Harbor exception.
+This separate `gpt-5.6-terra` Codex run on `terminal-bench/make-mips-interpreter` failed verification with reward 0 and no Harbor exception. [`profile_trajectory.py`](profile_trajectory.py) produced the [profile](experiments/codex_profile/profile.json).
 
 | Metric | Value |
 | --- | ---: |
@@ -191,10 +142,6 @@ I also profiled a separate Codex run on `terminal-bench/make-mips-interpreter` w
 | Reported reasoning output tokens | 6,332 |
 | Session-reported duration | 698.05 s |
 | Session-reported time to first token | 6.71 s |
-
-This run is what made repeated context and prefix reuse interesting to investigate. These are Codex's measurements, not an improvement made by ReedCode. The TTFT value is a session field, not a per-call latency distribution.
-
-[`profile_trajectory.py`](profile_trajectory.py) reads this session format and takes the final cumulative usage record. The [saved profile](experiments/codex_profile/profile.json) includes the source-session hash. Reasoning tokens should not be added to output tokens as a separate total.
 
 ## Running it
 
@@ -223,7 +170,7 @@ uv run python run_experiments.py real --dry-run
 uv run python run_experiments.py real --check-only
 ```
 
-For model runs, set `OPENAI_API_KEY` in your environment. The default model is `gpt-5.6-terra`; set `MODEL` to another Responses-compatible model if your account cannot access it. Record that change when comparing results.
+Set `OPENAI_API_KEY` for model runs. The default model is `gpt-5.6-terra`; use `MODEL` for another Responses-compatible model and record the change.
 
 ```bash
 PYTHONPATH="$PWD" uv run harbor run -p evals/hello \
@@ -241,7 +188,7 @@ python3 summarize_real_ab.py runs/real-TIMESTAMP
 python3 profile_trajectory.py /path/to/rollout.jsonl
 ```
 
-New runs go under `runs/`, with full Harbor output in `jobs/`. Both directories are ignored by Git. The saved pilot evidence is left alone. Reporters check trace hashes, retain failed attempts, and leave missing telemetry as unknown. New reports also write `paired_report.json`, including per-task and pooled comparisons. Each invocation creates a new study; interrupted studies are reported as partial and are not silently retried.
+Each invocation creates a study in `runs/`, including `paired_report.json`. Full Harbor output goes in `jobs/`. Both directories are ignored by Git.
 
 | Setting | Default |
 | --- | ---: |
@@ -254,18 +201,11 @@ New runs go under `runs/`, with full Harbor output in `jobs/`. Both directories 
 | `VLLM_METRICS_URL` | Unset; collection disabled |
 | `METRICS_SAMPLE_INTERVAL` | 0.1 seconds |
 
-The experiment runner fixes the turn limit and timeout across all conditions. `--model-api` and `--max-output-tokens` apply to every condition; SDK retries are disabled so hidden retries cannot be mistaken for one server request. Harbor also enforces the task's overall deadline. Settings are read when each agent is created; Python callers can pass a `Settings` instance directly.
+Settings are read at agent creation; Python callers can pass `Settings` directly. The runner fixes turn limits, timeouts, `--model-api`, and `--max-output-tokens` across conditions.
 
-## Files
+## Limitations
 
-- `reedcode_harbor_agent.py`: the Harbor agent.
-- `output_policy.py`: retention policies and agent settings.
-- `model_backend.py`: Responses and Chat Completions adapters.
-- `server_metrics.py`: vLLM metrics collection.
-- `archive/agent.py`: the original host prototype, retained for reference.
-- `run_experiments.py`: runs the suites and exports results.
-- `reporting.py`: shared code for the two summary scripts.
-- `profile_trajectory.py`: Codex session profiler.
-- `evals/`: smoke test, revised noisy bugfix task, and preserved pilot fixture.
-- `experiments/`: saved metrics and verifier results.
-- `tests/`: offline harness and reporting tests.
+- The new study has five pairs on one easy repair with visible source and tests. Its intervals are exploratory; all-pass results don't prove equal success rates. There is no across-task interval, and the latency interval spans zero.
+- The pilots ran every 20K trial first. Task variation and service conditions are mixed into their differences. `regex-log` never hit either cap: its largest outputs were 426 and 457 bytes. The [experiment records](experiments/README.md) cover missing source pins and changing dependencies.
+- Hosted cache state was not reset. API latency includes network and service overhead; tokens and call counts don't measure GPU savings or identify recovery actions. The ten-task study and GPU measurements are still pending. The Codex table describes a separate run; its TTFT is a session field, and reasoning tokens are already included in output tokens.
+- File checks are lexical; symlinks and `bash` can reach outside the workspace. Use disposable containers without sensitive mounts. Output is collected before truncation, so the cap doesn't limit subprocess memory. The [archived prototype](archive/README.md) runs commands on the host.
