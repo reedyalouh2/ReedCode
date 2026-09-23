@@ -83,7 +83,7 @@ class ExperimentDesignTests(unittest.TestCase):
             with self.subTest(oracle_reward=oracle_reward), tempfile.TemporaryDirectory() as tmp:
                 root = Path(tmp)
                 for name in ("reedcode_harbor_agent.py", "output_policy.py", "run_experiments.py",
-                             "reporting.py", "uv.lock"):
+                             "reporting.py", "model_backend.py", "server_metrics.py", "uv.lock"):
                     (root / name).write_text("test source")
                 source = root / "evals/noisy-bugfix"
                 source.mkdir(parents=True)

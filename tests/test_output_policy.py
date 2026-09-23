@@ -33,9 +33,21 @@ class OutputPolicyTests(unittest.TestCase):
         self.assertEqual(first.max_tool_output, 7)
         self.assertEqual(second.max_tool_output, 11)
         for kwargs in ({"max_turns": 0}, {"max_tool_output": -1}, {"tool_timeout": 0},
-                       {"output_policy": "unknown"}):
+                       {"output_policy": "unknown"}, {"model_api": "unknown"},
+                       {"max_output_tokens": 0}, {"metrics_sample_interval": float("nan")},
+                       {"metrics_sample_interval": 0}):
             with self.assertRaises(ValueError):
                 Settings(**kwargs)
+
+    def test_inference_settings_do_not_store_credentials(self):
+        with patch.dict(os.environ, {"MODEL_API": "chat", "MAX_OUTPUT_TOKENS": "4096",
+                                     "OPENAI_API_KEY": "private-test-value",
+                                     "VLLM_METRICS_URL": "http://localhost:8000/metrics"}):
+            settings = Settings.from_env()
+        self.assertEqual(settings.model_api, "chat")
+        self.assertEqual(settings.max_output_tokens, 4096)
+        self.assertEqual(settings.server_metrics_url, "http://localhost:8000/metrics")
+        self.assertNotIn("private-test-value", repr(settings))
 
     def test_verifier_uses_the_same_pristine_suite(self):
         task = Path(__file__).resolve().parents[1] / "evals" / "noisy-bugfix"

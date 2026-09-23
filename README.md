@@ -49,7 +49,7 @@ The harness writes a JSONL trace with token usage and latency for each model cal
 | Tool-output bytes | UTF-8 bytes returned to the model after truncation, including formatting |
 | Harbor job runtime | Time from job start to finish, including setup and verification |
 
-Model latency includes network, service, and SDK overhead. It does not separate prefill from decode. The harness does not measure GPU time, queue time, TTFT, ITL, or KV residency. Reported cached tokens are useful workload data, but they do not tell us how much GPU compute was saved.
+Model latency includes network, service, and SDK overhead. It does not separate prefill from decode. Hosted-API traces do not measure GPU time, server queue time, TTFT, ITL, or KV residency. The optional vLLM collector adds server phase times and sampled cache occupancy, described below. Reported cached tokens are useful workload data, but they do not tell us how much GPU compute was saved.
 
 `MAX_TOOL_OUTPUT` limits retained content to N characters. `OUTPUT_POLICY=head` keeps the beginning; `head_tail` splits the budget evenly between the beginning and end (the extra character goes to the head for odd budgets). The exit-code prefix and truncation marker add a little beyond that limit. Output is collected before truncation, so this setting does not bound subprocess memory use. Head-only retention can cut off diagnostics at the end. The exit code remains visible under both policies. Sizes before retention refer to the observation text, excluding the exit-code prefix; returned bytes include all formatting.
 
@@ -65,9 +65,11 @@ Three conditions use the same model, tools, turn limit, timeout, and task snapsh
 
 The real-suite schedule has ten tasks, five repetitions, and all three conditions: 150 trials. Each task/repetition is a block with its conditions run next to each other in varied order. The runner saves the schedule before running, downloads each task once, and checks its snapshot before every trial. Oracle checks must pass on every snapshot before any model calls begin. The schedule seed controls ordering, not model randomness.
 
-Reports show passes, exceptions, truncation counts, and per-task paired differences with exploratory 95% bootstrap intervals. Missing pairs remain visible; intervals are withheld below five complete pairs. The primary retention comparison is `head_tail_2k` against `head_2k`. Five repetitions are a starting point, not a guarantee of precision. See the [protocol](experiments/PROTOCOL.md) for task selection and interpretation.
+Reports show passes, exceptions, truncation counts, and paired differences in tokens, latency, model calls, and tool calls. They also report an overall estimate: average the differences within each task, then give each task equal weight. Its 95% interval resamples tasks, rather than treating repeated runs as independent tasks.
 
-This comparison has not been run yet. The revised synthetic task and retention policies have been checked without model calls.
+Missing tasks and pairs remain visible. Per-task intervals need at least five usable pairs; the pooled interval needs at least five tasks. A single synthetic task cannot provide an across-task interval. The primary retention comparison is `head_tail_2k` against `head_2k`. Five repetitions are a starting point, not a guarantee of precision. See the [protocol](experiments/PROTOCOL.md) for task selection and interpretation.
+
+The revised synthetic task and retention policies have been checked without model calls. No model results have been collected under this protocol yet. Model and tool call differences measure extra work; they do not identify individual recovery calls.
 
 ## Pilot results
 
@@ -122,7 +124,13 @@ Total Harbor job runtime fell from 420.01 to 346.12 seconds (17.6%), including s
 
 Three tasks and one run per setting are not enough to separate the cap's effect from stochastic trajectories and changing service conditions. More tasks and repeated, interleaved runs would be needed. These results do not establish 2K as an optimal cap or demonstrate equivalent accuracy across Terminal-Bench.
 
-The synthetic runs used 0.1.0, whose source snapshot was not saved. The current harness is 0.3.0; the saved results have not been rerun with it. Real tasks were fetched at `latest`; their checksums are recorded, but task contents and model aliases can change. See [experiment records](experiments/README.md) for the saved traces and reproduction limits.
+The synthetic runs used 0.1.0, whose source snapshot was not saved. The current harness is 0.4.0; the saved results have not been rerun with it. Real tasks were fetched at `latest`; their checksums are recorded, but task contents and model aliases can change. See [experiment records](experiments/README.md) for the saved traces and reproduction limits.
+
+## Server measurements
+
+The harness also supports a self-hosted vLLM model through Chat Completions. With a metrics endpoint configured, each model call records server-side prefill and decode times, prefix-cache counters, and sampled KV cache occupancy. These are separate from client API latency. The report includes phase-time differences and sampled KV maxima when the collection windows pass the attribution checks.
+
+The adapter and collector have offline tests. GPU measurements still need a dedicated server; none are reported here yet. See [the vLLM setup](docs/self-hosted.md) for the command, metric definitions, and cache policy.
 
 ## Next experiments
 
@@ -194,7 +202,7 @@ python3 summarize_real_ab.py runs/real-TIMESTAMP
 python3 profile_trajectory.py /path/to/rollout.jsonl
 ```
 
-New runs go under `runs/`, with full Harbor output in `jobs/`. Both directories are ignored by Git. The saved pilot evidence is left alone. Reporters check trace hashes, retain failed attempts, and leave missing telemetry as unknown. New reports also write `paired_report.json`. Each invocation creates a new study; interrupted studies are reported as partial and are not silently retried.
+New runs go under `runs/`, with full Harbor output in `jobs/`. Both directories are ignored by Git. The saved pilot evidence is left alone. Reporters check trace hashes, retain failed attempts, and leave missing telemetry as unknown. New reports also write `paired_report.json`, including per-task and pooled comparisons. Each invocation creates a new study; interrupted studies are reported as partial and are not silently retried.
 
 | Setting | Default |
 | --- | ---: |
@@ -202,13 +210,19 @@ New runs go under `runs/`, with full Harbor output in `jobs/`. Both directories 
 | `MAX_TOOL_OUTPUT` | 20,000 characters |
 | `TOOL_TIMEOUT` | 120 seconds per command |
 | `OUTPUT_POLICY` | `head` (`head_tail` also supported) |
+| `MODEL_API` | `responses` (`chat` for vLLM) |
+| `MAX_OUTPUT_TOKENS` | Unset; provider default |
+| `VLLM_METRICS_URL` | Unset; collection disabled |
+| `METRICS_SAMPLE_INTERVAL` | 0.1 seconds |
 
-The experiment runner fixes the turn limit and timeout across all conditions. Harbor also enforces the task's overall deadline. Settings are read when each agent is created; Python callers can pass a `Settings` instance directly.
+The experiment runner fixes the turn limit and timeout across all conditions. `--model-api` and `--max-output-tokens` apply to every condition; SDK retries are disabled so hidden retries cannot be mistaken for one server request. Harbor also enforces the task's overall deadline. Settings are read when each agent is created; Python callers can pass a `Settings` instance directly.
 
 ## Files
 
 - `reedcode_harbor_agent.py`: the Harbor agent.
 - `output_policy.py`: retention policies and agent settings.
+- `model_backend.py`: Responses and Chat Completions adapters.
+- `server_metrics.py`: vLLM metrics collection.
 - `archive/agent.py`: the original host prototype, retained for reference.
 - `run_experiments.py`: runs the suites and exports results.
 - `reporting.py`: shared code for the two summary scripts.

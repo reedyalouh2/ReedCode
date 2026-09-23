@@ -20,7 +20,8 @@ class HarnessTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
-        self.agent = harness.ReedCodeAgent(logs_dir=Path(self.tmp.name), model_name="test-model")
+        self.agent = harness.ReedCodeAgent(logs_dir=Path(self.tmp.name), model_name="test-model",
+                                           settings=harness.Settings())
         self.agent.cwd = "/app"
         self.env = NS(exec=AsyncMock(return_value=NS(stdout="ok", stderr="", return_code=0)))
 
@@ -125,6 +126,33 @@ class HarnessTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(asyncio.CancelledError):
             await self.run_with_responses(asyncio.CancelledError())
         self.assertEqual(self.events()[-1]["stop_reason"], "cancelled_or_task_timeout")
+
+    async def test_metrics_boundaries_are_logged_but_excluded_from_api_latency(self):
+        clock = [0.0]
+
+        class Metrics:
+            def __init__(self, *args, **kwargs):
+                self.result = {"status": "test", "scope": "server_window"}
+
+            async def __aenter__(self):
+                clock[0] += 10
+                return self
+
+            async def __aexit__(self, *args):
+                clock[0] += 10
+
+        async def reply(**kwargs):
+            clock[0] += 1
+            return response()
+
+        self.agent.settings = harness.Settings(server_metrics_url="http://localhost/metrics")
+        with patch.object(harness, "ServerMetricsWindow", Metrics), \
+             patch.object(harness.time, "perf_counter", side_effect=lambda: clock[0]):
+            context, _ = await self.run_with_responses(reply)
+        event = next(e for e in self.events() if e["type"] == "inference")
+        self.assertEqual(event["latency_ms"], 1000)
+        self.assertEqual(event["server_metrics"]["scope"], "server_window")
+        self.assertEqual(context.metadata["wall_time_ms"], 21000)
 
 
 if __name__ == "__main__":

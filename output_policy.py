@@ -1,6 +1,7 @@
 """Retention policies for text returned by tools."""
 
 from dataclasses import dataclass
+import math
 import os
 
 
@@ -10,12 +11,22 @@ class Settings:
     max_tool_output: int = 20000
     tool_timeout: int = 120
     output_policy: str = "head"
+    model_api: str = "responses"
+    max_output_tokens: int | None = None
+    server_metrics_url: str | None = None
+    metrics_sample_interval: float = 0.1
 
     def __post_init__(self):
         if min(self.max_turns, self.max_tool_output, self.tool_timeout) <= 0:
             raise ValueError("Turn, output and timeout limits must be positive")
         if self.output_policy not in ("head", "head_tail"):
             raise ValueError("OUTPUT_POLICY must be head or head_tail")
+        if self.model_api not in ("responses", "chat"):
+            raise ValueError("MODEL_API must be responses or chat")
+        if self.max_output_tokens is not None and self.max_output_tokens <= 0:
+            raise ValueError("MAX_OUTPUT_TOKENS must be positive when set")
+        if not math.isfinite(self.metrics_sample_interval) or self.metrics_sample_interval <= 0:
+            raise ValueError("METRICS_SAMPLE_INTERVAL must be positive and finite")
 
     @classmethod
     def from_env(cls):
@@ -24,6 +35,10 @@ class Settings:
             max_tool_output=int(os.getenv("MAX_TOOL_OUTPUT", "20000")),
             tool_timeout=int(os.getenv("TOOL_TIMEOUT", "120")),
             output_policy=os.getenv("OUTPUT_POLICY", "head"),
+            model_api=os.getenv("MODEL_API", "responses"),
+            max_output_tokens=int(os.environ["MAX_OUTPUT_TOKENS"]) if os.getenv("MAX_OUTPUT_TOKENS") else None,
+            server_metrics_url=os.getenv("VLLM_METRICS_URL") or None,
+            metrics_sample_interval=float(os.getenv("METRICS_SAMPLE_INTERVAL", "0.1")),
         )
 
 

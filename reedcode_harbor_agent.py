@@ -14,6 +14,8 @@ from harbor.environments.base import BaseEnvironment
 from harbor.models.agent.context import AgentContext
 
 from output_policy import Settings, ToolObservation, observation
+from model_backend import create_response
+from server_metrics import ServerMetricsWindow
 
 
 TOOLS = [
@@ -78,7 +80,7 @@ class ReedCodeAgent(BaseAgent):
         return "reedcode"
 
     def version(self) -> str:
-        return "0.3.0"
+        return "0.4.0"
 
     async def setup(self, environment: BaseEnvironment) -> None:
         result = await environment.exec(
@@ -126,25 +128,43 @@ class ReedCodeAgent(BaseAgent):
             "max_tool_output_chars": self.settings.max_tool_output,
             "output_policy": self.settings.output_policy,
             "tool_timeout_sec": self.settings.tool_timeout,
+            "model_api": self.settings.model_api,
+            "max_output_tokens": self.settings.max_output_tokens,
+            "server_metrics_enabled": bool(self.settings.server_metrics_url),
+            "metrics_sample_interval_sec": self.settings.metrics_sample_interval,
+            "sdk_max_retries": 0,
         })
 
         try:
-            async with AsyncOpenAI() as client:
+            async with AsyncOpenAI(max_retries=0) as client:
                 for turn in range(1, self.settings.max_turns + 1):
-                    start = time.perf_counter()
-
-                    response = await client.responses.create(
-                        model=self.model_name,
-                        instructions=(
-                            "You are a coding agent working inside a repository. "
-                            "Inspect files, run commands, modify files when needed, "
-                            "and verify your work before finishing."
-                        ),
-                        input=history,
-                        tools=TOOLS,
+                    metrics = ServerMetricsWindow(
+                        self.settings.server_metrics_url,
+                        model_name=self.model_name,
+                        sample_interval=self.settings.metrics_sample_interval,
                     )
-
-                    latency_ms = (time.perf_counter() - start) * 1000
+                    try:
+                        async with metrics:
+                            start = time.perf_counter()
+                            response = await create_response(
+                                client,
+                                api=self.settings.model_api,
+                                model=self.model_name,
+                                instructions=(
+                                    "You are a coding agent working inside a repository. "
+                                    "Inspect files, run commands, modify files when needed, "
+                                    "and verify your work before finishing."
+                                ),
+                                input=history,
+                                tools=TOOLS,
+                                max_output_tokens=self.settings.max_output_tokens,
+                            )
+                            latency_ms = (time.perf_counter() - start) * 1000
+                    except BaseException:
+                        if self.settings.server_metrics_url:
+                            log({"type": "failed_inference_metrics", "turn": turn,
+                                 "server_metrics": metrics.result})
+                        raise
                     model_calls += 1
                     model_ms += latency_ms
 
@@ -172,6 +192,8 @@ class ReedCodeAgent(BaseAgent):
                         "cached_input_tokens": cached_tokens,
                         "output_tokens": output_tokens,
                         "tool_calls": len(tool_calls),
+                        "served_model": getattr(response, "model", None),
+                        "server_metrics": metrics.result,
                     })
 
                     context.n_input_tokens = total_input

@@ -128,6 +128,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("suite", choices=("synthetic", "real"))
     parser.add_argument("--model", default=os.getenv("MODEL", "gpt-5.6-terra"))
+    parser.add_argument("--model-api", choices=("responses", "chat"), default=os.getenv("MODEL_API", "responses"))
+    parser.add_argument("--max-output-tokens", type=int, default=int(os.environ["MAX_OUTPUT_TOKENS"]) if os.getenv("MAX_OUTPUT_TOKENS") else None)
     parser.add_argument("--output", type=Path, help="New output directory (must not exist)")
     parser.add_argument("--repeats", type=int, default=5)
     parser.add_argument("--seed", type=int, default=20260922, help="Schedule seed, not a model seed")
@@ -135,6 +137,8 @@ def main():
     parser.add_argument("--dry-run", action="store_true", help="Save the schedule without downloads or model calls")
     parser.add_argument("--check-only", action="store_true", help="Prepare task snapshots and run their oracles, without model calls")
     args = parser.parse_args()
+    if args.max_output_tokens is not None and args.max_output_tokens <= 0:
+        parser.error("--max-output-tokens must be positive")
     if args.tasks and args.suite != "real":
         parser.error("--tasks is only available for the real suite")
     if args.dry_run and args.check_only:
@@ -154,12 +158,17 @@ def main():
     output.mkdir(parents=True, exist_ok=False)
     manifest = {
         "schema_version": 2, "model": args.model, "schedule_seed": args.seed,
+        "model_api": args.model_api, "max_output_tokens": args.max_output_tokens,
+        "server_metrics_enabled": bool(os.getenv("VLLM_METRICS_URL")),
+        "endpoint_kind": "custom" if os.getenv("OPENAI_BASE_URL") else "openai",
+        "sdk_max_retries": 0,
         "repeats": args.repeats, "state": "planned",
         "protocol": "randomized task/repetition blocks; three adjacent conditions per block",
         "max_turns": 30, "tool_timeout_sec": 120,
         "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
                           for name in ("reedcode_harbor_agent.py", "output_policy.py",
-                                       "run_experiments.py", "reporting.py", "uv.lock")},
+                                       "run_experiments.py", "reporting.py", "model_backend.py",
+                                       "server_metrics.py", "uv.lock")},
         "plan": plan, "runs": [],
     }
     save_manifest(output, manifest)
@@ -199,7 +208,11 @@ def main():
     save_manifest(output, manifest)
     env = dict(os.environ)
     env["PYTHONPATH"] = str(ROOT) + os.pathsep + env.get("PYTHONPATH", "")
-    env.update(MAX_TURNS="30", TOOL_TIMEOUT="120")
+    env.update(MAX_TURNS="30", TOOL_TIMEOUT="120", MODEL_API=args.model_api)
+    if args.max_output_tokens is not None:
+        env["MAX_OUTPUT_TOKENS"] = str(args.max_output_tokens)
+    else:
+        env.pop("MAX_OUTPUT_TOKENS", None)
     for planned in plan:
         run_id, task = planned["run_id"], planned["task"]
         snapshot = manifest["tasks"][task]

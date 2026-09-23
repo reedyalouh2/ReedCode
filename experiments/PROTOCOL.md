@@ -22,11 +22,21 @@ There are no automatic retries. Failed and interrupted attempts remain in the ma
 
 Log whether retention fired on every tool call, the selected policy and budget, original and retained character/byte counts, and total bytes returned after formatting. Also record API input, cached input, output tokens, call latency, tool latency, and verifier reward. Fresh input means input minus cached input; it is not a GPU-compute estimate.
 
-Report each task separately. Pair conditions within the same task/repetition block and compute candidate-minus-baseline differences for reward, input tokens, fresh input tokens, and cumulative model latency. The primary comparison is head+tail against head at 2K. The comparisons against 20K are secondary. Pairing controls task and time block; it does not give the runs identical model randomness or trajectories.
+Report each task separately. Pair conditions within the same task/repetition block and compute candidate-minus-baseline differences for reward, input tokens, fresh input tokens, cumulative model latency, model calls, and tool calls. Call-count differences measure extra work; identifying a particular call as recovery requires examining the trajectory. The primary comparison is head+tail against head at 2K. The comparisons against 20K are secondary. Pairing controls task and time block; it does not give the runs identical model randomness or trajectories.
 
-The reporter uses 10,000 bootstrap resamples of the paired differences and reports the 2.5th and 97.5th percentiles. No interval is reported below five usable pairs. Five is still a small sample: intervals can be unstable or degenerate, especially when every reward is identical. They are exploratory, unadjusted for multiple comparisons, and do not establish equivalent accuracy or generalization across tasks.
+The reporter uses 10,000 bootstrap resamples of the paired differences and reports the 2.5th and 97.5th percentiles. No interval is reported below five usable pairs. Five is still a small sample: intervals can be unstable or degenerate, especially when every reward is identical. They are exploratory, unadjusted for multiple comparisons, and do not establish equivalent accuracy or generalization across tasks. Degenerate intervals are marked explicitly.
 
 Report pass counts against all attempts, missing rewards, exceptions, scheduled versus attempted trials, and usable versus planned pairs. Reward-zero runs with complete telemetry remain in the paired analysis. Infrastructure exceptions, missing values, unfinished telemetry, and mismatched task checksums make a pair unusable; this exclusion is visible through pair coverage. Do not treat missing measurements as zero or a complete-case interval as covering failed attempts. If exclusions are material, fix the measurement problem before making an efficiency claim. Inspect output tokens and failures alongside input savings.
+
+## Overall estimate
+
+For each condition comparison and metric, first average usable paired differences within each task. Average those task means with equal weight. Resample tasks 10,000 times to obtain a percentile 95% interval; repeated trials are not counted as additional tasks. This describes the selected task mix, not all coding work. It does not remove uncertainty from having few tasks or few repeats.
+
+Report included and planned tasks, complete tasks, usable and planned pairs, and exclusions. Partial coverage is labeled `observed_subset`, including when every task has at least one pair but some repetitions are missing. Do not present that subset as the completed ten-task study. With fewer than five tasks, show the mean and coverage without an across-task interval. In particular, the synthetic suite has one task regardless of its repetition count.
+
+## Server measurements
+
+With a dedicated vLLM endpoint, collect phase-time histogram differences and cache samples around each call. The paired and pooled reports can compare cumulative prefill/decode times and the maximum KV fraction sampled during inference. They exclude unattributable windows, missing measurements, counter resets, and failed scrapes. The KV comparison also requires an in-flight sample on every call. See [setup and measurement definitions](../docs/self-hosted.md). Keep model, server version, hardware, generation budget, sampling interval, and cache policy fixed. Hosted and self-hosted studies remain separate.
 
 ## Synthetic check
 
