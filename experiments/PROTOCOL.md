@@ -28,6 +28,10 @@ The reporter uses 10,000 bootstrap resamples of the paired differences and repor
 
 Report pass counts against all attempts, missing rewards, exceptions, scheduled versus attempted trials, and usable versus planned pairs. Reward-zero runs with complete telemetry remain in the paired analysis. Infrastructure exceptions, missing values, unfinished telemetry, and mismatched task checksums make a pair unusable; this exclusion is visible through pair coverage. Do not treat missing measurements as zero or a complete-case interval as covering failed attempts. If exclusions are material, fix the measurement problem before making an efficiency claim. Inspect output tokens and failures alongside input savings.
 
+Chat `finish_reason=length` and Responses `incomplete_details.reason=max_output_tokens` stop the agent normally. Keep the response's usage and server measurements, skip all tool calls in that response, and run the verifier on the current workspace. These trials remain eligible for paired analysis, including when their reward is zero. A completed repair can still pass if a later response hits the limit.
+
+Report output-limit hits by condition, the number of attempts with a known limit outcome, and the number whose outcome is unknown. The hit rate uses known outcomes as its denominator; missing outcomes must not count as non-hits. Also compare the binary limit-hit indicator in paired and pooled reports. Record the generation budget and do not change it partway through a study. Historical exceptions without a recorded finish reason cannot be reclassified reliably.
+
 ## Overall estimate
 
 For each condition comparison and metric, first average usable paired differences within each task. Average those task means with equal weight. Resample tasks 10,000 times to obtain a percentile 95% interval; repeated trials are not counted as additional tasks. This describes the selected task mix, not all coding work. It does not remove uncertainty from having few tasks or few repeats.

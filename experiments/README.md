@@ -19,7 +19,7 @@ The scripts check trace hashes before summing token counts, latency, and returne
 
 ## Reproduction limits
 
-The synthetic traces predate `run_config` and `task_summary`. Their agent version comes from Harbor's records; cap and repetition come from the original filenames. The 0.1.0 source was not saved. The 0.2.0 harness is available in Git history at `6e7dbc2`. The current harness is 0.4.0 and uses a different experimental protocol. The original synthetic task is preserved in `evals/noisy-bugfix-pilot`; the revised `evals/noisy-bugfix` runs the full pytest suite and has additional cases. New runs are a separate study, not a reproduction of these numbers.
+The synthetic traces predate `run_config` and `task_summary`. Their agent version comes from Harbor's records; cap and repetition come from the original filenames. The 0.1.0 source was not saved. The 0.2.0 harness is available in Git history at `6e7dbc2`. The current harness is 0.4.1 and uses a different experimental protocol. The original synthetic task is preserved in `evals/noisy-bugfix-pilot`; the revised `evals/noisy-bugfix` runs the full pytest suite and has additional cases. New runs are a separate study, not a reproduction of these numbers.
 
 The real tasks were requested at `latest`. Recorded task checksums identify the evaluated contents but may not resolve to downloadable registry revisions. The original runs also had no Git commit pins, pinned container base tags, or pinned pytest installation in the synthetic task.
 

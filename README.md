@@ -26,13 +26,15 @@ flowchart TD
 
 Harbor manages the task's setup, deadline, and verification. ReedCode manages the model calls, tools, and history. Errors can end a run early; Harbor records evaluation exceptions separately from rewards.
 
-[`reedcode_harbor_agent.py`](reedcode_harbor_agent.py) calls the Responses API with a task, conversation history, and three tools: `read_file`, `write_file`, and `bash`. After each response, it executes any tool calls and appends their results to the history. It stops when the model returns without a tool call or reaches the turn limit.
+[`reedcode_harbor_agent.py`](reedcode_harbor_agent.py) calls the model with a task, conversation history, and three tools: `read_file`, `write_file`, and `bash`. After each complete response, it executes any tool calls and appends their results to the history. It stops when the model returns without a tool call or reaches a turn or output-token limit.
 
 The harness runs on the host. Commands run in a Docker task environment through Harbor's [`BaseEnvironment`](https://docs.harborframework.com/core-concepts/agents/custom-agents). Harbor runs the verifier after the agent finishes; the model saying it is done does not determine the reward.
 
 Instructions and tool schemas stay fixed across calls. History includes the model's full output, including reasoning items and tool-call IDs. Tools run sequentially. There is no context compaction or parallel-agent scheduler.
 
 Malformed arguments, invalid file paths, command failures, and recognized timeouts are returned to the model as tool results. API errors and other infrastructure failures propagate to Harbor. Cancellation also propagates so Harbor can enforce the task deadline.
+
+An output-token limit is a normal budget stop. Its usage stays in the trace, tools from the cut-off response are skipped, and Harbor verifies the current workspace. The trial stays in the analysis with its verifier reward. Reports show limit-hit counts and rates alongside passes; hitting the limit does not automatically mean the repair failed.
 
 The file tools check paths lexically, including absolute paths inside the workspace. This does not prevent symlink escape, and `bash` can access the rest of the container. Run the agent in disposable containers without sensitive mounts. The earlier host prototype is kept in [`archive/`](archive/README.md).
 
@@ -124,7 +126,7 @@ Total Harbor job runtime fell from 420.01 to 346.12 seconds (17.6%), including s
 
 Three tasks and one run per setting are not enough to separate the cap's effect from stochastic trajectories and changing service conditions. More tasks and repeated, interleaved runs would be needed. These results do not establish 2K as an optimal cap or demonstrate equivalent accuracy across Terminal-Bench.
 
-The synthetic runs used 0.1.0, whose source snapshot was not saved. The current harness is 0.4.0; the saved results have not been rerun with it. Real tasks were fetched at `latest`; their checksums are recorded, but task contents and model aliases can change. See [experiment records](experiments/README.md) for the saved traces and reproduction limits.
+The synthetic runs used 0.1.0, whose source snapshot was not saved. The current harness is 0.4.1; the saved results have not been rerun with it. Real tasks were fetched at `latest`; their checksums are recorded, but task contents and model aliases can change. See [experiment records](experiments/README.md) for the saved traces and reproduction limits.
 
 ## Server measurements
 

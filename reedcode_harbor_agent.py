@@ -14,7 +14,7 @@ from harbor.environments.base import BaseEnvironment
 from harbor.models.agent.context import AgentContext
 
 from output_policy import Settings, ToolObservation, observation
-from model_backend import create_response
+from model_backend import create_response, response_termination
 from server_metrics import ServerMetricsWindow
 
 
@@ -80,7 +80,7 @@ class ReedCodeAgent(BaseAgent):
         return "reedcode"
 
     def version(self) -> str:
-        return "0.4.0"
+        return "0.4.1"
 
     async def setup(self, environment: BaseEnvironment) -> None:
         result = await environment.exec(
@@ -183,6 +183,7 @@ class ReedCodeAgent(BaseAgent):
                         for item in response.output
                         if item.type == "function_call"
                     ]
+                    termination = response_termination(response)
 
                     log({
                         "type": "inference",
@@ -194,11 +195,16 @@ class ReedCodeAgent(BaseAgent):
                         "tool_calls": len(tool_calls),
                         "served_model": getattr(response, "model", None),
                         "server_metrics": metrics.result,
+                        **termination,
                     })
 
                     context.n_input_tokens = total_input
                     context.n_cache_tokens = total_cached
                     context.n_output_tokens = total_output
+
+                    if termination["output_limit_hit"]:
+                        stop_reason = "max_output_tokens"
+                        break
 
                     if response.status != "completed":
                         raise RuntimeError(
@@ -279,6 +285,11 @@ class ReedCodeAgent(BaseAgent):
                 "stop_reason": stop_reason,
                 # Harbor records the verifier reward separately.
                 "agent_completed": stop_reason == "no_tool_calls",
+                "output_limit_hit": (
+                    stop_reason == "max_output_tokens"
+                    if stop_reason in ("no_tool_calls", "max_turns", "max_output_tokens")
+                    else None
+                ),
                 "model_calls": model_calls,
                 "tool_calls": tool_calls_total,
                 "tool_failures": tool_failures,

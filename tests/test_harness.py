@@ -114,10 +114,46 @@ class HarnessTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(context.metadata["total_input_tokens"])
         self.assertIsNone(context.metadata["fresh_input_tokens"])
 
+    async def test_output_limit_is_a_normal_stop_with_usage_and_no_tool_execution(self):
+        # Even a complete-looking command in the cut-off response must not execute.
+        call = NS(type="function_call", name="bash", arguments='{"command":"touch unexpected"}', call_id="c")
+        reply = response([call], status="incomplete")
+        reply.incomplete_details = NS(reason="max_output_tokens")
+        context, client = await self.run_with_responses([reply])
+        self.env.exec.assert_not_awaited()
+        client.responses.create.assert_awaited_once()
+        self.assertEqual(context.metadata["stop_reason"], "max_output_tokens")
+        self.assertTrue(context.metadata["output_limit_hit"])
+        self.assertFalse(context.metadata["agent_completed"])
+        self.assertEqual(context.metadata["total_input_tokens"], 10)
+        self.assertEqual(context.metadata["total_output_tokens"], 2)
+        self.assertEqual(context.metadata["tool_calls"], 0)
+        self.assertNotIn("reward", context.metadata)
+        events = self.events()
+        self.assertFalse(any(e["type"] in ("agent_error", "failed_inference_metrics") for e in events))
+        event = next(e for e in events if e["type"] == "inference")
+        self.assertTrue(event["output_limit_hit"])
+        self.assertEqual(event["incomplete_reason"], "max_output_tokens")
+
+    async def test_chat_length_after_tool_execution_keeps_all_call_totals(self):
+        call = NS(type="function_call", name="bash", arguments='{"command":"pwd"}', call_id="c")
+        limited = response(status="incomplete")
+        limited.finish_reason = "length"
+        context, _ = await self.run_with_responses([response([call]), limited])
+        self.env.exec.assert_awaited_once()
+        self.assertEqual(context.metadata["model_calls"], 2)
+        self.assertEqual(context.metadata["tool_calls"], 1)
+        self.assertEqual(context.metadata["total_input_tokens"], 20)
+        self.assertEqual(context.metadata["total_output_tokens"], 4)
+        self.assertTrue(context.metadata["output_limit_hit"])
+        event = [e for e in self.events() if e["type"] == "inference"][-1]
+        self.assertEqual(event["finish_reason"], "length")
+
     async def test_incomplete_response_and_api_error_propagate_with_summary(self):
         with self.assertRaisesRegex(RuntimeError, "status: incomplete"):
             await self.run_with_responses([response(status="incomplete")])
         self.assertEqual(self.events()[-1]["stop_reason"], "error")
+        self.assertIsNone(self.events()[-1]["output_limit_hit"])
         with self.assertRaisesRegex(RuntimeError, "API unavailable"):
             await self.run_with_responses(RuntimeError("API unavailable"))
         self.assertEqual(self.events()[-1]["model_calls"], 0)

@@ -18,6 +18,19 @@ class ChatFunctionCall:
     type: str = field(default="function_call", init=False)
 
 
+def response_termination(response) -> dict:
+    details = getattr(response, "incomplete_details", None)
+    reason = details.get("reason") if isinstance(details, dict) else getattr(details, "reason", None)
+    finish = getattr(response, "finish_reason", None)
+    status = response.status
+    return {
+        "response_status": status,
+        "finish_reason": finish,
+        "incomplete_reason": reason,
+        "output_limit_hit": status == "incomplete" and (finish == "length" or reason == "max_output_tokens"),
+    }
+
+
 def chat_messages(instructions: str, history: list) -> list[dict]:
     messages = [{"role": "system", "content": instructions}]
     for item in history:
@@ -76,8 +89,10 @@ async def create_response(
 
     choice = completion.choices[0]
     message = choice.message
+    status = "completed" if choice.finish_reason in {"stop", "tool_calls"} else "incomplete"
     output = [ChatMessage(message.model_dump(exclude_none=True))]
-    for call in message.tool_calls or []:
+    # Incomplete tool calls can lack IDs or contain partial arguments. Never execute them.
+    for call in (message.tool_calls or []) if status == "completed" else []:
         if call.type != "function" or not call.id:
             raise RuntimeError("Chat completion contains an unsupported tool call")
         output.append(ChatFunctionCall(
@@ -91,7 +106,6 @@ async def create_response(
         output_tokens=getattr(usage, "completion_tokens", None),
         input_tokens_details=SimpleNamespace(cached_tokens=getattr(details, "cached_tokens", None)),
     )
-    status = "completed" if choice.finish_reason in {"stop", "tool_calls"} else "incomplete"
     return SimpleNamespace(
         output=output, output_text=message.content or "", usage=normalized_usage,
         status=status, finish_reason=choice.finish_reason, model=completion.model,

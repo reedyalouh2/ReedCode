@@ -13,7 +13,7 @@ from statistics import mean
 COMPARISONS = (("head_20k", "head_2k"), ("head_2k", "head_tail_2k"),
                ("head_20k", "head_tail_2k"))
 PAIRED_METRICS = ("reward", "input_tokens", "fresh_tokens", "model_latency_ms",
-                  "model_calls", "tool_calls")
+                  "model_calls", "tool_calls", "output_limit_hit")
 SERVER_METRICS = ("server_prefill_seconds", "server_decode_seconds", "server_kv_sampled_max_fraction")
 EXCLUSION_REASONS = ("missing_run", "exception", "incomplete_telemetry", "missing_metric",
                      "missing_task_checksum", "task_checksum_mismatch")
@@ -80,6 +80,16 @@ def analyze_trace(path):
     events = [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
     inference = [e for e in events if e.get("type") == "inference"]
     tools = [e for e in events if e.get("type") == "tool"]
+    summaries = [e for e in events if e.get("type") == "task_summary"]
+    summary = summaries[-1] if summaries else {}
+    stop_reason = summary.get("stop_reason")
+    if "output_limit_hit" in summary:
+        value = summary["output_limit_hit"]
+        output_limit_hit = value if isinstance(value, bool) else None
+    elif stop_reason in ("no_tool_calls", "max_turns", "max_output_tokens"):
+        output_limit_hit = stop_reason == "max_output_tokens"
+    else:
+        output_limit_hit = None
     metrics = {
         "input_tokens": known_sum(e.get("input_tokens") for e in inference),
         "cached_tokens": known_sum(e.get("cached_input_tokens") for e in inference),
@@ -92,8 +102,8 @@ def analyze_trace(path):
         "truncated_calls": known_sum(e.get("truncated") for e in tools) if tools else 0,
         "original_output_chars": known_sum(e.get("original_output_chars") for e in tools) if tools else 0,
         "retained_output_chars": known_sum(e.get("retained_output_chars") for e in tools) if tools else 0,
-        "telemetry_complete": any(e.get("type") == "task_summary" and
-            e.get("stop_reason") in ("no_tool_calls", "max_turns") for e in events),
+        "telemetry_complete": stop_reason in ("no_tool_calls", "max_turns", "max_output_tokens"),
+        "output_limit_hit": output_limit_hit,
         "server_metrics_enabled": any(e.get("server_metrics_enabled") is True or
             (isinstance(e.get("server_metrics"), dict) and e["server_metrics"].get("status")
              not in (None, "disabled")) for e in events),
@@ -122,7 +132,7 @@ def load_rows(directory):
             "input_tokens", "cached_tokens", "fresh_tokens", "output_tokens",
             "model_calls", "tool_calls", "model_latency_ms", "tool_latency_ms", "tool_output_bytes",
             "truncated_calls", "original_output_chars", "retained_output_chars", "telemetry_complete",
-            "server_metrics_enabled", *SERVER_METRICS,
+            "output_limit_hit", "server_metrics_enabled", *SERVER_METRICS,
         )}
         if run.get("trace"):
             path = directory / run["trace"]
@@ -290,20 +300,42 @@ def interval_text(result, unit):
     return text
 
 
+def condition_summaries(rows, plan):
+    summaries = []
+    for task in sorted({p["task"] for p in plan}):
+        for condition in ("head_20k", "head_2k", "head_tail_2k"):
+            group = [r for r in rows if r["task"] == task and r["condition"] == condition]
+            observed = sum(isinstance(r.get("output_limit_hit"), bool) for r in group)
+            hits = sum(r.get("output_limit_hit") is True for r in group)
+            summaries.append({
+                "task": task, "condition": condition,
+                "attempted": len(group),
+                "planned": sum(p["task"] == task and p["condition"] == condition for p in plan),
+                "passed": sum(r.get("reward") == 1 and not r.get("exception_type") for r in group),
+                "missing_rewards": sum(r.get("reward") is None for r in group),
+                "exceptions": sum(bool(r.get("exception_type")) for r in group),
+                "output_limit_hits": hits,
+                "output_limit_observed": observed,
+                "output_limit_unknown": len(group) - observed,
+                "output_limit_hit_rate": hits / observed if observed else None,
+                "truncated_calls": known_sum(r.get("truncated_calls") for r in group),
+            })
+    return summaries
+
+
 def summarize_paired(directory, manifest):
     rows = load_rows(directory) if manifest["runs"] else []
     plan = manifest["plan"]
     print(f"Attempted {len(rows)}/{len(plan)} scheduled trials; state={manifest['state']}")
-    for task in sorted({p["task"] for p in plan}):
-        for condition in ("head_20k", "head_2k", "head_tail_2k"):
-            group = [r for r in rows if r["task"] == task and r["condition"] == condition]
-            planned = sum(p["task"] == task and p["condition"] == condition for p in plan)
-            passed = sum(r.get("reward") == 1 and not r.get("exception_type") for r in group)
-            missing = sum(r.get("reward") is None for r in group)
-            exceptions = sum(bool(r.get("exception_type")) for r in group)
-            print(f"{task} {condition}: passed={passed}/{len(group)} attempts, planned={planned}, "
-                  f"missing rewards={missing}, exceptions={exceptions}; "
-                  f"truncated calls={display(known_sum(r.get('truncated_calls') for r in group))}")
+    conditions = condition_summaries(rows, plan)
+    for row in conditions:
+        rate = row["output_limit_hit_rate"]
+        rate_text = "unknown" if rate is None else f"{rate:.1%}"
+        print(f"{row['task']} {row['condition']}: passed={row['passed']}/{row['attempted']} attempts, "
+              f"planned={row['planned']}, missing rewards={row['missing_rewards']}, "
+              f"exceptions={row['exceptions']}; output limit hits={row['output_limit_hits']}/"
+              f"{row['output_limit_observed']} known ({rate_text}), unknown={row['output_limit_unknown']}; "
+              f"truncated calls={display(row['truncated_calls'])}")
     results = paired_results(rows, plan, manifest.get("server_metrics_enabled", False))
     print("\nPaired differences (candidate minus baseline), per task:")
     for row in results:
@@ -332,11 +364,15 @@ def summarize_paired(directory, manifest):
                        "and time block, not model randomness. Task bootstrap holds observed task means fixed; it is "
                        "not a separate estimate of within-task run uncertainty. Selected tasks are not a random "
                        "sample of Terminal-Bench. Model and tool calls are total workload counts, not identified "
-                       "recovery calls; inspect traces to attribute a call to hidden output. When enabled, server "
+                       "recovery calls; inspect traces to attribute a call to hidden output. Output-token limits "
+                       "are normal budget stops: verifier rewards and completed-call telemetry remain in the "
+                       "analysis. Limit-hit rates use trials with a known marker; unknown outcomes are counted "
+                       "separately. Paired limit-hit differences are differences in 0/1 indicators. When enabled, server "
                        "phase totals require valid samples for every model call. They are server wall times, not "
                        "GPU kernel timings. KV occupancy is the maximum during-call sample across calls and engines, "
                        "not a capacity-weighted fraction or a continuous peak, and excludes tool and idle time.",
         "attempted": len(rows), "planned": len(plan), "comparisons": results,
+        "condition_summaries": conditions,
         "pooled_comparisons": pooled,
     }
     (Path(directory) / "paired_report.json").write_text(json.dumps(report, indent=2) + "\n")

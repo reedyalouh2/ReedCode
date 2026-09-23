@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock
 import httpx
 from openai import AsyncOpenAI
 
-from model_backend import create_response
+from model_backend import create_response, response_termination
 
 
 TOOLS = [{
@@ -117,8 +117,36 @@ class BackendTests(unittest.IsolatedAsyncioTestCase):
             )
         self.assertEqual(result.status, "incomplete")
         self.assertEqual(result.finish_reason, "length")
+        self.assertTrue(response_termination(result)["output_limit_hit"])
         self.assertEqual(result.usage.input_tokens, 20)
         self.assertIsNone(result.usage.input_tokens_details.cached_tokens)
+
+    async def test_length_limit_with_partial_tool_call_preserves_usage(self):
+        body = completion({"role": "assistant", "content": None, "tool_calls": [{
+            "id": None, "type": "function",
+            "function": {"name": "bash", "arguments": '{"command":'},
+        }]}, "length", {"prompt_tokens": 20, "completion_tokens": 4096, "total_tokens": 4116})
+        async with AsyncOpenAI(
+            base_url="http://test.invalid/v1", api_key="test-only", max_retries=0,
+            http_client=httpx.AsyncClient(transport=httpx.MockTransport(
+                lambda request: httpx.Response(200, json=body),
+            )),
+        ) as client:
+            result = await create_response(
+                client, api="chat", model="m", instructions="work", input=[], tools=TOOLS,
+            )
+        self.assertTrue(response_termination(result)["output_limit_hit"])
+        self.assertEqual(result.usage.output_tokens, 4096)
+        self.assertFalse(any(item.type == "function_call" for item in result.output))
+
+    def test_only_explicit_budget_exhaustion_is_a_limit_stop(self):
+        for details in (NS(reason="max_output_tokens"), {"reason": "max_output_tokens"}):
+            event = response_termination(NS(status="incomplete", incomplete_details=details))
+            self.assertTrue(event["output_limit_hit"])
+            self.assertEqual(event["incomplete_reason"], "max_output_tokens")
+        for reason in ("content_filter", None):
+            event = response_termination(NS(status="incomplete", incomplete_details=NS(reason=reason)))
+            self.assertFalse(event["output_limit_hit"])
 
     async def test_invalid_api_or_foreign_history_fails_before_request(self):
         client = NS(chat=NS(completions=NS(create=AsyncMock())))

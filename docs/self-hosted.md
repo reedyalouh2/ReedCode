@@ -36,9 +36,13 @@ uv run python run_experiments.py synthetic \
 
 This runs five repetitions of all three retention policies, with an oracle check first. It is a separate study from the hosted-model pilot. Do not attribute differences between different models or servers to retention.
 
+The 4,096-token budget can stop a reasoning response early. The harness records that stop and its usage, skips tools from the cut-off response, and lets Harbor verify the workspace. Check the limit-hit rate beside the pass rate. Keep the same budget across conditions; if it is too restrictive, start a separate study with a larger budget.
+
 ## Read the measurements
 
 Each inference event contains a `server_metrics` object. The paired report compares summed prefill/decode seconds and the largest KV fraction sampled during inference; only windows with valid attribution checks contribute. A missing or invalid call makes that run's corresponding aggregate unknown. Collection uses a scrape before the API request, samples during it, and a final scrape afterward. Client API latency excludes the boundary scrapes; the background collector still adds some observer overhead. Check the overhead before using small latency differences as evidence.
+
+For that check, warm the server and replay fixed requests with collection alternately disabled and enabled. Hold the model, generation settings, cache policy, and workload fixed; repeat and vary the order. Compare client API latency and total elapsed time separately. Different agent trajectories are not a clean measure of sampler overhead. This check has not been run yet.
 
 | Measurement | Source and meaning |
 | --- | --- |
