@@ -1,6 +1,8 @@
 # ReedCode
 
-ReedCode is a small coding-agent harness that runs tools through Harbor and logs token use and timing. I built it to study tool-output retention. [TODO: why I started this]
+ReedCode is a small coding-agent harness that runs tools through Harbor and logs token use and timing. I built it to study tool-output retention.
+
+Built after becoming interested in the harness ↔ inference boundary in long-running coding agents.
 
 All 15 trials in the latest study passed. Both 2K policies used less input than 20K. Head+tail used fewer fresh tokens than head-only, but took more tool calls.
 
