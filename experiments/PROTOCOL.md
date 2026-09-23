@@ -1,6 +1,6 @@
 # Output retention study
 
-Status: implementation and local checks only. No model results have been collected under this protocol.
+Status: the [15-trial hosted synthetic study](synthetic-20260923/README.md) completed on September 23, 2026 UTC with harness 0.4.1. All scheduled trials are included. The ten-task study and self-hosted GPU measurements have not been collected.
 
 ## Question
 
@@ -48,4 +48,4 @@ The earlier fixture already placed pytest output after the noise. The revision p
 
 `tests/check_synthetic_container.py` checks actual failing and passing command output through all three retention policies. It verifies that 2K head-only hides the pytest failure/passing summary and that 2K head+tail retains it, while the 20K condition does not truncate. The harness keeps the exit code visible under every policy.
 
-This is a diagnostic-retention check, not a difficult coding benchmark. An agent can inspect the code or rerun focused commands to recover hidden information. Measure those recovery calls in later model runs; do not infer information preservation from a pass alone. Keep the revised task's results separate from the saved pilot.
+This is a diagnostic-retention check, not a difficult coding benchmark. An agent can inspect the code or rerun focused commands to recover hidden information. The completed synthetic study reports total model and tool calls; metric-only traces do not identify individual recovery actions. Do not infer information preservation from a pass alone. Keep the revised task's results separate from the saved pilot.

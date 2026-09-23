@@ -1,0 +1,1126 @@
+{
+  "schema_version": 2,
+  "method": "Per-task mean paired differences, bootstrapped over repetition blocks. Pooled estimate: equal-weight mean of observed task means, bootstrapped over tasks. 10,000 resamples, seed 0, percentile 95% intervals; at least five resampling units required.",
+  "limitations": "Exploratory intervals, especially with five pairs or few tasks. Degenerate intervals do not establish equivalence or certainty. Missing/exception pairs are excluded and counted; partial coverage estimates describe the observed subset, not the complete plan. Pairing controls task and time block, not model randomness. Task bootstrap holds observed task means fixed; it is not a separate estimate of within-task run uncertainty. Selected tasks are not a random sample of Terminal-Bench. Model and tool calls are total workload counts, not identified recovery calls; inspect traces to attribute a call to hidden output. Output-token limits are normal budget stops: verifier rewards and completed-call telemetry remain in the analysis. Limit-hit rates use trials with a known marker; unknown outcomes are counted separately. Paired limit-hit differences are differences in 0/1 indicators. When enabled, server phase totals require valid samples for every model call. They are server wall times, not GPU kernel timings. KV occupancy is the maximum during-call sample across calls and engines, not a capacity-weighted fraction or a continuous peak, and excludes tool and idle time.",
+  "attempted": 15,
+  "planned": 15,
+  "comparisons": [
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_20k",
+      "candidate": "head_2k",
+      "metric": "reward",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci95_status": "degenerate"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_20k",
+      "candidate": "head_2k",
+      "metric": "input_tokens",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": -9160.8,
+      "ci95": [
+        -10581.8,
+        -7739.8
+      ],
+      "ci95_status": "estimated"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_20k",
+      "candidate": "head_2k",
+      "metric": "fresh_tokens",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": -1323,
+      "ci95": [
+        -1613,
+        -956.4
+      ],
+      "ci95_status": "estimated"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_20k",
+      "candidate": "head_2k",
+      "metric": "model_latency_ms",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 1702.5879999999993,
+      "ci95": [
+        39.071999999999754,
+        3959.601999999999
+      ],
+      "ci95_status": "estimated"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_20k",
+      "candidate": "head_2k",
+      "metric": "model_calls",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 0.2,
+      "ci95": [
+        0,
+        0.6
+      ],
+      "ci95_status": "estimated"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_20k",
+      "candidate": "head_2k",
+      "metric": "tool_calls",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 0,
+      "ci95": [
+        -0.8,
+        1
+      ],
+      "ci95_status": "estimated"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_20k",
+      "candidate": "head_2k",
+      "metric": "output_limit_hit",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 0,
+      "ci95": [
+        0,
+        0
+      ],
+      "ci95_status": "degenerate"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_2k",
+      "candidate": "head_tail_2k",
+      "metric": "reward",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci95_status": "degenerate"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_2k",
+      "candidate": "head_tail_2k",
+      "metric": "input_tokens",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 1092.8,
+      "ci95": [
+        -38.4,
+        2079.2
+      ],
+      "ci95_status": "estimated"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_2k",
+      "candidate": "head_tail_2k",
+      "metric": "fresh_tokens",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": -564.6,
+      "ci95": [
+        -906,
+        -305.6
+      ],
+      "ci95_status": "estimated"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_2k",
+      "candidate": "head_tail_2k",
+      "metric": "model_latency_ms",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": -1298.2039999999993,
+      "ci95": [
+        -4359.419999999999,
+        813.1660000000007
+      ],
+      "ci95_status": "estimated"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_2k",
+      "candidate": "head_tail_2k",
+      "metric": "model_calls",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 0,
+      "ci95": [
+        0,
+        0
+      ],
+      "ci95_status": "degenerate"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_2k",
+      "candidate": "head_tail_2k",
+      "metric": "tool_calls",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 0.6,
+      "ci95": [
+        0.2,
+        1
+      ],
+      "ci95_status": "estimated"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_2k",
+      "candidate": "head_tail_2k",
+      "metric": "output_limit_hit",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 0,
+      "ci95": [
+        0,
+        0
+      ],
+      "ci95_status": "degenerate"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_20k",
+      "candidate": "head_tail_2k",
+      "metric": "reward",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci95_status": "degenerate"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_20k",
+      "candidate": "head_tail_2k",
+      "metric": "input_tokens",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": -8068,
+      "ci95": [
+        -9636.6,
+        -6282
+      ],
+      "ci95_status": "estimated"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_20k",
+      "candidate": "head_tail_2k",
+      "metric": "fresh_tokens",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": -1887.6,
+      "ci95": [
+        -2158.4,
+        -1650.2
+      ],
+      "ci95_status": "estimated"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_20k",
+      "candidate": "head_tail_2k",
+      "metric": "model_latency_ms",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 404.384,
+      "ci95": [
+        -754.566,
+        1906.904
+      ],
+      "ci95_status": "estimated"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_20k",
+      "candidate": "head_tail_2k",
+      "metric": "model_calls",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 0.2,
+      "ci95": [
+        0,
+        0.6
+      ],
+      "ci95_status": "estimated"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_20k",
+      "candidate": "head_tail_2k",
+      "metric": "tool_calls",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 0.6,
+      "ci95": [
+        0,
+        1.8
+      ],
+      "ci95_status": "estimated"
+    },
+    {
+      "task": "noisy-bugfix",
+      "baseline": "head_20k",
+      "candidate": "head_tail_2k",
+      "metric": "output_limit_hit",
+      "planned_pairs": 5,
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      },
+      "pairs": 5,
+      "mean_delta": 0,
+      "ci95": [
+        0,
+        0
+      ],
+      "ci95_status": "degenerate"
+    }
+  ],
+  "condition_summaries": [
+    {
+      "task": "noisy-bugfix",
+      "condition": "head_20k",
+      "attempted": 5,
+      "planned": 5,
+      "passed": 5,
+      "missing_rewards": 0,
+      "exceptions": 0,
+      "output_limit_hits": 0,
+      "output_limit_observed": 5,
+      "output_limit_unknown": 0,
+      "output_limit_hit_rate": 0.0,
+      "truncated_calls": 0
+    },
+    {
+      "task": "noisy-bugfix",
+      "condition": "head_2k",
+      "attempted": 5,
+      "planned": 5,
+      "passed": 5,
+      "missing_rewards": 0,
+      "exceptions": 0,
+      "output_limit_hits": 0,
+      "output_limit_observed": 5,
+      "output_limit_unknown": 0,
+      "output_limit_hit_rate": 0.0,
+      "truncated_calls": 9
+    },
+    {
+      "task": "noisy-bugfix",
+      "condition": "head_tail_2k",
+      "attempted": 5,
+      "planned": 5,
+      "passed": 5,
+      "missing_rewards": 0,
+      "exceptions": 0,
+      "output_limit_hits": 0,
+      "output_limit_observed": 5,
+      "output_limit_unknown": 0,
+      "output_limit_hit_rate": 0.0,
+      "truncated_calls": 12
+    }
+  ],
+  "pooled_comparisons": [
+    {
+      "baseline": "head_20k",
+      "candidate": "head_2k",
+      "metric": "reward",
+      "mean_delta": 0.0,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_20k",
+      "candidate": "head_2k",
+      "metric": "input_tokens",
+      "mean_delta": -9160.8,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_20k",
+      "candidate": "head_2k",
+      "metric": "fresh_tokens",
+      "mean_delta": -1323,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_20k",
+      "candidate": "head_2k",
+      "metric": "model_latency_ms",
+      "mean_delta": 1702.5879999999993,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_20k",
+      "candidate": "head_2k",
+      "metric": "model_calls",
+      "mean_delta": 0.2,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_20k",
+      "candidate": "head_2k",
+      "metric": "tool_calls",
+      "mean_delta": 0,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_20k",
+      "candidate": "head_2k",
+      "metric": "output_limit_hit",
+      "mean_delta": 0,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_2k",
+      "candidate": "head_tail_2k",
+      "metric": "reward",
+      "mean_delta": 0.0,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_2k",
+      "candidate": "head_tail_2k",
+      "metric": "input_tokens",
+      "mean_delta": 1092.8,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_2k",
+      "candidate": "head_tail_2k",
+      "metric": "fresh_tokens",
+      "mean_delta": -564.6,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_2k",
+      "candidate": "head_tail_2k",
+      "metric": "model_latency_ms",
+      "mean_delta": -1298.2039999999993,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_2k",
+      "candidate": "head_tail_2k",
+      "metric": "model_calls",
+      "mean_delta": 0,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_2k",
+      "candidate": "head_tail_2k",
+      "metric": "tool_calls",
+      "mean_delta": 0.6,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_2k",
+      "candidate": "head_tail_2k",
+      "metric": "output_limit_hit",
+      "mean_delta": 0,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_20k",
+      "candidate": "head_tail_2k",
+      "metric": "reward",
+      "mean_delta": 0.0,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_20k",
+      "candidate": "head_tail_2k",
+      "metric": "input_tokens",
+      "mean_delta": -8068,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_20k",
+      "candidate": "head_tail_2k",
+      "metric": "fresh_tokens",
+      "mean_delta": -1887.6,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_20k",
+      "candidate": "head_tail_2k",
+      "metric": "model_latency_ms",
+      "mean_delta": 404.384,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_20k",
+      "candidate": "head_tail_2k",
+      "metric": "model_calls",
+      "mean_delta": 0.2,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_20k",
+      "candidate": "head_tail_2k",
+      "metric": "tool_calls",
+      "mean_delta": 0.6,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    },
+    {
+      "baseline": "head_20k",
+      "candidate": "head_tail_2k",
+      "metric": "output_limit_hit",
+      "mean_delta": 0,
+      "ci95": null,
+      "ci95_status": "insufficient_tasks",
+      "bootstrap_unit": "task",
+      "task_weighting": "equal",
+      "included_task_count": 1,
+      "planned_task_count": 1,
+      "included_tasks": [
+        "noisy-bugfix"
+      ],
+      "excluded_tasks": [],
+      "complete_task_count": 1,
+      "pairs": 5,
+      "planned_pairs": 5,
+      "coverage": "complete",
+      "scope": "complete_plan",
+      "excluded_pairs": {
+        "missing_run": 0,
+        "exception": 0,
+        "incomplete_telemetry": 0,
+        "missing_metric": 0,
+        "missing_task_checksum": 0,
+        "task_checksum_mismatch": 0
+      }
+    }
+  ]
+}

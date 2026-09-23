@@ -6,7 +6,7 @@ Built after becoming interested in the harness ↔ inference boundary in long-ru
 
 ReedCode studies how much tool output a coding agent needs to keep. It compares head-only and head+tail retention, records the text budget used at each step, and separates model usage from tool execution and verifier results.
 
-The current runner supports repeated, interleaved comparisons. The saved results below come from an earlier pilot; they do not establish a token or latency improvement caused by truncation.
+The first [interleaved synthetic study](#interleaved-synthetic-results) is complete: 15 trials, five per condition. All passed. Both 2K policies used less input than 20K; head+tail did not reduce call counts compared with head-only at the same budget. Earlier pilot results are kept separately below.
 
 ## How it works
 
@@ -71,7 +71,42 @@ Reports show passes, exceptions, truncation counts, and paired differences in to
 
 Missing tasks and pairs remain visible. Per-task intervals need at least five usable pairs; the pooled interval needs at least five tasks. A single synthetic task cannot provide an across-task interval. The primary retention comparison is `head_tail_2k` against `head_2k`. Five repetitions are a starting point, not a guarantee of precision. See the [protocol](experiments/PROTOCOL.md) for task selection and interpretation.
 
-The revised synthetic task and retention policies have been checked without model calls. No model results have been collected under this protocol yet. Model and tool call differences measure extra work; they do not identify individual recovery calls.
+The revised synthetic study has been run with a hosted model. The ten-task study remains unrun. Model and tool call differences measure extra work; they do not identify individual recovery calls.
+
+## Interleaved synthetic results
+
+September 23, 2026 UTC, harness 0.4.1, `gpt-5.6-terra` through the Responses API. One revised `noisy-bugfix` task, five repetitions, three conditions per block. All 15 scheduled trials finished and passed the eight-test verifier. There were no exceptions, missing rewards, excluded pairs, or output-token limit hits. The generation budget was the provider default, with no explicit token cap.
+
+Token, call, and latency values below are means per trial.
+
+| Metric | Head 20K | Head 2K | Head+tail 2K |
+| --- | ---: | ---: | ---: |
+| Passed / attempted | 5/5 | 5/5 | 5/5 |
+| Input tokens | 15,686.0 | 6,525.2 | 7,618.0 |
+| Fresh input tokens | 4,952.4 | 3,629.4 | 3,064.8 |
+| Output tokens | 420.4 | 389.2 | 369.4 |
+| Model calls | 5.8 | 6.0 | 6.0 |
+| Tool calls | 6.4 | 6.4 | 7.0 |
+| Model API latency | 10.03 s | 11.73 s | 10.43 s |
+| Truncated / total tool calls | 0/32 | 9/32 | 12/35 |
+
+Both 2K policies reduced total input compared with 20K: 58.4% for head-only and 51.4% for head+tail. Neither had lower mean API latency than 20K in this run.
+
+The primary comparison is **head+tail minus head-only at 2K**, paired within each repetition:
+
+| Metric | Mean difference | Exploratory 95% interval |
+| --- | ---: | ---: |
+| Input tokens | +1,092.8 | [-38.4, +2,079.2] |
+| Fresh input tokens | -564.6 | [-906.0, -305.6] |
+| Model API latency | -1.30 s | [-4.36, +0.81] s |
+| Model calls | 0.0 | [0.0, 0.0], degenerate |
+| Tool calls | +0.6 | [+0.2, +1.0] |
+
+Head+tail used fewer fresh tokens but more total input and more tool calls. Its reported cached input was higher: 4,553.2 versus 2,895.8 tokens per trial. Hosted cache state was not reset between calls, and fresh input is not a GPU-compute measurement. The latency interval spans zero; these data do not establish a speedup from retaining the tail.
+
+This is one easy repair with visible source and tests. All policies succeeded, and retaining the tail did not reduce calls. Five-pair bootstrap intervals are exploratory; identical rewards do not establish equal success rates, and one task provides no across-task interval. The metric traces do not identify individual recovery actions.
+
+The [study record](experiments/synthetic-20260923/README.md) includes every trial, the unchanged task snapshot and traces, the saved schedule, and the [paired report](experiments/synthetic-20260923/paired_report.json). No GPU measurements were collected.
 
 ## Pilot results
 
@@ -126,7 +161,7 @@ Total Harbor job runtime fell from 420.01 to 346.12 seconds (17.6%), including s
 
 Three tasks and one run per setting are not enough to separate the cap's effect from stochastic trajectories and changing service conditions. More tasks and repeated, interleaved runs would be needed. These results do not establish 2K as an optimal cap or demonstrate equivalent accuracy across Terminal-Bench.
 
-The synthetic runs used 0.1.0, whose source snapshot was not saved. The current harness is 0.4.1; the saved results have not been rerun with it. Real tasks were fetched at `latest`; their checksums are recorded, but task contents and model aliases can change. See [experiment records](experiments/README.md) for the saved traces and reproduction limits.
+The pilot synthetic runs used 0.1.0, whose source snapshot was not saved. These pilot results have not been rerun with the current harness; the 0.4.1 synthetic study above uses a revised task and a different protocol. Real pilot tasks were fetched at `latest`; their checksums are recorded, but task contents and model aliases can change. See [experiment records](experiments/README.md) for the saved traces and reproduction limits.
 
 ## Server measurements
 
@@ -136,7 +171,8 @@ The adapter and collector have offline tests. GPU measurements still need a dedi
 
 ## Next experiments
 
-- Run the prepared three-condition study, starting with the revised synthetic task before the ten-task suite.
+- Run the prepared ten-task study. The synthetic study did not show fewer calls from head+tail; check whether tasks with harder diagnostics behave differently.
+- Run a separate study on a dedicated vLLM server, including the fixed-request sampler overhead check described in the setup guide.
 - Use the results to decide whether semantic retention of errors, test results, and code warrants another condition.
 - Eventually, test harness-provided lifecycle hints to an inference scheduler, such as when an agent starts a tool call and expects to need the model again.
 
@@ -170,6 +206,7 @@ uv sync --locked
 # Summarize the saved runs. No API key or Docker needed.
 python3 summarize_ab.py
 python3 summarize_real_ab.py
+python3 summarize_ab.py experiments/synthetic-20260923
 
 # Offline tests
 uv run python -m unittest discover -s tests -v

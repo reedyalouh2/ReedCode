@@ -1,25 +1,30 @@
 # Experiment records
 
-The saved runs are from September 21, 2026 UTC:
+The current study is from September 23, 2026 UTC:
+
+- [`synthetic-20260923/`](synthetic-20260923/README.md): 15 interleaved synthetic trials with ReedCode 0.4.1, five per retention condition. All 15 passed with no exceptions or output-limit hits. Includes the task snapshot, unchanged metric traces, saved schedule, and paired report.
+
+The earlier records are from September 21, 2026 UTC:
 
 - `ab/`: six synthetic runs with ReedCode 0.1.0.
 - `real_ab/`: six Terminal-Bench runs with ReedCode 0.2.0.
 - `codex_profile/`: a separate Codex run on `make-mips-interpreter`, which failed the verifier without a Harbor exception.
 
-Each A/B manifest contains the reward and exception status from Harbor's trial result, the task checksum, agent and model versions, job timestamps, and a SHA-256 hash of the metric trace. The traces are unchanged. They contain per-call metrics, not prompts or tool output text.
+Each study manifest contains the reward and exception status from Harbor's trial result, the task checksum, agent and model versions, job timestamps, and a SHA-256 hash of the metric trace. The traces are unchanged. They contain per-call metrics, not prompts or tool output text.
 
 To recompute the summaries from the repository root:
 
 ```bash
 python3 summarize_ab.py
 python3 summarize_real_ab.py
+python3 summarize_ab.py experiments/synthetic-20260923
 ```
 
 The scripts check trace hashes before summing token counts, latency, and returned tool bytes. Rewards come from the manifests. Failed or unverified attempts stay in the report, and missing values stay unknown. Percentage changes compare group means rather than averaging per-task percentages.
 
 ## Reproduction limits
 
-The synthetic traces predate `run_config` and `task_summary`. Their agent version comes from Harbor's records; cap and repetition come from the original filenames. The 0.1.0 source was not saved. The 0.2.0 harness is available in Git history at `6e7dbc2`. The current harness is 0.4.1 and uses a different experimental protocol. The original synthetic task is preserved in `evals/noisy-bugfix-pilot`; the revised `evals/noisy-bugfix` runs the full pytest suite and has additional cases. New runs are a separate study, not a reproduction of these numbers.
+The pilot synthetic traces predate `run_config` and `task_summary`. Their agent version comes from Harbor's records; cap and repetition come from the original filenames. The 0.1.0 source was not saved. The 0.2.0 harness is available in Git history at `6e7dbc2`. The current harness is 0.4.1 and uses a different experimental protocol. The original synthetic task is preserved in `evals/noisy-bugfix-pilot`; the revised `evals/noisy-bugfix` runs the full pytest suite and has additional cases. The September 23 study uses the revision and must be analyzed separately from the pilot.
 
 The real tasks were requested at `latest`. Recorded task checksums identify the evaluated contents but may not resolve to downloadable registry revisions. The original runs also had no Git commit pins, pinned container base tags, or pinned pytest installation in the synthetic task.
 
@@ -27,4 +32,4 @@ The Codex profile includes the source-session hash. `profile.txt` was generated 
 
 Exact job timestamps give real-suite totals of 420.006991 seconds at 20K and 346.119501 seconds at 2K. The README uses these values rather than the earlier rounded notes.
 
-The pilot traces do not record original output sizes or truncation flags. Those fields remain unknown when reading old traces. Their small, sequential design cannot isolate a causal cap effect. See [the next-study protocol](PROTOCOL.md).
+The pilot traces do not record original output sizes or truncation flags. Those fields remain unknown when reading old traces. Their small, sequential design cannot isolate a causal cap effect. See the [current protocol](PROTOCOL.md). Its hosted synthetic study is complete; the ten-task and self-hosted GPU studies have not been run.

@@ -1,0 +1,659 @@
+{
+  "schema_version": 2,
+  "model": "gpt-5.6-terra",
+  "schedule_seed": 20260922,
+  "model_api": "responses",
+  "max_output_tokens": null,
+  "server_metrics_enabled": false,
+  "endpoint_kind": "openai",
+  "sdk_max_retries": 0,
+  "repeats": 5,
+  "state": "finished",
+  "protocol": "randomized task/repetition blocks; three adjacent conditions per block",
+  "max_turns": 30,
+  "tool_timeout_sec": 120,
+  "source_sha256": {
+    "reedcode_harbor_agent.py": "f6e9e7b11b84f4f65c8bd6e76db750abce30523853df8a6327f5ecdeee83f4c8",
+    "output_policy.py": "a613fcd749c95e1d3ff0439789fb482ec7126e1ff81e7cb1a2a75c14c4e2bdd7",
+    "run_experiments.py": "2061fa3782d52cfdb0dc907debd50173ca0f62d03f8bfffe886b70b711e2ec3f",
+    "reporting.py": "c05d55fc53cbfc6d807fd98a72e92b4f1df894ed8f6889e7634acbd105d8cef4",
+    "model_backend.py": "a3fe0a6e14f4858c359de6495f4ae990efe895b9e432884f35ab0ce720008bdf",
+    "server_metrics.py": "7fd807056570032f099f1767b3a2bf4aeb8ba65ce5c42d1286789356aa7ff2e2",
+    "uv.lock": "2e82d91c1fa7727be90bbc2dde6ca03ea39fd06cd8dd7698042a542f86413883"
+  },
+  "plan": [
+    {
+      "run_id": "b001_r2_head_2k",
+      "task": "noisy-bugfix",
+      "repeat": 2,
+      "block": 1,
+      "position": 1,
+      "condition": "head_2k",
+      "cap_chars": 2000,
+      "output_policy": "head"
+    },
+    {
+      "run_id": "b001_r2_head_20k",
+      "task": "noisy-bugfix",
+      "repeat": 2,
+      "block": 1,
+      "position": 2,
+      "condition": "head_20k",
+      "cap_chars": 20000,
+      "output_policy": "head"
+    },
+    {
+      "run_id": "b001_r2_head_tail_2k",
+      "task": "noisy-bugfix",
+      "repeat": 2,
+      "block": 1,
+      "position": 3,
+      "condition": "head_tail_2k",
+      "cap_chars": 2000,
+      "output_policy": "head_tail"
+    },
+    {
+      "run_id": "b002_r4_head_tail_2k",
+      "task": "noisy-bugfix",
+      "repeat": 4,
+      "block": 2,
+      "position": 1,
+      "condition": "head_tail_2k",
+      "cap_chars": 2000,
+      "output_policy": "head_tail"
+    },
+    {
+      "run_id": "b002_r4_head_20k",
+      "task": "noisy-bugfix",
+      "repeat": 4,
+      "block": 2,
+      "position": 2,
+      "condition": "head_20k",
+      "cap_chars": 20000,
+      "output_policy": "head"
+    },
+    {
+      "run_id": "b002_r4_head_2k",
+      "task": "noisy-bugfix",
+      "repeat": 4,
+      "block": 2,
+      "position": 3,
+      "condition": "head_2k",
+      "cap_chars": 2000,
+      "output_policy": "head"
+    },
+    {
+      "run_id": "b003_r3_head_20k",
+      "task": "noisy-bugfix",
+      "repeat": 3,
+      "block": 3,
+      "position": 1,
+      "condition": "head_20k",
+      "cap_chars": 20000,
+      "output_policy": "head"
+    },
+    {
+      "run_id": "b003_r3_head_2k",
+      "task": "noisy-bugfix",
+      "repeat": 3,
+      "block": 3,
+      "position": 2,
+      "condition": "head_2k",
+      "cap_chars": 2000,
+      "output_policy": "head"
+    },
+    {
+      "run_id": "b003_r3_head_tail_2k",
+      "task": "noisy-bugfix",
+      "repeat": 3,
+      "block": 3,
+      "position": 3,
+      "condition": "head_tail_2k",
+      "cap_chars": 2000,
+      "output_policy": "head_tail"
+    },
+    {
+      "run_id": "b004_r1_head_tail_2k",
+      "task": "noisy-bugfix",
+      "repeat": 1,
+      "block": 4,
+      "position": 1,
+      "condition": "head_tail_2k",
+      "cap_chars": 2000,
+      "output_policy": "head_tail"
+    },
+    {
+      "run_id": "b004_r1_head_2k",
+      "task": "noisy-bugfix",
+      "repeat": 1,
+      "block": 4,
+      "position": 2,
+      "condition": "head_2k",
+      "cap_chars": 2000,
+      "output_policy": "head"
+    },
+    {
+      "run_id": "b004_r1_head_20k",
+      "task": "noisy-bugfix",
+      "repeat": 1,
+      "block": 4,
+      "position": 3,
+      "condition": "head_20k",
+      "cap_chars": 20000,
+      "output_policy": "head"
+    },
+    {
+      "run_id": "b005_r5_head_2k",
+      "task": "noisy-bugfix",
+      "repeat": 5,
+      "block": 5,
+      "position": 1,
+      "condition": "head_2k",
+      "cap_chars": 2000,
+      "output_policy": "head"
+    },
+    {
+      "run_id": "b005_r5_head_tail_2k",
+      "task": "noisy-bugfix",
+      "repeat": 5,
+      "block": 5,
+      "position": 2,
+      "condition": "head_tail_2k",
+      "cap_chars": 2000,
+      "output_policy": "head_tail"
+    },
+    {
+      "run_id": "b005_r5_head_20k",
+      "task": "noisy-bugfix",
+      "repeat": 5,
+      "block": 5,
+      "position": 3,
+      "condition": "head_20k",
+      "cap_chars": 20000,
+      "output_policy": "head"
+    }
+  ],
+  "runs": [
+    {
+      "run_id": "b001_r2_head_2k",
+      "task": "noisy-bugfix",
+      "repeat": 2,
+      "block": 1,
+      "position": 1,
+      "condition": "head_2k",
+      "cap_chars": 2000,
+      "output_policy": "head",
+      "trace": "b001_r2_head_2k.jsonl",
+      "trace_sha256": "1b72c813a63cc6aca901ab100348c90d01b3d135869b9c4d9dae1fee63e75ef1",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b001_r2_head_2k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 26.000157,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__LXHzMcb",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:17:13.276010",
+      "job_finished_at": "2026-09-22T21:17:39.276167",
+      "status": "finished"
+    },
+    {
+      "run_id": "b001_r2_head_20k",
+      "task": "noisy-bugfix",
+      "repeat": 2,
+      "block": 1,
+      "position": 2,
+      "condition": "head_20k",
+      "cap_chars": 20000,
+      "output_policy": "head",
+      "trace": "b001_r2_head_20k.jsonl",
+      "trace_sha256": "79f9c4cd266f3ae9a86e55f23883365b3b1c4888a647c634e43824c30de62998",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b001_r2_head_20k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 20.526831,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__F2K2ckd",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:17:42.314059",
+      "job_finished_at": "2026-09-22T21:18:02.840890",
+      "status": "finished"
+    },
+    {
+      "run_id": "b001_r2_head_tail_2k",
+      "task": "noisy-bugfix",
+      "repeat": 2,
+      "block": 1,
+      "position": 3,
+      "condition": "head_tail_2k",
+      "cap_chars": 2000,
+      "output_policy": "head_tail",
+      "trace": "b001_r2_head_tail_2k.jsonl",
+      "trace_sha256": "398cb269059b10cc1a01b6967ac11cdb508e3b8f0f5e4c93bc85dc2e21066b04",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b001_r2_head_tail_2k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 18.993691,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__7STFL3P",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:18:06.834545",
+      "job_finished_at": "2026-09-22T21:18:25.828236",
+      "status": "finished"
+    },
+    {
+      "run_id": "b002_r4_head_tail_2k",
+      "task": "noisy-bugfix",
+      "repeat": 4,
+      "block": 2,
+      "position": 1,
+      "condition": "head_tail_2k",
+      "cap_chars": 2000,
+      "output_policy": "head_tail",
+      "trace": "b002_r4_head_tail_2k.jsonl",
+      "trace_sha256": "705d973d6c5684de8b4ce1e6b260db135c20306a2fff01c2268f8d5e46c25789",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b002_r4_head_tail_2k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 20.092407,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__PG8ZQfN",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:18:29.718937",
+      "job_finished_at": "2026-09-22T21:18:49.811344",
+      "status": "finished"
+    },
+    {
+      "run_id": "b002_r4_head_20k",
+      "task": "noisy-bugfix",
+      "repeat": 4,
+      "block": 2,
+      "position": 2,
+      "condition": "head_20k",
+      "cap_chars": 20000,
+      "output_policy": "head",
+      "trace": "b002_r4_head_20k.jsonl",
+      "trace_sha256": "ccb7853e8d6d5e4e94c43ef010156638a8b9fd69b00540f906ea53e43ce8a7ad",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b002_r4_head_20k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 20.060529,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__JVRzrHp",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:18:53.089400",
+      "job_finished_at": "2026-09-22T21:19:13.149929",
+      "status": "finished"
+    },
+    {
+      "run_id": "b002_r4_head_2k",
+      "task": "noisy-bugfix",
+      "repeat": 4,
+      "block": 2,
+      "position": 3,
+      "condition": "head_2k",
+      "cap_chars": 2000,
+      "output_policy": "head",
+      "trace": "b002_r4_head_2k.jsonl",
+      "trace_sha256": "9f8073344414e5109bd294e01b777c42a7298ce77ce072cec1f41cc0f9e3671a",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b002_r4_head_2k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 21.396155,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__PmcijbL",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:19:17.121910",
+      "job_finished_at": "2026-09-22T21:19:38.518065",
+      "status": "finished"
+    },
+    {
+      "run_id": "b003_r3_head_20k",
+      "task": "noisy-bugfix",
+      "repeat": 3,
+      "block": 3,
+      "position": 1,
+      "condition": "head_20k",
+      "cap_chars": 20000,
+      "output_policy": "head",
+      "trace": "b003_r3_head_20k.jsonl",
+      "trace_sha256": "a6d1b36d06b631ef743051fe10dca2ae1e7b39a469e8d68525a2fe52d809dc44",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b003_r3_head_20k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 20.778472,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__iRQF5Xt",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:19:42.125708",
+      "job_finished_at": "2026-09-22T21:20:02.904180",
+      "status": "finished"
+    },
+    {
+      "run_id": "b003_r3_head_2k",
+      "task": "noisy-bugfix",
+      "repeat": 3,
+      "block": 3,
+      "position": 2,
+      "condition": "head_2k",
+      "cap_chars": 2000,
+      "output_policy": "head",
+      "trace": "b003_r3_head_2k.jsonl",
+      "trace_sha256": "38c006a11fcb2aad9fb3bd1f1f51a8f6682616566002eb6b805f6aff616d024e",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b003_r3_head_2k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 19.443169,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__4YwAvhm",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:20:06.356488",
+      "job_finished_at": "2026-09-22T21:20:25.799657",
+      "status": "finished"
+    },
+    {
+      "run_id": "b003_r3_head_tail_2k",
+      "task": "noisy-bugfix",
+      "repeat": 3,
+      "block": 3,
+      "position": 3,
+      "condition": "head_tail_2k",
+      "cap_chars": 2000,
+      "output_policy": "head_tail",
+      "trace": "b003_r3_head_tail_2k.jsonl",
+      "trace_sha256": "bba2035fbb4ecc80248e0436d95b56ecbfc39a63e7ba00ae89a81f103c4cde77",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b003_r3_head_tail_2k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 19.289439,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__XhDYyEC",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:20:29.238733",
+      "job_finished_at": "2026-09-22T21:20:48.528172",
+      "status": "finished"
+    },
+    {
+      "run_id": "b004_r1_head_tail_2k",
+      "task": "noisy-bugfix",
+      "repeat": 1,
+      "block": 4,
+      "position": 1,
+      "condition": "head_tail_2k",
+      "cap_chars": 2000,
+      "output_policy": "head_tail",
+      "trace": "b004_r1_head_tail_2k.jsonl",
+      "trace_sha256": "71c0460a14a6afe4c6c9c90da760359cdb76b88aff9e8850ed29afd6b325d3c7",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b004_r1_head_tail_2k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 20.06718,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__kfHjBT5",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:20:51.560769",
+      "job_finished_at": "2026-09-22T21:21:11.627949",
+      "status": "finished"
+    },
+    {
+      "run_id": "b004_r1_head_2k",
+      "task": "noisy-bugfix",
+      "repeat": 1,
+      "block": 4,
+      "position": 2,
+      "condition": "head_2k",
+      "cap_chars": 2000,
+      "output_policy": "head",
+      "trace": "b004_r1_head_2k.jsonl",
+      "trace_sha256": "7a65ed76413c35ce21e663584af34fb68b190c91a493d87b2c7d66e28eab235d",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b004_r1_head_2k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 18.401544,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__bYbXeiM",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:21:14.628504",
+      "job_finished_at": "2026-09-22T21:21:33.030048",
+      "status": "finished"
+    },
+    {
+      "run_id": "b004_r1_head_20k",
+      "task": "noisy-bugfix",
+      "repeat": 1,
+      "block": 4,
+      "position": 3,
+      "condition": "head_20k",
+      "cap_chars": 20000,
+      "output_policy": "head",
+      "trace": "b004_r1_head_20k.jsonl",
+      "trace_sha256": "274b5153447fd67de081564e956412576da0ba4b5cb9ab5cf48e3037f46cf864",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b004_r1_head_20k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 16.578379,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__7N8xB23",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:21:36.044658",
+      "job_finished_at": "2026-09-22T21:21:52.623037",
+      "status": "finished"
+    },
+    {
+      "run_id": "b005_r5_head_2k",
+      "task": "noisy-bugfix",
+      "repeat": 5,
+      "block": 5,
+      "position": 1,
+      "condition": "head_2k",
+      "cap_chars": 2000,
+      "output_policy": "head",
+      "trace": "b005_r5_head_2k.jsonl",
+      "trace_sha256": "0b5964c6f307dfc3ec8ef7d0aa0676e4966b547e4a3920eebe47b623f1077928",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b005_r5_head_2k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 17.873515,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__qMKoTQR",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:21:55.613233",
+      "job_finished_at": "2026-09-22T21:22:13.486748",
+      "status": "finished"
+    },
+    {
+      "run_id": "b005_r5_head_tail_2k",
+      "task": "noisy-bugfix",
+      "repeat": 5,
+      "block": 5,
+      "position": 2,
+      "condition": "head_tail_2k",
+      "cap_chars": 2000,
+      "output_policy": "head_tail",
+      "trace": "b005_r5_head_tail_2k.jsonl",
+      "trace_sha256": "548f07d56f3b92d621cfef62795c39c5d6eac122dcfb9241b6e96ed4d3c0ef80",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b005_r5_head_tail_2k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 18.824923,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__hoYRLUN",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:22:16.674770",
+      "job_finished_at": "2026-09-22T21:22:35.499693",
+      "status": "finished"
+    },
+    {
+      "run_id": "b005_r5_head_20k",
+      "task": "noisy-bugfix",
+      "repeat": 5,
+      "block": 5,
+      "position": 3,
+      "condition": "head_20k",
+      "cap_chars": 20000,
+      "output_policy": "head",
+      "trace": "b005_r5_head_20k.jsonl",
+      "trace_sha256": "344bedd8a08d71d0bbc545d08337799912e7a792c2351d95f80c416f5f2ea45b",
+      "job_name": "reedcode-synthetic-20260923T041656835189Z-b005_r5_head_20k",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 17.688525,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__qfs4Ugb",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "reedcode",
+        "version": "0.4.1",
+        "model_info": {
+          "name": "gpt-5.6-terra",
+          "provider": null
+        }
+      },
+      "job_started_at": "2026-09-22T21:22:38.508999",
+      "job_finished_at": "2026-09-22T21:22:56.197524",
+      "status": "finished"
+    }
+  ],
+  "harbor_version": "0.23.0",
+  "openai_version": "2.54.0",
+  "tasks": {
+    "noisy-bugfix": {
+      "path": "tasks/noisy-bugfix/noisy-bugfix",
+      "sha256": "ad6bd9381f9a5cdec1467ef19cd469f2cd0cad5cba6f438b16fe675d0bbcddda"
+    }
+  },
+  "preflight": [
+    {
+      "run_id": "oracle-noisy-bugfix",
+      "task": "noisy-bugfix",
+      "cap_chars": null,
+      "trace": null,
+      "trace_sha256": null,
+      "job_name": "reedcode-20260923T041656835189Z-oracle-noisy-bugfix",
+      "reward": 1.0,
+      "exception_type": null,
+      "job_runtime_s": 11.164515,
+      "harbor_returncode": 0,
+      "trial_name": "noisy-bugfix__HwnvxgC",
+      "task_checksum": "afdddc073263e8d845d23e17cab12449ee4b99e67b2fa4edc794e586d0492938",
+      "agent_info": {
+        "name": "oracle",
+        "version": "1.0.0",
+        "model_info": null
+      },
+      "job_started_at": "2026-09-22T21:16:58.523496",
+      "job_finished_at": "2026-09-22T21:17:09.688011"
+    }
+  ]
+}
