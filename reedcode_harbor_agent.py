@@ -3,7 +3,6 @@ from __future__ import annotations
 import asyncio
 import base64
 import json
-import os
 import posixpath
 import shlex
 import time
@@ -14,15 +13,7 @@ from harbor.agents.base import BaseAgent
 from harbor.environments.base import BaseEnvironment
 from harbor.models.agent.context import AgentContext
 
-
-MAX_TURNS = int(os.getenv("MAX_TURNS", "30"))
-MAX_TOOL_OUTPUT = int(os.getenv("MAX_TOOL_OUTPUT", "20000"))
-TOOL_TIMEOUT = int(os.getenv("TOOL_TIMEOUT", "120"))
-
-if min(MAX_TURNS, MAX_TOOL_OUTPUT, TOOL_TIMEOUT) <= 0:
-    raise ValueError(
-        "MAX_TURNS, MAX_TOOL_OUTPUT and TOOL_TIMEOUT must be positive"
-    )
+from output_policy import Settings, ToolObservation, observation
 
 
 TOOLS = [
@@ -77,25 +68,22 @@ def add_usage(total, value):
     return None if total is None or value is None else total + value
 
 
-def bound_output(text: str) -> str:
-    # Keep the first N characters, as in the recorded experiments.
-    if len(text) > MAX_TOOL_OUTPUT:
-        return text[:MAX_TOOL_OUTPUT] + "\n...[output truncated]"
-    return text
-
-
 class ReedCodeAgent(BaseAgent):
+    def __init__(self, *args, settings: Settings | None = None, **kwargs):
+        self.settings = settings if settings is not None else Settings.from_env()
+        super().__init__(*args, **kwargs)
+
     @staticmethod
     def name() -> str:
         return "reedcode"
 
     def version(self) -> str:
-        return "0.2.0"
+        return "0.3.0"
 
     async def setup(self, environment: BaseEnvironment) -> None:
         result = await environment.exec(
             command="pwd",
-            timeout_sec=TOOL_TIMEOUT,
+            timeout_sec=self.settings.tool_timeout,
         )
 
         cwd = (result.stdout or "").strip()
@@ -134,14 +122,15 @@ class ReedCodeAgent(BaseAgent):
             "type": "run_config",
             "agent_version": self.version(),
             "model": self.model_name,
-            "max_turns": MAX_TURNS,
-            "max_tool_output_chars": MAX_TOOL_OUTPUT,
-            "tool_timeout_sec": TOOL_TIMEOUT,
+            "max_turns": self.settings.max_turns,
+            "max_tool_output_chars": self.settings.max_tool_output,
+            "output_policy": self.settings.output_policy,
+            "tool_timeout_sec": self.settings.tool_timeout,
         })
 
         try:
             async with AsyncOpenAI() as client:
-                for turn in range(1, MAX_TURNS + 1):
+                for turn in range(1, self.settings.max_turns + 1):
                     start = time.perf_counter()
 
                     response = await client.responses.create(
@@ -209,7 +198,7 @@ class ReedCodeAgent(BaseAgent):
                     for call in tool_calls:
                         start_tool = time.perf_counter()
 
-                        result, success = await self.execute_tool(
+                        result = await self.execute_tool(
                             environment,
                             call.name,
                             call.arguments,
@@ -220,7 +209,7 @@ class ReedCodeAgent(BaseAgent):
                         ) * 1000
 
                         tool_calls_total += 1
-                        tool_failures += int(not success)
+                        tool_failures += int(not result.success)
                         tool_ms_total += tool_ms
 
                         log({
@@ -230,14 +219,15 @@ class ReedCodeAgent(BaseAgent):
                             "tool": call.name,
                             "duration_ms": round(tool_ms, 2),
                             # UTF-8 bytes after truncation and formatting.
-                            "output_bytes": len(result.encode("utf-8")),
-                            "success": success,
+                            "output_bytes": len(result.text.encode("utf-8")),
+                            "success": result.success,
+                            **result.retention,
                         })
 
                         history.append({
                             "type": "function_call_output",
                             "call_id": call.call_id,
-                            "output": result,
+                            "output": result.text,
                         })
                 else:
                     stop_reason = "max_turns"
@@ -281,8 +271,9 @@ class ReedCodeAgent(BaseAgent):
                     (time.perf_counter() - started) * 1000,
                     2,
                 ),
-                "max_tool_output_chars": MAX_TOOL_OUTPUT,
-                "tool_timeout_sec": TOOL_TIMEOUT,
+                "max_tool_output_chars": self.settings.max_tool_output,
+                "tool_timeout_sec": self.settings.tool_timeout,
+                "output_policy": self.settings.output_policy,
             }
 
             context.metadata = {
@@ -297,7 +288,7 @@ class ReedCodeAgent(BaseAgent):
         environment: BaseEnvironment,
         name: str,
         arguments: str | dict,
-    ) -> tuple[str, bool]:
+    ) -> ToolObservation:
         # Return argument errors so the model can retry.
         try:
             args = (
@@ -348,50 +339,38 @@ class ReedCodeAgent(BaseAgent):
                 raise ValueError(f"Unknown tool: {name}")
 
         except (ValueError, TypeError, KeyError) as exc:
-            return (
-                bound_output(f"ERROR: {type(exc).__name__}: {exc}"),
-                False,
-            )
+            return observation(f"ERROR: {type(exc).__name__}: {exc}", False, self.settings)
 
         try:
             result = await environment.exec(
                 command=command,
                 cwd=self.cwd,
-                timeout_sec=TOOL_TIMEOUT,
+                timeout_sec=self.settings.tool_timeout,
             )
 
         except (TimeoutError, asyncio.TimeoutError):
-            return (
-                f"ERROR: command timed out after {TOOL_TIMEOUT} seconds",
-                False,
+            return observation(
+                f"ERROR: command timed out after {self.settings.tool_timeout} seconds",
+                False, self.settings,
             )
 
         except RuntimeError as exc:
             # Harbor's Docker backend can wrap timeouts in RuntimeError.
             if str(exc).startswith("Command timed out after "):
-                return bound_output(f"ERROR: {exc}"), False
+                return observation(f"ERROR: {exc}", False, self.settings)
 
             raise
 
-        text, success = self.format_result(result)
+        if name == "write_file" and result.return_code == 0:
+            return observation(f"Successfully wrote {path}", True, self.settings)
+        return self.format_result(result)
 
-        if name == "write_file" and success:
-            text = bound_output(f"Successfully wrote {path}")
-
-        return text, success
-
-    def format_result(self, result) -> tuple[str, bool]:
+    def format_result(self, result) -> ToolObservation:
         output = result.stdout or ""
-
         if result.stderr:
             output += "\nSTDERR:\n" + result.stderr
-
-        text = (
-            f"EXIT CODE: {result.return_code}\n"
-            f"{bound_output(output)}"
-        )
-
-        return text, result.return_code == 0
+        return observation(output, result.return_code == 0, self.settings,
+                           prefix=f"EXIT CODE: {result.return_code}\n")
 
     def safe_path(self, path: str) -> str:
         # This checks path syntax only. Symlinks and bash can escape it.

@@ -1,0 +1,37 @@
+# Output retention study
+
+Status: implementation and local checks only. No model results have been collected under this protocol.
+
+## Question
+
+At the same 2,000-character budget, does retaining the beginning and end of tool output preserve task success or avoid extra work compared with retaining only the beginning? A 20,000-character head-only condition measures the effect of a larger budget; it is not an unlimited-output baseline.
+
+## Tasks and order
+
+The proposed subset keeps the three pilot tasks (`regex-log`, `extract-elf`, `sanitize-git-repo`) and adds `build-cython-ext`, `build-pmars`, `cancel-async-tasks`, `custom-memory-heap-crash`, `fix-git`, `log-summary-date-ranges`, and `large-scale-text-editing`. These task names are listed in the [Terminal-Bench source](https://github.com/harbor-framework/terminal-bench-2). The mix includes build, debugging, log, and file work. It is a convenience sample, not a representative benchmark. The seven added tasks have not yet had local oracle checks.
+
+The runner checks the exact task snapshots with the oracle before any model calls. A failed oracle stops the whole study; it does not silently drop that task. Use `--check-only` to download and check tasks without model calls. Record any environment failures and changes to the task list before inspecting model results. Do not drop tasks because one retention policy performs badly.
+
+Use five repetitions per task, each with `head_20k`, `head_2k`, and `head_tail_2k`: 150 trials. The runner permutes task/repetition blocks with a saved seed. Within each block, conditions run consecutively. For each task it samples condition orders without replacement from the six possible permutations, cycling if more than six repetitions are requested. This varies order without running one condition's entire batch first. It does not eliminate temporal dependence or shared service cache effects.
+
+Each task is downloaded once before the model runs. All conditions use that local snapshot, whose content hash is saved and checked before each trial. Source hashes, dependency versions, model alias, schedule, task checksums, and Harbor timestamps are recorded. Container images and remote dependencies can still change; task hashes alone do not pin them. Use a fixed model snapshot if the provider offers one.
+
+There are no automatic retries. Failed and interrupted attempts remain in the manifest. A dry run saves a plan without downloads or API calls. A new invocation starts a new study; it does not resume an interrupted one.
+
+## Measurements and analysis
+
+Log whether retention fired on every tool call, the selected policy and budget, original and retained character/byte counts, and total bytes returned after formatting. Also record API input, cached input, output tokens, call latency, tool latency, and verifier reward. Fresh input means input minus cached input; it is not a GPU-compute estimate.
+
+Report each task separately. Pair conditions within the same task/repetition block and compute candidate-minus-baseline differences for reward, input tokens, fresh input tokens, and cumulative model latency. The primary comparison is head+tail against head at 2K. The comparisons against 20K are secondary. Pairing controls task and time block; it does not give the runs identical model randomness or trajectories.
+
+The reporter uses 10,000 bootstrap resamples of the paired differences and reports the 2.5th and 97.5th percentiles. No interval is reported below five usable pairs. Five is still a small sample: intervals can be unstable or degenerate, especially when every reward is identical. They are exploratory, unadjusted for multiple comparisons, and do not establish equivalent accuracy or generalization across tasks.
+
+Report pass counts against all attempts, missing rewards, exceptions, scheduled versus attempted trials, and usable versus planned pairs. Reward-zero runs with complete telemetry remain in the paired analysis. Infrastructure exceptions, missing values, unfinished telemetry, and mismatched task checksums make a pair unusable; this exclusion is visible through pair coverage. Do not treat missing measurements as zero or a complete-case interval as covering failed attempts. If exclusions are material, fix the measurement problem before making an efficiency claim. Inspect output tokens and failures alongside input savings.
+
+## Synthetic check
+
+The earlier fixture already placed pytest output after the noise. The revision preserves that layout and uses a compact pytest traceback with eight cases, including fractional discounts and invalid inputs. The verifier runs a pristine copy of the same full suite against the edited implementation. Editing the visible tests cannot bypass it.
+
+`tests/check_synthetic_container.py` checks actual failing and passing command output through all three retention policies. It verifies that 2K head-only hides the pytest failure/passing summary and that 2K head+tail retains it, while the 20K condition does not truncate. The harness keeps the exit code visible under every policy.
+
+This is a diagnostic-retention check, not a difficult coding benchmark. An agent can inspect the code or rerun focused commands to recover hidden information. Measure those recovery calls in later model runs; do not infer information preservation from a pass alone. Keep the revised task's results separate from the saved pilot.

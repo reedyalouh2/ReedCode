@@ -1,10 +1,8 @@
 #!/bin/bash
-set -euo pipefail
-cd /app
 
-python - <<'NOISE'
+python - <<'PY'
 for i in range(150):
     print(f"diagnostic line {i:03d}: initialization subsystem healthy")
-NOISE
+PY
 
-exec python -m pytest -q --tb=short test_pricing.py
+pytest -q

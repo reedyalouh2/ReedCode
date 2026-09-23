@@ -4,20 +4,9 @@ A small coding-agent harness with tool execution, per-call tracing, and Harbor i
 
 Built after becoming interested in the harness ↔ inference boundary in long-running coding agents.
 
-## Key result
+ReedCode studies how much tool output a coding agent needs to keep. It compares head-only and head+tail retention, records the text budget used at each step, and separates model usage from tool execution and verifier results.
 
-Reducing the tool-output cap from 20,000 to 2,000 characters across three Terminal-Bench tasks:
-
-| Metric | 20K → 2K cap |
-| --- | ---: |
-| Tasks passed | **3/3 → 3/3** |
-| Input tokens | **−61.3%** |
-| Fresh input tokens | **−53.5%** |
-| Model latency | **−19.8%** |
-
-Token and latency changes compare per-task means. One run per task at each setting; one task got slower. These are preliminary observations, not a reliable speedup estimate.
-
-Shorter tool observations mean less text in subsequent requests, but they can also hide useful information and change what the agent does next. This experiment measures that tradeoff.
+The current runner supports repeated, interleaved comparisons. The saved results below come from an earlier pilot; they do not establish a token or latency improvement caused by truncation.
 
 ## How it works
 
@@ -45,11 +34,11 @@ Instructions and tool schemas stay fixed across calls. History includes the mode
 
 Malformed arguments, invalid file paths, command failures, and recognized timeouts are returned to the model as tool results. API errors and other infrastructure failures propagate to Harbor. Cancellation also propagates so Harbor can enforce the task deadline.
 
-The file tools check paths lexically, including absolute paths inside the workspace. This does not prevent symlink escape, and `bash` can access the rest of the container. Run the agent in disposable containers without sensitive mounts. [`agent.py`](agent.py) is the earlier local prototype; it runs commands directly on the host.
+The file tools check paths lexically, including absolute paths inside the workspace. This does not prevent symlink escape, and `bash` can access the rest of the container. Run the agent in disposable containers without sensitive mounts. The earlier host prototype is kept in [`archive/`](archive/README.md).
 
 ## Measurements
 
-The harness writes a JSONL trace with token usage and latency for each model call, duration and returned bytes for each tool call, and a final task summary. Harbor records the verifier reward separately.
+The harness writes a JSONL trace with token usage and latency for each model call, duration, original and retained output sizes, policy, and a `truncated` flag for each tool call, and a final task summary. Harbor records the verifier reward separately.
 
 | Metric | Definition |
 | --- | --- |
@@ -62,15 +51,31 @@ The harness writes a JSONL trace with token usage and latency for each model cal
 
 Model latency includes network, service, and SDK overhead. It does not separate prefill from decode. The harness does not measure GPU time, queue time, TTFT, ITL, or KV residency. Reported cached tokens are useful workload data, but they do not tell us how much GPU compute was saved.
 
-`MAX_TOOL_OUTPUT` keeps the first N characters of command output. The exit-code prefix and truncation marker add a little beyond that limit. Output is collected before truncation, so this setting does not bound subprocess memory use. It can cut off diagnostics at the end of an output.
+`MAX_TOOL_OUTPUT` limits retained content to N characters. `OUTPUT_POLICY=head` keeps the beginning; `head_tail` splits the budget evenly between the beginning and end (the extra character goes to the head for odd budgets). The exit-code prefix and truncation marker add a little beyond that limit. Output is collected before truncation, so this setting does not bound subprocess memory use. Head-only retention can cut off diagnostics at the end. The exit code remains visible under both policies. Sizes before retention refer to the observation text, excluding the exit-code prefix; returned bytes include all formatting.
 
-## Experiments
+## Experiment method
+
+Three conditions use the same model, tools, turn limit, timeout, and task snapshot:
+
+| Condition | Retained characters |
+| --- | --- |
+| `head_20k` | First 20,000 |
+| `head_2k` | First 2,000 |
+| `head_tail_2k` | First 1,000 and last 1,000 |
+
+The real-suite schedule has ten tasks, five repetitions, and all three conditions: 150 trials. Each task/repetition is a block with its conditions run next to each other in varied order. The runner saves the schedule before running, downloads each task once, and checks its snapshot before every trial. Oracle checks must pass on every snapshot before any model calls begin. The schedule seed controls ordering, not model randomness.
+
+Reports show passes, exceptions, truncation counts, and per-task paired differences with exploratory 95% bootstrap intervals. Missing pairs remain visible; intervals are withheld below five complete pairs. The primary retention comparison is `head_tail_2k` against `head_2k`. Five repetitions are a starting point, not a guarantee of precision. See the [protocol](experiments/PROTOCOL.md) for task selection and interpretation.
+
+This comparison has not been run yet. The revised synthetic task and retention policies have been checked without model calls.
+
+## Pilot results
 
 Both suites used `gpt-5.6-terra`, with the same tools and verifiers within each suite. All 20K runs happened before the 2K runs. Oracle runs passed the local tasks and the three selected Terminal-Bench tasks before the comparisons.
 
 ### Synthetic bugfix
 
-[`evals/noisy-bugfix`](evals/noisy-bugfix) prints 150 diagnostic lines before a failing pricing test. The agent must run the command before editing and again after fixing the bug. This deliberately tests a case with noisy output.
+The original task, preserved in [`evals/noisy-bugfix-pilot`](evals/noisy-bugfix-pilot), prints 150 diagnostic lines before a failing pricing test. At a 2K head-only cap the agent cannot see the pytest diagnostics or summary. Agents can inspect the source or rerun a more focused command; the current harness also keeps the exit code visible. Passing this task shows that the agent can work around hidden diagnostics; it does not establish that important information was safely discarded. The original verifier checked three assertions rather than running pytest.
 
 There were three runs per cap, using harness 0.1.0. All six passed.
 
@@ -85,6 +90,8 @@ There were three runs per cap, using harness 0.1.0. All six passed.
 | Tool calls | 7.00 | 6.33 | -9.5% |
 
 ### Terminal-Bench
+
+The aggregate input difference was −61.3%, but the cap cannot explain the whole change: `regex-log` never hit either cap. With one run per task and all 20K runs first, the cap effect cannot be separated from trajectory variation or service conditions.
 
 The first batch exposed problems with absolute workspace paths, command timeouts, and reporting failed trials. After fixing those, I ran each task once per cap with harness 0.2.0. All six final runs passed, with no Harbor exceptions.
 
@@ -111,16 +118,16 @@ The first batch exposed problems with absolute workspace paths, command timeouts
 
 Total Harbor job runtime fell from 420.01 to 346.12 seconds (17.6%), including setup and verification.
 
-There are two useful counterexamples in the per-task results. `extract-elf` used fewer input tokens at 2K but generated more output tokens and took longer. Neither `regex-log` run even hit the smaller cap: the largest returned observations were 426 and 457 bytes. Its large improvement cannot be attributed to truncation.
+`sanitize-git-repo` accounts for most of the absolute input-token difference. There are also two counterexamples in the per-task results. `extract-elf` used fewer input tokens at 2K but generated more output tokens and took longer. Neither `regex-log` run even hit the smaller cap: the largest returned observations were 426 and 457 bytes. Its large improvement cannot be attributed to truncation.
 
 Three tasks and one run per setting are not enough to separate the cap's effect from stochastic trajectories and changing service conditions. More tasks and repeated, interleaved runs would be needed. These results do not establish 2K as an optimal cap or demonstrate equivalent accuracy across Terminal-Bench.
 
-The synthetic runs used 0.1.0, whose source snapshot was not saved. The current harness is 0.2.0. Real tasks were fetched at `latest`; their checksums are recorded, but task contents and model aliases can change. See [experiment records](experiments/README.md) for the saved traces and reproduction limits.
+The synthetic runs used 0.1.0, whose source snapshot was not saved. The current harness is 0.3.0; the saved results have not been rerun with it. Real tasks were fetched at `latest`; their checksums are recorded, but task contents and model aliases can change. See [experiment records](experiments/README.md) for the saved traces and reproduction limits.
 
 ## Next experiments
 
-- Repeat and interleave runs across more tasks to separate the cap's effect from run-to-run variation.
-- Compare keeping the beginning and end of tool output (head+tail) with semantic retention of relevant errors, test results, and code.
+- Run the prepared three-condition study, starting with the revised synthetic task before the ten-task suite.
+- Use the results to decide whether semantic retention of errors, test results, and code warrants another condition.
 - Eventually, test harness-provided lifecycle hints to an inference scheduler, such as when an agent starts a tool call and expects to need the model again.
 
 ## Codex profile
@@ -157,8 +164,16 @@ python3 summarize_real_ab.py
 # Offline tests
 uv run python -m unittest discover -s tests -v
 
-# Check Harbor and Docker with the oracle
-uv run harbor run -p evals/hello -a oracle
+# Check the revised synthetic task without model calls
+uv run harbor run -p evals/noisy-bugfix -a oracle
+docker build -t reedcode-noisy-bugfix-v2 evals/noisy-bugfix/environment
+uv run python tests/check_synthetic_container.py
+
+# Inspect the 150-trial schedule without downloads or model calls
+uv run python run_experiments.py real --dry-run
+
+# Download and oracle-check the ten tasks without model calls
+uv run python run_experiments.py real --check-only
 ```
 
 For model runs, set `OPENAI_API_KEY` in your environment. The default model is `gpt-5.6-terra`; set `MODEL` to another Responses-compatible model if your account cannot access it. Record that change when comparing results.
@@ -168,7 +183,7 @@ PYTHONPATH="$PWD" uv run harbor run -p evals/hello \
   --agent reedcode_harbor_agent:ReedCodeAgent \
   --model "${MODEL:-gpt-5.6-terra}"
 
-# Six runs per suite; these use model API credits
+# These use model API credits: 15 synthetic trials, then 150 real-task trials
 bash run_ab.sh
 bash run_real_ab.sh
 
@@ -179,23 +194,25 @@ python3 summarize_real_ab.py runs/real-TIMESTAMP
 python3 profile_trajectory.py /path/to/rollout.jsonl
 ```
 
-New runs go under `runs/`, with full Harbor output in `jobs/`. Both directories are ignored by Git. The saved experiments are left alone. Reporters check trace hashes, retain failed attempts, and leave missing telemetry as unknown.
+New runs go under `runs/`, with full Harbor output in `jobs/`. Both directories are ignored by Git. The saved pilot evidence is left alone. Reporters check trace hashes, retain failed attempts, and leave missing telemetry as unknown. New reports also write `paired_report.json`. Each invocation creates a new study; interrupted studies are reported as partial and are not silently retried.
 
 | Setting | Default |
 | --- | ---: |
 | `MAX_TURNS` | 30 model calls |
 | `MAX_TOOL_OUTPUT` | 20,000 characters |
 | `TOOL_TIMEOUT` | 120 seconds per command |
+| `OUTPUT_POLICY` | `head` (`head_tail` also supported) |
 
-The experiment runner fixes the turn limit and timeout for both caps. Harbor also enforces the task's overall deadline. Settings are read at import time, so different caps need separate processes.
+The experiment runner fixes the turn limit and timeout across all conditions. Harbor also enforces the task's overall deadline. Settings are read when each agent is created; Python callers can pass a `Settings` instance directly.
 
 ## Files
 
 - `reedcode_harbor_agent.py`: the Harbor agent.
-- `agent.py`: the original local prototype.
+- `output_policy.py`: retention policies and agent settings.
+- `archive/agent.py`: the original host prototype, retained for reference.
 - `run_experiments.py`: runs the suites and exports results.
 - `reporting.py`: shared code for the two summary scripts.
 - `profile_trajectory.py`: Codex session profiler.
-- `evals/`: hello smoke test and noisy bugfix task.
+- `evals/`: smoke test, revised noisy bugfix task, and preserved pilot fixture.
 - `experiments/`: saved metrics and verifier results.
 - `tests/`: offline harness and reporting tests.

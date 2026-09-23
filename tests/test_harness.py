@@ -33,27 +33,43 @@ class HarnessTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_invalid_arguments_are_observations(self):
         for args in ("{broken", "[]", '{"command": 4}', "{}"):
-            result, success = await self.agent.execute_tool(self.env, "bash", args)
-            self.assertFalse(success)
-            self.assertTrue(result.startswith("ERROR:"))
+            result = await self.agent.execute_tool(self.env, "bash", args)
+            self.assertFalse(result.success)
+            self.assertTrue(result.text.startswith("ERROR:"))
         self.env.exec.assert_not_awaited()
 
     async def test_timeout_recoverable_infrastructure_error_visible(self):
         for error in (TimeoutError(), RuntimeError("Command timed out after 120 seconds")):
             self.env.exec.side_effect = error
-            result, success = await self.agent.execute_tool(self.env, "bash", {"command": "sleep 200"})
-            self.assertFalse(success)
-            self.assertIn("timed out", result)
+            result = await self.agent.execute_tool(self.env, "bash", {"command": "sleep 200"})
+            self.assertFalse(result.success)
+            self.assertIn("timed out", result.text)
         self.env.exec.side_effect = RuntimeError("Docker unavailable")
         with self.assertRaisesRegex(RuntimeError, "Docker unavailable"):
             await self.agent.execute_tool(self.env, "bash", {"command": "pwd"})
 
     async def test_nonzero_exit_preserves_status_and_caps_output(self):
         self.env.exec.return_value = NS(stdout="é" * 10, stderr="failure", return_code=1)
-        with patch.object(harness, "MAX_TOOL_OUTPUT", 3):
-            result, success = await self.agent.execute_tool(self.env, "bash", {"command": "false"})
-        self.assertFalse(success)
-        self.assertEqual(result, "EXIT CODE: 1\nééé\n...[output truncated]")
+        self.agent.settings = harness.Settings(max_tool_output=3)
+        result = await self.agent.execute_tool(self.env, "bash", {"command": "false"})
+        self.assertFalse(result.success)
+        self.assertEqual(result.text, "EXIT CODE: 1\nééé\n...[output truncated]")
+
+    async def test_retention_telemetry_and_tail_reach_model(self):
+        self.agent.settings = harness.Settings(max_tool_output=20, output_policy="head_tail")
+        self.env.exec.return_value = NS(stdout="header" + "é" * 100 + "FAILED", stderr="", return_code=1)
+        call = NS(type="function_call", name="bash", arguments='{"command":"pytest"}', call_id="c")
+        context, client = await self.run_with_responses([response([call]), response()])
+        event = next(e for e in self.events() if e["type"] == "tool")
+        self.assertTrue(event["truncated"])
+        self.assertEqual(event["original_output_chars"], 112)
+        self.assertEqual(event["original_output_bytes"], 212)
+        self.assertEqual(event["retained_output_chars"], 20)
+        self.assertEqual(event["output_policy"], "head_tail")
+        visible = client.responses.create.call_args.kwargs["input"][2]["output"]
+        self.assertTrue(visible.endswith("FAILED"))
+        self.assertTrue(visible.startswith("EXIT CODE: 1"))
+        self.assertEqual(event["output_bytes"], len(visible.encode()))
 
     async def run_with_responses(self, responses):
         client = NS(responses=NS(create=AsyncMock(side_effect=responses)))
@@ -87,8 +103,8 @@ class HarnessTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_turn_limit_is_not_completion(self):
         call = NS(type="function_call", name="bash", arguments='{"command":"pwd"}', call_id="c")
-        with patch.object(harness, "MAX_TURNS", 1):
-            context, _ = await self.run_with_responses([response([call])])
+        self.agent.settings = harness.Settings(max_turns=1)
+        context, _ = await self.run_with_responses([response([call])])
         self.assertFalse(context.metadata["agent_completed"])
         self.assertEqual(context.metadata["stop_reason"], "max_turns")
 

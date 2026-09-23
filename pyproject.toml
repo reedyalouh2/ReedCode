@@ -1,6 +1,6 @@
 [project]
 name = "reedcode"
-version = "0.2.0"
+version = "0.3.0"
 description = "A minimal instrumented coding-agent harness for studying agent workloads"
 requires-python = ">=3.12"
 dependencies = [
