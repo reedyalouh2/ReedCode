@@ -129,8 +129,6 @@ Total Harbor job runtime fell from 420.01 to 346.12 seconds (17.6%), including s
 
 Next are the ten-task and [vLLM studies](docs/self-hosted.md), followed by retaining specific errors and test results. Later, I'd like to test whether lifecycle hints from the harness help an inference scheduler.
 
-The [Dynamo co-design plan](docs/dynamo-codesign-plan.md) lays out the next experiment: using tool dependencies and prompt revisions to decide when to prepare an agent's context.
-
 ## Codex profile
 
 This separate `gpt-5.6-terra` Codex run on `terminal-bench/make-mips-interpreter` failed verification with reward 0 and no Harbor exception. [`profile_trajectory.py`](profile_trajectory.py) produced the [profile](experiments/codex_profile/profile.json).
