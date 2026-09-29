@@ -33,7 +33,7 @@ The cross-template matrix runs 16 authored cases on each revision. Restoring too
 - [Existing issues and PRs](known-issues.md): overlap and current-source inspection.
 - [Results](results.json): machine-readable reproduction with versions and hashes.
 - [Session cost](session-cost/README.md), [KV footprint](kv-footprint/README.md), [template scope](scope/README.md), and [router behavior](router/README.md): CPU evidence for impact and its limits.
-- [GPU results](../combined-gpu-20260929/PREFILL.md): all 18 replay trials, per-repetition differences, branch payload and the separate failed first epoch. The [combined plan](../combined-gpu-plan.md) records the approved $5 cap.
+- [GPU results](../combined-gpu-20260929/PREFILL.md): all 18 replay trials, per-repetition differences, branch payload and the separate failed first epoch. The [combined plan](../combined-gpu-plan.md) records the study design.
 - [Raw evidence](provenance-evidence.tar.gz) and [manifest](provenance-manifest.json): byte-preserving extracts of the original records.
 
 Related speculative-rendering problems are already discussed upstream. The draft identifies this reproduction's specific causes and links that work. It should be reviewed as supplemental evidence before deciding whether a separate issue is useful.
@@ -52,11 +52,11 @@ This verifies all original archive checksums, the extracted bundle against its o
 
 The runtime did not log raw speculative token IDs. It logged lengths and hashes of complete 16-token blocks. The tool warmup's final eight tokens are outside those hashes. [results.json](results.json) distinguishes the reconstruction from observed runtime evidence.
 
-## Repeat on an approved server
+## Repeat on a server
 
 The saved [deployment record](../../dynamo-20260928/deployment.json) contains the original image digest, model revision, and launch command. The evidence archive also contains the debug launch script that enables routing hashes. For a fresh run, record the actual deployment and collect frontend/backend logs and request traces.
 
-After GPU approval and key rotation, run each condition against that isolated server:
+Run each condition against that isolated server:
 
 ```bash
 uv run python experiments/dynamo-upstream/001-speculative-prefill/stock_probe.py \
@@ -74,4 +74,4 @@ Use `--case text` for the control. The client uses raw streamed Chat HTTP reques
 
 The fresh probe enables speculation only on the first request, making the follow-up easier to isolate. The original archive enabled it on both. `reproduce.py` checks that original archive; it does not ingest a new probe directory. The two-second wait is only a pacing choice. Require server evidence that preparation completed before accepting a new comparison.
 
-The approved replacement run collected the [18-trial comparison](../combined-gpu-20260929/PREFILL.md) using the privately stored rotated key. The comparison uses matched stock and fixed main frontends with the pinned vLLM backend. It measures controlled replay behavior; agent quality, shared-server latency and exact physical allocations remain unmeasured. Nothing in this directory has been posted upstream.
+The September 29 run collected the [18-trial comparison](../combined-gpu-20260929/PREFILL.md). The comparison uses matched stock and fixed main frontends with the pinned vLLM backend. It measures controlled replay behavior; agent quality, shared-server latency and exact physical allocations remain unmeasured.

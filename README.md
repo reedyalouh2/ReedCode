@@ -1,231 +1,73 @@
 # ReedCode
 
-ReedCode is a small coding-agent harness for studying what agents send to an inference server. It runs tools through Harbor and records token use, timing, and tool output.
+I found a bug in Dynamo's `speculative_prefill` agent hint that makes tool-calling agents pay for prefill their next request cannot reuse. On Qwen3-8B on an A100, stock warmups added **62–85% more prefill per session**, with zero extra cache hits on real follow-ups and a warmup-only KV branch of up to **2.4 GiB**. My fix removes that branch.
 
-I started with tool-output retention after becoming interested in the boundary between the harness and inference server. That led to testing Dynamo's agent hints and prefix caching.
+The work includes a Rust patch, regression tests, real Claude Code and Codex sessions, and captured backend token IDs and KV events. [Issue draft](experiments/dynamo-upstream/001-speculative-prefill/issue-draft.md) · [Patch and tests](experiments/dynamo-upstream/001-speculative-prefill/fix/README.md) · [GPU evidence](experiments/dynamo-upstream/combined-gpu-20260929/README.md)
 
-## Dynamo prototype
+## The result
 
-I found that stock `speculative_prefill` drops tool definitions and parts of the assistant message. The warmup then builds a cache branch that the real follow-up cannot reuse. The fix preserves those fields and renders a prefix that matches the next tool continuation.
+Eighteen controlled GPU trials: two saved sessions, hints off/stock/fixed, three repetitions with rotated order. These whole-session prefill counts repeated exactly in each condition.
 
-The [GPU comparison](experiments/dynamo-upstream/combined-gpu-20260929/PREFILL.md) ran 18 trials on an A100: two saved sessions, three conditions, three repetitions. These are whole-session prefill token counts; they repeated exactly in each condition.
+| Session | Hint off | Stock hint | Fixed hint | Stock-only KV payload at end |
+| --- | ---: | ---: | ---: | ---: |
+| Short | 5,205 | 8,446 | 5,240 | 450 MiB |
+| Long | 20,580 | 38,114 | 20,595 | 2,463.75 MiB |
 
-| Session | Hint off | Stock hint | Fixed hint |
-| --- | ---: | ---: | ---: |
-| Short | 5,205 | 8,446 | 5,240 |
-| Long | 20,580 | 38,114 | 20,595 |
+The fix cut prefill **37.96% and 45.96% versus stock**. Stock warmed a separate branch, reused it on later warmups, and added no cache hits to the real follow-ups. Before the final tool output extended the real context, that branch reached 97.56% and 99.10% of the real context's full-block KV payload.
 
-Stock added 62.27% and 85.20% more prefill than off, without extra cache hits on real follow-ups. The fix removed the separate branch and cut prefill 37.96% and 45.96% versus stock.
+[Per-request counts, timings and block accounting](experiments/dynamo-upstream/combined-gpu-20260929/PREFILL.md). The complete GPU study cost about $2.37, including disk and the earlier failed rental.
 
-I also ran real Codex and Claude Code sessions through stock Dynamo, each with 15 model calls and two follow-up messages. Both reused every compatible full prefix block. Cross-turn reuse fell when Claude changed reminder text and Qwen's template removed earlier reasoning. The [parity report](experiments/dynamo-upstream/combined-gpu-20260929/PARITY.md) includes the original Claude context-limit failure and its 64K YaRN retry.
+## Why it happens
 
-The [patch and regression tests](experiments/dynamo-upstream/001-speculative-prefill/fix/README.md), [issue draft](experiments/dynamo-upstream/001-speculative-prefill/issue-draft.md), and [raw evidence with a reproduction command](experiments/dynamo-upstream/combined-gpu-20260929/README.md) are ready for review. Nothing has been submitted upstream. [Setup and hint support](docs/dynamo.md).
+The warmup builder copies only the message history. It drops the tool definitions and template settings, then reconstructs the new assistant response from text alone. Its prompt diverges from the real continuation before most of the agent's context.
 
-## How it works
+The same builder is [still on main as of September 29](experiments/dynamo-upstream/001-speculative-prefill/recheck-20260929/README.md).
 
 ```mermaid
 flowchart TD
-    H[Harbor loads the task and starts Docker] --> A[ReedCode calls the model with task and history]
-    A --> D{Tool calls?}
-    D -->|Yes| T[ReedCode executes tools in Docker]
-    T --> O[Cap tool output and append to history]
-    O -->|Next turn| A
-    D -->|No| V[Harbor runs the task verifier]
-    O -->|Turn limit reached| V
-    V --> R[Verifier reward]
-    A -.-> L[Token usage and timing logs]
-    T -.-> L
+    A[Agent request: history, tools, settings] --> B[Dynamo serves the assistant turn]
+    B --> C[Stock warmup drops request and assistant fields]
+    B --> D[Agent appends the tool result]
+    C --> E[Prefill and retain a different cache branch]
+    D --> F[Real follow-up keeps the original fields]
+    E -. Cannot supply the divergent prefix .-> F
+    B --> G[Fixed warmup preserves fields and renders the tool boundary]
+    G --> H[Prefix matches the real follow-up]
+    H --> F
 ```
 
-Harbor handles setup, deadlines, and verification. [`reedcode_harbor_agent.py`](reedcode_harbor_agent.py) calls the model and runs `read_file`, `write_file`, and `bash` in Docker, one at a time. Results stay in the history for later calls.
+The CPU check reproduced the missing-field problem in Qwen, Nemotron and GPT-OSS templates. Restoring the fields gives exact prefixes in the tested Nemotron and GPT-OSS tool cases. Qwen also needs a renderer-level tool-continuation boundary. The full fix passes **54/54 prefix cases**, leaves ordinary request tokens unchanged, and passes all **19 Dynamo warmup-module tests**. [Scope](experiments/dynamo-upstream/001-speculative-prefill/scope/README.md) · [Implementation](experiments/dynamo-upstream/001-speculative-prefill/proposal.md)
 
-The agent stops on a final response or budget limit, then Harbor grades the workspace. Tool errors go back to the model; API failures go to Harbor.
+## What else I found
 
-## Measurements
+- **Real harness history changes.** Qwen strips earlier-turn reasoning from Codex's rendered history. Claude Code removes reminder text on resume. Both shorten the reusable prefix. Dynamo reused every compatible full block in the two completed sessions. [Parity report](experiments/dynamo-upstream/combined-gpu-20260929/PARITY.md)
+- **A stock 1.5 startup failure.** A frontend with a fixed RPC port failed to register the model. Dynamic port selection worked. The source path has since changed on main. [Failure and source comparison](experiments/dynamo-upstream/006-fixed-rpc-registration/README.md)
+- **Missing request linkage.** Warmup requests lack a direct link to the request that triggered them, making their cost and eventual reuse harder to trace. [Observability findings](experiments/dynamo-upstream/005-observability/README.md)
+- **A useful negative result.** Across 42 tool continuations, corrected preparation added a median of only 80 tokens. That stopped me from building a scheduling policy for a workload with little to gain. [Survey](experiments/dynamo-prefix/trajectory-survey.md)
 
-JSONL traces record model usage, tool timing, output sizes, and truncation. Harbor supplies the reward.
+## Reproduce
 
-| Metric | Definition |
-| --- | --- |
-| Input, cached, and output tokens | API-reported usage summed across completed calls |
-| Fresh input tokens | Input tokens minus cached input tokens |
-| Model latency | Time spent awaiting complete API responses, summed per task |
-| Tool latency | Time spent executing tools, summed per task |
-| Tool-output bytes | UTF-8 bytes returned to the model after truncation, including formatting |
-| Harbor job runtime | Time from job start to finish, including setup and verification |
+From the repository root, with Python 3.12+ and [uv](https://docs.astral.sh/uv/):
 
-## Retention conditions
+```bash
+uv run --no-project --with msgpack==1.1.1 --with xxhash==3.5.0 python \
+  experiments/dynamo-upstream/combined-gpu-20260929/reproduce.py \
+  --output /tmp/reedcode-combined-reproduced
+```
 
-| Condition | Retained characters |
-| --- | --- |
-| `head_20k` | First 20,000 |
-| `head_2k` | First 2,000 |
-| `head_tail_2k` | First 1,000 and last 1,000 |
-
-Exit codes stay visible. The [protocol](experiments/PROTOCOL.md) covers scheduling, task checks, and analysis.
-
-## Interleaved synthetic results
-
-I ran `noisy-bugfix` on September 23, 2026 UTC with harness 0.4.1 and `gpt-5.6-terra` through the Responses API, using the provider's default generation budget. All trials passed the eight-test verifier. The [study record](experiments/synthetic-20260923/README.md) includes every attempt and its outcome.
-
-Token, call, and latency values are means per trial.
-
-| Metric | Head 20K | Head 2K | Head+tail 2K |
-| --- | ---: | ---: | ---: |
-| Passed / attempted | 5/5 | 5/5 | 5/5 |
-| Input tokens | 15,686.0 | 6,525.2 | 7,618.0 |
-| Fresh input tokens | 4,952.4 | 3,629.4 | 3,064.8 |
-| Output tokens | 420.4 | 389.2 | 369.4 |
-| Model calls | 5.8 | 6.0 | 6.0 |
-| Tool calls | 6.4 | 6.4 | 7.0 |
-| Model API latency | 10.03 s | 11.73 s | 10.43 s |
-| Truncated / total tool calls | 0/32 | 9/32 | 12/35 |
-
-Compared with 20K, input fell 58.4% for head-only and 51.4% for head+tail. Mean API latency was higher under both 2K policies.
-
-The paired comparison below is **head+tail minus head-only at 2K**.
-
-| Metric | Mean difference | Exploratory 95% interval |
-| --- | ---: | ---: |
-| Input tokens | +1,092.8 | [-38.4, +2,079.2] |
-| Fresh input tokens | -564.6 | [-906.0, -305.6] |
-| Model API latency | -1.30 s | [-4.36, +0.81] s |
-| Model calls | 0.0 | [0.0, 0.0], degenerate |
-| Tool calls | +0.6 | [+0.2, +1.0] |
-
-Head+tail had more cached input: 4,553.2 versus 2,895.8 tokens per trial. See the full [paired report](experiments/synthetic-20260923/paired_report.json).
-
-## Pilot results
-
-Both earlier suites used `gpt-5.6-terra`. Their oracle checks passed before the model runs.
-
-### Synthetic bugfix
-
-The [original task](evals/noisy-bugfix-pilot) prints 150 diagnostic lines before pytest. Its verifier checked three assertions. All six trials passed: three per cap, harness 0.1.0.
-
-| Mean per run | 20K cap | 2K cap | Change |
-| --- | ---: | ---: | ---: |
-| Input tokens | 13,881.7 | 5,532.0 | -60.1% |
-| Cached tokens | 9,464.3 | 1,948.3 | -79.4% |
-| Fresh tokens | 4,417.3 | 3,583.7 | -18.9% |
-| Tool-output bytes | 18,607.7 | 5,096.7 | -72.6% |
-| Model latency | 13.21 s | 11.99 s | -9.3% |
-| Model calls | 6.00 | 6.00 | 0.0% |
-| Tool calls | 7.00 | 6.33 | -9.5% |
-
-### Terminal-Bench
-
-After fixing path, timeout, and reporting bugs, I ran each task once per cap with harness 0.2.0. All six passed without Harbor exceptions.
-
-| Task | Cap | Input tokens | Fresh tokens | Model latency |
-| --- | ---: | ---: | ---: | ---: |
-| `extract-elf` | 20K | 45,203 | 11,022 | 64.88 s |
-| `extract-elf` | 2K | 33,427 | 9,262 | 93.14 s |
-| `regex-log` | 20K | 67,217 | 8,304 | 112.84 s |
-| `regex-log` | 2K | 5,691 | 3,212 | 38.57 s |
-| `sanitize-git-repo` | 20K | 297,390 | 39,873 | 98.23 s |
-| `sanitize-git-repo` | 2K | 119,649 | 15,069 | 89.62 s |
-
-| Mean per task | 20K cap | 2K cap | Change |
-| --- | ---: | ---: | ---: |
-| Input tokens | 136,603.3 | 52,922.3 | -61.3% |
-| Cached tokens | 116,870.3 | 43,741.3 | -62.6% |
-| Fresh tokens | 19,733.0 | 9,181.0 | -53.5% |
-| Output tokens | 5,513.7 | 4,813.0 | -12.7% |
-| Tool-output bytes | 39,422.7 | 10,146.7 | -74.3% |
-| Model latency | 91.98 s | 73.78 s | -19.8% |
-| Tool latency | 16.86 s | 8.52 s | -49.4% |
-| Model calls | 12.00 | 9.33 | -22.2% |
-| Tool calls | 11.00 | 9.33 | -15.2% |
-
-Total Harbor job runtime fell from 420.01 to 346.12 seconds (17.6%), including setup and verification. `sanitize-git-repo` accounts for most of the input difference. `extract-elf` used fewer input tokens at 2K but generated more output and took longer.
-
-## Earlier Dynamo experiments
-
-The [first GPU run](experiments/dynamo-20260928/README.md) passed all ten coding trials and completed 40 replay workflows. Replay time barely changed. A [follow-up probe](experiments/dynamo-prefix/gpu-20260928/README.md) found 16 extra cached tokens after correcting the small tool prefix, 528 in a synthetic long-argument case, and zero in the text control. The [survey of 42 tool continuations](experiments/dynamo-prefix/trajectory-survey.md) found a median of 80 preparable tokens. That small ceiling shifted the work toward the stock warmup bug above.
-
-Next is review of the fix and a fresh check of related issues before filing. The [work queue](docs/dynamo-upstream.md) tracks that and the remaining rendering checks. The broader [co-design plan](docs/dynamo-roadmap.md) is paused.
-
-## Codex profile
-
-This separate `gpt-5.6-terra` Codex run on `terminal-bench/make-mips-interpreter` failed verification with reward 0 and no Harbor exception. [`profile_trajectory.py`](profile_trajectory.py) produced the [profile](experiments/codex_profile/profile.json).
-
-| Metric | Value |
-| --- | ---: |
-| Commands / failed commands | 20 / 9 |
-| File-change events | 10 |
-| Cumulative input tokens | 1,598,392 |
-| Cached input tokens | 1,528,576 (95.63%) |
-| Fresh input tokens | 69,816 |
-| Output tokens | 16,912 |
-| Reported reasoning output tokens | 6,332 |
-| Session-reported duration | 698.05 s |
-| Session-reported time to first token | 6.71 s |
-
-## Running it
-
-Requires Python 3.12+, [uv](https://docs.astral.sh/uv/), and Docker for evaluations. Harbor is pinned to 0.23.0 and the OpenAI SDK to 2.54.0.
+This checks the hashes and rebuilds both reports from the saved captures. No GPU or model API is needed. It covers all 18 prefill trials, both completed harness sessions and the failed original Claude 32K attempt.
 
 ```bash
 uv sync --locked
-
-# Summarize the saved runs. No API key or Docker needed.
-python3 summarize_ab.py
-python3 summarize_real_ab.py
-python3 summarize_ab.py experiments/synthetic-20260923
-
-# Offline tests
-uv run python -m unittest discover -s tests -v
-
-# Check the revised synthetic task without model calls
-uv run harbor run -p evals/noisy-bugfix -a oracle
-docker build -t reedcode-noisy-bugfix-v2 evals/noisy-bugfix/environment
-uv run python tests/check_synthetic_container.py
-
-# Inspect the 150-trial schedule without downloads or model calls
-uv run python run_experiments.py real --dry-run
-
-# Download and oracle-check the ten tasks without model calls
-uv run python run_experiments.py real --check-only
+uv run python -m unittest discover -s tests
 ```
 
-Set `OPENAI_API_KEY` for model runs. The default model is `gpt-5.6-terra`; use `MODEL` for another Responses-compatible model and record the change.
+[Dynamo setup](docs/dynamo.md) covers live runs. The original Harbor harness, retention tables, commands and settings are in [earlier studies](docs/retention-studies.md).
 
-```bash
-PYTHONPATH="$PWD" uv run harbor run -p evals/hello \
-  --agent reedcode_harbor_agent:ReedCodeAgent \
-  --model "${MODEL:-gpt-5.6-terra}"
+## Next
 
-# These use model API credits: 15 synthetic trials, then 150 real-task trials
-bash run_ab.sh
-bash run_real_ab.sh
-
-# Use the output directory printed by the runner
-python3 summarize_real_ab.py runs/real-TIMESTAMP
-
-# Profile a compatible Codex session
-python3 profile_trajectory.py /path/to/rollout.jsonl
-```
-
-Each invocation creates a study in `runs/`, including `paired_report.json`. Full Harbor output goes in `jobs/`. Both directories are ignored by Git.
-
-| Setting | Default |
-| --- | ---: |
-| `MAX_TURNS` | 30 model calls |
-| `MAX_TOOL_OUTPUT` | 20,000 characters |
-| `TOOL_TIMEOUT` | 120 seconds per command |
-| `OUTPUT_POLICY` | `head` (`head_tail` also supported) |
-| `MODEL_API` | `responses` (`chat` for vLLM) |
-| `MAX_OUTPUT_TOKENS` | Unset; provider default |
-| `VLLM_METRICS_URL` | Unset; collection disabled |
-| `METRICS_SAMPLE_INTERVAL` | 0.1 seconds |
-
-Settings are read at agent creation; Python callers can pass `Settings` directly. The runner fixes turn limits, timeouts, `--model-api`, and `--max-output-tokens` across conditions.
+Split the upstream contribution into request/assistant preservation and the renderer continuation hook. Keep the existing GPU result attached to the complete tested fix. Then test whether the extra branch displaces useful prefixes when several real agent sessions share a GPU. [Patch split](experiments/dynamo-upstream/001-speculative-prefill/upstream-split.md) · [Work queue](docs/dynamo-upstream.md)
 
 ## Limitations
 
-- The September 23 retention study has five pairs on one easy repair with visible source and tests. Its intervals are exploratory; all-pass results don't prove equal success rates. There is no across-task interval, and the latency interval spans zero.
-- The pilots ran every 20K trial first. Task variation and service conditions are mixed into their differences. `regex-log` never hit either cap: its largest outputs were 426 and 457 bytes. The [experiment records](experiments/README.md) cover missing source pins and changing dependencies.
-- Hosted cache state was not reset. API latency includes network and service overhead; tokens and call counts don't measure GPU savings or identify recovery actions. The ten-task retention study is pending. The Codex profile is a separate run; its TTFT is a session field, and reasoning tokens are already included in output tokens.
-- The September 28 Dynamo pilot kept cache state between conditions, and its server-metric comparisons failed the restart-observability check. The September 29 comparison used verified resets and process identity. Its prefill results come from controlled replays with one discarded generated token per request. Concurrent serving, agent quality and uninstrumented latency remain unmeasured. The runtime fix supports the pinned Qwen3 tool template. The completed parity sessions used different context limits and stay separate.
-- File checks are lexical; symlinks and `bash` can reach outside the workspace. Use disposable containers without sensitive mounts. Output is collected before truncation, so the cap doesn't limit subprocess memory. The [archived prototype](archive/README.md) runs commands on the host.
+The GPU result is a controlled replay on one Qwen3-8B deployment, with one discarded generated token per request and instrumentation enabled. Shared-server latency, eviction pressure and model quality remain unmeasured. KV payload is calculated from full blocks and model geometry; allocator overhead is excluded. Cross-model evidence is CPU-only. The full runtime fix currently supports the pinned Qwen tool template. Codex used 32K context; Claude completed after a 64K YaRN retry. The $2.37 cost is an estimate, including reserves, rather than a settled invoice.

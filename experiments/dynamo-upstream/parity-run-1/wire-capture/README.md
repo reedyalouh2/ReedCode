@@ -50,7 +50,7 @@ uv run --with msgpack==1.1.1 --with xxhash==3.5.0 python "$wire/decode.py" \
 
 The GPU pod routes traffic to its own interface address through `lo`. For that layout, pass `--local-address` with the address recorded from the pod. The decoder accepts it only when both packet addresses match and either TCP port is 20000 or 20003. The default remains loopback addresses only. Keep the interface observation with the capture evidence.
 
-The first attempt omitted immediate delivery. It finished the two CPU requests, but tcpdump reported 0 captured packets and 90 received by its filter. That failed PCAP and the original counters remain in the archive. The first retry was rejected by automatic approval review because the account had reached its usage limit. After the approval service recovered, the same isolated command was approved and completed. No permissions were weakened to get around that rejection.
+The first attempt omitted immediate delivery. It finished the two CPU requests, but tcpdump reported 0 captured packets and 90 received by its filter. That failed PCAP and the original counters remain in the archive. Enabling immediate delivery recovered the packet stream in the repeat.
 
 ## What the decoder checks
 
@@ -66,6 +66,6 @@ The HTTP-to-runtime join is verified on both APIs. Adding `X-Request-ID: wire-{c
 
 `decode.py --frontend-log PATH` saves the log hash and exact bridge row for each match. Repeat the option for frontend restarts. Duplicate observer IDs or internal IDs fail the join. Unlinked model requests stay listed; a report must account for them before claiming complete capture. The live observer preserves an existing client header and only adds a unique value when absent. Request bodies remain byte-for-byte unchanged.
 
-For the approved single-pod layout, the passive filter is `tcp and (port 20000 or port 20003)`: backend request ingress plus frontend responses. Start capture before those processes open TCP connections, stop it after the final response, and retain tcpdump's zero-drop counters. Reset-helper responses use a separate port and are verified by their saved helper output and live clear-event proof.
+For the single-pod layout, the passive filter is `tcp and (port 20000 or port 20003)`: backend request ingress plus frontend responses. Start capture before those processes open TCP connections, stop it after the final response, and retain tcpdump's zero-drop counters. Reset-helper responses use a separate port and are verified by their saved helper output and live clear-event proof.
 
 For the live study, match the expected request count, confirm zero capture drops, and preserve the complete interval. A parser cannot detect an entire missing connection by examining only the connections it received. This CPU test compares against every callback to close that gap. GPU runs must also confirm that the unmodified vLLM worker receives the same wire payload and that event capture covers the same process epoch. Capture overhead remains unmeasured.

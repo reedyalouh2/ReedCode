@@ -8,7 +8,7 @@ When speculative prefill runs, which user request and session caused the interna
 
 ## Reproduction
 
-Run the [two-request stock-hint probe](../001-speculative-prefill/README.md#repeat-on-an-approved-server) with request tracing and routing debug logs enabled. Match the normal Chat request, the internal preparation, and the follow-up. The saved reproduction used one A100, the exact image digest and command in [results.json](results.json), and Qwen3-8B revision `b968826d9c46dd6066d109eabc6255188de91218`.
+Run the [two-request stock-hint probe](../001-speculative-prefill/README.md#repeat-on-a-server) with request tracing and routing debug logs enabled. Match the normal Chat request, the internal preparation, and the follow-up. The saved reproduction used one A100, the exact image digest and command in [results.json](results.json), and Qwen3-8B revision `b968826d9c46dd6066d109eabc6255188de91218`.
 
 The tool preparation ID is `7e0604ef-aead-454d-bf62-3172907a2c1f`. It appears at frontend log lines 108 and 112 and backend log lines 1085 and 1086. Its parent Chat request is `59fd1e70-5c6a-48a3-9642-a2305cb37fee`. The isolated text control has the same correlation gap. The [CPU record checker](reproduce.py) verifies the archive hashes and locates these records without a server.
 

@@ -48,4 +48,4 @@ The last column applies if those shared blocks remain on the selected worker. It
 | Did the warmup evict useful blocks or hurt another agent? | Unmeasured. The capture used one worker and did not test cache pressure. |
 | Could event lag or approximate predictions temporarily overestimate residency? | Yes by design; this audit does not measure their frequency. |
 
-Before making a shared-server impact claim, record `Stored`/`Removed` events and index lookups alongside the request tokens, then compare hint off, stock and fixed under a matched concurrent workload. Measure useful-block survival and unrelated-request latency. The [GPU check plan](../gpu-check.md) keeps this conditional on measured extra work and approval.
+Before making a shared-server impact claim, record `Stored`/`Removed` events and index lookups alongside the request tokens, then compare hint off, stock and fixed under a matched concurrent workload. Measure useful-block survival and unrelated-request latency. The [GPU comparison](../../combined-gpu-20260929/PREFILL.md) established the extra work; a concurrent experiment would measure its effect on other sessions.

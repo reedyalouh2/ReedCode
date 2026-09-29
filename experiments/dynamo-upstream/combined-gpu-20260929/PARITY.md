@@ -42,13 +42,13 @@ Claude's raw request already changed before rendering. At the first resume, mess
 
 At 32K, the fifth Claude request had 26,499 input tokens and requested 8,192 output tokens. Dynamo rejected it. Both scheduled follow-ups also exceeded the context allowance. All seven admitted requests remain in the record: four HTTP 200s and three HTTP 400s. The four usable requests had 63,744 cached and ideal tokens out of 87,854 input tokens; no usable cross-turn request exists. The first continuation attempt followed a 362.99-second diagnostic pause. This incomplete session cannot establish parity.
 
-After prefill finished, 68.16 minutes remained before the admission deadline. The approved retry raised the context limit to 65,536 with YaRN factor 2 and original context 32,768. It retained thinking and Claude's original output budget. That session completed all 15 requests in 320.76 seconds; Codex completed in 169.79 seconds. Their controller gaps between user turns were below 0.01 seconds. The 7/4/4 request caps interrupted unfinished turns as specified. Completing capture does not imply task success.
+After prefill finished, the retry raised the context limit to 65,536 with YaRN factor 2 and original context 32,768. It retained thinking and Claude's original output budget. That session completed all 15 requests in 320.76 seconds; Codex completed in 169.79 seconds. Their controller gaps between user turns were below 0.01 seconds. The 7/4/4 request caps interrupted unfinished turns as specified. Completing capture does not imply task success.
 
 ## Configuration and evidence
 
 Parity used stock Dynamo 1.5.0, vLLM 0.28.0 and the pinned Qwen3-8B revision. Qwen's `<think>` reasoning and structured tool calls made it a practical single-A100 proxy for the mechanisms of interest in GLM and MiniMax. Those families were not measured. Claude Code 2.1.81 used `/v1/messages`; Codex CLI 0.155.1 used `/v1/responses`, on separate copies of [the same frozen public task](../parity-run-1/task.json).
 
-All three measured sessions had `--enable-anthropic-api`, `--strip-anthropic-preamble` and `--enable-streaming-tool-dispatch`. Workers used `--dyn-tool-call-parser hermes`, `--dyn-reasoning-parser qwen3` and `--dyn-default-thinking-mode enabled`. No `nvext` hints or serving patches were used. Exact manifests and the approved clean-start substitution are linked in the [combined report](README.md).
+All three measured sessions had `--enable-anthropic-api`, `--strip-anthropic-preamble` and `--enable-streaming-tool-dispatch`. Workers used `--dyn-tool-call-parser hermes`, `--dyn-reasoning-parser qwen3` and `--dyn-default-thinking-mode enabled`. No `nvext` hints or serving patches were used. Exact manifests and the clean-start substitution are linked in the [combined report](README.md).
 
 The final Codex and Claude YaRN PCAPs contain 25,504 and 44,630 packets respectively, with zero capture drops. Joins account for reset canaries, smoke calls and control RPCs separately. Claude YaRN's three extra attempts at the proxy's request caps had no forwarded body; they remain recorded as controller-only attempts.
 

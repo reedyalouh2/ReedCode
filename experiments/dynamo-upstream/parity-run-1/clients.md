@@ -1,6 +1,6 @@
 # Client configuration and capture
 
-These are the configurations for [Parity Run 1](README.md). Both pinned CLIs completed streamed tool responses and two resumed follow-ups against the [CPU stub](readiness/README.md). The GPU smoke test is still required. Keep study configuration separate from personal credentials, plugins and session state. Do not edit the user's normal configuration.
+These are the configurations for [Parity Run 1](README.md). Both pinned CLIs completed streamed tool responses and two resumed follow-ups against the [CPU stub](readiness/README.md), then passed their live smoke tests and completed the [GPU sessions](../combined-gpu-20260929/PARITY.md). The study uses separate client configuration and session state.
 
 ## Claude Code 2.1.81
 

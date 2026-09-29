@@ -1,6 +1,6 @@
 # USER 0 image metadata
 
-`manifest.json` identifies the approved derivative. Its digest is `sha256:0a0741342e709bbfa6689e688c8306090af4a65d0f366ec38ec0269d63c201c6`.
+`manifest.json` identifies the deployed derivative. Its digest is `sha256:0a0741342e709bbfa6689e688c8306090af4a65d0f366ec38ec0269d63c201c6`.
 
 `config.json` changes only `config.User` from `dynamo` to `0`. All 67 layer descriptors, rootfs diff IDs, history and other settings match the pinned parent. `prepare_image.py` fetches and verifies the parent manifest, verifies the saved config, and constructs these files. `proof.json` records the checks.
 

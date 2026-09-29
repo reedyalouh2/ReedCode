@@ -112,9 +112,9 @@
   },
   "files": {
     ".gitignore": "9b685398f0a74732dedfb432a8dfda0c08518a08506c0e3198023194d08c2206",
-    "PARITY.md": "c2f0ad4fc3117027ab96e5c38237b78b11db2d86b8cb5d95db96eef218496cc1",
+    "PARITY.md": "072799090e24ed99c9f6b58737903b9b6f655c022b3f08867215fddec996a914",
     "PREFILL.md": "0a041a235aa004966d662759679ca72ca0a115e077cd2c20921756217a471409",
-    "README.md": "4df265336d8d1c2065c979758ef0d043bd3bb0b92c94c37835852211bb3aa561",
+    "README.md": "d82cb4eb8ec1ad76735af94a626ccf894e947f07c411f49bdbc8e831d661b77c",
     "operations/billing.json": "9c7a1d79b3f20be28472f573dc682df7569ecf320ea35476ad54bc0ea3b91168",
     "operations/claude-full-clean-start-proof.json": "e89fe985a58069bfbb2fd1f9b64d8f3f4d9630191c0e50726e01a987f841d8d7",
     "operations/claude-full-reset.json": "313c6d0c1f74b5d9c341a9a8ad1b2ddd197e234349046693e7c629cb6bd9c8f9",

@@ -22,7 +22,7 @@ Engine scheduling can change which work runs and when resources become free. Tha
 - [#7492](https://github.com/ai-dynamo/dynamo/pull/7492), merged March 20, 2026, unified user-facing priority and normalized backend polarity.
 - [#9821](https://github.com/ai-dynamo/dynamo/pull/9821), merged June 2, 2026, clarified layer boundaries, flags, queue requirements, and benchmark interpretation.
 
-Three searches returned complete result sets: [`"agent_hints.priority" vllm`](https://github.com/search?type=issues&q=repo%3Aai-dynamo%2Fdynamo%20%22agent_hints.priority%22%20vllm), [`"priority" "cache eviction"`](https://github.com/search?type=issues&q=repo%3Aai-dynamo%2Fdynamo%20%22priority%22%20%22cache%20eviction%22), and [`"priority" polarity`](https://github.com/search?type=issues&q=repo%3Aai-dynamo%2Fdynamo%20%22priority%22%20polarity). They returned 1, 29, and 23 results respectively. This was a focused check of the user's question.
+Three searches returned complete result sets: [`"agent_hints.priority" vllm`](https://github.com/search?type=issues&q=repo%3Aai-dynamo%2Fdynamo%20%22agent_hints.priority%22%20vllm), [`"priority" "cache eviction"`](https://github.com/search?type=issues&q=repo%3Aai-dynamo%2Fdynamo%20%22priority%22%20%22cache%20eviction%22), and [`"priority" polarity`](https://github.com/search?type=issues&q=repo%3Aai-dynamo%2Fdynamo%20%22priority%22%20polarity). They returned 1, 29, and 23 results respectively.
 
 ## Small tests worth running after review
 

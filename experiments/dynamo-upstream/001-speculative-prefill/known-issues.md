@@ -1,5 +1,7 @@
 # Speculative-prefill duplicate check
 
+**September 29 update:** current main still has the tested missing-field defect. #12109 and #12204 have closed without merging; the changes cited in their closing comments do not touch `speculative_prefill.rs`. [Fresh source, PR diffs and search results](recheck-20260929/README.md). The September 28 audit below is retained with its original inspection date.
+
 Checked September 28, 2026. This is a read-only source and issue-history audit. No upstream issue, comment, or pull request was submitted.
 
 ## Finding

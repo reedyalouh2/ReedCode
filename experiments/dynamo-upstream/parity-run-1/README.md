@@ -1,6 +1,6 @@
 # Parity Run 1: real coding sessions
 
-**Status: completed.** The [September 29 results](../combined-gpu-20260929/PARITY.md) include Codex at 32K, the incomplete Claude 32K attempt, and the approved Claude 64K YaRN retry. Both completed sessions matched their compatible-prefix reference. The protocol below preserves the planned 32K setup; configuration changes and clean-start evidence are recorded with the results.
+**Status: completed.** The [September 29 results](../combined-gpu-20260929/PARITY.md) include Codex at 32K, the incomplete Claude 32K attempt, and the Claude 64K YaRN retry. Both completed sessions matched their compatible-prefix reference. The protocol below preserves the planned 32K setup; configuration changes and clean-start evidence are recorded with the results.
 
 The question is how much reusable prefix history Dynamo loses while serving Claude Code and Codex, and where it is lost. The two sessions use stock Dynamo. The speculative-prefill patch is tested separately.
 
@@ -14,7 +14,7 @@ nvcr.io/nvidia/ai-dynamo/vllm-runtime@sha256:d18389c89eb319401fdd73f1fbbaff10d93
 
 The [deployment record](../../dynamo-20260928/deployment.json) reports vLLM 0.28.0 and embedded Dynamo revision `32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653`. Keep the image digest authoritative and verify the installed versions before running. The release tag points to a different commit; source checks must identify which revision they inspect.
 
-The first rental could not capture backend traffic under the image's default user. The user approved a [runtime-user-only derivative](../gpu-readiness/runpod-retry-proposal/README.md) for the replacement run. Its filesystem layers are identical to the image above; the config changes `User` to `0`. Record both digests and the effective runtime user in the results. The stock 1.5.0 frontend and backend binaries remain unchanged.
+The first rental could not capture backend traffic under the image's default user. The run used a [runtime-user-only derivative](../gpu-readiness/runpod-retry-proposal/README.md) for the replacement run. Its filesystem layers are identical to the image above; the config changes `User` to `0`. Record both digests and the effective runtime user in the results. The stock 1.5.0 frontend and backend binaries remain unchanged.
 
 Serve `Qwen/Qwen3-8B` at `b968826d9c46dd6066d109eabc6255188de91218`, with BF16 weights and KV, TP=1, prefix caching, 16-token blocks and a 32,768-token context. Set `--dyn-default-thinking-mode enabled`, with the Qwen3 reasoning parser and Hermes tool parser. Inspect the effective prompt and returned reasoning to confirm thinking is active. A client override that turns it off fails readiness.
 
@@ -25,7 +25,7 @@ I chose Qwen3-8B because its `<think>` reasoning and structured tool calls fit o
 | Claude Code | 2.1.81 | `/v1/messages` |
 | Codex CLI | 0.155.1 | `/v1/responses` |
 
-Freeze the actual executable hashes and effective configuration before the run. The documented configuration is in [clients.md](clients.md). The user updated the frontend configuration before collection to NVIDIA's recommended `--enable-anthropic-api --strip-anthropic-preamble --enable-streaming-tool-dispatch`; all three were available and active. Preserve normal client cache fields and tool schemas, and send no `nvext` fields or agent hints. No request-rewriting adapter, template replacement or serving patch is allowed in this study.
+Freeze the actual executable hashes and effective configuration before the run. The documented configuration is in [clients.md](clients.md). Before collection, the frontend was configured with NVIDIA's recommended `--enable-anthropic-api --strip-anthropic-preamble --enable-streaming-tool-dispatch`; all three were available and active. Preserve normal client cache fields and tool schemas, and send no `nvext` fields or agent hints. No request-rewriting adapter, template replacement or serving patch is allowed in this study.
 
 ## Workload
 

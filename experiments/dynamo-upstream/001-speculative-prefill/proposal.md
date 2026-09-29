@@ -1,6 +1,6 @@
 # Local speculative-prefill fix
 
-The [local patch](fix/README.md) implements a narrow Qwen3 tool-continuation path. It preserves the request and completed assistant, then asks the renderer for a supported continuation prefix. Unknown contracts skip preparation. Nothing has been submitted upstream.
+The [local patch](fix/README.md) implements a narrow Qwen3 tool-continuation path. It preserves the request and completed assistant, then asks the renderer for a supported continuation prefix. Unknown contracts skip preparation. The [split plan](upstream-split.md) separates the general request-preservation change from the renderer hook.
 
 ## Pinned source
 
@@ -42,10 +42,10 @@ The native CPU renderer produces exact follow-up prefixes in **54/54 cases**: 42
 
 Passing helper regressions cover fragmented and parallel tool calls, reasoning, raw argument preservation, malformed/incomplete responses, changed artifacts, unsupported templates and settings, multi-turn histories, and tool text containing template delimiters. The [fix packet](fix/README.md) records the commands, logs and hashes.
 
-The patched `dynamo-llm` crate compiles with test targets on macOS ARM64. All 19 warmup-module tests pass, including the 13 adapted upstream lifecycle tests and six accumulator tests. These use a mock backend; the Linux serving artifact, live dispatch and GPU cache behavior remain to be validated.
+The patched `dynamo-llm` crate compiles with test targets on macOS ARM64. All 19 warmup-module tests pass, including the 13 adapted upstream lifecycle tests and six accumulator tests. These use a mock backend. Matched Linux frontends then passed the live generated-tool checks and the 18-trial GPU comparison.
 
 ## GPU validation
 
-The approved [combined plan](../combined-gpu-plan.md) replaces the standalone $2 proposal with one **$5 maximum** covering stock/fixed speculative prefill and parity Run 1. The [Run 1 protocol](../parity-run-1/README.md) is frozen. Matched Linux artifacts and client/capture checks are in progress; the replacement key is stored locally.
+The [GPU comparison](../combined-gpu-20260929/PREFILL.md) measured first and repeated warmups, scheduled prefill, follow-up hits and the retained branch. Stock added 62.27% and 85.20% prefill work versus off, with no extra real-request hits. The fix cut prefill 37.96% and 45.96% versus stock and removed the warmup-only branch.
 
-The measurement needs both first and repeated warmups. [Input accounting](session-cost/README.md) shows that repeated bad warmups can reuse each other; [KV accounting](kv-footprint/README.md) shows that the separate branch can still retain substantial content. Measure scheduled prefill, follow-up hits and actual resident blocks separately. The CPU fix removes the warmup-only full-input branch after the matching follow-up in these cases; its physical memory and latency effect remain unmeasured.
+The complete tested fix supplies those results. The smaller request-preservation contribution will need its own tests after extraction; the cross-model ablation already shows why it is useful. [Proposed split](upstream-split.md).

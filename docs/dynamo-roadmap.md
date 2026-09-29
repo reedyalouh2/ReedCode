@@ -4,7 +4,7 @@ I started this to test whether information from an agent's tool loop could help 
 
 Work started locally on September 27, 2026. The [first GPU run](../experiments/dynamo-20260928/README.md) followed on September 28 using a rented A100 80GB. The development machine is an Apple Silicon Mac.
 
-**Current priority:** get the [verified Dynamo findings](dynamo-upstream.md) reviewed upstream. The [September 29 GPU check](../experiments/dynamo-upstream/combined-gpu-20260929/README.md) completed the stock-versus-fix comparison and real Claude Code/Codex parity sessions. The patch and reproduction are ready for review; nothing has been filed or pushed. The research studies below remain paused.
+**Current priority:** get the [verified Dynamo findings](dynamo-upstream.md) reviewed upstream. The [September 29 GPU check](../experiments/dynamo-upstream/combined-gpu-20260929/README.md) completed the stock-versus-fix comparison and real Claude Code/Codex parity sessions. The patch and reproduction are ready for review. The research studies below remain paused.
 
 ## Where the integration sits
 

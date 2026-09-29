@@ -19,8 +19,8 @@ Not ready to file until each item is checked:
 - [x] **Still present on current code.** CPU reproduction rerun against the latest release and `main`. [Pinned builds and results](../experiments/dynamo-upstream/001-speculative-prefill/current-code/README.md).
 - [x] **Root cause named.** One sentence explaining why the warmup diverges at token 40 (tools) and 56 (text), pointing to the code path. [Causes and source links](../experiments/dynamo-upstream/001-speculative-prefill/current-code/intended-use.md#exact-causes).
 - [x] **Scope measured.** Same check on 2–3 more model families. The missing schema affects Qwen, Nemotron and GPT-OSS in the tested cases. Text boundaries vary; DeepSeek tool rendering errors prevent its tool-prefix comparison. [Cases, ablations and pins](../experiments/dynamo-upstream/001-speculative-prefill/scope/README.md).
-- [x] **Fix shown to help.** The approved replacement run used the rotated key and completed all 18 cells: two sessions, three conditions, three repetitions. Relative to stock, the fix cut scheduled prefill by 37.96% and 45.96%, increased real follow-up cache hits, and removed the warmup-only branch. [GPU results and reproduction](../experiments/dynamo-upstream/combined-gpu-20260929/PREFILL.md). The combined cap remains $5.
-- [ ] **Existing issues and PRs searched again** on the day of filing.
+- [x] **Fix shown to help.** The GPU run completed all 18 cells: two sessions, three conditions, three repetitions. Relative to stock, the fix cut scheduled prefill by 37.96% and 45.96%, increased real follow-up cache hits, and removed the warmup-only branch. [GPU results and reproduction](../experiments/dynamo-upstream/combined-gpu-20260929/PREFILL.md).
+- [x] **Existing issues and PRs searched again September 29.** Current main still has the defect; #12109 and #12204 closed without merging. [Updated search and source](../experiments/dynamo-upstream/001-speculative-prefill/recheck-20260929/README.md). Repeat the check if filing on a later date.
 
 The [stock CPU check](../experiments/dynamo-upstream/001-speculative-prefill/current-code/README.md) reproduces token 40 and 56 on v1.5.0 (`b83b1d9`) and `main` (`f5d3353`), checked September 28, 2026. The local patch preserves the request and completed assistant, then uses an explicit Qwen tool-continuation boundary. Other templates and text continuations skip preparation. The patched Dynamo crate compiles; all 19 warmup-module tests pass.
 
@@ -30,21 +30,21 @@ These are controlled builder replays. The timings include serial warmups and obs
 
 The separate [stock parity run](../experiments/dynamo-upstream/combined-gpu-20260929/PARITY.md) completed 15 calls and two follow-ups in each harness. Codex at 32K and Claude at 64K YaRN reused every compatible full prefix block. The original Claude 32K failure remains recorded. That compatible-prefix parity track stops with no significant gap; the cross-model rendering audit stays queued.
 
-The [first rental](../experiments/dynamo-upstream/gpu-readiness/gpu-attempt-01/README.md) failed capture permissions and was deleted before model download. The approved runtime-user change allowed the replacement run to proceed. Its first prefill epoch passed tool smokes, then our measurement identity endpoint returned HTTP 503 before the first replay model request was sent. The backend launcher had been reparented to PID 1, changing the recorded process identity. The [failed epoch remains separate](../experiments/dynamo-upstream/combined-gpu-20260929/PREFILL.md#live-path-check-and-earlier-attempt) from the 18 successful trials.
+The [first rental](../experiments/dynamo-upstream/gpu-readiness/gpu-attempt-01/README.md) failed capture permissions and was deleted before model download. Changing the container runtime user enabled packet capture. Its first prefill epoch passed tool smokes, then our measurement identity endpoint returned HTTP 503 before the first replay model request was sent. The backend launcher had been reparented to PID 1, changing the recorded process identity. The [failed epoch remains separate](../experiments/dynamo-upstream/combined-gpu-20260929/PREFILL.md#live-path-check-and-earlier-attempt) from the 18 successful trials.
 
-Next: review the issue and patch, then repeat the existing-issue search on the filing day. Nothing has been filed or pushed upstream.
+Next: review the issue and extract the two changes in the [patch split](../experiments/dynamo-upstream/001-speculative-prefill/upstream-split.md). The September 29 search is complete.
 
 ## After #1: next milestones
 
 1. **Issue + PR for #1.** Keep the PR small, include a regression test, and respond to review quickly.
 2. **#2 rendering and cache compatibility.** This is the next audit after #1, with the speculative-prefill defect as its first regression case. Rust 1.96.1 is available; the current main snapshot uses renderer 5.4.0, superseding the earlier 5.1.2 target. Extend the official-template parity check across multi-turn history, tool calls and reasoning settings. File DeepSeek cases only if the known issues leave them uncovered.
 3. **Cache-compatibility test suite (upstream).** Propose the suite in the #1 thread first; build it while #1 is in review. Keep each supported template's rendering and reusable-prefix tests together.
-4. **Measured payoff on their tools.** AIPerf replaying TraceLab plus our sessions: time to first token and cached tokens with stock vs. fixed `speculative_prefill`. Needs GPU approval. The controlled prefill and branch measurements are complete. A live-agent or concurrent study needs its own workload and approval.
+4. **Measured payoff on their tools.** AIPerf replaying TraceLab plus our sessions: time to first token and cached tokens with stock vs. fixed `speculative_prefill`. The controlled prefill and branch measurements are complete. A concurrent study needs a representative workload and a separate experiment.
 5. **#5 observability:** file after #1, using it as the concrete example of what the missing linkage blocked.
 6. **Write-up:** problem, fix, test suite, and measured gain, offered to the Dynamo team.
 
 For each candidate: reproduce, search existing issues and PRs, draft an issue, and propose a fix. Already-known problems should be recorded with links before moving on. A verified report needs exact versions, commands, raw evidence with hashes, an impact estimate, and clear limits.
 
-CPU checks are authorized. GPU spending requires a stated purpose, cost cap, and explicit approval. The exposed Runpod key was replaced before this run; credentials are read only from local storage. Upstream filing, posting, and pushes require review of the concrete issue and fix first.
+The issue and patch are prepared for review. The current patch spans request preservation and a renderer hook; [the split plan](../experiments/dynamo-upstream/001-speculative-prefill/upstream-split.md) separates those changes.
 
-The dead-suffix study and further prefix-preparation research are paused. Existing records remain available as evidence. Neither study authorizes more implementation or GPU spending.
+The dead-suffix study and further prefix-preparation research are paused. Existing records remain available as evidence.

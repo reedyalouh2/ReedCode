@@ -67,4 +67,4 @@ Use the report from that build and a new output directory. The script verifies t
 
 The ten terminal responses have no observed follow-up and are excluded. These records cover short, single-user-turn sessions with thinking disabled. The length controls are constructed and exceed the original server's 32,768-token limit at their largest sizes. They demonstrate rendering and cache-accounting behavior only.
 
-Actual prefill work, block insertions, evictions and other agents' latency remain unmeasured. The pilot's 7.305 s versus 7.266 s does not provide reliable directional evidence. The next server test should distinguish a cold alternate prefix from repeated warmups that reuse that prefix, and compare hint-off, stock and a validated fix. GPU approval, a cap under $2 and key rotation are still required.
+This CPU model preceded the [GPU comparison](../../combined-gpu-20260929/PREFILL.md), which measured scheduled prefill and the retained branch for hint-off, stock and fixed. The pilot's 7.305 s versus 7.266 s supplies no reliable directional evidence. Eviction pressure and other agents' latency remain unmeasured.

@@ -2,7 +2,7 @@
 
 The CPU packet is ready. It contains one recorded coding session, one longer transcript built from executed repository tools, and the stock/fixed token arrays for every continuation. No GPU requests have been made with these fixtures.
 
-**This is a controlled builder replay.** Each HTTP request generates one discarded token. It then supplies the saved assistant history as part of the next input. The original assistant's decode KV is absent, so the extra reuse credited to a fixed warmup can exceed its benefit in a live agent. The approved generated-tool check must still exercise the actual stock and fixed hint paths before results are collected.
+**This is a controlled builder replay.** Each HTTP request generates one discarded token. It then supplies the saved assistant history as part of the next input. The original assistant's decode KV is absent, so the extra reuse credited to a fixed warmup can exceed its benefit in a live agent. Generated-tool checks exercised both actual hint paths before the [completed GPU comparison](../../combined-gpu-20260929/PREFILL.md).
 
 ## Frozen sessions
 
@@ -70,4 +70,4 @@ The lower-level `replay.py` remains available for controlled debugging with an i
 - Prove cache/index reset and continuous KV-event collection. [reset.md](reset.md) records the pinned source path and the part still requiring live confirmation.
 - Join each HTTP request to backend scheduled-prefill accounting, cache events and process identity. SSE usage and these CPU arrays alone cannot show physical KV residency or scheduled GPU work.
 
-The [combined plan](../../combined-gpu-plan.md) governs GPU setup, approval, budget and stopping times. This directory adds no permission to start paid resources.
+The [combined method](../../combined-gpu-plan.md) records the deployment and measurement design.

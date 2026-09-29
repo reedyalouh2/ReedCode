@@ -1,6 +1,6 @@
 # Controlled replay handoff
 
-Run the coordinator and KV collector on the same pod. The [launcher](../linux-readiness/README.md) supplies the approved worker, frontend, discovery path and stable ports. Start the passive TCP capture before launching those processes. This page starts after deployment; it does not provision anything.
+Run the coordinator and KV collector on the same pod. The [launcher](../linux-readiness/README.md) supplies the pinned worker, frontend, discovery path and stable ports. Start the passive TCP capture before launching those processes. This page starts after deployment; it does not provision anything.
 
 ## Required live evidence
 
@@ -96,7 +96,7 @@ The switch starts fresh TCP/KV capture before the backend and frontend. It uses 
 
 The current paths are in `/tmp/reedcode-study/phase-active.json`. Each switched phase gets its own `epochs/<id>/` directory. The bootstrap parity capture remains intact. Use the active `kv_directory`, `wire_pcap` and `processes_file` for subsequent evidence, rather than the bootstrap paths.
 
-Run the generated stock/fixed smokes and frozen trial schedule with the approved absolute phase deadline:
+Run the generated stock/fixed smokes and frozen trial schedule with the recorded absolute phase deadline:
 
 ```bash
 "$control" "$readiness/phase_control.py" prefill \

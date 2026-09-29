@@ -2,7 +2,7 @@
 
 The speculative-prefill bug produced measurable wasted work. Across two controlled sessions, stock warmups added 62.27% and 85.20% more prefill than leaving the hint off, with no extra cache hits on real follow-ups. The fix removed the separate warmup branch. [Prefill results](PREFILL.md).
 
-Stock Dynamo also completed real Codex and Claude Code sessions, each with 15 model calls and two user follow-ups. Neither missed a compatible cached prefix. Claude needed the approved 64K YaRN retry after its original 32K session exceeded the context limit. [Parity results and causes](PARITY.md).
+Stock Dynamo also completed real Codex and Claude Code sessions, each with 15 model calls and two user follow-ups. Neither missed a compatible cached prefix. Claude needed a 64K YaRN retry after its original 32K session exceeded the context limit. [Parity results and causes](PARITY.md).
 
 | Completed parity session | Actual cached / input | Input-only ideal / input | Actual / ideal |
 | --- | ---: | ---: | ---: |
@@ -24,7 +24,7 @@ worker:   --dyn-tool-call-parser hermes --dyn-reasoning-parser qwen3 --dyn-defau
 
 All were supported in 1.5.0. [Original Claude configuration](operations/recommended-config-manifest.json), [Codex configuration](operations/codex-recommended-config-manifest.json) and [Claude YaRN configuration](operations/claude-yarn-config-manifest.json) record the evidence. Codex's frontend flags come from its recorded launcher and hash-matched source; its worker argv was captured live. Both Claude configurations include live frontend argv.
 
-The YaRN decision left **68.16 minutes** before minute 130, exceeding the requested 40-minute minimum. The rerun kept Claude's original 8,192 output and 4,096 thinking budgets and used the [documented Qwen scaling](https://huggingface.co/Qwen/Qwen3-8B/blob/b968826d9c46dd6066d109eabc6255188de91218/README.md):
+The 64K rerun kept Claude's original 8,192 output and 4,096 thinking budgets and used the [documented Qwen scaling](https://huggingface.co/Qwen/Qwen3-8B/blob/b968826d9c46dd6066d109eabc6255188de91218/README.md):
 
 ```text
 --max-model-len 65536 --hf-overrides '{"rope_scaling":{"rope_type":"yarn","factor":2.0,"original_max_position_embeddings":32768}}'
@@ -36,11 +36,11 @@ The [manifest](manifest.json) records both image digests, model hashes, patches,
 
 The original Claude session produced four successful requests, then three context-limit errors including its two follow-up attempts. Those records remain in the parity report. Codex completed next, followed by all 18 prefill trials and the Claude YaRN retry. The successful parity sessions kept follow-up gaps below ten seconds.
 
-The user approved first-request `cached_tokens=0` as parity's clean-start evidence when the expected reset trace remained unavailable. Every measured session has that explicit zero, plus the saved reset acknowledgement and canary evidence. The prefill comparison separately verified an empty router index through its clear-event counters.
+Parity used first-request `cached_tokens=0` as its clean-start evidence because the expected reset trace was unavailable. Every measured session has that explicit zero, plus the saved reset acknowledgement and canary evidence. The prefill comparison separately verified an empty router index through its clear-event counters.
 
 Fixed frontend RPC-port registration failed during setup. Dynamic port selection worked without a serving-code patch. This is recorded as [candidate #6](../006-fixed-rpc-registration/README.md) for a separate reproduction and issue search. An earlier prefill attempt stopped at our identity monitor before sending any replay model request; its records remain in the archive.
 
-The pod was deleted at 06:36:51 UTC after 79.43 minutes. An independent account check confirmed it absent and active spend at $0/hour. The conservative total is **$2.37**, including disk and the earlier failed rental, against the approved $5 cap. [Billing and deletion evidence](operations/billing.json). This is an estimate; provider settlement was still unknown.
+The study ran for 79.43 minutes and cost an estimated **$2.37**, including disk and the earlier failed rental. [Run and cost record](operations/billing.json).
 
 ## Reproduce locally
 
@@ -58,6 +58,6 @@ The project test suite passed: 190 executed, 26 skipped, 216 discovered. [Test l
 
 ## Limits and next step
 
-These are single-GPU measurements with instrumentation enabled. They do not measure shared-server latency, throughput, eviction pressure or model quality. Prefill replays use one discarded generated token per request; their timing is separate from the real harness sessions. The two completed parity sessions use different context configurations and stay separate. Old-history suffix lengths show where reuse becomes impossible; they do not quantify a quality-preserving fix's savings.
+These are single-GPU measurements with instrumentation enabled. They do not measure shared-server latency, throughput, eviction pressure or model quality. Prefill replays use one discarded generated token per request; their timing is separate from the real harness sessions. The two completed parity sessions use different context configurations and stay separate. Old-history suffix lengths show where reuse becomes impossible; they do not quantify a quality-preserving fix's savings. The cost estimate includes reserves; provider settlement was still unknown.
 
-The result supports reviewing the [speculative-prefill issue draft](../001-speculative-prefill/issue-draft.md) and [tested patch](../001-speculative-prefill/fix/README.md). The compatible-prefix parity track stops here with no significant gap in the two completed sessions. Nothing has been filed or pushed upstream. A fresh issue/PR search and user review still precede filing.
+The result supports reviewing the [speculative-prefill issue draft](../001-speculative-prefill/issue-draft.md) and [tested patch](../001-speculative-prefill/fix/README.md). The compatible-prefix parity track stops here with no significant gap in the two completed sessions. The [current issue check and patch split](../001-speculative-prefill/upstream-split.md) describe the contribution planned for upstream review.
