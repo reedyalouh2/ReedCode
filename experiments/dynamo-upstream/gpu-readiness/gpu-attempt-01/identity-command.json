@@ -1,0 +1,5 @@
+[
+  "python3",
+  "-c",
+  "import os,json,shutil; from pathlib import Path; print(json.dumps({'uid':os.getuid(),'euid':os.geteuid(),'tcpdump':shutil.which('tcpdump'),'capabilities':[x for x in Path('/proc/self/status').read_text().splitlines() if x.startswith(('CapEff:','CapBnd:','NoNewPrivs:'))]}))"
+]

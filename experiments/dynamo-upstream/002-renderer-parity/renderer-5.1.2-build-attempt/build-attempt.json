@@ -1,0 +1,26 @@
+{
+  "status": "build_failed",
+  "renderer_version": "5.1.2",
+  "protocols_version": "5.4.1",
+  "dynamo_tokenizers_version": "1.8.1",
+  "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)",
+  "cargo": "cargo 1.90.0 (Homebrew)",
+  "command": "CARGO_HOME=/tmp/reedcode-renderer-cargo CARGO_TARGET_DIR=/tmp/reedcode-renderer-512-target cargo build --manifest-path /tmp/reedcode-renderer-512/Cargo.toml",
+  "failure": {
+    "code": "E0658",
+    "crate": "dynamo-tokenizers 1.8.1",
+    "file": "src/lib.rs",
+    "line": 502,
+    "message": "use of unstable library feature round_char_boundary",
+    "source": "new_text.floor_char_boundary(requested_split)"
+  },
+  "compiled_binary": false,
+  "fixture_cases_executed": 0,
+  "gpu_measurements": false,
+  "files_sha256": {
+    "Cargo.toml": "ae03b00e6726b675c72d43e7d38adaf3a2ef9b94ff6c8392b4a33d4f68ceea9e",
+    "Cargo.lock": "3af9658d504e84cc23bd39523e20f23f75dcddf0df2e9ede70c18103ae72c0e2",
+    "src/main.rs": "c9392648f28f68b088b4d52d623d8d5d7de82069eb639f075b3188659a2065ea"
+  },
+  "decision": "Stopped at the installed toolchain limitation. No toolchain or upstream source changes. No 5.1.2 rendering result."
+}

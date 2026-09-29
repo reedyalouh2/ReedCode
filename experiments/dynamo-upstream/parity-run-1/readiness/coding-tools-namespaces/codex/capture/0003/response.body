@@ -1,0 +1,27 @@
+event: response.created
+data: {"type": "response.created", "response": {"id": "resp_stub", "object": "response", "created_at": 1, "status": "in_progress", "model": "Qwen/Qwen3-8B", "output": [], "usage": null}}
+
+event: response.output_item.added
+data: {"type": "response.output_item.added", "output_index": 0, "item": {"id": "rs_stub", "type": "reasoning", "summary": []}}
+
+event: response.output_item.done
+data: {"type": "response.output_item.done", "output_index": 0, "item": {"id": "rs_stub", "type": "reasoning", "summary": [{"type": "summary_text", "text": "I will read the local fixture before answering."}]}}
+
+event: response.output_item.added
+data: {"type": "response.output_item.added", "output_index": 1, "item": {"id": "msg_stub", "type": "message", "role": "assistant", "status": "in_progress", "content": []}}
+
+event: response.content_part.added
+data: {"type": "response.content_part.added", "item_id": "msg_stub", "output_index": 1, "content_index": 0, "part": {"type": "output_text", "text": "", "annotations": []}}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "item_id": "msg_stub", "output_index": 1, "content_index": 0, "delta": "The local protocol check is complete."}
+
+event: response.output_text.done
+data: {"type": "response.output_text.done", "item_id": "msg_stub", "output_index": 1, "content_index": 0, "text": "The local protocol check is complete."}
+
+event: response.output_item.done
+data: {"type": "response.output_item.done", "output_index": 1, "item": {"id": "msg_stub", "type": "message", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "The local protocol check is complete.", "annotations": []}]}}
+
+event: response.completed
+data: {"type": "response.completed", "response": {"id": "resp_stub", "object": "response", "created_at": 1, "status": "completed", "model": "Qwen/Qwen3-8B", "output": [{"id": "rs_stub", "type": "reasoning", "summary": [{"type": "summary_text", "text": "I will read the local fixture before answering."}]}, {"id": "msg_stub", "type": "message", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "The local protocol check is complete.", "annotations": []}]}], "usage": {"input_tokens": 100, "output_tokens": 12, "total_tokens": 112, "input_tokens_details": {"cached_tokens": 20}, "output_tokens_details": {"reasoning_tokens": 8}}}}
+

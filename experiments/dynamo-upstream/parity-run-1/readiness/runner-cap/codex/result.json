@@ -1,0 +1,467 @@
+{
+  "client": "codex",
+  "version": "codex-cli 0.155.1",
+  "executable_sha256": "298d3d73d0bbc1367e58a370df5b6216fe30ce0a92e8b6b0afb0377a958dc335",
+  "workspace": "/study",
+  "stub_only": true,
+  "smoke": false,
+  "max_calls": 15,
+  "seconds": 60.0,
+  "upstream": "http://127.0.0.1:41633",
+  "model_requests_made": 0,
+  "turns": [
+    {
+      "command": [
+        "/codex",
+        "exec",
+        "--ignore-user-config",
+        "--ignore-rules",
+        "--strict-config",
+        "--json",
+        "--sandbox",
+        "workspace-write",
+        "--skip-git-repo-check",
+        "--cd",
+        "/study/task",
+        "-c",
+        "model=\"Qwen/Qwen3-8B\"",
+        "-c",
+        "model_provider=\"dynamo_parity\"",
+        "-c",
+        "model_context_window=32768",
+        "-c",
+        "model_reasoning_effort=\"medium\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "-c",
+        "model_providers.dynamo_parity.name=\"Dynamo parity\"",
+        "-c",
+        "model_providers.dynamo_parity.base_url=\"http://127.0.0.1:36507/v1\"",
+        "-c",
+        "model_providers.dynamo_parity.wire_api=\"responses\"",
+        "-c",
+        "model_providers.dynamo_parity.requires_openai_auth=false",
+        "-c",
+        "model_providers.dynamo_parity.supports_websockets=false",
+        "-c",
+        "model_providers.dynamo_parity.request_max_retries=0",
+        "-c",
+        "model_providers.dynamo_parity.stream_max_retries=0",
+        "-c",
+        "sqlite_home=\"/study/codex-state\"",
+        "-c",
+        "log_dir=\"/study/codex-logs\"",
+        "-c",
+        "analytics.enabled=false",
+        "-c",
+        "feedback.enabled=false",
+        "-c",
+        "allow_login_shell=false",
+        "Read fixture.txt using a normal file or shell tool, then briefly report its contents."
+      ],
+      "exit_code": 1,
+      "started_monotonic_ns": 5609504418887,
+      "ended_monotonic_ns": 5610664850679,
+      "intervention": {
+        "reason": "phase_call_limit",
+        "signal": "SIGINT",
+        "at_monotonic_ns": 5610502024846,
+        "admitted_calls": 1,
+        "failed_http_capture_sequences": []
+      },
+      "session_id": "01a0eb05-4baf-7e60-bba3-38479ec45518",
+      "prompt_sha256": "71ae66b70b720d67a6a3df73046e7e21e4e45a8760052be36da27115a214efc1",
+      "followup_delay_seconds": null
+    },
+    {
+      "command": [
+        "/codex",
+        "exec",
+        "--ignore-user-config",
+        "--ignore-rules",
+        "--strict-config",
+        "--json",
+        "--sandbox",
+        "workspace-write",
+        "--skip-git-repo-check",
+        "--cd",
+        "/study/task",
+        "-c",
+        "model=\"Qwen/Qwen3-8B\"",
+        "-c",
+        "model_provider=\"dynamo_parity\"",
+        "-c",
+        "model_context_window=32768",
+        "-c",
+        "model_reasoning_effort=\"medium\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "-c",
+        "model_providers.dynamo_parity.name=\"Dynamo parity\"",
+        "-c",
+        "model_providers.dynamo_parity.base_url=\"http://127.0.0.1:36507/v1\"",
+        "-c",
+        "model_providers.dynamo_parity.wire_api=\"responses\"",
+        "-c",
+        "model_providers.dynamo_parity.requires_openai_auth=false",
+        "-c",
+        "model_providers.dynamo_parity.supports_websockets=false",
+        "-c",
+        "model_providers.dynamo_parity.request_max_retries=0",
+        "-c",
+        "model_providers.dynamo_parity.stream_max_retries=0",
+        "-c",
+        "sqlite_home=\"/study/codex-state\"",
+        "-c",
+        "log_dir=\"/study/codex-logs\"",
+        "-c",
+        "analytics.enabled=false",
+        "-c",
+        "feedback.enabled=false",
+        "-c",
+        "allow_login_shell=false",
+        "resume",
+        "01a0eb05-4baf-7e60-bba3-38479ec45518",
+        "First follow-up: confirm the fixture marker again."
+      ],
+      "exit_code": 0,
+      "started_monotonic_ns": 5610666019137,
+      "ended_monotonic_ns": 5616007629639,
+      "intervention": null,
+      "session_id": "01a0eb05-4baf-7e60-bba3-38479ec45518",
+      "prompt_sha256": "87b993e2ce2df50a871a8d5752e106594ed1775c22e226c84388fa7db382db36",
+      "followup_delay_seconds": 0.001168458
+    },
+    {
+      "command": [
+        "/codex",
+        "exec",
+        "--ignore-user-config",
+        "--ignore-rules",
+        "--strict-config",
+        "--json",
+        "--sandbox",
+        "workspace-write",
+        "--skip-git-repo-check",
+        "--cd",
+        "/study/task",
+        "-c",
+        "model=\"Qwen/Qwen3-8B\"",
+        "-c",
+        "model_provider=\"dynamo_parity\"",
+        "-c",
+        "model_context_window=32768",
+        "-c",
+        "model_reasoning_effort=\"medium\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "-c",
+        "model_providers.dynamo_parity.name=\"Dynamo parity\"",
+        "-c",
+        "model_providers.dynamo_parity.base_url=\"http://127.0.0.1:36507/v1\"",
+        "-c",
+        "model_providers.dynamo_parity.wire_api=\"responses\"",
+        "-c",
+        "model_providers.dynamo_parity.requires_openai_auth=false",
+        "-c",
+        "model_providers.dynamo_parity.supports_websockets=false",
+        "-c",
+        "model_providers.dynamo_parity.request_max_retries=0",
+        "-c",
+        "model_providers.dynamo_parity.stream_max_retries=0",
+        "-c",
+        "sqlite_home=\"/study/codex-state\"",
+        "-c",
+        "log_dir=\"/study/codex-logs\"",
+        "-c",
+        "analytics.enabled=false",
+        "-c",
+        "feedback.enabled=false",
+        "-c",
+        "allow_login_shell=false",
+        "resume",
+        "01a0eb05-4baf-7e60-bba3-38479ec45518",
+        "Second follow-up: give the fixture marker once more."
+      ],
+      "exit_code": 0,
+      "started_monotonic_ns": 5616013700556,
+      "ended_monotonic_ns": 5621524167183,
+      "intervention": null,
+      "session_id": "01a0eb05-4baf-7e60-bba3-38479ec45518",
+      "prompt_sha256": "cb312c25a092a31e3c54b1731c122fc16e9c0ce3b41067c83ea0c16eae08354b",
+      "followup_delay_seconds": 0.006070917
+    }
+  ],
+  "session_id": "01a0eb05-4baf-7e60-bba3-38479ec45518",
+  "completed": true,
+  "admitted_calls": 3,
+  "elapsed_seconds": 12.719225088000712,
+  "capture_ledger": [
+    {
+      "sequence": 1,
+      "method": "POST",
+      "path": "/v1/responses",
+      "inference": true,
+      "admitted_inference_count": 1,
+      "started_unix_ns": 1790649388438103305,
+      "started_monotonic_ns": 5610423433887,
+      "request_headers": [
+        [
+          "accept",
+          "text/event-stream"
+        ],
+        [
+          "content-type",
+          "application/json"
+        ],
+        [
+          "originator",
+          "codex_exec"
+        ],
+        [
+          "user-agent",
+          "codex_exec/0.155.1 (Debian 12.0.0; aarch64) dumb (codex_exec; 0.155.1)"
+        ],
+        [
+          "content-length",
+          "40112"
+        ]
+      ],
+      "authorization_present": false,
+      "authorization_is_study_dummy": false,
+      "unexpected_credentials": false,
+      "complete": true,
+      "chunks": [
+        {
+          "received_monotonic_ns": 5610439163179,
+          "bytes": 212
+        },
+        {
+          "received_monotonic_ns": 5610443309012,
+          "bytes": 162
+        },
+        {
+          "received_monotonic_ns": 5610449490262,
+          "bytes": 243
+        },
+        {
+          "received_monotonic_ns": 5610455092512,
+          "bytes": 241
+        },
+        {
+          "received_monotonic_ns": 5610460182804,
+          "bytes": 216
+        },
+        {
+          "received_monotonic_ns": 5610466291012,
+          "bytes": 218
+        },
+        {
+          "received_monotonic_ns": 5610472344346,
+          "bytes": 295
+        },
+        {
+          "received_monotonic_ns": 5610477490179,
+          "bytes": 696
+        }
+      ],
+      "request_sha256": "31ca14edb61df6fdce1c400142eb1beefd9473db5c355a345bc45d9481242b43",
+      "request_bytes": 40112,
+      "response_status": 200,
+      "response_headers": [
+        [
+          "Content-Type",
+          "text/event-stream"
+        ],
+        [
+          "x-request-id",
+          "stub-request"
+        ]
+      ],
+      "response_headers_monotonic_ns": 5610437942429,
+      "response_sha256": "264300af8d3640e15f9834d3eb04b19887d10d110a6b893b59ed2cba15b443d5",
+      "response_bytes": 2283,
+      "ended_monotonic_ns": 5610483474096
+    },
+    {
+      "sequence": 2,
+      "method": "POST",
+      "path": "/v1/responses",
+      "inference": true,
+      "admitted_inference_count": 2,
+      "started_unix_ns": 1790649389065964597,
+      "started_monotonic_ns": 5611051582304,
+      "request_headers": [
+        [
+          "accept",
+          "text/event-stream"
+        ],
+        [
+          "content-type",
+          "application/json"
+        ],
+        [
+          "originator",
+          "codex_exec"
+        ],
+        [
+          "user-agent",
+          "codex_exec/0.155.1 (Debian 12.0.0; aarch64) dumb (codex_exec; 0.155.1)"
+        ],
+        [
+          "content-length",
+          "41119"
+        ]
+      ],
+      "authorization_present": false,
+      "authorization_is_study_dummy": false,
+      "unexpected_credentials": false,
+      "complete": true,
+      "chunks": [
+        {
+          "received_monotonic_ns": 5611054390346,
+          "bytes": 212
+        },
+        {
+          "received_monotonic_ns": 5611060301763,
+          "bytes": 162
+        },
+        {
+          "received_monotonic_ns": 5611065415346,
+          "bytes": 243
+        },
+        {
+          "received_monotonic_ns": 5611070892846,
+          "bytes": 207
+        },
+        {
+          "received_monotonic_ns": 5611077231471,
+          "bytes": 208
+        },
+        {
+          "received_monotonic_ns": 5611083357763,
+          "bytes": 192
+        },
+        {
+          "received_monotonic_ns": 5611088760346,
+          "bytes": 189
+        },
+        {
+          "received_monotonic_ns": 5611094125054,
+          "bytes": 294
+        },
+        {
+          "received_monotonic_ns": 5611099781304,
+          "bytes": 695
+        }
+      ],
+      "request_sha256": "0e111b70f71b25f3c94054a2dbf313a13105ec82633266f2bf6d6bc744017609",
+      "request_bytes": 41119,
+      "response_status": 200,
+      "response_headers": [
+        [
+          "Content-Type",
+          "text/event-stream"
+        ],
+        [
+          "x-request-id",
+          "stub-request"
+        ]
+      ],
+      "response_headers_monotonic_ns": 5611054020221,
+      "response_sha256": "258702faceefd0bae05109e32d812506e6a906adad3c6eb5d349a5794bf9c661",
+      "response_bytes": 2402,
+      "ended_monotonic_ns": 5611105322596
+    },
+    {
+      "sequence": 3,
+      "method": "POST",
+      "path": "/v1/responses",
+      "inference": true,
+      "admitted_inference_count": 3,
+      "started_unix_ns": 1790649394704160252,
+      "started_monotonic_ns": 5616690059973,
+      "request_headers": [
+        [
+          "accept",
+          "text/event-stream"
+        ],
+        [
+          "content-type",
+          "application/json"
+        ],
+        [
+          "originator",
+          "codex_exec"
+        ],
+        [
+          "user-agent",
+          "codex_exec/0.155.1 (Debian 12.0.0; aarch64) dumb (codex_exec; 0.155.1)"
+        ],
+        [
+          "content-length",
+          "41601"
+        ]
+      ],
+      "authorization_present": false,
+      "authorization_is_study_dummy": false,
+      "unexpected_credentials": false,
+      "complete": true,
+      "chunks": [
+        {
+          "received_monotonic_ns": 5616695720931,
+          "bytes": 212
+        },
+        {
+          "received_monotonic_ns": 5616700627348,
+          "bytes": 162
+        },
+        {
+          "received_monotonic_ns": 5616705858389,
+          "bytes": 243
+        },
+        {
+          "received_monotonic_ns": 5616711186764,
+          "bytes": 207
+        },
+        {
+          "received_monotonic_ns": 5616716806806,
+          "bytes": 208
+        },
+        {
+          "received_monotonic_ns": 5616723114348,
+          "bytes": 192
+        },
+        {
+          "received_monotonic_ns": 5616729194556,
+          "bytes": 189
+        },
+        {
+          "received_monotonic_ns": 5616735399389,
+          "bytes": 294
+        },
+        {
+          "received_monotonic_ns": 5616740642264,
+          "bytes": 695
+        }
+      ],
+      "request_sha256": "d8eb2a64e1e20399121bdf884c0cd24e97a175553f780c59e97b5e5aae3d936c",
+      "request_bytes": 41601,
+      "response_status": 200,
+      "response_headers": [
+        [
+          "Content-Type",
+          "text/event-stream"
+        ],
+        [
+          "x-request-id",
+          "stub-request"
+        ]
+      ],
+      "response_headers_monotonic_ns": 5616694538848,
+      "response_sha256": "258702faceefd0bae05109e32d812506e6a906adad3c6eb5d349a5794bf9c661",
+      "response_bytes": 2402,
+      "ended_monotonic_ns": 5616746646723
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "config_path": "/private/tmp/reedcode-current-stock-prefill/model/tokenizer_config.json",
+  "tokenizer_path": "/private/tmp/reedcode-current-stock-prefill/model/tokenizer.json",
+  "cases": [
+    {
+      "name": "text",
+      "original_request": {
+        "model": "Qwen/Qwen3-8B",
+        "messages": [
+          {
+            "role": "system",
+            "content": "Run identifier: 6996dc79e3fe4f069c42e58cb052de16. Follow the user instruction."
+          },
+          {
+            "role": "user",
+            "content": "Reply with exactly ready."
+          }
+        ],
+        "temperature": 0,
+        "max_completion_tokens": 128
+      },
+      "followup_request": {
+        "model": "Qwen/Qwen3-8B",
+        "messages": [
+          {
+            "role": "system",
+            "content": "Run identifier: 6996dc79e3fe4f069c42e58cb052de16. Follow the user instruction."
+          },
+          {
+            "role": "user",
+            "content": "Reply with exactly ready."
+          },
+          {
+            "content": "ready.",
+            "role": "assistant"
+          },
+          {
+            "role": "user",
+            "content": "Now reply with exactly done."
+          }
+        ],
+        "temperature": 0,
+        "max_completion_tokens": 128
+      },
+      "response_text": "ready.",
+      "effective_normal_template_args": {
+        "enable_thinking": false
+      }
+    },
+    {
+      "name": "tool",
+      "original_request": {
+        "model": "Qwen/Qwen3-8B",
+        "messages": [
+          {
+            "role": "system",
+            "content": "Run identifier: 1310f41001ee43489ec3f5690fef2854. Follow the user instruction."
+          },
+          {
+            "role": "user",
+            "content": "Call record_value exactly once with value ready. Do not answer in prose."
+          }
+        ],
+        "temperature": 0,
+        "max_completion_tokens": 128,
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_value",
+              "description": "Record a short string.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto"
+      },
+      "followup_request": {
+        "model": "Qwen/Qwen3-8B",
+        "messages": [
+          {
+            "role": "system",
+            "content": "Run identifier: 1310f41001ee43489ec3f5690fef2854. Follow the user instruction."
+          },
+          {
+            "role": "user",
+            "content": "Call record_value exactly once with value ready. Do not answer in prose."
+          },
+          {
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "id": "call-be1ad8f3-d43c-41e0-8f8d-a4e37d338845",
+                "function": {
+                  "arguments": "{\"value\": \"ready\"}",
+                  "name": "record_value"
+                },
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "tool_call_id": "call-be1ad8f3-d43c-41e0-8f8d-a4e37d338845",
+            "content": "Recorded successfully. Now reply with exactly done."
+          }
+        ],
+        "temperature": 0,
+        "max_completion_tokens": 128,
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_value",
+              "description": "Record a short string.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto"
+      },
+      "response_text": "",
+      "effective_normal_template_args": {
+        "enable_thinking": false
+      }
+    }
+  ]
+}

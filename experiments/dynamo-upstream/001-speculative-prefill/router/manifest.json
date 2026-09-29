@@ -1,0 +1,741 @@
+{
+  "fetched_at": "2026-09-28T22:37:41.727598+00:00",
+  "repository": "ai-dynamo/dynamo",
+  "pins": {
+    "release": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+    "main": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222"
+  },
+  "files": [
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-hashing/src/compute.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-hashing/src/compute.rs",
+      "bytes": 3497,
+      "sha256": "be5f99c9221a28e4648a4d2d2f210c3b6fc718f7df87d115fd8bd07fa438b46d",
+      "git_blob_sha": "d6f6edc486446d5c6a14eef7ea905959f56fc2e5",
+      "archive_member": "sources/release/lib/kv-hashing/src/compute.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-hashing/src/request.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-hashing/src/request.rs",
+      "bytes": 4684,
+      "sha256": "a70caf3a032dd19d802a20ed9d6b623a968156fb44c1435898afe02734c9df73",
+      "git_blob_sha": "7acd9228299f6cd423d6ff7736ae23f7080019d6",
+      "archive_member": "sources/release/lib/kv-hashing/src/request.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/indexer/radix_tree.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/indexer/radix_tree.rs",
+      "bytes": 38176,
+      "sha256": "c5e9b75a1e9345844e2455a26e82f092d47b8212e25a3f88a925ed95de860c23",
+      "git_blob_sha": "60ee6a3145c75678ec1dbc83eaef6d3edd3ed017",
+      "archive_member": "sources/release/lib/kv-router/src/indexer/radix_tree.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/indexer/kv_indexer.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/indexer/kv_indexer.rs",
+      "bytes": 36361,
+      "sha256": "a0d4230467541bcb84e97ab6b8d31552581d0b25b8ee76b485a23f6f5ad4528c",
+      "git_blob_sha": "a3c08f6946d89c044cefbcbfbcfb25b962dfac4b",
+      "archive_member": "sources/release/lib/kv-router/src/indexer/kv_indexer.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/indexer/traits.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/indexer/traits.rs",
+      "bytes": 10895,
+      "sha256": "91dfe5965434c930f908f14487d038999aaf04e4974cc32566a178f0c1b6972c",
+      "git_blob_sha": "d5abc44334bde3fafd3911574a78be76e0fef356",
+      "archive_member": "sources/release/lib/kv-router/src/indexer/traits.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/lookup_update.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/lookup_update.rs",
+      "bytes": 1246,
+      "sha256": "7b20a015363a7b9c7001ea49b1449c067644eddc4198cd84005e9cbcbc9fb318",
+      "git_blob_sha": "593e5146996c68bbd97d5a6a7e02c9b09f35e712",
+      "archive_member": "sources/release/lib/kv-router/src/lookup_update.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/zmq_wire/convert.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/zmq_wire/convert.rs",
+      "bytes": 34102,
+      "sha256": "8ce549d6f9fd050f338b384333be49951ed4f098aa2c67c8bca3cd8b0310611a",
+      "git_blob_sha": "68a1b8cb9ccedcc62e29e3dc2b8c7da0d1308408",
+      "archive_member": "sources/release/lib/kv-router/src/zmq_wire/convert.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/indexer/local.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/indexer/local.rs",
+      "bytes": 43000,
+      "sha256": "7d5cc5d109e37aadc90c589e14f5839ad0d9be525d27d742c3aa44c3cfeab3f3",
+      "git_blob_sha": "d91508f320604e20671cc45bef2c2b47b9e95197",
+      "archive_member": "sources/release/lib/kv-router/src/indexer/local.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/indexer/observation.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/indexer/observation.rs",
+      "bytes": 6948,
+      "sha256": "a0bea23ac3f8e98eef4bb2ef2d2ca6481ce611692711333a5a4ec547423d1c4f",
+      "git_blob_sha": "a273125087595efa474d08561f8c40584a4b0417",
+      "archive_member": "sources/release/lib/kv-router/src/indexer/observation.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/sequences/multi_worker.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/sequences/multi_worker.rs",
+      "bytes": 141430,
+      "sha256": "bd3d13cbf73996815419a17b4908495c62803df9b002228a8cf9e283299ad1f1",
+      "git_blob_sha": "a49441de8c0542d72d8c72047a9805f7fca8bee4",
+      "archive_member": "sources/release/lib/kv-router/src/sequences/multi_worker.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/llm/src/kv_router/routing_host/kv.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/llm/src/kv_router/routing_host/kv.rs",
+      "bytes": 24040,
+      "sha256": "404cda9254348752784e6f6d49f9a1227f3e48d5f2339bef03fc9ead46a51e2d",
+      "git_blob_sha": "4d4316efc27f81e64bca3a53d2eeca98830fe080",
+      "archive_member": "sources/release/lib/llm/src/kv_router/routing_host/kv.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/llm/src/kv_router/publisher/event_processor.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/llm/src/kv_router/publisher/event_processor.rs",
+      "bytes": 8755,
+      "sha256": "14bedb6312f81938497860a86934aa469ef6756a146215a5394e989af1a168e5",
+      "git_blob_sha": "3b40b9e6e503517842b02693a714fe06379cc123",
+      "archive_member": "sources/release/lib/llm/src/kv_router/publisher/event_processor.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/llm/src/kv_router/publisher/zmq_listener.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/llm/src/kv_router/publisher/zmq_listener.rs",
+      "bytes": 6807,
+      "sha256": "ec83ef3d2d96f01aaafc818d3344725181858d1256472fe7f40d8ee0250887a5",
+      "git_blob_sha": "9084655f0710b8ab9eeeeac100a1bb8babc7d1bc",
+      "archive_member": "sources/release/lib/llm/src/kv_router/publisher/zmq_listener.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "components/src/dynamo/vllm/publisher.py",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/components/src/dynamo/vllm/publisher.py",
+      "bytes": 6805,
+      "sha256": "da7209fbf5b6373d08c09e95fe3c7c15bd9cfb6ec236074a7b9262d027b42d27",
+      "git_blob_sha": "ff1113b307d752c56a7bd33b350db62a94190e1c",
+      "archive_member": "sources/release/components/src/dynamo/vllm/publisher.py"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-hashing/src/compute.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-hashing/src/compute.rs",
+      "bytes": 3497,
+      "sha256": "be5f99c9221a28e4648a4d2d2f210c3b6fc718f7df87d115fd8bd07fa438b46d",
+      "git_blob_sha": "d6f6edc486446d5c6a14eef7ea905959f56fc2e5",
+      "archive_member": "sources/main/lib/kv-hashing/src/compute.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-hashing/src/request.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-hashing/src/request.rs",
+      "bytes": 4684,
+      "sha256": "a70caf3a032dd19d802a20ed9d6b623a968156fb44c1435898afe02734c9df73",
+      "git_blob_sha": "7acd9228299f6cd423d6ff7736ae23f7080019d6",
+      "archive_member": "sources/main/lib/kv-hashing/src/request.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/indexer/radix_tree.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/indexer/radix_tree.rs",
+      "bytes": 43741,
+      "sha256": "c32b3c6d880cfac0dd54a883af580494e955c1cab7fcdf94de99b9381f0b0e0e",
+      "git_blob_sha": "d6bafe7d8bd90719074b4191a187527e1f92a118",
+      "archive_member": "sources/main/lib/kv-router/src/indexer/radix_tree.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/indexer/kv_indexer.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/indexer/kv_indexer.rs",
+      "bytes": 39118,
+      "sha256": "4039ff10334bce326cb297009be8a39cc679bb79932c6fc1bde821ef3c221e1e",
+      "git_blob_sha": "ecf97d1f25fadad1074ef24016a66e6dfd8bb22e",
+      "archive_member": "sources/main/lib/kv-router/src/indexer/kv_indexer.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/indexer/traits.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/indexer/traits.rs",
+      "bytes": 10905,
+      "sha256": "fcd26a0791ef07dfee3274a8be550ffd8ad691c392c5cbe031f338c0e386841f",
+      "git_blob_sha": "b193c50605c4256c39b8636f0ce8a1c292f1daae",
+      "archive_member": "sources/main/lib/kv-router/src/indexer/traits.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/session_prefix_index.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/session_prefix_index.rs",
+      "bytes": 39402,
+      "sha256": "4c219caaf62186a6cd95603457eda0765b8cd53958625ab652cfd43c1e157549",
+      "git_blob_sha": "7bae25fcf847c13103796e1beefa745a45098d59",
+      "archive_member": "sources/main/lib/kv-router/src/session_prefix_index.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/lookup_update.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/lookup_update.rs",
+      "bytes": 1999,
+      "sha256": "a8bb2b8ccc17df782cc3b25dbfb98ecafb89dbb19043baa491ca5dbe131c28bf",
+      "git_blob_sha": "c345403e2f5dd44aab753debb653874a03614575",
+      "archive_member": "sources/main/lib/kv-router/src/lookup_update.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/zmq_wire/convert.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/zmq_wire/convert.rs",
+      "bytes": 34502,
+      "sha256": "31967f48b635676034d7f08d445b11ad9df9ce53c40aa66d628a1c42efaabd44",
+      "git_blob_sha": "8015abba31f61faa0f973d64de8630e81da9ec50",
+      "archive_member": "sources/main/lib/kv-router/src/zmq_wire/convert.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/indexer/local.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/indexer/local.rs",
+      "bytes": 44183,
+      "sha256": "5be25b4ee4425b776746105989b4cf3e6263c225c2378029cd53c60d31413d6e",
+      "git_blob_sha": "8e23d41c41379c352c989fba31f10b11a0eb6552",
+      "archive_member": "sources/main/lib/kv-router/src/indexer/local.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/indexer/observation.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/indexer/observation.rs",
+      "bytes": 6948,
+      "sha256": "a0bea23ac3f8e98eef4bb2ef2d2ca6481ce611692711333a5a4ec547423d1c4f",
+      "git_blob_sha": "a273125087595efa474d08561f8c40584a4b0417",
+      "archive_member": "sources/main/lib/kv-router/src/indexer/observation.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/sequences/multi_worker.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/sequences/multi_worker.rs",
+      "bytes": 141053,
+      "sha256": "8e3af575a90a96dd31968a7035a41cc2ea3a640cb583980e67b503dd9d9c6b18",
+      "git_blob_sha": "3806888e2f9b0a8883b8bdf119d3effd86427475",
+      "archive_member": "sources/main/lib/kv-router/src/sequences/multi_worker.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/llm/src/kv_router/embedded.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/llm/src/kv_router/embedded.rs",
+      "bytes": 30159,
+      "sha256": "123e57cd51de7d68a26c7a0a82ac3c16953f9a29582db7f2c21c4c63d47de74a",
+      "git_blob_sha": "583b5319042a919d8662942cb567f1dcea99f5f4",
+      "archive_member": "sources/main/lib/llm/src/kv_router/embedded.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/llm/src/kv_router/routing_host/kv.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/llm/src/kv_router/routing_host/kv.rs",
+      "bytes": 26753,
+      "sha256": "083a16c6f9a34d9f5f2fb48136635cb82c1588ef976aff4f79eeef4c61b87b8e",
+      "git_blob_sha": "88498369b9fe784af9279d2368e7f1c8ebed62ad",
+      "archive_member": "sources/main/lib/llm/src/kv_router/routing_host/kv.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/llm/src/kv_router/publisher/event_processor.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/llm/src/kv_router/publisher/event_processor.rs",
+      "bytes": 8793,
+      "sha256": "c81591d118e646fa0b8d43c358dd39f71f10ec8ebf95c34bf625b281e612fc1a",
+      "git_blob_sha": "7e86de30bd473360d586a2d78ef8af20bdf82a06",
+      "archive_member": "sources/main/lib/llm/src/kv_router/publisher/event_processor.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/llm/src/kv_router/publisher/zmq_listener.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/llm/src/kv_router/publisher/zmq_listener.rs",
+      "bytes": 6807,
+      "sha256": "ec83ef3d2d96f01aaafc818d3344725181858d1256472fe7f40d8ee0250887a5",
+      "git_blob_sha": "9084655f0710b8ab9eeeeac100a1bb8babc7d1bc",
+      "archive_member": "sources/main/lib/llm/src/kv_router/publisher/zmq_listener.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "components/src/dynamo/vllm/publisher.py",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/components/src/dynamo/vllm/publisher.py",
+      "bytes": 7752,
+      "sha256": "216016b277a6d2e72a5c1385b964a9e468b10d2a079ff7bbd639c061c2729a47",
+      "git_blob_sha": "da7317e8653ab3c27ed1be51c49cc25c76c517da",
+      "archive_member": "sources/main/components/src/dynamo/vllm/publisher.py"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/llm/src/kv_router.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/llm/src/kv_router.rs",
+      "bytes": 123272,
+      "sha256": "0d7099ac5af29df62ccfc27dcbcac5dace30d2c84d65e355da41c90d08d3afb9",
+      "git_blob_sha": "6451a2365e4cb2f291873abc7569d65ebca1bddd",
+      "archive_member": "sources/release/lib/llm/src/kv_router.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/llm/src/kv_router/indexer/mod.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/llm/src/kv_router/indexer/mod.rs",
+      "bytes": 46501,
+      "sha256": "92742562259e5cf26f6ebe54f0e87d5cbe77a8e33dd4ca08cbf387176b09e3a5",
+      "git_blob_sha": "dd8f333981d04bae72a42b531fca1c7c7a97e051",
+      "archive_member": "sources/release/lib/llm/src/kv_router/indexer/mod.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/indexer/types.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/indexer/types.rs",
+      "bytes": 22850,
+      "sha256": "b2d85fee5555e7e3c3ebd264f54c64663284c076885aec22d52d97deafb5ab0b",
+      "git_blob_sha": "ff23486462324b102f12f0c6f70414d59e8f42ee",
+      "archive_member": "sources/release/lib/kv-router/src/indexer/types.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/indexer/pruning.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/indexer/pruning.rs",
+      "bytes": 27003,
+      "sha256": "82ac7286fef618a506169f856f584330d0c8c133d1934e130e6fc377aec37e23",
+      "git_blob_sha": "29df35a88818dfa48088f1dfb85f05d38b2b297c",
+      "archive_member": "sources/release/lib/kv-router/src/indexer/pruning.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/scheduling/overlap.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/scheduling/overlap.rs",
+      "bytes": 17483,
+      "sha256": "2da8590a16cdb3dff95e6618833c6221b7c3b731df739a96ab7666b867ba43be",
+      "git_blob_sha": "80d78dda1fe31aeaac186237d6181e945ca819ff",
+      "archive_member": "sources/release/lib/kv-router/src/scheduling/overlap.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/protocols.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/protocols.rs",
+      "bytes": 97180,
+      "sha256": "c09b9af9a22738ae0deef6678bf61a00de6bbd6c4556513ecbf6c7d676f18d05",
+      "git_blob_sha": "9ecd216da5280d5d953606c0a38a748c741a9c76",
+      "archive_member": "sources/release/lib/kv-router/src/protocols.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/tokens/src/blocks.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/tokens/src/blocks.rs",
+      "bytes": 793,
+      "sha256": "0c46d346d689d2f566a56eb6a8df6e4195eacbd1146a14f17b7617a952b48a54",
+      "git_blob_sha": "682b2a3628ab7a8502764cb0a5c8e297be7f90d2",
+      "archive_member": "sources/release/lib/tokens/src/blocks.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "components/src/dynamo/common/configuration/groups/kv_router_args.py",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/components/src/dynamo/common/configuration/groups/kv_router_args.py",
+      "bytes": 27788,
+      "sha256": "ca4d21270ba30ec5762a971fe5e17c40e66e8f2e69846e693076fd8486e4b52e",
+      "git_blob_sha": "1a43c56a900a07ea2ddc18ba595edb8edc73bac9",
+      "archive_member": "sources/release/components/src/dynamo/common/configuration/groups/kv_router_args.py"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "components/src/dynamo/vllm/main.py",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/components/src/dynamo/vllm/main.py",
+      "bytes": 43162,
+      "sha256": "6db973a37e10d1d6667a5943591c3a8af0be054b94ea497b77b304575d155439",
+      "git_blob_sha": "9576d10aeecffb0a733ef3ba401c0227a2883345",
+      "archive_member": "sources/release/components/src/dynamo/vllm/main.py"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "components/src/dynamo/vllm/handlers.py",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/components/src/dynamo/vllm/handlers.py",
+      "bytes": 199842,
+      "sha256": "cd8d0f817cf881e66b313b140dd8029d6a03c269215b22bc8aa4f98f175250f6",
+      "git_blob_sha": "b5e3375d8cfbc82a679499342f8875ceae252d14",
+      "archive_member": "sources/release/components/src/dynamo/vllm/handlers.py"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/indexer/concurrent_radix_tree_compressed/matches.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/indexer/concurrent_radix_tree_compressed/matches.rs",
+      "bytes": 6839,
+      "sha256": "da5286e15f59ee4f244675abc7a52542f94fa10bb137a693ff8ba597e5e02260",
+      "git_blob_sha": "bfd9dbb80bd77cf6f91791253d007ff6bfcdaa83",
+      "archive_member": "sources/release/lib/kv-router/src/indexer/concurrent_radix_tree_compressed/matches.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/llm/src/kv_router.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/llm/src/kv_router.rs",
+      "bytes": 135369,
+      "sha256": "a2d5b4cf94c2e2125a2778c708d88d820d737d198be59e8a73d3493eea8fa337",
+      "git_blob_sha": "b6c5cb2e8d9410c5ffd0bea66db3a94f62dee101",
+      "archive_member": "sources/main/lib/llm/src/kv_router.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/llm/src/kv_router/indexer/mod.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/llm/src/kv_router/indexer/mod.rs",
+      "bytes": 11868,
+      "sha256": "11ed914cf4f2466e75d32d0c82c3bbda7db69d9b20c01e372a1a420a5b7f10aa",
+      "git_blob_sha": "f74ab7d9b720ef488b73d2fdcf47ba9cec125158",
+      "archive_member": "sources/main/lib/llm/src/kv_router/indexer/mod.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/indexer/delegate.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/indexer/delegate.rs",
+      "bytes": 3288,
+      "sha256": "effed96f6f9c9ad91e19f99798b031c3631f665b54971f50b8904198d8a901ef",
+      "git_blob_sha": "8a7d89e6832b73f53aa5e01124d96d73c43662bb",
+      "archive_member": "sources/main/lib/kv-router/src/indexer/delegate.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/indexer/types.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/indexer/types.rs",
+      "bytes": 23209,
+      "sha256": "d6f2ecc10f1b4f6c8262720f9faa3305ab402343342d1f422029a60ebfdab6bd",
+      "git_blob_sha": "edf72d2777f82235d517ef998384271d73a57498",
+      "archive_member": "sources/main/lib/kv-router/src/indexer/types.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/indexer/pruning.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/indexer/pruning.rs",
+      "bytes": 27003,
+      "sha256": "82ac7286fef618a506169f856f584330d0c8c133d1934e130e6fc377aec37e23",
+      "git_blob_sha": "29df35a88818dfa48088f1dfb85f05d38b2b297c",
+      "archive_member": "sources/main/lib/kv-router/src/indexer/pruning.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/scheduling/overlap.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/scheduling/overlap.rs",
+      "bytes": 18678,
+      "sha256": "64a2dfbfb8cc0c0b186382d5f53d7ea1ee65161b943f4fbed36c15c6afb998e4",
+      "git_blob_sha": "2af77f2de30b3ef9122cc816d4926bef24313c30",
+      "archive_member": "sources/main/lib/kv-router/src/scheduling/overlap.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/protocols.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/protocols.rs",
+      "bytes": 98122,
+      "sha256": "f334d33aa5937fcf478cc60a9c95ce66e1ad37f75a67bca5b0b336a111eb42e5",
+      "git_blob_sha": "c63b9605df1e367b5f0d2c766c09645c0a1c31e3",
+      "archive_member": "sources/main/lib/kv-router/src/protocols.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/tokens/src/blocks.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/tokens/src/blocks.rs",
+      "bytes": 793,
+      "sha256": "0c46d346d689d2f566a56eb6a8df6e4195eacbd1146a14f17b7617a952b48a54",
+      "git_blob_sha": "682b2a3628ab7a8502764cb0a5c8e297be7f90d2",
+      "archive_member": "sources/main/lib/tokens/src/blocks.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "components/src/dynamo/common/configuration/groups/kv_router_args.py",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/components/src/dynamo/common/configuration/groups/kv_router_args.py",
+      "bytes": 28446,
+      "sha256": "6f5606c85d99c04211fff83a0d5d6d4f94e10483156237ca0ccf893c487b9e63",
+      "git_blob_sha": "0fc85150cfec578cb78c6128a78a69d2ee02646f",
+      "archive_member": "sources/main/components/src/dynamo/common/configuration/groups/kv_router_args.py"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "components/src/dynamo/vllm/main.py",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/components/src/dynamo/vllm/main.py",
+      "bytes": 43405,
+      "sha256": "311a674df56ed1f75e5607ddb05ebb8a3c936376603c3ffc03d0e963221d11df",
+      "git_blob_sha": "ed9f3092f195a581c341a489fe9fcf956799e55f",
+      "archive_member": "sources/main/components/src/dynamo/vllm/main.py"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "components/src/dynamo/vllm/handlers.py",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/components/src/dynamo/vllm/handlers.py",
+      "bytes": 213713,
+      "sha256": "10774466bf9d36bfe02c992d23e6a9b650266003abe0f8c32069bc9170d021fb",
+      "git_blob_sha": "c83aa199e643f5fd54da90b096e9bfc5ec1c9d1b",
+      "archive_member": "sources/main/components/src/dynamo/vllm/handlers.py"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/llm/src/kv_router/indexer/ingress.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/llm/src/kv_router/indexer/ingress.rs",
+      "bytes": 5539,
+      "sha256": "f1e948fcc91d935d7b99cf6de52f4312d0e3a7416bcfbc4bb3a81fab426be827",
+      "git_blob_sha": "e3f2089cc849830d29963b52a82950753896e907",
+      "archive_member": "sources/main/lib/llm/src/kv_router/indexer/ingress.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/indexer/concurrent_radix_tree_compressed/matches.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/indexer/concurrent_radix_tree_compressed/matches.rs",
+      "bytes": 6799,
+      "sha256": "505529857d0178c035bb0c5465912a5d3cc21c575b11a5ccedefe54e2000b866",
+      "git_blob_sha": "7f22ef372aacae3b0c32e87d8bc2c1927a4d10d8",
+      "archive_member": "sources/main/lib/kv-router/src/indexer/concurrent_radix_tree_compressed/matches.rs"
+    },
+    {
+      "repository": "vllm-project/vllm",
+      "label": "vllm",
+      "revision": "2cf0a6915ce544dc493a0990f2ea38d81601128a",
+      "path": "vllm/v1/core/kv_cache_manager.py",
+      "url": "https://github.com/vllm-project/vllm/blob/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/v1/core/kv_cache_manager.py",
+      "bytes": 38949,
+      "sha256": "2d20c3d98845cfd8d88a2f66b8fc6402ea1fcfbee16879d2364a4a9e45b8fa47",
+      "git_blob_sha": "44097c3da2768540691ec87b94dc8229fd583750",
+      "archive_member": "sources/vllm/vllm/v1/core/kv_cache_manager.py"
+    },
+    {
+      "repository": "vllm-project/vllm",
+      "label": "vllm",
+      "revision": "2cf0a6915ce544dc493a0990f2ea38d81601128a",
+      "path": "vllm/v1/core/block_pool.py",
+      "url": "https://github.com/vllm-project/vllm/blob/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/v1/core/block_pool.py",
+      "bytes": 33243,
+      "sha256": "ddee56dccb2208411b3a035918e917ce8f56a9858471e9ca12b420d5d79bc69c",
+      "git_blob_sha": "a8a6c1ca94dabfb8d432fdcfe0b3b21ca6f26d03",
+      "archive_member": "sources/vllm/vllm/v1/core/block_pool.py"
+    },
+    {
+      "repository": "vllm-project/vllm",
+      "label": "vllm",
+      "revision": "2cf0a6915ce544dc493a0990f2ea38d81601128a",
+      "path": "vllm/v1/core/sched/scheduler.py",
+      "url": "https://github.com/vllm-project/vllm/blob/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/v1/core/sched/scheduler.py",
+      "bytes": 141223,
+      "sha256": "4b79ab760c3864af6838d555c01335deea3aac97c9be2be415fa0e5dab32f07e",
+      "git_blob_sha": "e4a21328660a40f1b3640536565fd99c8dff1945",
+      "archive_member": "sources/vllm/vllm/v1/core/sched/scheduler.py"
+    },
+    {
+      "repository": "vllm-project/vllm",
+      "label": "vllm",
+      "revision": "2cf0a6915ce544dc493a0990f2ea38d81601128a",
+      "path": "vllm/v1/core/kv_cache_utils.py",
+      "url": "https://github.com/vllm-project/vllm/blob/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/v1/core/kv_cache_utils.py",
+      "bytes": 93945,
+      "sha256": "088f2201bee86fade694e78141b6e99a5cd0cdd23c5c7ab3526dd119f76e4aec",
+      "git_blob_sha": "ad51e4b2b39719693957902486414b41f35bc163",
+      "archive_member": "sources/vllm/vllm/v1/core/kv_cache_utils.py"
+    },
+    {
+      "repository": "vllm-project/vllm",
+      "label": "vllm",
+      "revision": "2cf0a6915ce544dc493a0990f2ea38d81601128a",
+      "path": "vllm/distributed/kv_events.py",
+      "url": "https://github.com/vllm-project/vllm/blob/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/distributed/kv_events.py",
+      "bytes": 18021,
+      "sha256": "1b3d156c647d94ba7bdaf065bfebdaef7bad9bffe9f0e7ebacea4a22a2da6ac9",
+      "git_blob_sha": "cd222567a33cc17befb55f6320e8320f2bff51a0",
+      "archive_member": "sources/vllm/vllm/distributed/kv_events.py"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/services/indexer/backend.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/services/indexer/backend.rs",
+      "bytes": 69058,
+      "sha256": "e81882b498531ceadbaa141475abbde4c258c3ef9236629ae0e5bbb2d1058b4c",
+      "git_blob_sha": "978479464bccf0cd06144a8e624deccae36a6fd2",
+      "archive_member": "sources/main/lib/kv-router/src/services/indexer/backend.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/services/indexer/lookup.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/services/indexer/lookup.rs",
+      "bytes": 41967,
+      "sha256": "535698b589236b23b94eb44aa3b9972cc819d8b07a2802b5e802c98c88f04ec7",
+      "git_blob_sha": "aea7cdf380d03bc2a3469f79a12e372005ca777c",
+      "archive_member": "sources/main/lib/kv-router/src/services/indexer/lookup.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/services/indexer/recording.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/services/indexer/recording.rs",
+      "bytes": 8369,
+      "sha256": "9c7a114324e2dc8e2a2d3f176fd474c1efc0b6dd6ee726a6e42e773754a90ec9",
+      "git_blob_sha": "95e484d0d45318027e4b8c601878a759b0192e54",
+      "archive_member": "sources/main/lib/kv-router/src/services/indexer/recording.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/llm/src/kv_router/indexer/recovery/target.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/llm/src/kv_router/indexer/recovery/target.rs",
+      "bytes": 3078,
+      "sha256": "9160ac94cdd50fe49f1225ea4b15cf2913ff49ff9002867d9bdd57be23fbf9ab",
+      "git_blob_sha": "775933201dbbfcf37e8506bda50a34336e23d716",
+      "archive_member": "sources/main/lib/llm/src/kv_router/indexer/recovery/target.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/llm/src/kv_router/indexer/lookup.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/llm/src/kv_router/indexer/lookup.rs",
+      "bytes": 15556,
+      "sha256": "96d664d00676ee9f4621ec03eb759783573f0d9c5ef3a528681d590604b403f7",
+      "git_blob_sha": "54f8827bbadbf1e170a3adac800ebc746322f1df",
+      "archive_member": "sources/release/lib/llm/src/kv_router/indexer/lookup.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/llm/src/kv_router/indexer/recording.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/llm/src/kv_router/indexer/recording.rs",
+      "bytes": 8334,
+      "sha256": "705e0065446de749ec47ccdb5c63e2125c23cfd4838b1b23cd7688d3ead58e0c",
+      "git_blob_sha": "596938f71681dc0f186e505b866eccf8c3085833",
+      "archive_member": "sources/release/lib/llm/src/kv_router/indexer/recording.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/llm/src/kv_router/indexer/recovery/target.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/llm/src/kv_router/indexer/recovery/target.rs",
+      "bytes": 3078,
+      "sha256": "9160ac94cdd50fe49f1225ea4b15cf2913ff49ff9002867d9bdd57be23fbf9ab",
+      "git_blob_sha": "775933201dbbfcf37e8506bda50a34336e23d716",
+      "archive_member": "sources/release/lib/llm/src/kv_router/indexer/recovery/target.rs"
+    },
+    {
+      "label": "release",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/llm/src/preprocessor/speculative_prefill.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/llm/src/preprocessor/speculative_prefill.rs",
+      "bytes": 6918,
+      "sha256": "a8f4bebc8c3db3c7022f8a2a29c1d6f7499b7f944df1e6a91c7f033a3a12d794",
+      "git_blob_sha": "d5027759f0d92beb67acd56564f8ca95fb3f3c46",
+      "copied_from_verified_current_code_capture": true,
+      "archive_member": "sources/release/lib/llm/src/preprocessor/speculative_prefill.rs"
+    },
+    {
+      "label": "main",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/llm/src/preprocessor/speculative_prefill.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/llm/src/preprocessor/speculative_prefill.rs",
+      "bytes": 51509,
+      "sha256": "d1ea24631f4d7c9e731615948bc9a128afdd70a4326bad87cf1569200b1535fb",
+      "git_blob_sha": "ded325493147f37b0c0f8ed0865b0951c53fbcaf",
+      "copied_from_verified_current_code_capture": true,
+      "archive_member": "sources/main/lib/llm/src/preprocessor/speculative_prefill.rs"
+    }
+  ],
+  "failed": [
+    {
+      "label": "release",
+      "path": "lib/kv-router/src/session_prefix_index.rs",
+      "error": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "label": "release",
+      "path": "lib/llm/src/kv_router/embedded.rs",
+      "error": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "label": "release",
+      "path": "lib/kv-router/src/indexer/delegate.rs",
+      "error": "gh: Not Found (HTTP 404)"
+    },
+    {
+      "label": "release",
+      "path": "lib/llm/src/kv_router/indexer/ingress.rs",
+      "error": "gh: Not Found (HTTP 404)"
+    }
+  ],
+  "last_fetched_at": "2026-09-28T22:44:51.900555+00:00",
+  "vllm_revision": "2cf0a6915ce544dc493a0990f2ea38d81601128a",
+  "vllm_release": "v0.28.0",
+  "api_metadata": [
+    {
+      "archive_member": "main-tree.json",
+      "bytes": 1922254,
+      "sha256": "5e4ec863a8d4a6cacdc79bb9ed7468be59941f0a9e25a0fad95e95f6b576de8c"
+    },
+    {
+      "archive_member": "vllm-release-metadata.json",
+      "bytes": 4868,
+      "sha256": "07376e59bec891c8edfeb322579383c523f352d524a5a043eb56a5c67bb1bac9"
+    }
+  ],
+  "storage": {
+    "archive": "source-evidence.tar.gz",
+    "bytes": 846363,
+    "sha256": "9114ea0cfa922586f570e445787a1f7505fa0fad9c245005af01b24f9b9ab745",
+    "source_files": 68,
+    "api_metadata_files": 2
+  }
+}

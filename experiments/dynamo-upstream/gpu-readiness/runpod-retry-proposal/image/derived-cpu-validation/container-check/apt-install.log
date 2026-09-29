@@ -1,0 +1,61 @@
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following packages were automatically installed and are no longer required:
+  fontconfig fontconfig-config fonts-dejavu-core fonts-dejavu-mono
+  libasound2-data libasound2t64 libasyncns0 libblas3 libcairo-gobject2
+  libcairo2 libcjson1 libdatrie1 libdecor-0-0 libdeflate0 libfftw3-double3
+  libflac12t64 libfontconfig1 libfreetype6 libfribidi0 libgdk-pixbuf-2.0-0
+  libgdk-pixbuf2.0-common libgfortran5 libgraphite2-3 libharfbuzz0b libhwy1t64
+  libjbig0 libjpeg-turbo8 libjpeg8 libjxl0.7 liblapack3 liblcms2-2 liblerc4
+  liblilv-0-0 libmbedcrypto7t64 libmpg123-0t64 libmysofa1 libnorm1t64 libogg0
+  libopenal-data libopenal1 libopenjp2-7 libpango-1.0-0 libpangocairo-1.0-0
+  libpangoft2-1.0-0 libpgm-5.3-0t64 libpixman-1-0 libplacebo338 libpng16-16t64
+  librabbitmq4 librav1e0 librist4 librsvg2-2 libsamplerate0 libserd-0-0
+  libsharpyuv0 libslang2 libsnappy1v5 libsndio7.0 libsodium23 libsord-0-0
+  libspeex1 libsratom-0-0 libssh-gcrypt-4 libthai-data libthai0 libtiff6
+  libunibreak5 libusb-1.0-0 libva-drm2 libva-x11-2 libva2 libvdpau1 libvpl2
+  libwayland-client0 libwayland-cursor0 libwayland-egl1 libwebp7 libwebpmux3
+  libxcb-render0 libxcb-shape0 libxcursor1 libxfixes3 libxi6 libxkbcommon0
+  libxrandr2 libxrender1 libxss1 libxv1 libzimg2 libzix-0-0 libzmq5
+  ocl-icd-libopencl1 xkb-data
+Use 'apt autoremove' to remove them.
+The following additional packages will be installed:
+  libpcap0.8t64
+Suggested packages:
+  apparmor
+The following NEW packages will be installed:
+  libpcap0.8t64 tcpdump
+0 upgraded, 2 newly installed, 0 to remove and 84 not upgraded.
+Need to get 630 kB of archives.
+After this operation, 1716 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpcap0.8t64 amd64 1.10.4-4.1ubuntu3.1 [151 kB]
+Get:2 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 tcpdump amd64 4.99.4-3ubuntu4.24.04.1 [479 kB]
+debconf: delaying package configuration, since apt-utils is not installed
+Fetched 630 kB in 2s (418 kB/s)
+Selecting previously unselected package libpcap0.8t64:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 20867 files and directories currently installed.)
+Preparing to unpack .../libpcap0.8t64_1.10.4-4.1ubuntu3.1_amd64.deb ...
+Unpacking libpcap0.8t64:amd64 (1.10.4-4.1ubuntu3.1) ...
+Selecting previously unselected package tcpdump.
+Preparing to unpack .../tcpdump_4.99.4-3ubuntu4.24.04.1_amd64.deb ...
+Unpacking tcpdump (4.99.4-3ubuntu4.24.04.1) ...
+Setting up libpcap0.8t64:amd64 (1.10.4-4.1ubuntu3.1) ...
+Setting up tcpdump (4.99.4-3ubuntu4.24.04.1) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.8) ...
+/sbin/ldconfig.real: /usr/local/lib/libvpx.so.9 is not a symbolic link
+
+/sbin/ldconfig.real: /usr/local/lib/libavformat.so.62 is not a symbolic link
+
+/sbin/ldconfig.real: /usr/local/lib/libavfilter.so.11 is not a symbolic link
+
+/sbin/ldconfig.real: /usr/local/lib/libavutil.so.60 is not a symbolic link
+
+/sbin/ldconfig.real: /usr/local/lib/libavdevice.so.62 is not a symbolic link
+
+/sbin/ldconfig.real: /usr/local/lib/libavcodec.so.62 is not a symbolic link
+
+/sbin/ldconfig.real: /usr/local/lib/libswresample.so.6 is not a symbolic link
+
+/sbin/ldconfig.real: /usr/local/lib/libswscale.so.9 is not a symbolic link
+

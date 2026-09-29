@@ -1,0 +1,214 @@
+{
+  "archive_sha256": "4a4650d97c06173e817e21657a651daa7d9d1be20441db92869fb42a584a1cb1",
+  "trace_sha256": "b12cc90b559d16a3e2d74b8498a66881b8a44504f5aaaf566613786ed74f8b12",
+  "cases": [
+    {
+      "case": "text",
+      "capture_member": "prefix-check/text-on.json",
+      "capture_sha256": "eee1af9f580325b348f52924bdb03f695ab1cbd09f5e1c27719feb3b70527369",
+      "history_contract": "unchanged history plus completed assistant and matching continuation",
+      "request_and_followup": [
+        {
+          "request_id": "d5360dd8-7b9b-4916-a2f2-33279b20c025",
+          "wire_trace_line_1based": 617,
+          "session_id": "prefix-check-text-on-5980f29fd54a4093b5fe7e9dbb7d5856",
+          "endpoint": "openai.chat_completion",
+          "wire_payload_complete": true,
+          "speculative_prefill": true,
+          "stream": true,
+          "tool_choice": null,
+          "max_completion_tokens": 128,
+          "model": "Qwen/Qwen3-8B",
+          "message_roles": [
+            "system",
+            "user"
+          ],
+          "finish_reason": "stop",
+          "server_hash_validation": {
+            "status": "verified",
+            "input_length_matches": true,
+            "hashes_match": true,
+            "trace_block_size": 16,
+            "compared_hashes": 4,
+            "expected_hashes": 4,
+            "first_mismatch_block": null,
+            "reason": "All recorded input hashes match, including the trailing partial block"
+          }
+        },
+        {
+          "request_id": "d8c6a27c-cc15-4152-b635-9f82c1750f0a",
+          "wire_trace_line_1based": 619,
+          "session_id": "prefix-check-text-on-5980f29fd54a4093b5fe7e9dbb7d5856",
+          "endpoint": "openai.chat_completion",
+          "wire_payload_complete": true,
+          "speculative_prefill": true,
+          "stream": true,
+          "tool_choice": null,
+          "max_completion_tokens": 128,
+          "model": "Qwen/Qwen3-8B",
+          "message_roles": [
+            "system",
+            "user",
+            "assistant",
+            "user"
+          ],
+          "finish_reason": "stop",
+          "server_hash_validation": {
+            "status": "verified",
+            "input_length_matches": true,
+            "hashes_match": true,
+            "trace_block_size": 16,
+            "compared_hashes": 5,
+            "expected_hashes": 5,
+            "first_mismatch_block": null,
+            "reason": "All recorded input hashes match, including the trailing partial block"
+          }
+        }
+      ],
+      "first_mismatch_index_zero_based": 56,
+      "stock_token_id": 151667,
+      "stock_token_text": "<think>",
+      "actual_token_id": 2307,
+      "actual_token_text": "ready"
+    },
+    {
+      "case": "tool",
+      "capture_member": "prefix-check/tool-on.json",
+      "capture_sha256": "9cfb8648bcb0eb58ffa9eb1c5f90bacb5f3db0f9b56b96154d41e00ce2ddc74b",
+      "history_contract": "unchanged history plus completed assistant and matching continuation",
+      "request_and_followup": [
+        {
+          "request_id": "59fd1e70-5c6a-48a3-9642-a2305cb37fee",
+          "wire_trace_line_1based": 625,
+          "session_id": "prefix-check-tool-on-876561371a894b4e885dffbcaf4d0f51",
+          "endpoint": "openai.chat_completion",
+          "wire_payload_complete": true,
+          "speculative_prefill": true,
+          "stream": true,
+          "tool_choice": "auto",
+          "max_completion_tokens": 128,
+          "model": "Qwen/Qwen3-8B",
+          "message_roles": [
+            "system",
+            "user"
+          ],
+          "finish_reason": "tool_calls",
+          "server_hash_validation": {
+            "status": "verified",
+            "input_length_matches": true,
+            "hashes_match": true,
+            "trace_block_size": 16,
+            "compared_hashes": 13,
+            "expected_hashes": 13,
+            "first_mismatch_block": null,
+            "reason": "All recorded input hashes match, including the trailing partial block"
+          }
+        },
+        {
+          "request_id": "d5a3f0ff-0cdf-407a-ae67-207807687e79",
+          "wire_trace_line_1based": 627,
+          "session_id": "prefix-check-tool-on-876561371a894b4e885dffbcaf4d0f51",
+          "endpoint": "openai.chat_completion",
+          "wire_payload_complete": true,
+          "speculative_prefill": true,
+          "stream": true,
+          "tool_choice": "auto",
+          "max_completion_tokens": 128,
+          "model": "Qwen/Qwen3-8B",
+          "message_roles": [
+            "system",
+            "user",
+            "assistant",
+            "tool"
+          ],
+          "finish_reason": "stop",
+          "server_hash_validation": {
+            "status": "verified",
+            "input_length_matches": true,
+            "hashes_match": true,
+            "trace_block_size": 16,
+            "compared_hashes": 16,
+            "expected_hashes": 16,
+            "first_mismatch_block": null,
+            "reason": "All recorded input hashes match, including the trailing partial block"
+          }
+        }
+      ],
+      "first_mismatch_index_zero_based": 40,
+      "stock_token_id": 13,
+      "stock_token_text": ".",
+      "actual_token_id": 382,
+      "actual_token_text": ".\n\n"
+    }
+  ],
+  "template_sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+  "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+  "source_pins": {
+    "release": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+    "main": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+    "fetched_at": "2026-09-28T22:23:13.928373+00:00",
+    "files": [
+      {
+        "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+        "local_path": "release/speculative_prefill.rs",
+        "repository_path": "lib/llm/src/preprocessor/speculative_prefill.rs",
+        "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/llm/src/preprocessor/speculative_prefill.rs",
+        "sha256": "a8f4bebc8c3db3c7022f8a2a29c1d6f7499b7f944df1e6a91c7f033a3a12d794"
+      },
+      {
+        "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+        "local_path": "main/speculative_prefill.rs",
+        "repository_path": "lib/llm/src/preprocessor/speculative_prefill.rs",
+        "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/llm/src/preprocessor/speculative_prefill.rs",
+        "sha256": "d1ea24631f4d7c9e731615948bc9a128afdd70a4326bad87cf1569200b1535fb"
+      },
+      {
+        "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+        "local_path": "release/agent-hints.md",
+        "repository_path": "docs/fern/pages/use-cases/agents/agent-hints.md",
+        "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/docs/fern/pages/use-cases/agents/agent-hints.md",
+        "sha256": "43b5424b25f64c119100f1905b8f76960ad24f15b4f2fa587b9c5a190974e208"
+      },
+      {
+        "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+        "local_path": "release/agentic-inference-optimizations.mdx",
+        "repository_path": "docs/fern/pages/blog/2026/agentic-inference-optimizations.mdx",
+        "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/docs/fern/pages/blog/2026/agentic-inference-optimizations.mdx",
+        "sha256": "9d2fa3890d1e9a5228c2e5413be59b1fb2bbeac3aef4c697b0643b1400ca07cb"
+      },
+      {
+        "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+        "local_path": "release/nvidia-request-extensions-nvext.md",
+        "repository_path": "docs/fern/pages/developer-guide/additional-resources/nvidia-request-extensions-nvext.md",
+        "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/docs/fern/pages/developer-guide/additional-resources/nvidia-request-extensions-nvext.md",
+        "sha256": "b7ac0ba6ab83adc3c720e2fb724a3ec1f2e7bd86e2e3941a113236217cb8377a"
+      },
+      {
+        "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+        "local_path": "main/agent-hints.md",
+        "repository_path": "docs/fern/pages/use-cases/agents/agent-hints.md",
+        "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/docs/fern/pages/use-cases/agents/agent-hints.md",
+        "sha256": "5870cad335d252c88c8fac97b52b6ad3bff6f1746acc4dc6874e8f872d3f4069"
+      },
+      {
+        "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+        "local_path": "main/agentic-inference-optimizations.mdx",
+        "repository_path": "docs/fern/pages/blog/2026/agentic-inference-optimizations.mdx",
+        "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/docs/fern/pages/blog/2026/agentic-inference-optimizations.mdx",
+        "sha256": "9d2fa3890d1e9a5228c2e5413be59b1fb2bbeac3aef4c697b0643b1400ca07cb"
+      },
+      {
+        "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+        "local_path": "main/nvidia-request-extensions-nvext.md",
+        "repository_path": "docs/fern/pages/developer-guide/additional-resources/nvidia-request-extensions-nvext.md",
+        "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/docs/fern/pages/developer-guide/additional-resources/nvidia-request-extensions-nvext.md",
+        "sha256": "89ec87f72e644110bcd0b0b2f2f7c85a79ca03536129c8289655b5363b7308f7"
+      }
+    ]
+  },
+  "documented_use": {
+    "tool_continuation": "explicitly described by official tool-aware agentic article",
+    "ordinary_user_continuation": "covered by documented predictable multi-turn prefix construction",
+    "model_specific_guarantee_found": false
+  }
+}

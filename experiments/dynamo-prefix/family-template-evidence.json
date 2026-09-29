@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "evidence": "official_template_sources_and_constructed_rendering_checks",
+  "gpu_measurements": false,
+  "model_generated_trajectories": false,
+  "models": [
+    {
+      "family": "deepseek-r1",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+      "artifacts": [
+        {
+          "model": "deepseek-ai/DeepSeek-R1",
+          "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+          "file": "tokenizer.json",
+          "size": 7847602,
+          "sha256": "ecb6f9fc369894346f0511f4074ca75cee5cd5f3b06d02f1ba35fcd39f8e121d",
+          "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1/resolve/56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad/tokenizer.json"
+        },
+        {
+          "model": "deepseek-ai/DeepSeek-R1",
+          "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+          "file": "tokenizer_config.json",
+          "size": 3594,
+          "sha256": "99e80c96269ca4430f1e67f67b5766cb096cbac96fed7a7c611c6ee088b3a039",
+          "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1/resolve/56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad/tokenizer_config.json"
+        },
+        {
+          "model": "deepseek-ai/DeepSeek-R1",
+          "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+          "file": "chat_template.jinja",
+          "size": 2765,
+          "sha256": "563b1ce7d61d50a9b4c7439a912a1116f095b712df5b5e4d3e1116049874eb64",
+          "derived_from": "tokenizer_config.json:chat_template",
+          "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-R1/blob/56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad/tokenizer_config.json"
+        }
+      ],
+      "observed_template_semantics": [
+        "Ordinary assistant content strips inline text through the last closing think tag even without a later user turn.",
+        "The separate reasoning_content field is ignored.",
+        "The assistant tool-call branch preserves inline reasoning after a new user turn.",
+        "The immediately-after-tool assistant branch also bypasses the ordinary stripping path.",
+        "Tool-call arguments must be strings for this template."
+      ],
+      "constructed_checks": [
+        {
+          "case": "plain-current",
+          "settings": {},
+          "thought_marker_retained": false,
+          "rendered_tokens": 12,
+          "rendered_sha256": "238f376019b769ab111f172cced9ca6a4ec9b31e56e5296040d1fef6af1bd9f7"
+        },
+        {
+          "case": "plain-next-user",
+          "settings": {},
+          "thought_marker_retained": false,
+          "rendered_tokens": 16,
+          "rendered_sha256": "ede981f14b5340ed3fc0037404aebef3fd689376b4cc2d1f1dfd292ede43a0d5"
+        },
+        {
+          "case": "separate-field-current",
+          "settings": {},
+          "thought_marker_retained": false,
+          "rendered_tokens": 12,
+          "rendered_sha256": "238f376019b769ab111f172cced9ca6a4ec9b31e56e5296040d1fef6af1bd9f7"
+        },
+        {
+          "case": "separate-field-next-user",
+          "settings": {},
+          "thought_marker_retained": false,
+          "rendered_tokens": 16,
+          "rendered_sha256": "ede981f14b5340ed3fc0037404aebef3fd689376b4cc2d1f1dfd292ede43a0d5"
+        },
+        {
+          "case": "tool-current",
+          "settings": {},
+          "thought_marker_retained": true,
+          "rendered_tokens": 48,
+          "rendered_sha256": "72f4f2a23487f8bdaf51ebc23812d5b5abc1841158f8cc3af3644dca14adb83a"
+        },
+        {
+          "case": "tool-next-user",
+          "settings": {},
+          "thought_marker_retained": true,
+          "rendered_tokens": 54,
+          "rendered_sha256": "3cf039d240ff8230781bf180f9cd4c9a9cb21e84c2fb5221abd94bb87e08fe48"
+        }
+      ]
+    },
+    {
+      "family": "nemotron-3-nano",
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+      "artifacts": [
+        {
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+          "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+          "file": "tokenizer.json",
+          "size": 17077485,
+          "sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+          "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16/resolve/bf77c3174f68ad409e1c2aa60daeb46e32d1c606/tokenizer.json"
+        },
+        {
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+          "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+          "file": "tokenizer_config.json",
+          "size": 188049,
+          "sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+          "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16/resolve/bf77c3174f68ad409e1c2aa60daeb46e32d1c606/tokenizer_config.json"
+        },
+        {
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+          "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+          "file": "chat_template.jinja",
+          "size": 10504,
+          "sha256": "ab7813c3abdd9cb655905a410728b26c7884eca45ddfab8d9f931553485a7862",
+          "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16/resolve/bf77c3174f68ad409e1c2aa60daeb46e32d1c606/chat_template.jinja"
+        }
+      ],
+      "observed_template_semantics": [
+        "truncate_history_thinking defaults to true.",
+        "Plain and tool-call assistants retain reasoning after the latest user; adding a new user removes earlier reasoning.",
+        "Both inline thought tags and separate reasoning_content are supported.",
+        "truncate_history_thinking=false preserves earlier reasoning and changes model input.",
+        "Tool-call arguments must be mappings under direct Jinja rendering."
+      ],
+      "constructed_checks": [
+        {
+          "case": "plain-current",
+          "settings": {},
+          "thought_marker_retained": true,
+          "rendered_tokens": 36,
+          "rendered_sha256": "a1ce36eb762dec5e7c84e0c47884080597f7a05e3173bef44c34ec5190e22991"
+        },
+        {
+          "case": "plain-next-user",
+          "settings": {},
+          "thought_marker_retained": false,
+          "rendered_tokens": 37,
+          "rendered_sha256": "1654531f742bd6ea144aa09a92faca899e8dfa779c7d596ebad7f780e585e8c3"
+        },
+        {
+          "case": "separate-field-current",
+          "settings": {},
+          "thought_marker_retained": true,
+          "rendered_tokens": 39,
+          "rendered_sha256": "55429af959e9701ce7ddec45d643b228c9672a0b23a17acd734db0d4510530bf"
+        },
+        {
+          "case": "separate-field-next-user",
+          "settings": {},
+          "thought_marker_retained": false,
+          "rendered_tokens": 38,
+          "rendered_sha256": "07977e148571851765dbff5f1364488a3a856caabd429d03ed76b88ea05f8a33"
+        },
+        {
+          "case": "tool-current",
+          "settings": {},
+          "thought_marker_retained": true,
+          "rendered_tokens": 75,
+          "rendered_sha256": "9835b3c353ec6eaec725d80900d8b71df10ff86c58386188ae8307bf26aace0f"
+        },
+        {
+          "case": "tool-next-user",
+          "settings": {},
+          "thought_marker_retained": false,
+          "rendered_tokens": 76,
+          "rendered_sha256": "d7172d888b20ba98cb09f97806cbf90bf2eb735a99a851bef947489187c7b86f"
+        },
+        {
+          "case": "plain-next-user-keep",
+          "settings": {
+            "truncate_history_thinking": false
+          },
+          "thought_marker_retained": true,
+          "rendered_tokens": 44,
+          "rendered_sha256": "78f54a212c63dd8087d3f008dda6939869dd69cd8536283276bd5b0d16229c79"
+        },
+        {
+          "case": "tool-next-user-keep",
+          "settings": {
+            "truncate_history_thinking": false
+          },
+          "thought_marker_retained": true,
+          "rendered_tokens": 83,
+          "rendered_sha256": "84e02007717ca1611f068009e836dc17da46d2124634811f6462103cc2d89dc5"
+        }
+      ]
+    }
+  ],
+  "rendering": {
+    "jinja2": "3.1.6",
+    "tokenizers": "0.23.2",
+    "add_special_tokens": false,
+    "remote_custom_code_executed": false
+  },
+  "limitations": [
+    "Rendered counts come from constructed fixtures and are not measured model outputs.",
+    "No Dynamo or inference-engine renderer parity was established for either model.",
+    "Nemotron is a hybrid architecture; token-prefix comparisons alone cannot validate complete engine cache state reuse.",
+    "Preserving or stripping reasoning changes model inputs; any performance intervention needs quality validation.",
+    "Do not count deliberately omitted reasoning tokens as necessary recomputation; measure the retained next-request suffix after the earliest divergent prefix."
+  ]
+}

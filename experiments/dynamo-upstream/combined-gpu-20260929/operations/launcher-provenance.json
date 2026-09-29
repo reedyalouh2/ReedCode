@@ -1,0 +1,11 @@
+{
+  "launch-32k.sh": {
+    "sha256": "1239a84f960858288175faaf24390d3a335b021e4287a05ad231becd4efcdb34",
+    "provenance": "Recovered the pre-YaRN source by removing the later context override; bytes match the hash recorded during Codex configuration capture.",
+    "recorded_hash_matches": true
+  },
+  "launch-yarn.sh": {
+    "sha256": "04bcb70ddc4e349996a0250fbe16ce31c25b7ff8f62767565882728af37a448c",
+    "provenance": "Exact final launcher used for the approved YaRN retry."
+  }
+}

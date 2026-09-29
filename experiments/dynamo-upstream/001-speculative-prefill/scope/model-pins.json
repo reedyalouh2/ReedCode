@@ -1,0 +1,110 @@
+{
+  "models": [
+    {
+      "family": "qwen3",
+      "model": "Qwen/Qwen3-8B",
+      "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "artifacts": [
+        {
+          "file": "tokenizer.json",
+          "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+          "url": "https://huggingface.co/Qwen/Qwen3-8B/resolve/b968826d9c46dd6066d109eabc6255188de91218/tokenizer.json"
+        },
+        {
+          "file": "tokenizer_config.json",
+          "sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+          "url": "https://huggingface.co/Qwen/Qwen3-8B/resolve/b968826d9c46dd6066d109eabc6255188de91218/tokenizer_config.json"
+        }
+      ]
+    },
+    {
+      "family": "deepseek-r1",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+      "artifacts": [
+        {
+          "model": "deepseek-ai/DeepSeek-R1",
+          "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+          "file": "tokenizer.json",
+          "size": 7847602,
+          "sha256": "ecb6f9fc369894346f0511f4074ca75cee5cd5f3b06d02f1ba35fcd39f8e121d",
+          "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1/resolve/56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad/tokenizer.json"
+        },
+        {
+          "model": "deepseek-ai/DeepSeek-R1",
+          "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+          "file": "tokenizer_config.json",
+          "size": 3594,
+          "sha256": "99e80c96269ca4430f1e67f67b5766cb096cbac96fed7a7c611c6ee088b3a039",
+          "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1/resolve/56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad/tokenizer_config.json"
+        },
+        {
+          "model": "deepseek-ai/DeepSeek-R1",
+          "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+          "file": "chat_template.jinja",
+          "size": 2765,
+          "sha256": "563b1ce7d61d50a9b4c7439a912a1116f095b712df5b5e4d3e1116049874eb64",
+          "derived_from": "tokenizer_config.json:chat_template",
+          "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-R1/blob/56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad/tokenizer_config.json"
+        }
+      ]
+    },
+    {
+      "family": "nemotron-3-nano",
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+      "artifacts": [
+        {
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+          "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+          "file": "tokenizer.json",
+          "size": 17077485,
+          "sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+          "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16/resolve/bf77c3174f68ad409e1c2aa60daeb46e32d1c606/tokenizer.json"
+        },
+        {
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+          "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+          "file": "tokenizer_config.json",
+          "size": 188049,
+          "sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+          "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16/resolve/bf77c3174f68ad409e1c2aa60daeb46e32d1c606/tokenizer_config.json"
+        },
+        {
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+          "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+          "file": "chat_template.jinja",
+          "size": 10504,
+          "sha256": "ab7813c3abdd9cb655905a410728b26c7884eca45ddfab8d9f931553485a7862",
+          "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16/resolve/bf77c3174f68ad409e1c2aa60daeb46e32d1c606/chat_template.jinja"
+        }
+      ]
+    },
+    {
+      "family": "gpt-oss-20b",
+      "model": "openai/gpt-oss-20b",
+      "revision": "6cee5e81ee83917806bbde320786a8fb61efebee",
+      "artifacts": [
+        {
+          "file": "chat_template.jinja",
+          "size": 16738,
+          "sha256": "a4c9919cbbd4acdd51ccffe22da049264b1b73e59055fa58811a99efbd7c8146",
+          "url": "https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/chat_template.jinja"
+        },
+        {
+          "file": "tokenizer.json",
+          "size": 27868174,
+          "sha256": "0614fe83cadab421296e664e1f48f4261fa8fef6e03e63bb75c20f38e37d07d3",
+          "url": "https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/tokenizer.json"
+        },
+        {
+          "file": "tokenizer_config.json",
+          "size": 4200,
+          "sha256": "9279e942392b742d633c7adbb89ebe002c98399db8926a7af5125c726f404070",
+          "url": "https://huggingface.co/openai/gpt-oss-20b/resolve/6cee5e81ee83917806bbde320786a8fb61efebee/tokenizer_config.json"
+        }
+      ]
+    }
+  ],
+  "weights_downloaded": false
+}

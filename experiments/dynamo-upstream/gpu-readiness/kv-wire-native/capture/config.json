@@ -1,0 +1,8 @@
+{
+  "endpoint": "tcp://127.0.0.1:55219",
+  "topic": "kv-events",
+  "operator_supplied_worker_epoch": "cpu-wire-fixture",
+  "maximum_seconds": 10.0,
+  "physical_bytes_per_block": null,
+  "scope": "published cacheable GPU blocks; partial allocations are absent"
+}

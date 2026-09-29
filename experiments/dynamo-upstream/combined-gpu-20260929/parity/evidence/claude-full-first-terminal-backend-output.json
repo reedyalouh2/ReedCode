@@ -1,0 +1,17 @@
+{
+  "time": "2026-09-29T05:52:08.237508Z",
+  "level": "TRACE",
+  "file": "/opt/dynamo/lib/llm/src/preprocessor.rs",
+  "line": 5056,
+  "target": "dynamo_llm::preprocessor",
+  "message": "Processing common response: Annotated { data: Some(BackendOutput { token_ids: [151645], tokens: [None], text: None, cum_log_probs: None, log_probs: None, top_logprobs: None, finish_reason: Some(Stop), stop_reason: None, index: Some(0), completion_usage: Some(CompletionUsage { prompt_tokens: 20003, completion_tokens: 1027, total_tokens: 21030, prompt_tokens_details: Some(PromptTokensDetails { audio_tokens: None, cached_tokens: Some(0) }), completion_tokens_details: None }), disaggregated_params: None, encoder_result: None, worker_trace_link: None, engine_data: None, routing_data: None }), id: None, event: None, comment: None, error: None }",
+  "method": "POST",
+  "model": "Qwen/Qwen3-8B",
+  "request_id": "6fc5d44a-07ca-448f-ae92-ab239bfe33c2",
+  "span_id": "529475bc13525f8d",
+  "span_name": "http-request",
+  "trace_id": "e5bf856e705e2e8996e5cb845dd97d76",
+  "uri": "/v1/messages?beta=true",
+  "version": "HTTP/1.1",
+  "x_request_id": "parity-claude-full-364a468b780f4403b43a67667559fc51"
+}

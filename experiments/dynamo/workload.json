@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "description": "Two short turns separated by a tool wait, for checking the request path.",
+  "workflows": [
+    {
+      "id": "short-continuation",
+      "arrival_ms": 0,
+      "turns": [
+        {
+          "wait_ms": 0,
+          "request": {
+            "messages": [{"role": "user", "content": "Reply with exactly the word ready."}],
+            "temperature": 0,
+            "max_completion_tokens": 64
+          },
+          "expected_message": {"role": "assistant", "content": "ready"}
+        },
+        {
+          "wait_ms": 100,
+          "request": {
+            "messages": [
+              {"role": "user", "content": "Reply with exactly the word ready."},
+              {"role": "assistant", "content": "ready"},
+              {"role": "user", "content": "The check has finished. Reply with exactly the word done."}
+            ],
+            "temperature": 0,
+            "max_completion_tokens": 64
+          },
+          "expected_message": {"role": "assistant", "content": "done"}
+        }
+      ]
+    }
+  ]
+}

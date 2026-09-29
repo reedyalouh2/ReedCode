@@ -1,0 +1,175 @@
+{
+  "status": "passed_cpu_stock_image_frontend_capture",
+  "created_at": "2026-09-29T01:28:59.927597+00:00",
+  "deployment_details": "stock-protocol-summary.json",
+  "endpoint": "/v1/responses",
+  "outcomes": [
+    {
+      "request": "codex-1.json",
+      "status": 200,
+      "headers": {
+        "content-type": "text/event-stream",
+        "cache-control": "no-cache",
+        "connection": "close",
+        "transfer-encoding": "chunked",
+        "date": "Tue, 29 Sep 2026 01:27:13 GMT"
+      },
+      "wall_seconds": 0.19657500000016626
+    },
+    {
+      "request": "codex-2.json",
+      "status": 200,
+      "headers": {
+        "content-type": "text/event-stream",
+        "cache-control": "no-cache",
+        "connection": "close",
+        "transfer-encoding": "chunked",
+        "date": "Tue, 29 Sep 2026 01:27:13 GMT"
+      },
+      "wall_seconds": 0.03140070799986461
+    }
+  ],
+  "requests": [
+    {
+      "request_path": "experiments/dynamo-upstream/parity-run-1/readiness/verified/codex/capture/0001/request.body",
+      "request_sha256": "42187023bb5fb5e4a2b91bf6dfc3a1511265204e8ac36e38e49514919c8766ad",
+      "request_bytes": 40384,
+      "tools": 8,
+      "tool_types": [
+        "function",
+        "function",
+        "function",
+        "function",
+        "namespace",
+        "function",
+        "function",
+        "function"
+      ],
+      "raw_reasoning": {
+        "effort": "medium",
+        "summary": "auto"
+      },
+      "backend_input_tokens": 8696,
+      "backend_token_ids_json_sha256": "dc644e9a27cefbd34a81f30f883723d975a13233d9f1379e31a4e06a55bb0eea",
+      "max_output_tokens": null,
+      "context_limit": 32768,
+      "full_input_plus_output_fit_checked": false,
+      "backend_extra_args": {
+        "reasoning_parser_kwargs": {
+          "chat_template_kwargs": {
+            "reasoning_effort": "medium",
+            "enable_thinking": true,
+            "thinking_mode": "enabled",
+            "thinking": true
+          }
+        }
+      },
+      "response_completed": true
+    },
+    {
+      "request_path": "experiments/dynamo-upstream/parity-run-1/readiness/verified/codex/capture/0002/request.body",
+      "request_sha256": "a4986f709c5b4ebe3a10060c1872c75bdb24d41f1a79cd8f20cbbf1fc0ebda4e",
+      "request_bytes": 41229,
+      "tools": 8,
+      "tool_types": [
+        "function",
+        "function",
+        "function",
+        "function",
+        "namespace",
+        "function",
+        "function",
+        "function"
+      ],
+      "raw_reasoning": {
+        "effort": "medium",
+        "summary": "auto"
+      },
+      "backend_input_tokens": 8869,
+      "backend_token_ids_json_sha256": "3958ea40fa2ad8d0e6dd5ba46a466d5f46db94cd6d7570c113bd7778382fed80",
+      "max_output_tokens": null,
+      "context_limit": 32768,
+      "full_input_plus_output_fit_checked": false,
+      "backend_extra_args": {
+        "reasoning_parser_kwargs": {
+          "chat_template_kwargs": {
+            "thinking_mode": "enabled",
+            "reasoning_effort": "medium",
+            "thinking": true,
+            "enable_thinking": true
+          }
+        }
+      },
+      "response_completed": true
+    }
+  ],
+  "archive_sha256": "a217e02fac439afaedf77f93b03e5e086ba0b7b8a6a030f982f5e0ca699a543f",
+  "evidence_files": [
+    {
+      "path": "protocol-codex/backend-1.json",
+      "bytes": 85032,
+      "sha256": "2fe5b75571be393a8079bd0f2df8ff64fa2bfced2f896c47692c2433edcd06f9"
+    },
+    {
+      "path": "protocol-codex/backend-2.json",
+      "bytes": 86680,
+      "sha256": "7c50f31049ad9fc9be499d0153bf2dce70f45b736490c8419533dc5ab42b39f7"
+    },
+    {
+      "path": "protocol-codex/codex-1-response.body",
+      "bytes": 107910,
+      "sha256": "84b56f1250737772b0d6ecd87ce258dbca7c3a9c3a0ab7f737e686e5afb77d32"
+    },
+    {
+      "path": "protocol-codex/codex-2-response.body",
+      "bytes": 107910,
+      "sha256": "098038b088ba8efc2c9cee659446fe54736fc7bd24fe3b77598dd22eb9c47bd4"
+    },
+    {
+      "path": "protocol-codex/discovery/v1/instances/readiness%2Fcapture%2Fgenerate%2Ff5c2a0ea80559e7c",
+      "bytes": 239,
+      "sha256": "4104c7e8021f29acd7ba77a5ef39ed98d94b45c7d9e469e68dd9b1928c1c70a9"
+    },
+    {
+      "path": "protocol-codex/discovery/v1/mdc/readiness%2Fcapture%2Fgenerate%2Ff5c2a0ea80559e7c",
+      "bytes": 1465,
+      "sha256": "f80cfe1fc5b27510bf53287fdcb45a150711057af2fa50ea2dc1be014eb5d451"
+    },
+    {
+      "path": "protocol-codex/frontend.log",
+      "bytes": 126870,
+      "sha256": "5c7f6fdc868583a95a8b56ea0c3cbe5c1a97dae9850169f460d7fa165b599262"
+    },
+    {
+      "path": "protocol-codex/models.json",
+      "bytes": 192,
+      "sha256": "377eebbf88ca1392bb9e10f953588517b77166b654f1093e9d55672e36a86bb9"
+    },
+    {
+      "path": "protocol-codex/outcomes.json",
+      "bytes": 630,
+      "sha256": "a2832ccbb2341f60afeaf618a8af3c820f9deac2f35a3173d12999833ccec6a8"
+    },
+    {
+      "path": "protocol-codex/worker.log",
+      "bytes": 12972,
+      "sha256": "0c37fb66a18372f7232d4fe0e75ecc80a6300ef1e0f2ba486ae3a294bc6340cb"
+    },
+    {
+      "path": "used-scripts/run-stock-protocol.py",
+      "bytes": 3120,
+      "sha256": "d94187122fe97290e61fe0ffc4432a57fcd24be436315cb316225315b2ade173"
+    },
+    {
+      "path": "used-scripts/capture-worker.py",
+      "bytes": 1520,
+      "sha256": "61cc46ca3442912b9e51c3daaf8aa9889a170fb9164bcf001f8f616d5e835781"
+    }
+  ],
+  "limitations": [
+    "Actualimage1.5HTTPfrontend and RustTCPwire were executed; Pythoncallback is our CPUcapturestub. No realvLLM engine, model generation, CUDA, or GPU.",
+    "RawCodexrequests omit max_output_tokens; normalizedmax_tokens isNone. Inputtokensfit32768 but no finiteoutputbudgetfit waschecked.",
+    "BackendJSONfiles come from ourcapturecallback; stockPythonbackend ingress logs onlyPythonPayload(<PyAny>) and are not an independenttoken trace.",
+    "Python3.11/localDebian plus exactimageDynamo+FFmpeg artifacts; notthe fullpinnedPython3.12GPUimage."
+  ]
+}

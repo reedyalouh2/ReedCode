@@ -1,0 +1,452 @@
+{
+  "schema_version": 1,
+  "kind": "synthetic_cost_model",
+  "gpu_measurements": false,
+  "workload_sha256": "a0730d2970c8f3f756e6520bce9b38ab9204095261d0e43eec9d7e9baad44dc9",
+  "source_sha256": "6eff9964b0c48327be2a038f2a5a9433af5828e9538e3cbcf5af33fcb74bbe81",
+  "assumptions": [
+    "One serialized GPU resource; fixed synthetic service costs; no batching.",
+    "Demand has dispatch priority; running preparation chunks cannot be preempted.",
+    "Ordinary decoding populates prompt and generated full blocks.",
+    "Cache starts empty in every condition; LRU eviction; one common speculation budget.",
+    "Future timing knows tool duration and revision/cancellation times, never future block contents.",
+    "Future timing is a diagnostic heuristic, not an optimal oracle or a GPU performance bound.",
+    "Synthetic full blocks omit tokenizer boundaries; use the separate pinned prefix audit.",
+    "Reserved and resident cache blocks both count toward capacity and occupancy.",
+    "Charged compute includes the full cost of chunks admitted before the horizon."
+  ],
+  "results": [
+    {
+      "policy": "off",
+      "workflows": [
+        {
+          "workflow": "revised",
+          "status": "completed",
+          "capped_completion_ms": 54,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 6,
+              "cached_blocks": 0
+            },
+            {
+              "turn": 1,
+              "ready_ms": 46,
+              "completed_ms": 54,
+              "cached_blocks": 0
+            }
+          ]
+        },
+        {
+          "workflow": "cancelled",
+          "status": "cancelled",
+          "capped_completion_ms": 100,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 12,
+              "cached_blocks": 0
+            }
+          ]
+        }
+      ],
+      "metrics": {
+        "demand_compute_ms": 20.0,
+        "speculative_compute_ms": 0.0,
+        "speculative_blocks_computed": 0,
+        "useful_speculative_blocks": 0,
+        "ordinary_cached_blocks": 0,
+        "cache_block_ms": 744.0,
+        "peak_cache_blocks": 9,
+        "obsolete_blocks_completed": 0,
+        "late_blocks_completed": 0,
+        "unconsumed_speculative_blocks": 0
+      },
+      "mean_capped_completion_ms": 77,
+      "events": [
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "revised",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "cancelled",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_started",
+          "workflow": "revised",
+          "turn": 0,
+          "cost_ms": 6,
+          "cached_blocks": 0
+        },
+        {
+          "at_ms": 6,
+          "event": "request_finished",
+          "workflow": "revised",
+          "turn": 0
+        },
+        {
+          "at_ms": 6,
+          "event": "request_started",
+          "workflow": "cancelled",
+          "turn": 0,
+          "cost_ms": 6,
+          "cached_blocks": 0
+        },
+        {
+          "at_ms": 11,
+          "event": "revision",
+          "workflow": "revised",
+          "revision": 1
+        },
+        {
+          "at_ms": 12,
+          "event": "request_finished",
+          "workflow": "cancelled",
+          "turn": 0
+        },
+        {
+          "at_ms": 15,
+          "event": "cancel",
+          "workflow": "cancelled"
+        },
+        {
+          "at_ms": 21,
+          "event": "revision",
+          "workflow": "revised",
+          "revision": 2
+        },
+        {
+          "at_ms": 46,
+          "event": "request_ready",
+          "workflow": "revised",
+          "turn": 1
+        },
+        {
+          "at_ms": 46,
+          "event": "request_started",
+          "workflow": "revised",
+          "turn": 1,
+          "cost_ms": 8,
+          "cached_blocks": 0
+        },
+        {
+          "at_ms": 54,
+          "event": "request_finished",
+          "workflow": "revised",
+          "turn": 1
+        }
+      ],
+      "mean_difference_from_off_ms": 0
+    },
+    {
+      "policy": "eager",
+      "workflows": [
+        {
+          "workflow": "revised",
+          "status": "completed",
+          "capped_completion_ms": 50,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 6,
+              "cached_blocks": 0
+            },
+            {
+              "turn": 1,
+              "ready_ms": 46,
+              "completed_ms": 50,
+              "cached_blocks": 2
+            }
+          ]
+        },
+        {
+          "workflow": "cancelled",
+          "status": "cancelled",
+          "capped_completion_ms": 100,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 12,
+              "cached_blocks": 0
+            }
+          ]
+        }
+      ],
+      "metrics": {
+        "demand_compute_ms": 16.0,
+        "speculative_compute_ms": 6.0,
+        "speculative_blocks_computed": 3,
+        "useful_speculative_blocks": 2,
+        "ordinary_cached_blocks": 0,
+        "cache_block_ms": 891.0,
+        "peak_cache_blocks": 10,
+        "obsolete_blocks_completed": 0,
+        "late_blocks_completed": 0,
+        "unconsumed_speculative_blocks": 1
+      },
+      "mean_capped_completion_ms": 75,
+      "events": [
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "revised",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "cancelled",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_started",
+          "workflow": "revised",
+          "turn": 0,
+          "cost_ms": 6,
+          "cached_blocks": 0
+        },
+        {
+          "at_ms": 6,
+          "event": "request_finished",
+          "workflow": "revised",
+          "turn": 0
+        },
+        {
+          "at_ms": 6,
+          "event": "request_started",
+          "workflow": "cancelled",
+          "turn": 0,
+          "cost_ms": 6,
+          "cached_blocks": 0
+        },
+        {
+          "at_ms": 11,
+          "event": "revision",
+          "workflow": "revised",
+          "revision": 1
+        },
+        {
+          "at_ms": 12,
+          "event": "request_finished",
+          "workflow": "cancelled",
+          "turn": 0
+        },
+        {
+          "at_ms": 12,
+          "event": "preparation_started",
+          "workflow": "revised",
+          "revision": 1,
+          "blocks": 2
+        },
+        {
+          "at_ms": 15,
+          "event": "cancel",
+          "workflow": "cancelled"
+        },
+        {
+          "at_ms": 16,
+          "event": "preparation_finished",
+          "workflow": "revised",
+          "blocks": 2,
+          "obsolete": false
+        },
+        {
+          "at_ms": 21,
+          "event": "revision",
+          "workflow": "revised",
+          "revision": 2
+        },
+        {
+          "at_ms": 21,
+          "event": "preparation_started",
+          "workflow": "revised",
+          "revision": 2,
+          "blocks": 1
+        },
+        {
+          "at_ms": 23,
+          "event": "preparation_finished",
+          "workflow": "revised",
+          "blocks": 1,
+          "obsolete": false
+        },
+        {
+          "at_ms": 46,
+          "event": "request_ready",
+          "workflow": "revised",
+          "turn": 1
+        },
+        {
+          "at_ms": 46,
+          "event": "request_started",
+          "workflow": "revised",
+          "turn": 1,
+          "cost_ms": 4,
+          "cached_blocks": 2
+        },
+        {
+          "at_ms": 50,
+          "event": "request_finished",
+          "workflow": "revised",
+          "turn": 1
+        }
+      ],
+      "mean_difference_from_off_ms": -2
+    },
+    {
+      "policy": "future_timing",
+      "workflows": [
+        {
+          "workflow": "revised",
+          "status": "completed",
+          "capped_completion_ms": 50,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 6,
+              "cached_blocks": 0
+            },
+            {
+              "turn": 1,
+              "ready_ms": 46,
+              "completed_ms": 50,
+              "cached_blocks": 2
+            }
+          ]
+        },
+        {
+          "workflow": "cancelled",
+          "status": "cancelled",
+          "capped_completion_ms": 100,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 12,
+              "cached_blocks": 0
+            }
+          ]
+        }
+      ],
+      "metrics": {
+        "demand_compute_ms": 16.0,
+        "speculative_compute_ms": 4.0,
+        "speculative_blocks_computed": 2,
+        "useful_speculative_blocks": 2,
+        "ordinary_cached_blocks": 0,
+        "cache_block_ms": 752.0,
+        "peak_cache_blocks": 9,
+        "obsolete_blocks_completed": 0,
+        "late_blocks_completed": 0,
+        "unconsumed_speculative_blocks": 0
+      },
+      "mean_capped_completion_ms": 75,
+      "events": [
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "revised",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "cancelled",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_started",
+          "workflow": "revised",
+          "turn": 0,
+          "cost_ms": 6,
+          "cached_blocks": 0
+        },
+        {
+          "at_ms": 6,
+          "event": "request_finished",
+          "workflow": "revised",
+          "turn": 0
+        },
+        {
+          "at_ms": 6,
+          "event": "request_started",
+          "workflow": "cancelled",
+          "turn": 0,
+          "cost_ms": 6,
+          "cached_blocks": 0
+        },
+        {
+          "at_ms": 11,
+          "event": "revision",
+          "workflow": "revised",
+          "revision": 1
+        },
+        {
+          "at_ms": 12,
+          "event": "request_finished",
+          "workflow": "cancelled",
+          "turn": 0
+        },
+        {
+          "at_ms": 15,
+          "event": "cancel",
+          "workflow": "cancelled"
+        },
+        {
+          "at_ms": 21,
+          "event": "revision",
+          "workflow": "revised",
+          "revision": 2
+        },
+        {
+          "at_ms": 42,
+          "event": "preparation_started",
+          "workflow": "revised",
+          "revision": 2,
+          "blocks": 2
+        },
+        {
+          "at_ms": 46,
+          "event": "preparation_finished",
+          "workflow": "revised",
+          "blocks": 2,
+          "obsolete": false
+        },
+        {
+          "at_ms": 46,
+          "event": "request_ready",
+          "workflow": "revised",
+          "turn": 1
+        },
+        {
+          "at_ms": 46,
+          "event": "request_started",
+          "workflow": "revised",
+          "turn": 1,
+          "cost_ms": 4,
+          "cached_blocks": 2
+        },
+        {
+          "at_ms": 50,
+          "event": "request_finished",
+          "workflow": "revised",
+          "turn": 1
+        }
+      ],
+      "mean_difference_from_off_ms": -2
+    }
+  ]
+}

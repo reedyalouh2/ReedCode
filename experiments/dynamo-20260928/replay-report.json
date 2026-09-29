@@ -1,0 +1,587 @@
+{
+  "study_kind": "dynamo_replay",
+  "environment": "unverified_server",
+  "state": "finished",
+  "hint_application": "unverified",
+  "description": "Fixed-request replay. Recorded counts are epochs; completed counts are workflows. Server behavior still needs trace verification.",
+  "rows": [
+    {
+      "run_id": "noisy-bugfix_r01_on",
+      "repeat": 1,
+      "position": 1,
+      "condition": "on",
+      "status": "finished",
+      "directory": "noisy-bugfix_r01_on",
+      "sha256": "7b9a1fb1c49c5da46c4062a9cc0b85c5d690989d427ff55357562e0a9730e947",
+      "completed": 4,
+      "workflows": 4,
+      "outcomes": {
+        "completed": 4
+      },
+      "mean_capped_completion_ms": 7517.8026255453005,
+      "post_tool_first_output_p90_ms": 453.99149996228516,
+      "post_tool_timing_coverage": "16/16",
+      "output_limit_hits": 0,
+      "recorded_message_mismatches": 18,
+      "recorded_message_unknown": 0,
+      "failed_final_notifications": 0,
+      "client_requests": 20,
+      "session_final_requests": 4,
+      "client_input_tokens": 59016,
+      "client_output_tokens": 1566,
+      "epoch_elapsed_s": 8.945793417049572,
+      "server_prefill_seconds": null,
+      "server_decode_seconds": null,
+      "sampled_kv_fraction_seconds": null,
+      "sampled_kv_max_fraction": null,
+      "server_generation_tokens": null,
+      "server_prompt_tokens": null,
+      "server_requests_finished": null
+    },
+    {
+      "run_id": "noisy-bugfix_r01_off",
+      "repeat": 1,
+      "position": 2,
+      "condition": "off",
+      "status": "finished",
+      "directory": "noisy-bugfix_r01_off",
+      "sha256": "714fc8b21a350b457d4f84003e0b62eca32186816028789683af536290f13211",
+      "completed": 4,
+      "workflows": 4,
+      "outcomes": {
+        "completed": 4
+      },
+      "mean_capped_completion_ms": 7127.822874783305,
+      "post_tool_first_output_p90_ms": 443.60100000631064,
+      "post_tool_timing_coverage": "16/16",
+      "output_limit_hits": 0,
+      "recorded_message_mismatches": 18,
+      "recorded_message_unknown": 0,
+      "failed_final_notifications": 0,
+      "client_requests": 20,
+      "session_final_requests": 4,
+      "client_input_tokens": 59016,
+      "client_output_tokens": 1612,
+      "epoch_elapsed_s": 8.370758875040337,
+      "server_prefill_seconds": null,
+      "server_decode_seconds": null,
+      "sampled_kv_fraction_seconds": null,
+      "sampled_kv_max_fraction": null,
+      "server_generation_tokens": null,
+      "server_prompt_tokens": null,
+      "server_requests_finished": null
+    },
+    {
+      "run_id": "noisy-bugfix_r02_off",
+      "repeat": 2,
+      "position": 1,
+      "condition": "off",
+      "status": "finished",
+      "directory": "noisy-bugfix_r02_off",
+      "sha256": "6376880f9d1e2ea5f59b546627ce361b8c38a33936d8b71a182430da60a94a71",
+      "completed": 4,
+      "workflows": 4,
+      "outcomes": {
+        "completed": 4
+      },
+      "mean_capped_completion_ms": 7241.9004374824,
+      "post_tool_first_output_p90_ms": 502.8906249208376,
+      "post_tool_timing_coverage": "16/16",
+      "output_limit_hits": 0,
+      "recorded_message_mismatches": 20,
+      "recorded_message_unknown": 0,
+      "failed_final_notifications": 0,
+      "client_requests": 20,
+      "session_final_requests": 4,
+      "client_input_tokens": 59016,
+      "client_output_tokens": 1656,
+      "epoch_elapsed_s": 8.911810541991144,
+      "server_prefill_seconds": null,
+      "server_decode_seconds": null,
+      "sampled_kv_fraction_seconds": null,
+      "sampled_kv_max_fraction": null,
+      "server_generation_tokens": null,
+      "server_prompt_tokens": null,
+      "server_requests_finished": null
+    },
+    {
+      "run_id": "noisy-bugfix_r02_on",
+      "repeat": 2,
+      "position": 2,
+      "condition": "on",
+      "status": "finished",
+      "directory": "noisy-bugfix_r02_on",
+      "sha256": "e6c23094fefb6dba81397407137302738bf6eb4ee1452a61c7fa9b5776b4aa08",
+      "completed": 4,
+      "workflows": 4,
+      "outcomes": {
+        "completed": 4
+      },
+      "mean_capped_completion_ms": 6993.986697547371,
+      "post_tool_first_output_p90_ms": 454.2286250507459,
+      "post_tool_timing_coverage": "16/16",
+      "output_limit_hits": 0,
+      "recorded_message_mismatches": 18,
+      "recorded_message_unknown": 0,
+      "failed_final_notifications": 0,
+      "client_requests": 20,
+      "session_final_requests": 4,
+      "client_input_tokens": 59016,
+      "client_output_tokens": 1578,
+      "epoch_elapsed_s": 8.28844008303713,
+      "server_prefill_seconds": null,
+      "server_decode_seconds": null,
+      "sampled_kv_fraction_seconds": null,
+      "sampled_kv_max_fraction": null,
+      "server_generation_tokens": null,
+      "server_prompt_tokens": null,
+      "server_requests_finished": null
+    },
+    {
+      "run_id": "noisy-bugfix_r03_off",
+      "repeat": 3,
+      "position": 1,
+      "condition": "off",
+      "status": "finished",
+      "directory": "noisy-bugfix_r03_off",
+      "sha256": "c9d876d9fe346596921a1457421a75a7f373937d97cf2c0040c71d0bfb2fa8bb",
+      "completed": 4,
+      "workflows": 4,
+      "outcomes": {
+        "completed": 4
+      },
+      "mean_capped_completion_ms": 7271.895885525737,
+      "post_tool_first_output_p90_ms": 484.21866609714925,
+      "post_tool_timing_coverage": "16/16",
+      "output_limit_hits": 0,
+      "recorded_message_mismatches": 19,
+      "recorded_message_unknown": 0,
+      "failed_final_notifications": 0,
+      "client_requests": 20,
+      "session_final_requests": 4,
+      "client_input_tokens": 59016,
+      "client_output_tokens": 1630,
+      "epoch_elapsed_s": 8.385152542032301,
+      "server_prefill_seconds": null,
+      "server_decode_seconds": null,
+      "sampled_kv_fraction_seconds": null,
+      "sampled_kv_max_fraction": null,
+      "server_generation_tokens": null,
+      "server_prompt_tokens": null,
+      "server_requests_finished": null
+    },
+    {
+      "run_id": "noisy-bugfix_r03_on",
+      "repeat": 3,
+      "position": 2,
+      "condition": "on",
+      "status": "finished",
+      "directory": "noisy-bugfix_r03_on",
+      "sha256": "6fa98f559d4c562161248fae32ed2745372dcf2b8c55086303debfbd6c138feb",
+      "completed": 4,
+      "workflows": 4,
+      "outcomes": {
+        "completed": 4
+      },
+      "mean_capped_completion_ms": 7196.662135247607,
+      "post_tool_first_output_p90_ms": 445.5442080507055,
+      "post_tool_timing_coverage": "16/16",
+      "output_limit_hits": 0,
+      "recorded_message_mismatches": 19,
+      "recorded_message_unknown": 0,
+      "failed_final_notifications": 0,
+      "client_requests": 20,
+      "session_final_requests": 4,
+      "client_input_tokens": 59016,
+      "client_output_tokens": 1586,
+      "epoch_elapsed_s": 8.895469667040743,
+      "server_prefill_seconds": null,
+      "server_decode_seconds": null,
+      "sampled_kv_fraction_seconds": null,
+      "sampled_kv_max_fraction": null,
+      "server_generation_tokens": null,
+      "server_prompt_tokens": null,
+      "server_requests_finished": null
+    },
+    {
+      "run_id": "noisy-bugfix_r04_off",
+      "repeat": 4,
+      "position": 1,
+      "condition": "off",
+      "status": "finished",
+      "directory": "noisy-bugfix_r04_off",
+      "sha256": "16ebecf3437d0ba9cb9c8c5f684a407f039b299e9c0bfd7745d1f20831c33378",
+      "completed": 4,
+      "workflows": 4,
+      "outcomes": {
+        "completed": 4
+      },
+      "mean_capped_completion_ms": 7390.811041579582,
+      "post_tool_first_output_p90_ms": 509.7747500985861,
+      "post_tool_timing_coverage": "16/16",
+      "output_limit_hits": 0,
+      "recorded_message_mismatches": 20,
+      "recorded_message_unknown": 0,
+      "failed_final_notifications": 0,
+      "client_requests": 20,
+      "session_final_requests": 4,
+      "client_input_tokens": 59016,
+      "client_output_tokens": 1686,
+      "epoch_elapsed_s": 9.547842792002484,
+      "server_prefill_seconds": null,
+      "server_decode_seconds": null,
+      "sampled_kv_fraction_seconds": null,
+      "sampled_kv_max_fraction": null,
+      "server_generation_tokens": null,
+      "server_prompt_tokens": null,
+      "server_requests_finished": null
+    },
+    {
+      "run_id": "noisy-bugfix_r04_on",
+      "repeat": 4,
+      "position": 2,
+      "condition": "on",
+      "status": "finished",
+      "directory": "noisy-bugfix_r04_on",
+      "sha256": "6504fb30a6ad0e6f0e79388fe4d2f43c2f210be8221c9e5db6e6043a310a03b1",
+      "completed": 4,
+      "workflows": 4,
+      "outcomes": {
+        "completed": 4
+      },
+      "mean_capped_completion_ms": 7243.849948048592,
+      "post_tool_first_output_p90_ms": 513.1197080481797,
+      "post_tool_timing_coverage": "16/16",
+      "output_limit_hits": 0,
+      "recorded_message_mismatches": 19,
+      "recorded_message_unknown": 0,
+      "failed_final_notifications": 0,
+      "client_requests": 20,
+      "session_final_requests": 4,
+      "client_input_tokens": 59016,
+      "client_output_tokens": 1596,
+      "epoch_elapsed_s": 8.595125082996674,
+      "server_prefill_seconds": null,
+      "server_decode_seconds": null,
+      "sampled_kv_fraction_seconds": null,
+      "sampled_kv_max_fraction": null,
+      "server_generation_tokens": null,
+      "server_prompt_tokens": null,
+      "server_requests_finished": null
+    },
+    {
+      "run_id": "noisy-bugfix_r05_on",
+      "repeat": 5,
+      "position": 1,
+      "condition": "on",
+      "status": "finished",
+      "directory": "noisy-bugfix_r05_on",
+      "sha256": "727be8311ad9966dd60b461d0f1e6b2d87ccbcfc54b1120f47291029570e6e01",
+      "completed": 4,
+      "workflows": 4,
+      "outcomes": {
+        "completed": 4
+      },
+      "mean_capped_completion_ms": 7572.696750430623,
+      "post_tool_first_output_p90_ms": 444.2851661005989,
+      "post_tool_timing_coverage": "16/16",
+      "output_limit_hits": 0,
+      "recorded_message_mismatches": 19,
+      "recorded_message_unknown": 0,
+      "failed_final_notifications": 0,
+      "client_requests": 20,
+      "session_final_requests": 4,
+      "client_input_tokens": 59016,
+      "client_output_tokens": 1745,
+      "epoch_elapsed_s": 8.680969208944589,
+      "server_prefill_seconds": null,
+      "server_decode_seconds": null,
+      "sampled_kv_fraction_seconds": null,
+      "sampled_kv_max_fraction": null,
+      "server_generation_tokens": null,
+      "server_prompt_tokens": null,
+      "server_requests_finished": null
+    },
+    {
+      "run_id": "noisy-bugfix_r05_off",
+      "repeat": 5,
+      "position": 2,
+      "condition": "off",
+      "status": "finished",
+      "directory": "noisy-bugfix_r05_off",
+      "sha256": "7dd26abfb2ff733ef71765378ad71e101743c30eca23321f1eb3030aeafd70ef",
+      "completed": 4,
+      "workflows": 4,
+      "outcomes": {
+        "completed": 4
+      },
+      "mean_capped_completion_ms": 7296.755999705056,
+      "post_tool_first_output_p90_ms": 541.3839579559863,
+      "post_tool_timing_coverage": "16/16",
+      "output_limit_hits": 0,
+      "recorded_message_mismatches": 20,
+      "recorded_message_unknown": 0,
+      "failed_final_notifications": 0,
+      "client_requests": 20,
+      "session_final_requests": 4,
+      "client_input_tokens": 59016,
+      "client_output_tokens": 1556,
+      "epoch_elapsed_s": 8.704555624979548,
+      "server_prefill_seconds": null,
+      "server_decode_seconds": null,
+      "sampled_kv_fraction_seconds": null,
+      "sampled_kv_max_fraction": null,
+      "server_generation_tokens": null,
+      "server_prompt_tokens": null,
+      "server_requests_finished": null
+    }
+  ],
+  "comparisons": [
+    {
+      "metric": "mean_capped_completion_ms",
+      "pairs": 5,
+      "missing_pairs": [],
+      "mean_on_minus_off": 39.162383548682556,
+      "per_task_mean": {
+        "replay": 39.162383548682556
+      },
+      "weighting": "equal weight per task with observed pairs",
+      "ci95": null,
+      "interval_status": "cache_carryover_not_controlled"
+    },
+    {
+      "metric": "post_tool_first_output_p90_ms",
+      "pairs": 5,
+      "missing_pairs": [],
+      "mean_on_minus_off": -34.13995837327093,
+      "per_task_mean": {
+        "replay": -34.13995837327093
+      },
+      "weighting": "equal weight per task with observed pairs",
+      "ci95": null,
+      "interval_status": "cache_carryover_not_controlled"
+    },
+    {
+      "metric": "client_input_tokens",
+      "pairs": 5,
+      "missing_pairs": [],
+      "mean_on_minus_off": 0,
+      "per_task_mean": {
+        "replay": 0
+      },
+      "weighting": "equal weight per task with observed pairs",
+      "ci95": null,
+      "interval_status": "cache_carryover_not_controlled"
+    },
+    {
+      "metric": "client_output_tokens",
+      "pairs": 5,
+      "missing_pairs": [],
+      "mean_on_minus_off": -13.8,
+      "per_task_mean": {
+        "replay": -13.8
+      },
+      "weighting": "equal weight per task with observed pairs",
+      "ci95": null,
+      "interval_status": "cache_carryover_not_controlled"
+    },
+    {
+      "metric": "output_limit_hits",
+      "pairs": 5,
+      "missing_pairs": [],
+      "mean_on_minus_off": 0,
+      "per_task_mean": {
+        "replay": 0
+      },
+      "weighting": "equal weight per task with observed pairs",
+      "ci95": null,
+      "interval_status": "cache_carryover_not_controlled"
+    },
+    {
+      "metric": "server_prefill_seconds",
+      "pairs": 0,
+      "missing_pairs": [
+        {
+          "task": "replay",
+          "repeat": 1
+        },
+        {
+          "task": "replay",
+          "repeat": 2
+        },
+        {
+          "task": "replay",
+          "repeat": 3
+        },
+        {
+          "task": "replay",
+          "repeat": 4
+        },
+        {
+          "task": "replay",
+          "repeat": 5
+        }
+      ],
+      "mean_on_minus_off": null,
+      "per_task_mean": {},
+      "weighting": "equal weight per task with observed pairs",
+      "ci95": null,
+      "interval_status": "cache_carryover_not_controlled"
+    },
+    {
+      "metric": "server_decode_seconds",
+      "pairs": 0,
+      "missing_pairs": [
+        {
+          "task": "replay",
+          "repeat": 1
+        },
+        {
+          "task": "replay",
+          "repeat": 2
+        },
+        {
+          "task": "replay",
+          "repeat": 3
+        },
+        {
+          "task": "replay",
+          "repeat": 4
+        },
+        {
+          "task": "replay",
+          "repeat": 5
+        }
+      ],
+      "mean_on_minus_off": null,
+      "per_task_mean": {},
+      "weighting": "equal weight per task with observed pairs",
+      "ci95": null,
+      "interval_status": "cache_carryover_not_controlled"
+    },
+    {
+      "metric": "server_generation_tokens",
+      "pairs": 0,
+      "missing_pairs": [
+        {
+          "task": "replay",
+          "repeat": 1
+        },
+        {
+          "task": "replay",
+          "repeat": 2
+        },
+        {
+          "task": "replay",
+          "repeat": 3
+        },
+        {
+          "task": "replay",
+          "repeat": 4
+        },
+        {
+          "task": "replay",
+          "repeat": 5
+        }
+      ],
+      "mean_on_minus_off": null,
+      "per_task_mean": {},
+      "weighting": "equal weight per task with observed pairs",
+      "ci95": null,
+      "interval_status": "cache_carryover_not_controlled"
+    },
+    {
+      "metric": "server_prompt_tokens",
+      "pairs": 0,
+      "missing_pairs": [
+        {
+          "task": "replay",
+          "repeat": 1
+        },
+        {
+          "task": "replay",
+          "repeat": 2
+        },
+        {
+          "task": "replay",
+          "repeat": 3
+        },
+        {
+          "task": "replay",
+          "repeat": 4
+        },
+        {
+          "task": "replay",
+          "repeat": 5
+        }
+      ],
+      "mean_on_minus_off": null,
+      "per_task_mean": {},
+      "weighting": "equal weight per task with observed pairs",
+      "ci95": null,
+      "interval_status": "cache_carryover_not_controlled"
+    },
+    {
+      "metric": "server_requests_finished",
+      "pairs": 0,
+      "missing_pairs": [
+        {
+          "task": "replay",
+          "repeat": 1
+        },
+        {
+          "task": "replay",
+          "repeat": 2
+        },
+        {
+          "task": "replay",
+          "repeat": 3
+        },
+        {
+          "task": "replay",
+          "repeat": 4
+        },
+        {
+          "task": "replay",
+          "repeat": 5
+        }
+      ],
+      "mean_on_minus_off": null,
+      "per_task_mean": {},
+      "weighting": "equal weight per task with observed pairs",
+      "ci95": null,
+      "interval_status": "cache_carryover_not_controlled"
+    },
+    {
+      "metric": "sampled_kv_fraction_seconds",
+      "pairs": 0,
+      "missing_pairs": [
+        {
+          "task": "replay",
+          "repeat": 1
+        },
+        {
+          "task": "replay",
+          "repeat": 2
+        },
+        {
+          "task": "replay",
+          "repeat": 3
+        },
+        {
+          "task": "replay",
+          "repeat": 4
+        },
+        {
+          "task": "replay",
+          "repeat": 5
+        }
+      ],
+      "mean_on_minus_off": null,
+      "per_task_mean": {},
+      "weighting": "equal weight per task with observed pairs",
+      "ci95": null,
+      "interval_status": "cache_carryover_not_controlled"
+    }
+  ]
+}

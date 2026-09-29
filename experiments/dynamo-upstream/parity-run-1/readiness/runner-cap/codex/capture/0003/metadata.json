@@ -1,0 +1,90 @@
+{
+  "sequence": 3,
+  "method": "POST",
+  "path": "/v1/responses",
+  "inference": true,
+  "admitted_inference_count": 3,
+  "started_unix_ns": 1790649394704160252,
+  "started_monotonic_ns": 5616690059973,
+  "request_headers": [
+    [
+      "accept",
+      "text/event-stream"
+    ],
+    [
+      "content-type",
+      "application/json"
+    ],
+    [
+      "originator",
+      "codex_exec"
+    ],
+    [
+      "user-agent",
+      "codex_exec/0.155.1 (Debian 12.0.0; aarch64) dumb (codex_exec; 0.155.1)"
+    ],
+    [
+      "content-length",
+      "41601"
+    ]
+  ],
+  "authorization_present": false,
+  "authorization_is_study_dummy": false,
+  "unexpected_credentials": false,
+  "complete": true,
+  "chunks": [
+    {
+      "received_monotonic_ns": 5616695720931,
+      "bytes": 212
+    },
+    {
+      "received_monotonic_ns": 5616700627348,
+      "bytes": 162
+    },
+    {
+      "received_monotonic_ns": 5616705858389,
+      "bytes": 243
+    },
+    {
+      "received_monotonic_ns": 5616711186764,
+      "bytes": 207
+    },
+    {
+      "received_monotonic_ns": 5616716806806,
+      "bytes": 208
+    },
+    {
+      "received_monotonic_ns": 5616723114348,
+      "bytes": 192
+    },
+    {
+      "received_monotonic_ns": 5616729194556,
+      "bytes": 189
+    },
+    {
+      "received_monotonic_ns": 5616735399389,
+      "bytes": 294
+    },
+    {
+      "received_monotonic_ns": 5616740642264,
+      "bytes": 695
+    }
+  ],
+  "request_sha256": "d8eb2a64e1e20399121bdf884c0cd24e97a175553f780c59e97b5e5aae3d936c",
+  "request_bytes": 41601,
+  "response_status": 200,
+  "response_headers": [
+    [
+      "Content-Type",
+      "text/event-stream"
+    ],
+    [
+      "x-request-id",
+      "stub-request"
+    ]
+  ],
+  "response_headers_monotonic_ns": 5616694538848,
+  "response_sha256": "258702faceefd0bae05109e32d812506e6a906adad3c6eb5d349a5794bf9c661",
+  "response_bytes": 2402,
+  "ended_monotonic_ns": 5616746646723
+}

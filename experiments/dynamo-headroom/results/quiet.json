@@ -1,0 +1,260 @@
+{
+  "schema_version": 1,
+  "kind": "synthetic_cost_model",
+  "gpu_measurements": false,
+  "workload_sha256": "e21cc6618ff3cf6ef95491a04a5c1644bf086b12e1f3b311bed035498e01eea6",
+  "source_sha256": "6eff9964b0c48327be2a038f2a5a9433af5828e9538e3cbcf5af33fcb74bbe81",
+  "assumptions": [
+    "One serialized GPU resource; fixed synthetic service costs; no batching.",
+    "Demand has dispatch priority; running preparation chunks cannot be preempted.",
+    "Ordinary decoding populates prompt and generated full blocks.",
+    "Cache starts empty in every condition; LRU eviction; one common speculation budget.",
+    "Future timing knows tool duration and revision/cancellation times, never future block contents.",
+    "Future timing is a diagnostic heuristic, not an optimal oracle or a GPU performance bound.",
+    "Synthetic full blocks omit tokenizer boundaries; use the separate pinned prefix audit.",
+    "Reserved and resident cache blocks both count toward capacity and occupancy.",
+    "Charged compute includes the full cost of chunks admitted before the horizon."
+  ],
+  "results": [
+    {
+      "policy": "off",
+      "workflows": [
+        {
+          "workflow": "agent",
+          "status": "completed",
+          "capped_completion_ms": 32,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 7,
+              "cached_blocks": 0
+            },
+            {
+              "turn": 1,
+              "ready_ms": 27,
+              "completed_ms": 32,
+              "cached_blocks": 3
+            }
+          ]
+        }
+      ],
+      "metrics": {
+        "demand_compute_ms": 12.0,
+        "speculative_compute_ms": 0.0,
+        "speculative_blocks_computed": 0,
+        "useful_speculative_blocks": 0,
+        "ordinary_cached_blocks": 3,
+        "cache_block_ms": 446.0,
+        "peak_cache_blocks": 5,
+        "obsolete_blocks_completed": 0,
+        "late_blocks_completed": 0,
+        "unconsumed_speculative_blocks": 0
+      },
+      "mean_capped_completion_ms": 32,
+      "events": [
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "agent",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_started",
+          "workflow": "agent",
+          "turn": 0,
+          "cost_ms": 7,
+          "cached_blocks": 0
+        },
+        {
+          "at_ms": 7,
+          "event": "request_finished",
+          "workflow": "agent",
+          "turn": 0
+        },
+        {
+          "at_ms": 27,
+          "event": "request_ready",
+          "workflow": "agent",
+          "turn": 1
+        },
+        {
+          "at_ms": 27,
+          "event": "request_started",
+          "workflow": "agent",
+          "turn": 1,
+          "cost_ms": 5,
+          "cached_blocks": 3
+        },
+        {
+          "at_ms": 32,
+          "event": "request_finished",
+          "workflow": "agent",
+          "turn": 1
+        }
+      ],
+      "mean_difference_from_off_ms": 0
+    },
+    {
+      "policy": "eager",
+      "workflows": [
+        {
+          "workflow": "agent",
+          "status": "completed",
+          "capped_completion_ms": 32,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 7,
+              "cached_blocks": 0
+            },
+            {
+              "turn": 1,
+              "ready_ms": 27,
+              "completed_ms": 32,
+              "cached_blocks": 3
+            }
+          ]
+        }
+      ],
+      "metrics": {
+        "demand_compute_ms": 12.0,
+        "speculative_compute_ms": 0.0,
+        "speculative_blocks_computed": 0,
+        "useful_speculative_blocks": 0,
+        "ordinary_cached_blocks": 3,
+        "cache_block_ms": 446.0,
+        "peak_cache_blocks": 5,
+        "obsolete_blocks_completed": 0,
+        "late_blocks_completed": 0,
+        "unconsumed_speculative_blocks": 0
+      },
+      "mean_capped_completion_ms": 32,
+      "events": [
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "agent",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_started",
+          "workflow": "agent",
+          "turn": 0,
+          "cost_ms": 7,
+          "cached_blocks": 0
+        },
+        {
+          "at_ms": 7,
+          "event": "request_finished",
+          "workflow": "agent",
+          "turn": 0
+        },
+        {
+          "at_ms": 27,
+          "event": "request_ready",
+          "workflow": "agent",
+          "turn": 1
+        },
+        {
+          "at_ms": 27,
+          "event": "request_started",
+          "workflow": "agent",
+          "turn": 1,
+          "cost_ms": 5,
+          "cached_blocks": 3
+        },
+        {
+          "at_ms": 32,
+          "event": "request_finished",
+          "workflow": "agent",
+          "turn": 1
+        }
+      ],
+      "mean_difference_from_off_ms": 0
+    },
+    {
+      "policy": "future_timing",
+      "workflows": [
+        {
+          "workflow": "agent",
+          "status": "completed",
+          "capped_completion_ms": 32,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 7,
+              "cached_blocks": 0
+            },
+            {
+              "turn": 1,
+              "ready_ms": 27,
+              "completed_ms": 32,
+              "cached_blocks": 3
+            }
+          ]
+        }
+      ],
+      "metrics": {
+        "demand_compute_ms": 12.0,
+        "speculative_compute_ms": 0.0,
+        "speculative_blocks_computed": 0,
+        "useful_speculative_blocks": 0,
+        "ordinary_cached_blocks": 3,
+        "cache_block_ms": 446.0,
+        "peak_cache_blocks": 5,
+        "obsolete_blocks_completed": 0,
+        "late_blocks_completed": 0,
+        "unconsumed_speculative_blocks": 0
+      },
+      "mean_capped_completion_ms": 32,
+      "events": [
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "agent",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_started",
+          "workflow": "agent",
+          "turn": 0,
+          "cost_ms": 7,
+          "cached_blocks": 0
+        },
+        {
+          "at_ms": 7,
+          "event": "request_finished",
+          "workflow": "agent",
+          "turn": 0
+        },
+        {
+          "at_ms": 27,
+          "event": "request_ready",
+          "workflow": "agent",
+          "turn": 1
+        },
+        {
+          "at_ms": 27,
+          "event": "request_started",
+          "workflow": "agent",
+          "turn": 1,
+          "cost_ms": 5,
+          "cached_blocks": 3
+        },
+        {
+          "at_ms": 32,
+          "event": "request_finished",
+          "workflow": "agent",
+          "turn": 1
+        }
+      ],
+      "mean_difference_from_off_ms": 0
+    }
+  ]
+}

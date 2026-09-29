@@ -1,0 +1,12 @@
+{
+  "phase": "parity",
+  "epoch": "8fbb1b335a3847f1bd0f366f6e0d89a6",
+  "directory": "/tmp/reedcode-study/parity/epochs/8fbb1b335a3847f1bd0f366f6e0d89a6",
+  "processes_file": "/tmp/reedcode-study/parity/epochs/8fbb1b335a3847f1bd0f366f6e0d89a6/processes.json",
+  "frontend_state": "/tmp/reedcode-study/parity/frontend-state.json",
+  "status": "stopped",
+  "identity_fingerprint": "7841aa8642b798659b263f3a0c2ee6d4d20c33dee9a81b41ad0d85093a2cf10a",
+  "kv_directory": "/tmp/reedcode-study/parity/epochs/8fbb1b335a3847f1bd0f366f6e0d89a6/kv",
+  "wire_pcap": "/tmp/reedcode-study/parity/epochs/8fbb1b335a3847f1bd0f366f6e0d89a6/wire.pcap",
+  "stopped_unix": 1790663771.6286712
+}

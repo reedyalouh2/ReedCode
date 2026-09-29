@@ -1,0 +1,12 @@
+warning: unused variable: `join_reuseport`
+   --> lib/runtime/src/pipeline/network/quic_response.rs:844:41
+    |
+844 | fn bind_server_udp(address: SocketAddr, join_reuseport: bool) -> std::io::Result<UdpSocket> {
+    |                                         ^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_join_reuseport`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `dynamo-runtime` (lib) generated 1 warning (run `cargo fix --lib -p dynamo-runtime` to apply 1 suggestion)
+warning: dynamo-llm@1.6.0: Found FATBIN at default location: ./src/block_manager/block/transfer/kernels/vectorized_copy.fatbin
+warning: dynamo-llm@1.6.0: CUDA FATBIN found at: ./src/block_manager/block/transfer/kernels/vectorized_copy.fatbin - copied to OUT_DIR
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.44s

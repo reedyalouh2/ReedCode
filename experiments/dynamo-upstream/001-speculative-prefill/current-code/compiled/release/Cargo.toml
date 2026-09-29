@@ -1,0 +1,16 @@
+[package]
+name = "reedcode-stock-prefill-repro"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+dynamo-renderer = "=5.1.0"
+dynamo-protocols = "=5.4.0"
+dynamo-tokenizers = "=1.8.0"
+minijinja = { version = "=2.24.0", features = ["preserve_order"] }
+serde_json = { version = "=1.0.150", features = ["preserve_order"] }
+serde = { version = "=1.0.228", features = ["derive"] }
+anyhow = "=1.0.102"
+
+[workspace]

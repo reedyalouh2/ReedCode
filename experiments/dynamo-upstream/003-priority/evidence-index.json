@@ -1,0 +1,190 @@
+{
+  "retrieved_at": "2026-09-28T20:07:17.991056+00:00",
+  "main_sha": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+  "release_ref": "v1.5.0",
+  "scope": "Read-only source, documentation and public report triage; no live requests",
+  "queries": [
+    {
+      "query": "repo:ai-dynamo/dynamo \"agent_hints.priority\" vllm",
+      "url": "https://github.com/search?type=issues&q=repo%3Aai-dynamo/dynamo%20%22agent_hints.priority%22%20vllm",
+      "total_count": 1,
+      "returned": 1,
+      "incomplete_results": false,
+      "complete": true
+    },
+    {
+      "query": "repo:ai-dynamo/dynamo \"priority\" \"cache eviction\"",
+      "url": "https://github.com/search?type=issues&q=repo%3Aai-dynamo/dynamo%20%22priority%22%20%22cache%20eviction%22",
+      "total_count": 29,
+      "returned": 29,
+      "incomplete_results": false,
+      "complete": true
+    },
+    {
+      "query": "repo:ai-dynamo/dynamo \"priority\" polarity",
+      "url": "https://github.com/search?type=issues&q=repo%3Aai-dynamo/dynamo%20%22priority%22%20polarity",
+      "total_count": 23,
+      "returned": 23,
+      "incomplete_results": false,
+      "complete": true
+    }
+  ],
+  "source_files": [
+    {
+      "path": "components/src/dynamo/vllm/handlers.py",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/components/src/dynamo/vllm/handlers.py",
+      "git_blob_sha": "36305c28305184325b3300e5c04e1d6e615b3a55",
+      "sha256": "a06d934bc431037aa4917178f53a8bfb8916f87d086d209a0b9d5dffcf712249",
+      "error": null
+    },
+    {
+      "path": "components/src/dynamo/vllm/handlers.py",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/components/src/dynamo/vllm/handlers.py",
+      "git_blob_sha": "b5e3375d8cfbc82a679499342f8875ceae252d14",
+      "sha256": "cd8d0f817cf881e66b313b140dd8029d6a03c269215b22bc8aa4f98f175250f6",
+      "error": null
+    },
+    {
+      "path": "components/src/dynamo/vllm/args.py",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/components/src/dynamo/vllm/args.py",
+      "git_blob_sha": "8f33dc39ed18bc20323d850ebb834cc4e13ab996",
+      "sha256": "b5b2dc230ecf7125b9e4f01ae741d7105dedc88e027c6e7b136f618490b80924",
+      "error": null
+    },
+    {
+      "path": "components/src/dynamo/vllm/args.py",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/components/src/dynamo/vllm/args.py",
+      "git_blob_sha": "134333029309937edf0814745791273e073fbb48",
+      "sha256": "72c4812187b157cd0d8845bb749cd715b2786453c0bf0fc4633fe6a3406d9042",
+      "error": null
+    },
+    {
+      "path": "components/src/dynamo/frontend/vllm_processor.py",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/components/src/dynamo/frontend/vllm_processor.py",
+      "git_blob_sha": "7dc94fa03e15aa48fa5564e896363e5500d7d107",
+      "sha256": "836cd0d5ff7c8cae7b2dae94735561f304f07dd2b141d523709aa732364056cc",
+      "error": null
+    },
+    {
+      "path": "components/src/dynamo/frontend/vllm_processor.py",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/components/src/dynamo/frontend/vllm_processor.py",
+      "git_blob_sha": "5bb5a229535e2bcd39bb856441937feb7fc81edb",
+      "sha256": "adf9d3195ce67f36e924fda325298b5df6f3dceda7762acb0c033d843ffcfbbb",
+      "error": null
+    },
+    {
+      "path": "lib/llm/src/protocols/common/extensions.rs",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/lib/llm/src/protocols/common/extensions.rs",
+      "git_blob_sha": "527e85095018e0401674b8e302cb15159b961d80",
+      "sha256": "9bd4ed00cebde395f63bc48e628fb770abecf5f357a4e23fa4d3bd8ce313f427",
+      "error": null
+    },
+    {
+      "path": "lib/llm/src/protocols/common/extensions.rs",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/lib/llm/src/protocols/common/extensions.rs",
+      "git_blob_sha": "7d48a3c228a9d2afe610c6b34fb7a623ef0530c4",
+      "sha256": "2619e3b1f78249ed42c5dd49e96d83e2c0611656de742031cc9261fc6ef3de2a",
+      "error": null
+    },
+    {
+      "path": "docs/fern/pages/use-cases/agents/priority-scheduling.md",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/docs/fern/pages/use-cases/agents/priority-scheduling.md",
+      "git_blob_sha": "342704fc14cdb8dcbd3a0357da67397a98b339ed",
+      "sha256": "b8d69001e3911416a3fc46bc40c417394f0ee94d33beefd2d46a08f105c7cfe0",
+      "error": null
+    },
+    {
+      "path": "docs/fern/pages/use-cases/agents/priority-scheduling.md",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/docs/fern/pages/use-cases/agents/priority-scheduling.md",
+      "git_blob_sha": "9248f6aa08ef9851fd10a2840b55d7903c0f0fd1",
+      "sha256": "e86340f328a1d5064952628decd48b8925acab9df1e185b213c74de8b702f7ad",
+      "error": null
+    },
+    {
+      "path": "docs/fern/pages/use-cases/agents/agent-hints.md",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/docs/fern/pages/use-cases/agents/agent-hints.md",
+      "git_blob_sha": "085705870bb221fbf52b4044c698f4a31cb62257",
+      "sha256": "5870cad335d252c88c8fac97b52b6ad3bff6f1746acc4dc6874e8f872d3f4069",
+      "error": null
+    },
+    {
+      "path": "docs/fern/pages/use-cases/agents/agent-hints.md",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/docs/fern/pages/use-cases/agents/agent-hints.md",
+      "git_blob_sha": "bbfd963f3acacb69667b655f8815957e10c63588",
+      "sha256": "43b5424b25f64c119100f1905b8f76960ad24f15b4f2fa587b9c5a190974e208",
+      "error": null
+    },
+    {
+      "path": "docs/fern/pages/developer-guide/knowledge-base/modular-components/backends/vllm/reference-guide.md",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/docs/fern/pages/developer-guide/knowledge-base/modular-components/backends/vllm/reference-guide.md",
+      "git_blob_sha": "1a8633f9ca5c0ef2c1c84f968de287f0317e4dbb",
+      "sha256": "5fa7331f1be0776ab4a14dbdff379f64845e9efe3cce4bb2260f192b50bfaa8e",
+      "error": null
+    },
+    {
+      "path": "docs/fern/pages/developer-guide/knowledge-base/modular-components/backends/vllm/reference-guide.md",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/docs/fern/pages/developer-guide/knowledge-base/modular-components/backends/vllm/reference-guide.md",
+      "git_blob_sha": "1a8633f9ca5c0ef2c1c84f968de287f0317e4dbb",
+      "sha256": "5fa7331f1be0776ab4a14dbdff379f64845e9efe3cce4bb2260f192b50bfaa8e",
+      "error": null
+    },
+    {
+      "path": "container/deps/requirements.vllm.txt",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/container/deps/requirements.vllm.txt",
+      "git_blob_sha": "993bee8fdde431e94f58b799f0bd18bf1a4f09f2",
+      "sha256": "7eabd1ba74ad620d995501a8229f2f36f9c527d5802c8161fa1a483739a30f62",
+      "error": null
+    },
+    {
+      "path": "container/deps/requirements.vllm.txt",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/container/deps/requirements.vllm.txt",
+      "git_blob_sha": "5f787160bb6875431a0afac1d2a38194f6a17b38",
+      "sha256": "4e54a865b2c180f87058dfc1b4491387d559ae44edf1eb2286ecb0be51e6296b",
+      "error": null
+    },
+    {
+      "path": "container/templates/vllm_runtime.Dockerfile",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/container/templates/vllm_runtime.Dockerfile",
+      "git_blob_sha": "a099131ac655985267d7718902f3ca2baf0740cd",
+      "sha256": "1f08a45b77178812696324cb9fee82f95a53637bcfb4c750a15504178773720c",
+      "error": null
+    },
+    {
+      "path": "container/templates/vllm_runtime.Dockerfile",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/container/templates/vllm_runtime.Dockerfile",
+      "git_blob_sha": "362ca9ee0666ac99641ac61947f7851d6dc7016e",
+      "sha256": "538703c9cb205976281ae3ea7b84033d175708b494333ad1c36854eb977b68b1",
+      "error": null
+    }
+  ],
+  "archive": {
+    "name": "source-evidence.tar.gz",
+    "bytes": 327120,
+    "sha256": "4ebe869030d66100e03a71120ae09d50c254fab11911ba996a794491f37a21f7",
+    "contents": [
+      {
+        "name": "priority-evidence.json",
+        "bytes": 1561516,
+        "sha256": "e8542dff4eedcc7d7da68d06da153463973d4b0738b8117069898dd61b1545a7"
+      }
+    ]
+  }
+}

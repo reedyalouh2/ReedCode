@@ -1,0 +1,118 @@
+{
+  "status": "recommended_launch_flags_verified",
+  "created_unix": 1790661452.397822,
+  "recommendation": {
+    "url": "https://docs.nvidia.com/dynamo/dev/digest/agentic-harnesses",
+    "title": "Streaming Tokens and Tools: Multi-Turn Agentic Harness Support in Dynamo",
+    "published_date": "2026-04-30",
+    "required_frontend_flags": [
+      "--enable-anthropic-api",
+      "--strip-anthropic-preamble",
+      "--enable-streaming-tool-dispatch"
+    ],
+    "worker_parsers": "Model-specific tool-call and reasoning parsers are required. This run uses hermes and qwen3 for Qwen/Qwen3-8B."
+  },
+  "frontend": {
+    "pid": 3173,
+    "start_ticks": 1064964135,
+    "epoch": "f35860a24a8a42fb9b529b4d9911428e",
+    "argv": [
+      "python3",
+      "-m",
+      "dynamo.frontend",
+      "--discovery-backend",
+      "file",
+      "--request-plane",
+      "tcp",
+      "--router-mode",
+      "kv",
+      "--http-host",
+      "127.0.0.1",
+      "--http-port",
+      "8000",
+      "--enable-anthropic-api",
+      "--strip-anthropic-preamble",
+      "--enable-streaming-tool-dispatch"
+    ],
+    "effective_launch_settings": {
+      "enable_anthropic_api": true,
+      "strip_anthropic_preamble": true,
+      "enable_streaming_tool_dispatch": true
+    },
+    "evidence_basis": "The live process command line contains each positive flag and no negative counterpart. The installed argument definitions accept them, and installed main.py forwards their config fields into HTTP server kwargs. This check does not introspect Rust process memory.",
+    "installed_source": {
+      "main.py": {
+        "remote_path": "/usr/local/lib/python3.12/dist-packages/dynamo/frontend/main.py",
+        "sha256": "4896b27c3b484bc10cbf4d7dae6cd62aeee2958307139252864c6935be49dbd2"
+      },
+      "frontend_args.py": {
+        "remote_path": "/usr/local/lib/python3.12/dist-packages/dynamo/frontend/frontend_args.py",
+        "sha256": "d27c2bf029bf1581ead621531cce3ea77ff23215348b434c210bdf8cd46e4e15"
+      }
+    }
+  },
+  "worker": {
+    "pid": 1056,
+    "start_ticks": 1064828818,
+    "argv": [
+      "python3",
+      "-m",
+      "dynamo.vllm",
+      "--model",
+      "Qwen/Qwen3-8B",
+      "--revision",
+      "b968826d9c46dd6066d109eabc6255188de91218",
+      "--discovery-backend",
+      "file",
+      "--request-plane",
+      "tcp",
+      "--dtype",
+      "bfloat16",
+      "--kv-cache-dtype",
+      "auto",
+      "--tensor-parallel-size",
+      "1",
+      "--max-model-len",
+      "32768",
+      "--gpu-memory-utilization",
+      "0.80",
+      "--enable-prefix-caching",
+      "--block-size",
+      "16",
+      "--kv-events-config",
+      "{\"enable_kv_cache_events\":true,\"publisher\":\"zmq\",\"topic\":\"kv-events\",\"endpoint\":\"tcp://*:5557\"}",
+      "--dyn-tool-call-parser",
+      "hermes",
+      "--dyn-reasoning-parser",
+      "qwen3",
+      "--dyn-default-thinking-mode",
+      "enabled"
+    ],
+    "tool_parser": "hermes",
+    "reasoning_parser": "qwen3",
+    "default_thinking_mode": "enabled"
+  },
+  "evidence": {
+    "recommended-config-runtime.json": {
+      "path": "/tmp/reedcode-gpu-evidence-02/recommended-config-runtime.json",
+      "sha256": "73a927272e52b83c010d4dc2320977b53c3c9db91280c31233d4db102f01be36"
+    },
+    "recommended-config-installed-source.json": {
+      "path": "/tmp/reedcode-gpu-evidence-02/recommended-config-installed-source.json",
+      "sha256": "4c330b83166bbe2d0702eec9e4e7e2760ec2cf36c36fd248e03df821c22da481"
+    },
+    "stock-frontend-help.txt": {
+      "path": "/tmp/reedcode-gpu-evidence-02/stock-frontend-help.txt",
+      "sha256": "c99362b9fbc4f122d208c3937aa8b1a9ac631eadd9b3e5a06f32bc01e16a3dfe"
+    },
+    "frontend-recommended-restart.json": {
+      "path": "/tmp/reedcode-gpu-evidence-02/frontend-recommended-restart.json",
+      "sha256": "b41db1cfcea78e15dc6cff3584f2c016087436a59d24cd45ba578057063fa552"
+    },
+    "claude-full-reset.json": {
+      "path": "/tmp/reedcode-gpu-evidence-02/claude-full-reset.json",
+      "sha256": "313c6d0c1f74b5d9c341a9a8ad1b2ddd197e234349046693e7c629cb6bd9c8f9"
+    }
+  },
+  "scope": "This verifies the recommended frontend flags and model-specific worker parsers. The model and experimental setup differ from the NVIDIA article, and this file makes no performance comparison."
+}

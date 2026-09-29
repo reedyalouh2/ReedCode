@@ -1,0 +1,436 @@
+{
+  "source_revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+  "renderer": "5.4.0 with local patch",
+  "recorded_tool_continuations": 42,
+  "constructed_length_cases": 12,
+  "exact_prefixes": 54,
+  "normal_requests_unchanged": true,
+  "gpu_measurements": false,
+  "future_tool_content_used_to_prepare": false,
+  "completed_assistant_source": "captured followup message at original message count; tool-result messages are withheld from preparation",
+  "source_input_sha256": "1f0c9e255c298b78cb471387547663dc008da49267d7acd839ea22762540c12b",
+  "input_sha256": "1f0c9e255c298b78cb471387547663dc008da49267d7acd839ea22762540c12b",
+  "native_output_sha256": "fa296dde4a8b357a83067c2a01f92e0094b69d934a804c9ca034b71d4a33547c",
+  "native_output_uncompressed_sha256": "95c91a900d3a7d56dc503d4c41d35c95a40ebba8f7701844f07c7e7265758eae",
+  "binary_sha256": "c562ee5a4370c99ef8db7ac73cdb4963b79599c25209b6591ad0f056ee6d2b96",
+  "registry_dependencies": 298,
+  "dependency_drift": [],
+  "isolated_pilot": {
+    "cases": [
+      {
+        "case": "text",
+        "prepared_tokens": null,
+        "outcome": "skipped",
+        "normal_requests_unchanged": true
+      },
+      {
+        "case": "tool",
+        "prepared_tokens": 218,
+        "outcome": "exact_prefix",
+        "normal_requests_unchanged": true
+      }
+    ],
+    "input_sha256": "fa46d3a19056efc4ef23c7e9b57548b4fd62b32b0cf330b41e9811d70a012c8e",
+    "stock_sha256": "2662b01258dee46ddfc2cb9544bfa3dff9902c21f7f4c7960dadb0a48d5ca5f2",
+    "native_output_sha256": "d6aaffff6a3724f8f8b76351c770e4f07f67fe6bed1e97f58c4c711e0213ead3"
+  },
+  "files": {
+    "build.py": "a14c1361628b9199529003858313aed0219db1d1341636924a896c842f6fa756",
+    "reproduce.py": "e2fa4bc2d4d951c44d05d6b852842b9f61d0285aa8a56841f87112f04d14b361",
+    "check.rs": "19b10e4d723f209fb4ebc2b7b245326d8598f823f3414c19e59e6eb2b7f595ea",
+    "dynamo.patch": "533ef5a467bc92674fa7170b954b34a295328856ca6251eeeda9bdb552bd3f39",
+    "renderer.patch": "f6bac08a4a8ba8b72b0c2a9b3db120e5f36f2b1c3af9ca4745e22fbf4bf93f78",
+    "dynamo/accumulator.rs": "c8a7b09ff996ac86c5b6a40965867ec4205474905da514aea70bfe869d97908d",
+    "dynamo/contract.rs": "0606b7500b9fcb9176ec60b715f5b3f42bc0292864001a7d4f6b393f372f0397",
+    "renderer/speculative.rs": "7b176e9b7882f7298eb642afe4b585af06b055e3fc5b99d84352943afa47b022",
+    "renderer/qwen3-tool-prefix.jinja": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+    "Cargo.lock": "aff21128d5f2d8aa615b9c341f427f2810ce0200573e58223f0d3287b1668d69",
+    "cpu-tests.log": "0aae0a2eede5fc4a70a37d061e9dfecaf0ab394d2515b41ee6a3fe7f2faafaf6"
+  },
+  "cases": [
+    {
+      "case": "noisy-bugfix_r01_on/1",
+      "prepared_tokens": 398,
+      "complete_blocks": 24,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r01_on/2",
+      "prepared_tokens": 2962,
+      "complete_blocks": 185,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r01_on/3",
+      "prepared_tokens": 3269,
+      "complete_blocks": 204,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r01_on/4",
+      "prepared_tokens": 3310,
+      "complete_blocks": 206,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r01_off/1",
+      "prepared_tokens": 398,
+      "complete_blocks": 24,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r01_off/2",
+      "prepared_tokens": 2976,
+      "complete_blocks": 186,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r01_off/3",
+      "prepared_tokens": 3260,
+      "complete_blocks": 203,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r01_off/4",
+      "prepared_tokens": 3500,
+      "complete_blocks": 218,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r01_off/5",
+      "prepared_tokens": 3573,
+      "complete_blocks": 223,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r02_off/1",
+      "prepared_tokens": 398,
+      "complete_blocks": 24,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r02_off/2",
+      "prepared_tokens": 2983,
+      "complete_blocks": 186,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r02_off/3",
+      "prepared_tokens": 3217,
+      "complete_blocks": 201,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r02_off/4",
+      "prepared_tokens": 3494,
+      "complete_blocks": 218,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r02_off/5",
+      "prepared_tokens": 3567,
+      "complete_blocks": 222,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r02_on/1",
+      "prepared_tokens": 398,
+      "complete_blocks": 24,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r02_on/2",
+      "prepared_tokens": 2952,
+      "complete_blocks": 184,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r02_on/3",
+      "prepared_tokens": 3224,
+      "complete_blocks": 201,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r02_on/4",
+      "prepared_tokens": 3322,
+      "complete_blocks": 207,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r03_off/1",
+      "prepared_tokens": 398,
+      "complete_blocks": 24,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r03_off/2",
+      "prepared_tokens": 2966,
+      "complete_blocks": 185,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r03_off/3",
+      "prepared_tokens": 3216,
+      "complete_blocks": 201,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r03_off/4",
+      "prepared_tokens": 3257,
+      "complete_blocks": 203,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r03_on/1",
+      "prepared_tokens": 398,
+      "complete_blocks": 24,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r03_on/2",
+      "prepared_tokens": 2961,
+      "complete_blocks": 185,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r03_on/3",
+      "prepared_tokens": 3234,
+      "complete_blocks": 202,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r03_on/4",
+      "prepared_tokens": 3303,
+      "complete_blocks": 206,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r04_off/1",
+      "prepared_tokens": 398,
+      "complete_blocks": 24,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r04_off/2",
+      "prepared_tokens": 2952,
+      "complete_blocks": 184,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r04_off/3",
+      "prepared_tokens": 3229,
+      "complete_blocks": 201,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r04_off/4",
+      "prepared_tokens": 3270,
+      "complete_blocks": 204,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r04_on/1",
+      "prepared_tokens": 398,
+      "complete_blocks": 24,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r04_on/2",
+      "prepared_tokens": 2958,
+      "complete_blocks": 184,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r04_on/3",
+      "prepared_tokens": 3221,
+      "complete_blocks": 201,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r04_on/4",
+      "prepared_tokens": 3262,
+      "complete_blocks": 203,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r05_on/1",
+      "prepared_tokens": 398,
+      "complete_blocks": 24,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r05_on/2",
+      "prepared_tokens": 2962,
+      "complete_blocks": 185,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r05_on/3",
+      "prepared_tokens": 3281,
+      "complete_blocks": 205,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r05_on/4",
+      "prepared_tokens": 3322,
+      "complete_blocks": 207,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r05_off/1",
+      "prepared_tokens": 398,
+      "complete_blocks": 24,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r05_off/2",
+      "prepared_tokens": 2964,
+      "complete_blocks": 185,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r05_off/3",
+      "prepared_tokens": 3275,
+      "complete_blocks": 204,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "noisy-bugfix_r05_off/4",
+      "prepared_tokens": 3362,
+      "complete_blocks": 210,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "constructed/earlier_tool_output/4096/1",
+      "prepared_tokens": 4179,
+      "complete_blocks": 261,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "constructed/earlier_tool_output/4096/2",
+      "prepared_tokens": 4486,
+      "complete_blocks": 280,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "constructed/earlier_tool_output/8192/1",
+      "prepared_tokens": 8275,
+      "complete_blocks": 517,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "constructed/earlier_tool_output/8192/2",
+      "prepared_tokens": 8582,
+      "complete_blocks": 536,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "constructed/earlier_tool_output/16384/1",
+      "prepared_tokens": 16467,
+      "complete_blocks": 1029,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "constructed/earlier_tool_output/16384/2",
+      "prepared_tokens": 16774,
+      "complete_blocks": 1048,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "constructed/earlier_tool_output/32768/1",
+      "prepared_tokens": 32851,
+      "complete_blocks": 2053,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "constructed/earlier_tool_output/32768/2",
+      "prepared_tokens": 33158,
+      "complete_blocks": 2072,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "constructed/earlier_tool_output/50000/1",
+      "prepared_tokens": 50083,
+      "complete_blocks": 3130,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "constructed/earlier_tool_output/50000/2",
+      "prepared_tokens": 50390,
+      "complete_blocks": 3149,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "constructed/system_content/50000/1",
+      "prepared_tokens": 50083,
+      "complete_blocks": 3130,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    },
+    {
+      "case": "constructed/system_content/50000/2",
+      "prepared_tokens": 50390,
+      "complete_blocks": 3149,
+      "exact_prefix": true,
+      "warmup_only_full_blocks_after_followup": 0
+    }
+  ],
+  "limits": [
+    "This report covers native CPU token parity; full module checks are recorded in integration-results.json.",
+    "Exact Qwen template and tokenizer contract only; text continuations and unsupported settings skip.",
+    "Client must preserve completed messages and effective rendering fields when appending tool results.",
+    "Zero warmup-only blocks after a matching followup is input-block accounting, not physical GPU residency."
+  ]
+}

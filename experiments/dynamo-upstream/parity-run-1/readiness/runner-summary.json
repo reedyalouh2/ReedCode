@@ -1,0 +1,107 @@
+{
+  "claude": {
+    "client": "claude",
+    "version": "2.1.81 (Claude Code)",
+    "executable_sha256": "d014162177fc18bfeb7f93d942130dd964f7424e4101f6ad569de66e6eddca03",
+    "session_id": "3e81e397-57fa-4bdc-a6e7-f598782d6aba",
+    "admitted_calls": 4,
+    "completed": true,
+    "stub_only": true,
+    "turns": [
+      {
+        "exit_code": 0,
+        "session_id": "3e81e397-57fa-4bdc-a6e7-f598782d6aba",
+        "intervention": null,
+        "followup_delay_seconds": null
+      },
+      {
+        "exit_code": 0,
+        "session_id": "3e81e397-57fa-4bdc-a6e7-f598782d6aba",
+        "intervention": null,
+        "followup_delay_seconds": 0.000471459
+      },
+      {
+        "exit_code": 0,
+        "session_id": "3e81e397-57fa-4bdc-a6e7-f598782d6aba",
+        "intervention": null,
+        "followup_delay_seconds": 0.000418875
+      }
+    ],
+    "evidence": "runner-verified/claude/result.json"
+  },
+  "codex": {
+    "client": "codex",
+    "version": "codex-cli 0.155.1",
+    "executable_sha256": "298d3d73d0bbc1367e58a370df5b6216fe30ce0a92e8b6b0afb0377a958dc335",
+    "session_id": "01a0eb08-e804-7590-8370-432d08dbc684",
+    "admitted_calls": 4,
+    "completed": true,
+    "stub_only": true,
+    "turns": [
+      {
+        "exit_code": 0,
+        "session_id": "01a0eb08-e804-7590-8370-432d08dbc684",
+        "intervention": null,
+        "followup_delay_seconds": null
+      },
+      {
+        "exit_code": 0,
+        "session_id": "01a0eb08-e804-7590-8370-432d08dbc684",
+        "intervention": null,
+        "followup_delay_seconds": 0.017485167
+      },
+      {
+        "exit_code": 0,
+        "session_id": "01a0eb08-e804-7590-8370-432d08dbc684",
+        "intervention": null,
+        "followup_delay_seconds": 0.003057042
+      }
+    ],
+    "evidence": "runner-verified/codex/result.json"
+  },
+  "codex_forced_cap": {
+    "client": "codex",
+    "version": "codex-cli 0.155.1",
+    "executable_sha256": "298d3d73d0bbc1367e58a370df5b6216fe30ce0a92e8b6b0afb0377a958dc335",
+    "session_id": "01a0eb05-4baf-7e60-bba3-38479ec45518",
+    "admitted_calls": 3,
+    "completed": true,
+    "stub_only": true,
+    "turns": [
+      {
+        "exit_code": 1,
+        "session_id": "01a0eb05-4baf-7e60-bba3-38479ec45518",
+        "intervention": {
+          "reason": "phase_call_limit",
+          "signal": "SIGINT",
+          "at_monotonic_ns": 5610502024846,
+          "admitted_calls": 1,
+          "failed_http_capture_sequences": []
+        },
+        "followup_delay_seconds": null
+      },
+      {
+        "exit_code": 0,
+        "session_id": "01a0eb05-4baf-7e60-bba3-38479ec45518",
+        "intervention": null,
+        "followup_delay_seconds": 0.001168458
+      },
+      {
+        "exit_code": 0,
+        "session_id": "01a0eb05-4baf-7e60-bba3-38479ec45518",
+        "intervention": null,
+        "followup_delay_seconds": 0.006070917
+      }
+    ],
+    "evidence": "runner-cap/codex/result.json"
+  },
+  "model_requests_made": 0,
+  "code_sha256": {
+    "run_session.py": "eb86e07a7af1c11d4aceb450fb1a6678e938009bfda053c99f2c2191a34ffd98",
+    "capture_proxy.py": "ea8b50ada0698b946f6367e89ed421697abf0dd40624db62acde151b7286d7bc",
+    "check_clients.py": "98da55f87eea486dd282beb03d4a6fe88955f727327137f269f640234de45aef",
+    "stub_server.py": "af8a6f15b58b01a050310edc33c5cd919f61df9874a70a17fd3ed46f8579de36",
+    "launch-packet.json": "2ba6af1c9adc22d091db3b489acbcf939b35a6efc5c738d887314e956d2ac0c3"
+  },
+  "post_run_change": "Added optional observer X-Request-ID injection after these CLI runs. Existing client arguments and entity bodies are unchanged. Twelve focused proxy tests and four stock frontend/wire comparisons cover that instrumentation."
+}

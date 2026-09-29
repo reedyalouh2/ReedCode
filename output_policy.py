@@ -4,6 +4,8 @@ from dataclasses import dataclass
 import math
 import os
 
+from dynamo_support import DynamoConfig
+
 
 @dataclass(frozen=True)
 class Settings:
@@ -15,6 +17,8 @@ class Settings:
     max_output_tokens: int | None = None
     server_metrics_url: str | None = None
     metrics_sample_interval: float = 0.1
+    dynamo: DynamoConfig | None = None
+    capture_requests: bool = False
 
     def __post_init__(self):
         if min(self.max_turns, self.max_tool_output, self.tool_timeout) <= 0:
@@ -27,6 +31,13 @@ class Settings:
             raise ValueError("MAX_OUTPUT_TOKENS must be positive when set")
         if not math.isfinite(self.metrics_sample_interval) or self.metrics_sample_interval <= 0:
             raise ValueError("METRICS_SAMPLE_INTERVAL must be positive and finite")
+        if self.dynamo is not None:
+            if self.model_api != "chat":
+                raise ValueError("Dynamo integration requires MODEL_API=chat")
+            if self.server_metrics_url:
+                raise ValueError("Dynamo studies need epoch-level metrics; unset VLLM_METRICS_URL")
+        if self.capture_requests and self.dynamo is None:
+            raise ValueError("Request capture is available only for Dynamo studies")
 
     @classmethod
     def from_env(cls):
@@ -39,6 +50,8 @@ class Settings:
             max_output_tokens=int(os.environ["MAX_OUTPUT_TOKENS"]) if os.getenv("MAX_OUTPUT_TOKENS") else None,
             server_metrics_url=os.getenv("VLLM_METRICS_URL") or None,
             metrics_sample_interval=float(os.getenv("METRICS_SAMPLE_INTERVAL", "0.1")),
+            dynamo=DynamoConfig.from_env(),
+            capture_requests=os.getenv("DYNAMO_CAPTURE_REQUESTS", "0") == "1",
         )
 
 

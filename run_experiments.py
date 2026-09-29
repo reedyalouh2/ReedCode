@@ -137,6 +137,8 @@ def main():
     parser.add_argument("--dry-run", action="store_true", help="Save the schedule without downloads or model calls")
     parser.add_argument("--check-only", action="store_true", help="Prepare task snapshots and run their oracles, without model calls")
     args = parser.parse_args()
+    if os.getenv("DYNAMO_SPECULATIVE_PREFILL") is not None:
+        parser.error("Use run_dynamo.py for serving-hint studies; unset DYNAMO_SPECULATIVE_PREFILL here")
     if args.max_output_tokens is not None and args.max_output_tokens <= 0:
         parser.error("--max-output-tokens must be positive")
     if args.tasks and args.suite != "real":
@@ -168,7 +170,7 @@ def main():
         "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
                           for name in ("reedcode_harbor_agent.py", "output_policy.py",
                                        "run_experiments.py", "reporting.py", "model_backend.py",
-                                       "server_metrics.py", "uv.lock")},
+                                       "server_metrics.py", "dynamo_support.py", "chat_stream.py", "uv.lock")},
         "plan": plan, "runs": [],
     }
     save_manifest(output, manifest)

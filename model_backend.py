@@ -3,6 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from types import SimpleNamespace
 
+from dynamo_support import DynamoConfig
+from chat_stream import stream_completion
+
 
 @dataclass
 class ChatMessage:
@@ -59,9 +62,15 @@ def chat_messages(instructions: str, history: list) -> list[dict]:
 async def create_response(
     client, *, api: str, model: str, instructions: str,
     input: list, tools: list[dict], max_output_tokens: int | None = None,
+    dynamo: DynamoConfig | None = None, session_id: str | None = None,
+    stream: bool = False, capture=None,
 ):
     if max_output_tokens is not None and max_output_tokens < 1:
         raise ValueError("max_output_tokens must be positive")
+    if dynamo is not None and (api != "chat" or not session_id):
+        raise ValueError("Dynamo requests require the Chat API and a session ID")
+    if stream and api != "chat":
+        raise ValueError("Streaming timing requires the Chat API")
 
     if api == "responses":
         options = {} if max_output_tokens is None else {"max_output_tokens": max_output_tokens}
@@ -80,10 +89,18 @@ async def create_response(
             "function": {key: value for key, value in tool.items() if key != "type"},
         })
     options = {} if max_output_tokens is None else {"max_completion_tokens": max_output_tokens}
-    completion = await client.chat.completions.create(
-        model=model, messages=chat_messages(instructions, input),
-        tools=chat_tools, tool_choice="auto", **options,
-    )
+    if dynamo is not None:
+        options.update(dynamo.request_options(session_id))
+    request = dict(model=model, messages=chat_messages(instructions, input),
+                   tools=chat_tools, tool_choice="auto", **options)
+    if capture is not None:
+        capture({key: value for key, value in request.items()
+                 if key not in ("extra_headers", "extra_body")})
+    timing = None
+    if stream:
+        completion, timing = await stream_completion(client, **request)
+    else:
+        completion = await client.chat.completions.create(**request)
     if len(completion.choices) != 1:
         raise RuntimeError("Expected exactly one Chat completion choice")
 
@@ -109,4 +126,5 @@ async def create_response(
     return SimpleNamespace(
         output=output, output_text=message.content or "", usage=normalized_usage,
         status=status, finish_reason=choice.finish_reason, model=completion.model,
+        completion_id=completion.id, stream_timing=timing,
     )

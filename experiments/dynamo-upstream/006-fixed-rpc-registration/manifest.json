@@ -1,0 +1,13 @@
+{
+  "captured_for": "2026-09-29 combined GPU run",
+  "upstream_issue_search": "pending",
+  "new_upstream_bug_confirmed": false,
+  "files": {
+    "frontend-startup-diagnosis.json": "a0fec0b0f58299add030721f2f53f23b8712f457bdf3c87b208d9d0ffb5bd179",
+    "frontend-registration-readonly.json": "0c043097cc3e7532f5474c037b07e67707e72d113b5234d21f9c37a0a704f947",
+    "frontend-startup-release-endpoint.rs": "621833b2ecd947ab985d8535e6763997540b8b123f8d27c5f89e40fef2c4f8e7",
+    "frontend-startup-release-http.rs": "39079d9c52397f9d4fa3d5a539ff245dc1cdece0a5222ee4d1fbbdb796560558",
+    "frontend-startup-main-endpoint.rs": "59a6889fa5137820ea4374582b8b7b5b089b3a4d1c71e22b0edf0fd307eb231d",
+    "frontend-startup-main-http.rs": "a9535898c89e76ff54fd471c04404aa675552b4ffed50d17fa806b3dc9c37230"
+  }
+}

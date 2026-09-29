@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "kind": "synthetic_cost_model",
+  "description": "Ordinary decoding already caches the entire known continuation.",
+  "cache_blocks": 8,
+  "speculative_block_budget": 32,
+  "speculative_chunk_blocks": 2,
+  "prefill_block_ms": 2,
+  "horizon_ms": 100,
+  "workflows": [
+    {
+      "id": "agent",
+      "arrival_ms": 0,
+      "turns": [
+        {
+          "prompt_blocks": [
+            "system",
+            "user"
+          ],
+          "generated_blocks": [
+            "call"
+          ],
+          "decode_ms": 3,
+          "wait_ms": 0
+        },
+        {
+          "prompt_blocks": [
+            "system",
+            "user",
+            "call",
+            "tool"
+          ],
+          "generated_blocks": [
+            "answer"
+          ],
+          "decode_ms": 3,
+          "wait_ms": 20,
+          "intent": [
+            "system",
+            "user",
+            "call"
+          ]
+        }
+      ]
+    }
+  ]
+}

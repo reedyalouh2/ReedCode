@@ -1,0 +1,192 @@
+{
+  "status": "CPU fixtures validated; real backend replay not yet exercised",
+  "gpu_measurements": false,
+  "model_requests_made": 0,
+  "source_revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+  "model": "Qwen/Qwen3-8B",
+  "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "stock_binary_sha256": "97cb70795a83a819c3892c0c3cd573bcfd561f40f815c5d73286401342350548",
+  "fixed_binary_sha256": "c562ee5a4370c99ef8db7ac73cdb4963b79599c25209b6591ad0f056ee6d2b96",
+  "patch_sha256": {
+    "dynamo.patch": "533ef5a467bc92674fa7170b954b34a295328856ca6251eeeda9bdb552bd3f39",
+    "renderer.patch": "f6bac08a4a8ba8b72b0c2a9b3db120e5f36f2b1c3af9ca4745e22fbf4bf93f78"
+  },
+  "sessions": {
+    "short": {
+      "kind": "recorded_qwen_coding_session",
+      "source_run": "noisy-bugfix_r01_on",
+      "source_trace_sha256": "2c941ae695ec9e5a2edbd15036cead19576b6542cd55937107cd721b6dd8094f",
+      "source_archive_sha256": "4a4650d97c06173e817e21657a651daa7d9d1be20441db92869fb42a584a1cb1",
+      "tool_wait_ms": {
+        "1": 292.45,
+        "2": 130.01,
+        "3": 353.58,
+        "4": 347.93
+      },
+      "model_generated_assistant": true
+    },
+    "long": {
+      "kind": "controlled_transcript_of_executed_public_repo_tools",
+      "source_revision": "d72cf6dfba2660e1571ed1aa3a0d798e7ee67b31",
+      "source_file_sha256": {
+        "output_policy.py": "a613fcd749c95e1d3ff0439789fb482ec7126e1ff81e7cb1a2a75c14c4e2bdd7",
+        "reedcode_harbor_agent.py": "7444c772f00280fa1cc88ce2386d116345d43cf2b8e88a53df86b8d7ead6a5b9",
+        "model_backend.py": "314b39b689d4fcebc4ca74baddbe2e4c3d43f5b002f269126163bb2814a4097d",
+        "run_experiments.py": "2061fa3782d52cfdb0dc907debd50173ca0f62d03f8bfffe886b70b711e2ec3f",
+        "reporting.py": "782fc5e7b04c200f81b68eb1ed0db0f59a34daaceb6a8e60c0fe83ebedcea420",
+        "server_metrics.py": "917d44f03f514b1b69a7a24b565c9f761216615fe9b4be0b1155d6ebf3eb22d2",
+        "tests/test_output_policy.py": "e036ab3fd25ec145024c3ff81c5692e242a286a43cbc58a9f84d75ac6e3c7edc",
+        "tests/test_experiment_design.py": "3d18ca51338bf3f751ed233a8745bb6e04ecd4fbc2a8b3072d79783d7dc86bff",
+        "tests/test_harness.py": "b5210b7879897746f6c8ef1ae51d1b4ae0fb0f88e23ad6a69574e938ea5aca63",
+        "tests/test_reporting.py": "d8e4e0b89dc184f9b46e69d79d89176c4476450a16f422781996dcf62c20e197",
+        "evals/noisy-bugfix/tests/test_pricing.py": "b8c1b426cd44c20b316ac16ca5c9d247cb6587173cfa93138844420bd1842acc",
+        "evals/noisy-bugfix/environment/data/test_pricing.py": "b8c1b426cd44c20b316ac16ca5c9d247cb6587173cfa93138844420bd1842acc"
+      },
+      "model_generated_assistant": false,
+      "assistant_provenance": "Authored bash-call fixtures for the recorded CPU commands; no Qwen session was generated.",
+      "tool_wait_ms": {
+        "1": 126.70320901088417,
+        "2": 4.254415980540216
+      },
+      "tools": [
+        {
+          "argv": [
+            "cat",
+            "output_policy.py",
+            "reedcode_harbor_agent.py",
+            "model_backend.py",
+            "run_experiments.py",
+            "reporting.py",
+            "server_metrics.py",
+            "tests/test_output_policy.py",
+            "tests/test_experiment_design.py"
+          ],
+          "exit_code": 0,
+          "output_file": "tool-0.txt",
+          "output_sha256": "fe07170a95b53924c856a302f5b57c7986687b1fd4e908f3f1314e34916939b3",
+          "duration_ms": 4.8088328912854195
+        },
+        {
+          "argv": [
+            "python3",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "tests",
+            "-p",
+            "test_output_policy.py"
+          ],
+          "exit_code": 0,
+          "output_file": "tool-1.txt",
+          "output_sha256": "6273232de4d3ef7acd4ecafa5c86beeeb974f56586b21089a2990b3f72facbe6",
+          "duration_ms": 126.70320901088417
+        },
+        {
+          "argv": [
+            "cat",
+            "tests/test_harness.py",
+            "tests/test_reporting.py"
+          ],
+          "exit_code": 0,
+          "output_file": "tool-2.txt",
+          "output_sha256": "651daf1f20205d688b48efa8319d483ac03e9afb5c7c1538ae22b500639342d6",
+          "duration_ms": 4.254415980540216
+        }
+      ]
+    }
+  },
+  "checks": [
+    {
+      "case": "noisy-bugfix_r01_on/1",
+      "original_tokens": 381,
+      "followup_tokens": 2879,
+      "stock_warmup_tokens": 93,
+      "stock_first_difference": 31,
+      "fixed_warmup_tokens": 398,
+      "fixed_exact_prefix": true,
+      "normal_tokens_unchanged": true
+    },
+    {
+      "case": "noisy-bugfix_r01_on/2",
+      "original_tokens": 2879,
+      "followup_tokens": 3038,
+      "stock_warmup_tokens": 2657,
+      "stock_first_difference": 31,
+      "fixed_warmup_tokens": 2962,
+      "fixed_exact_prefix": true,
+      "normal_tokens_unchanged": true
+    },
+    {
+      "case": "noisy-bugfix_r01_on/3",
+      "original_tokens": 3038,
+      "followup_tokens": 3293,
+      "stock_warmup_tokens": 2894,
+      "stock_first_difference": 31,
+      "fixed_warmup_tokens": 3269,
+      "fixed_exact_prefix": true,
+      "normal_tokens_unchanged": true
+    },
+    {
+      "case": "noisy-bugfix_r01_on/4",
+      "original_tokens": 3293,
+      "followup_tokens": 5150,
+      "stock_warmup_tokens": 3005,
+      "stock_first_difference": 31,
+      "fixed_warmup_tokens": 3310,
+      "fixed_exact_prefix": true,
+      "normal_tokens_unchanged": true
+    },
+    {
+      "case": "public-repo-review/1",
+      "original_tokens": 17610,
+      "followup_tokens": 17680,
+      "stock_warmup_tokens": 17468,
+      "stock_first_difference": 24,
+      "fixed_warmup_tokens": 17639,
+      "fixed_exact_prefix": true,
+      "normal_tokens_unchanged": true
+    },
+    {
+      "case": "public-repo-review/2",
+      "original_tokens": 17680,
+      "followup_tokens": 20554,
+      "stock_warmup_tokens": 17538,
+      "stock_first_difference": 24,
+      "fixed_warmup_tokens": 17704,
+      "fixed_exact_prefix": true,
+      "normal_tokens_unchanged": true
+    }
+  ],
+  "controlled_replay_limits": [
+    "Normal and warmup requests generate one discarded token; original sampled output is not regenerated.",
+    "Recorded assistant history is held fixed independently of newly sampled output.",
+    "Missing original decode KV can overstate added fixed-warmup reuse relative to a live agent trajectory.",
+    "Native helpers invoke the builders during preparation; HTTP replay sends their frozen exact token IDs.",
+    "Token-input completion transport, backend capture, cache reset and event collection require live smoke checks.",
+    "The generated end-to-end hint check remains separate from this controlled replay."
+  ],
+  "files": {
+    "fixed-native.json.gz": "d87ee7166c42958ceb09bf375a23a4c699f30a9eb9bafaa1416f37e8528635d8",
+    "input.json.gz": "c7d1626204c10200dfe4c8da0122b68ce8f4c7c273a75f0cfa57e8469c28a2ef",
+    "long-replay.json.gz": "3d0dc2e54047885a161e74cff38d7c1449b3734d5640f99177c869fafd06378f",
+    "schedule.json": "6de86267d694cc63fdfdb6ccfd826bc102e36be5555b1dc5f428e6b95e0b8f0b",
+    "short-replay.json.gz": "f08afc7a90bd326fc3fedf326f4e8d428da76e25b811b38ca9e68f802c59c98a",
+    "source/evals/noisy-bugfix/environment/data/test_pricing.py": "b8c1b426cd44c20b316ac16ca5c9d247cb6587173cfa93138844420bd1842acc",
+    "source/evals/noisy-bugfix/tests/test_pricing.py": "b8c1b426cd44c20b316ac16ca5c9d247cb6587173cfa93138844420bd1842acc",
+    "source/model_backend.py": "314b39b689d4fcebc4ca74baddbe2e4c3d43f5b002f269126163bb2814a4097d",
+    "source/output_policy.py": "a613fcd749c95e1d3ff0439789fb482ec7126e1ff81e7cb1a2a75c14c4e2bdd7",
+    "source/reedcode_harbor_agent.py": "7444c772f00280fa1cc88ce2386d116345d43cf2b8e88a53df86b8d7ead6a5b9",
+    "source/reporting.py": "782fc5e7b04c200f81b68eb1ed0db0f59a34daaceb6a8e60c0fe83ebedcea420",
+    "source/run_experiments.py": "2061fa3782d52cfdb0dc907debd50173ca0f62d03f8bfffe886b70b711e2ec3f",
+    "source/server_metrics.py": "917d44f03f514b1b69a7a24b565c9f761216615fe9b4be0b1155d6ebf3eb22d2",
+    "source/tests/test_experiment_design.py": "3d18ca51338bf3f751ed233a8745bb6e04ecd4fbc2a8b3072d79783d7dc86bff",
+    "source/tests/test_harness.py": "b5210b7879897746f6c8ef1ae51d1b4ae0fb0f88e23ad6a69574e938ea5aca63",
+    "source/tests/test_output_policy.py": "e036ab3fd25ec145024c3ff81c5692e242a286a43cbc58a9f84d75ac6e3c7edc",
+    "source/tests/test_reporting.py": "d8e4e0b89dc184f9b46e69d79d89176c4476450a16f422781996dcf62c20e197",
+    "stock-native.json.gz": "ab95cb095a46fa81f23107a7dd407df2e9733b3a45f70e9b1a7d43ee2639371c",
+    "tool-0.txt": "fe07170a95b53924c856a302f5b57c7986687b1fd4e908f3f1314e34916939b3",
+    "tool-1.txt": "6273232de4d3ef7acd4ecafa5c86beeeb974f56586b21089a2990b3f72facbe6",
+    "tool-2.txt": "651daf1f20205d688b48efa8319d483ac03e9afb5c7c1538ae22b500639342d6"
+  }
+}

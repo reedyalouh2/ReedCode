@@ -1,0 +1,37 @@
+warning: unused variable: `join_reuseport`
+   --> lib/runtime/src/pipeline/network/quic_response.rs:844:41
+    |
+844 | fn bind_server_udp(address: SocketAddr, join_reuseport: bool) -> std::io::Result<UdpSocket> {
+    |                                         ^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_join_reuseport`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `dynamo-runtime` (lib) generated 1 warning (run `cargo fix --lib -p dynamo-runtime` to apply 1 suggestion)
+warning: dynamo-llm@1.6.0: Found FATBIN at default location: ./src/block_manager/block/transfer/kernels/vectorized_copy.fatbin
+warning: dynamo-llm@1.6.0: CUDA FATBIN found at: ./src/block_manager/block/transfer/kernels/vectorized_copy.fatbin - copied to OUT_DIR
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.77s
+     Running unittests src/lib.rs (/tmp/reedcode-dynamo-integration-target/debug/deps/dynamo_llm-197bcf7e7900377c)
+
+running 19 tests
+test preprocessor::speculative_prefill::accumulator::tests::late_error_and_late_choice_skip ... ok
+test preprocessor::speculative_prefill::accumulator::tests::incomplete_or_limited_turns_skip ... ok
+test preprocessor::speculative_prefill::accumulator::tests::raw_tool_arguments_are_never_reserialized ... ok
+test preprocessor::speculative_prefill::accumulator::tests::fields_and_reasoning_survive_fragments ... ok
+test preprocessor::speculative_prefill::accumulator::tests::parallel_tools_are_ordered_and_unique ... ok
+test preprocessor::speculative_prefill::accumulator::tests::malformed_conflicting_and_multiple_choices_skip ... ok
+test preprocessor::speculative_prefill::tests::dropping_owner_cancels_tasks_waiting_for_client_completion ... ok
+test preprocessor::speculative_prefill::tests::an_already_cancelled_token_dispatches_nothing ... ok
+test preprocessor::speculative_prefill::tests::replacement_owners_share_process_preprocessing_admission ... ok
+test preprocessor::speculative_prefill::tests::cancellation_during_blocked_preprocessing_prevents_dispatch ... ok
+test preprocessor::speculative_prefill::tests::cancellation_during_tokenization_prevents_dispatch ... ok
+test preprocessor::speculative_prefill::tests::dropping_owner_stops_and_drains_a_permanently_pending_warmup ... ok
+test preprocessor::speculative_prefill::tests::stalled_warmup_is_released_when_the_runtime_token_is_cancelled ... ok
+test preprocessor::speculative_prefill::tests::a_turn_longer_than_the_bound_still_gets_its_warmup ... ok
+test preprocessor::speculative_prefill::tests::stalled_warmup_is_released_when_the_lifetime_bound_elapses ... ok
+test preprocessor::speculative_prefill::tests::a_warmup_still_waiting_for_a_worker_is_reachable_by_the_stop ... ok
+test preprocessor::speculative_prefill::tests::without_the_hint_the_stream_is_untouched_and_nothing_is_dispatched ... ok
+test preprocessor::speculative_prefill::tests::a_downstream_that_honours_the_stop_completes_its_own_cleanup ... ok
+test preprocessor::speculative_prefill::tests::blocked_preprocessing_retains_tracking_and_admission_after_warmup_ends ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 2760 filtered out; finished in 0.08s
+

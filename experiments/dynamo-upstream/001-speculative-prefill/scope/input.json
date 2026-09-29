@@ -1,0 +1,1274 @@
+[
+  {
+    "id": "qwen3/text/on",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/qwen3/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/qwen3/tokenizer.json",
+    "template_path": null,
+    "original_request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        }
+      ]
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "ready."
+    },
+    "followup_request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        },
+        {
+          "role": "assistant",
+          "content": "ready."
+        },
+        {
+          "role": "user",
+          "content": "Now reply with exactly done."
+        }
+      ]
+    },
+    "response_text": "ready.",
+    "settings": {
+      "enable_thinking": true
+    }
+  },
+  {
+    "id": "qwen3/tool/on",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/qwen3/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/qwen3/tokenizer.json",
+    "template_path": null,
+    "original_request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "id": "call_one",
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "arguments": "{\"value\": \"ready\"}"
+          }
+        }
+      ]
+    },
+    "followup_request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_one",
+              "type": "function",
+              "function": {
+                "name": "record_value",
+                "arguments": "{\"value\": \"ready\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_one",
+          "content": "Recorded."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "response_text": "",
+    "settings": {
+      "enable_thinking": true
+    }
+  },
+  {
+    "id": "qwen3/text_reasoning/on",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/qwen3/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/qwen3/tokenizer.json",
+    "template_path": null,
+    "original_request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        }
+      ]
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "ready.",
+      "reasoning_content": "THOUGHT_MARKER"
+    },
+    "followup_request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        },
+        {
+          "role": "assistant",
+          "content": "ready.",
+          "reasoning_content": "THOUGHT_MARKER"
+        },
+        {
+          "role": "user",
+          "content": "Now reply with exactly done."
+        }
+      ]
+    },
+    "response_text": "ready.",
+    "settings": {
+      "enable_thinking": true
+    }
+  },
+  {
+    "id": "qwen3/tool_reasoning/on",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/qwen3/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/qwen3/tokenizer.json",
+    "template_path": null,
+    "original_request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "id": "call_one",
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "arguments": "{\"value\": \"ready\"}"
+          }
+        }
+      ],
+      "reasoning_content": "THOUGHT_MARKER"
+    },
+    "followup_request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_one",
+              "type": "function",
+              "function": {
+                "name": "record_value",
+                "arguments": "{\"value\": \"ready\"}"
+              }
+            }
+          ],
+          "reasoning_content": "THOUGHT_MARKER"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_one",
+          "content": "Recorded."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "response_text": "",
+    "settings": {
+      "enable_thinking": true
+    }
+  },
+  {
+    "id": "qwen3/text/off",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/qwen3/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/qwen3/tokenizer.json",
+    "template_path": null,
+    "original_request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        }
+      ]
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "ready."
+    },
+    "followup_request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        },
+        {
+          "role": "assistant",
+          "content": "ready."
+        },
+        {
+          "role": "user",
+          "content": "Now reply with exactly done."
+        }
+      ]
+    },
+    "response_text": "ready.",
+    "settings": {
+      "enable_thinking": false
+    }
+  },
+  {
+    "id": "qwen3/tool/off",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/qwen3/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/qwen3/tokenizer.json",
+    "template_path": null,
+    "original_request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "id": "call_one",
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "arguments": "{\"value\": \"ready\"}"
+          }
+        }
+      ]
+    },
+    "followup_request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_one",
+              "type": "function",
+              "function": {
+                "name": "record_value",
+                "arguments": "{\"value\": \"ready\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_one",
+          "content": "Recorded."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "response_text": "",
+    "settings": {
+      "enable_thinking": false
+    }
+  },
+  {
+    "id": "deepseek-r1/text/native-default",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/deepseek-r1/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/deepseek-r1/tokenizer.json",
+    "template_path": null,
+    "original_request": {
+      "model": "deepseek-ai/DeepSeek-R1",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        }
+      ]
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "ready."
+    },
+    "followup_request": {
+      "model": "deepseek-ai/DeepSeek-R1",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        },
+        {
+          "role": "assistant",
+          "content": "ready."
+        },
+        {
+          "role": "user",
+          "content": "Now reply with exactly done."
+        }
+      ]
+    },
+    "response_text": "ready.",
+    "settings": {}
+  },
+  {
+    "id": "deepseek-r1/tool/native-default",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/deepseek-r1/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/deepseek-r1/tokenizer.json",
+    "template_path": null,
+    "original_request": {
+      "model": "deepseek-ai/DeepSeek-R1",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "id": "call_one",
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "arguments": "{\"value\": \"ready\"}"
+          }
+        }
+      ]
+    },
+    "followup_request": {
+      "model": "deepseek-ai/DeepSeek-R1",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_one",
+              "type": "function",
+              "function": {
+                "name": "record_value",
+                "arguments": "{\"value\": \"ready\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_one",
+          "content": "Recorded."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "response_text": "",
+    "settings": {}
+  },
+  {
+    "id": "nemotron-3-nano/text/on",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/nemotron-3-nano/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/nemotron-3-nano/tokenizer.json",
+    "template_path": null,
+    "original_request": {
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        }
+      ]
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "ready."
+    },
+    "followup_request": {
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        },
+        {
+          "role": "assistant",
+          "content": "ready."
+        },
+        {
+          "role": "user",
+          "content": "Now reply with exactly done."
+        }
+      ]
+    },
+    "response_text": "ready.",
+    "settings": {
+      "enable_thinking": true
+    }
+  },
+  {
+    "id": "nemotron-3-nano/tool/on",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/nemotron-3-nano/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/nemotron-3-nano/tokenizer.json",
+    "template_path": null,
+    "original_request": {
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "id": "call_one",
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "arguments": "{\"value\": \"ready\"}"
+          }
+        }
+      ]
+    },
+    "followup_request": {
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_one",
+              "type": "function",
+              "function": {
+                "name": "record_value",
+                "arguments": "{\"value\": \"ready\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_one",
+          "content": "Recorded."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "response_text": "",
+    "settings": {
+      "enable_thinking": true
+    }
+  },
+  {
+    "id": "nemotron-3-nano/text_reasoning/on",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/nemotron-3-nano/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/nemotron-3-nano/tokenizer.json",
+    "template_path": null,
+    "original_request": {
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        }
+      ]
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "ready.",
+      "reasoning_content": "THOUGHT_MARKER"
+    },
+    "followup_request": {
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        },
+        {
+          "role": "assistant",
+          "content": "ready.",
+          "reasoning_content": "THOUGHT_MARKER"
+        },
+        {
+          "role": "user",
+          "content": "Now reply with exactly done."
+        }
+      ]
+    },
+    "response_text": "ready.",
+    "settings": {
+      "enable_thinking": true
+    }
+  },
+  {
+    "id": "nemotron-3-nano/tool_reasoning/on",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/nemotron-3-nano/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/nemotron-3-nano/tokenizer.json",
+    "template_path": null,
+    "original_request": {
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "id": "call_one",
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "arguments": "{\"value\": \"ready\"}"
+          }
+        }
+      ],
+      "reasoning_content": "THOUGHT_MARKER"
+    },
+    "followup_request": {
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_one",
+              "type": "function",
+              "function": {
+                "name": "record_value",
+                "arguments": "{\"value\": \"ready\"}"
+              }
+            }
+          ],
+          "reasoning_content": "THOUGHT_MARKER"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_one",
+          "content": "Recorded."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "response_text": "",
+    "settings": {
+      "enable_thinking": true
+    }
+  },
+  {
+    "id": "nemotron-3-nano/text/off",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/nemotron-3-nano/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/nemotron-3-nano/tokenizer.json",
+    "template_path": null,
+    "original_request": {
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        }
+      ]
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "ready."
+    },
+    "followup_request": {
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        },
+        {
+          "role": "assistant",
+          "content": "ready."
+        },
+        {
+          "role": "user",
+          "content": "Now reply with exactly done."
+        }
+      ]
+    },
+    "response_text": "ready.",
+    "settings": {
+      "enable_thinking": false
+    }
+  },
+  {
+    "id": "nemotron-3-nano/tool/off",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/nemotron-3-nano/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/nemotron-3-nano/tokenizer.json",
+    "template_path": null,
+    "original_request": {
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "id": "call_one",
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "arguments": "{\"value\": \"ready\"}"
+          }
+        }
+      ]
+    },
+    "followup_request": {
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_one",
+              "type": "function",
+              "function": {
+                "name": "record_value",
+                "arguments": "{\"value\": \"ready\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_one",
+          "content": "Recorded."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "response_text": "",
+    "settings": {
+      "enable_thinking": false
+    }
+  },
+  {
+    "id": "gpt-oss-20b/text/native-default",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/gpt-oss-20b/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/gpt-oss-20b/tokenizer.json",
+    "template_path": "/private/tmp/reedcode-stock-scope/models/gpt-oss-20b/chat_template.jinja",
+    "original_request": {
+      "model": "openai/gpt-oss-20b",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        }
+      ]
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "ready."
+    },
+    "followup_request": {
+      "model": "openai/gpt-oss-20b",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        },
+        {
+          "role": "assistant",
+          "content": "ready."
+        },
+        {
+          "role": "user",
+          "content": "Now reply with exactly done."
+        }
+      ]
+    },
+    "response_text": "ready.",
+    "settings": {}
+  },
+  {
+    "id": "gpt-oss-20b/tool/native-default",
+    "config_path": "/private/tmp/reedcode-stock-scope/models/gpt-oss-20b/tokenizer_config.json",
+    "tokenizer_path": "/private/tmp/reedcode-stock-scope/models/gpt-oss-20b/tokenizer.json",
+    "template_path": "/private/tmp/reedcode-stock-scope/models/gpt-oss-20b/chat_template.jinja",
+    "original_request": {
+      "model": "openai/gpt-oss-20b",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "completed_assistant": {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "id": "call_one",
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "arguments": "{\"value\": \"ready\"}"
+          }
+        }
+      ]
+    },
+    "followup_request": {
+      "model": "openai/gpt-oss-20b",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value with value ready."
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_one",
+              "type": "function",
+              "function": {
+                "name": "record_value",
+                "arguments": "{\"value\": \"ready\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_one",
+          "content": "Recorded."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "TOOL_SCHEMA_MARKER",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "response_text": "",
+    "settings": {}
+  }
+]

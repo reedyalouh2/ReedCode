@@ -1,0 +1,16 @@
+[package]
+name = "reedcode-renderer-parity"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+anyhow = "1"
+dynamo-renderer = "=5.1.2"
+dynamo-protocols = "=5.4.1"
+dynamo-tokenizers = "=1.8.1"
+minijinja = { version = "=2.24.0", features = ["preserve_order"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "=1.0.150", features = ["preserve_order"] }
+
+[workspace]

@@ -1,0 +1,138 @@
+[
+  {
+    "session_id": "prefix-check-text-on-5980f29fd54a4093b5fe7e9dbb7d5856",
+    "request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Run identifier: 6996dc79e3fe4f069c42e58cb052de16. Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        }
+      ],
+      "temperature": 0,
+      "max_completion_tokens": 128
+    },
+    "response": {
+      "id": "chatcmpl-d5360dd8-7b9b-4916-a2f2-33279b20c025",
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "content": "ready.",
+            "refusal": null,
+            "role": "assistant",
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": null
+          }
+        }
+      ],
+      "created": 0,
+      "model": "Qwen/Qwen3-8B",
+      "object": "chat.completion",
+      "moderation": null,
+      "service_tier": null,
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 3,
+        "prompt_tokens": 60,
+        "total_tokens": 63,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 0
+        }
+      }
+    },
+    "timing": {
+      "first_output_ms": 183.65895794704556,
+      "stream_ms": 206.48458297364414,
+      "chunks": 4
+    }
+  },
+  {
+    "session_id": "prefix-check-text-on-5980f29fd54a4093b5fe7e9dbb7d5856",
+    "request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Run identifier: 6996dc79e3fe4f069c42e58cb052de16. Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Reply with exactly ready."
+        },
+        {
+          "content": "ready.",
+          "role": "assistant"
+        },
+        {
+          "role": "user",
+          "content": "Now reply with exactly done."
+        }
+      ],
+      "temperature": 0,
+      "max_completion_tokens": 128
+    },
+    "response": {
+      "id": "chatcmpl-d8c6a27c-cc15-4152-b635-9f82c1750f0a",
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "content": "done.",
+            "refusal": null,
+            "role": "assistant",
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": null
+          }
+        }
+      ],
+      "created": 0,
+      "model": "Qwen/Qwen3-8B",
+      "object": "chat.completion",
+      "moderation": null,
+      "service_tier": null,
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 3,
+        "prompt_tokens": 78,
+        "total_tokens": 81,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 48
+        }
+      }
+    },
+    "timing": {
+      "first_output_ms": 182.21349990926683,
+      "stream_ms": 208.7194590130821,
+      "chunks": 4
+    }
+  }
+]

@@ -1,0 +1,281 @@
+{
+  "archive_sha256": "4a4650d97c06173e817e21657a651daa7d9d1be20441db92869fb42a584a1cb1",
+  "verified_archive_members": 102,
+  "deployment": {
+    "dynamo_revision": "32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653",
+    "dynamo_version": "1.5.0",
+    "reference_tag_commit": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+    "backend_version": "vllm 0.28.0",
+    "torch_version": "2.13.0+cu130",
+    "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "gpu": "1 x NVIDIA A100-SXM4-80GB (81920 MiB)",
+    "driver_version": "580.126.16",
+    "dtype": "bfloat16",
+    "context_limit": 32768,
+    "cache_policy": "vLLM prefix caching enabled; ZMQ KV events; KV routing; cache carries between conditions",
+    "thinking_mode": "disabled",
+    "launch_command": "#!/usr/bin/env bash\nset -euo pipefail\ncd /tmp/reedcode-dynamo\nexport DYN_REQUEST_TRACE=1\nexport DYN_REQUEST_TRACE_SINKS=file\nexport DYN_REQUEST_TRACE_FILE_FORMAT=jsonl\nexport DYN_REQUEST_TRACE_RECORDS=request_end,request_payload\nexport DYN_LOGGING_CONSOLE_FORMAT=jsonl\nexport DYN_EVENT_PLANE=zmq\nexport DYN_LOG=info\nexport HF_HOME=/tmp/reedcode-dynamo/hf\nDYN_SYSTEM_PORT=8081 DYN_REQUEST_TRACE_FILE_PATH=/tmp/reedcode-dynamo/backend-trace.jsonl \\\n  nohup python3 -m dynamo.vllm \\\n  --model Qwen/Qwen3-8B --revision b968826d9c46dd6066d109eabc6255188de91218 \\\n  --discovery-backend file \\\n  --dtype bfloat16 --max-model-len 32768 --gpu-memory-utilization 0.80 \\\n  --enable-prefix-caching \\\n  --kv-events-config '{\"enable_kv_cache_events\":true,\"publisher\":\"zmq\",\"topic\":\"kv-events\",\"endpoint\":\"tcp://*:5557\"}' \\\n  --dyn-tool-call-parser hermes --dyn-reasoning-parser qwen3 \\\n  --dyn-default-thinking-mode disabled \\\n  > backend.log 2>&1 < /dev/null &\necho $! > backend.pid\nDYN_SYSTEM_PORT=8082 DYN_REQUEST_TRACE_FILE_PATH=/tmp/reedcode-dynamo/frontend-trace.jsonl \\\n  nohup python3 -m dynamo.frontend --discovery-backend file \\\n  --router-mode kv --http-port 8000 > frontend.log 2>&1 < /dev/null &\necho $! > frontend.pid\n",
+    "container_image": "nvcr.io/nvidia/ai-dynamo/vllm-runtime@sha256:d18389c89eb319401fdd73f1fbbaff10d9382f634b879941dfba75bbf7260c1e",
+    "network": "local client via SSH tunnel; frontend and backend metrics have no public HTTP port"
+  },
+  "script_sha256": "c57f61f5397e4e58240a021b641b0a818bcfe2f58976deb497327b063f0125f6",
+  "prometheus_snapshots": [
+    {
+      "member": "prefix-check/text-off-0-after.prom",
+      "sha256": "6ca8c8317e700a7b502015b3c0cedefce14e7e71849ef4c554dace935f7b0491",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/text-off-0-before.prom",
+      "sha256": "550deef2cfe3c7a92f9e6cb47e9eeaef534e79523b238e761d1da80babcd5f77",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/text-off-1-after.prom",
+      "sha256": "4e7c1bd32c2e32e52e897668d8d21e5294677f569a2baa47538b4b16e3523100",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/text-off-1-before.prom",
+      "sha256": "0646906013566a81a6e66fd2604284b04066e5a7770bc01380779c0daf0abd46",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/text-on-0-after.prom",
+      "sha256": "b391f64524f213a8656bdc5d3161e0972f83014a468e39d7bc2e95bfbe052e1a",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/text-on-0-before.prom",
+      "sha256": "df1cf1cbe599da0457a44c571deec4229853cdd3a44897ffada5d393df0ba60a",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/text-on-1-after.prom",
+      "sha256": "b7cc10cb6a7c733cbf4f5fbc11227a184c5fbceff1cce4668c0677655636f192",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/text-on-1-before.prom",
+      "sha256": "b1a508570fec9e200cd7265175a227289b6351aa242b171200a13aeb57eda133",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/tool-off-0-after.prom",
+      "sha256": "8a9eaad874420d90a23dbf3fe6fe2205fb5744fb0ceb4d65397c029170182a11",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/tool-off-0-before.prom",
+      "sha256": "d070fb0a27e5342de9e9c5829171824645cc17641637dd8bce056bf269786d8d",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/tool-off-1-after.prom",
+      "sha256": "5e3ff38b71441923dd7e02992942709651296ac4aa1c1e58ceb2e640bcf259a4",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/tool-off-1-before.prom",
+      "sha256": "475410d93618f5fbd60aaff1e35544e4ae986e6decef82b7c4bb567b27671ea0",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/tool-on-0-after.prom",
+      "sha256": "6014b73d2ba190300761cf70aec4d7313d02b3c307f3196ef95503d08bfbef5a",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/tool-on-0-before.prom",
+      "sha256": "c88f1bac8727eaaa4b4ae6ff132a3a7ea23f8e0507a1a84e977881b5a1dd75d7",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/tool-on-1-after.prom",
+      "sha256": "5151783613323a9d7275ef6bb831d8a82d7c78144b192d9a85a0dda889f37544",
+      "process_start_present": false
+    },
+    {
+      "member": "prefix-check/tool-on-1-before.prom",
+      "sha256": "377dbab0715ec89f57c3546e7e125cd0df0eb936d84e3df1b6720daa23eab44f",
+      "process_start_present": false
+    },
+    {
+      "member": "server/final-metrics.prom",
+      "sha256": "acce86fb675a05240409789afac1af8a921d75b7b829d8245a12c048ecdd6007",
+      "process_start_present": false
+    },
+    {
+      "member": "setup/startup-metrics.prom",
+      "sha256": "4338072a5c15d4cd2d9d233153a36aef31c2ab56ade9290cc4c5419db6da3b38",
+      "process_start_present": false
+    },
+    {
+      "member": "tool-check/off-0-after.prom",
+      "sha256": "338666bf0e321de028ff6843fcef3cf05010beff6df1bd90570226c280b87206",
+      "process_start_present": false
+    },
+    {
+      "member": "tool-check/off-0-before.prom",
+      "sha256": "88047f46f70a58d5fe5df20ee9379abab571b4edfbfcdd9046570bc1a9cb4395",
+      "process_start_present": false
+    },
+    {
+      "member": "tool-check/off-1-after.prom",
+      "sha256": "1fae54ff0c0057bae7d834b413b71d209adde7de38b67ecb6030d435c83d5bb4",
+      "process_start_present": false
+    },
+    {
+      "member": "tool-check/off-1-before.prom",
+      "sha256": "d33ea7f8358b8793877274bd21a699449f2306d27bf897b178306405bfb0d283",
+      "process_start_present": false
+    },
+    {
+      "member": "tool-check/on-0-after.prom",
+      "sha256": "d911799ea294b1280e54971170830f01c3a1313d3fd9c6faa596c864b766c2a8",
+      "process_start_present": false
+    },
+    {
+      "member": "tool-check/on-0-before.prom",
+      "sha256": "71aa9eba9ae5ff487a3d9346981eb1974963768906f1da462f1e3c0330515c1d",
+      "process_start_present": false
+    },
+    {
+      "member": "tool-check/on-1-after.prom",
+      "sha256": "eaa6d7171c932579d886d210d9564b7d578fa56db331536d164faf1872bf5a94",
+      "process_start_present": false
+    },
+    {
+      "member": "tool-check/on-1-before.prom",
+      "sha256": "48dac169af7ca39b911255bf578e185240217e7abd7e297ce43e2f43c9bde8e5",
+      "process_start_present": false
+    }
+  ],
+  "replay_epochs": [
+    {
+      "member": "replay/noisy-bugfix_r01_off/epoch.json",
+      "sha256": "714fc8b21a350b457d4f84003e0b62eca32186816028789683af536290f13211",
+      "valid_boundaries": false,
+      "restart_observable": false,
+      "idle_before": true,
+      "drained": true,
+      "errors": []
+    },
+    {
+      "member": "replay/noisy-bugfix_r01_on/epoch.json",
+      "sha256": "7b9a1fb1c49c5da46c4062a9cc0b85c5d690989d427ff55357562e0a9730e947",
+      "valid_boundaries": false,
+      "restart_observable": false,
+      "idle_before": true,
+      "drained": true,
+      "errors": []
+    },
+    {
+      "member": "replay/noisy-bugfix_r02_off/epoch.json",
+      "sha256": "6376880f9d1e2ea5f59b546627ce361b8c38a33936d8b71a182430da60a94a71",
+      "valid_boundaries": false,
+      "restart_observable": false,
+      "idle_before": true,
+      "drained": true,
+      "errors": []
+    },
+    {
+      "member": "replay/noisy-bugfix_r02_on/epoch.json",
+      "sha256": "e6c23094fefb6dba81397407137302738bf6eb4ee1452a61c7fa9b5776b4aa08",
+      "valid_boundaries": false,
+      "restart_observable": false,
+      "idle_before": true,
+      "drained": true,
+      "errors": []
+    },
+    {
+      "member": "replay/noisy-bugfix_r03_off/epoch.json",
+      "sha256": "c9d876d9fe346596921a1457421a75a7f373937d97cf2c0040c71d0bfb2fa8bb",
+      "valid_boundaries": false,
+      "restart_observable": false,
+      "idle_before": true,
+      "drained": true,
+      "errors": []
+    },
+    {
+      "member": "replay/noisy-bugfix_r03_on/epoch.json",
+      "sha256": "6fa98f559d4c562161248fae32ed2745372dcf2b8c55086303debfbd6c138feb",
+      "valid_boundaries": false,
+      "restart_observable": false,
+      "idle_before": true,
+      "drained": true,
+      "errors": []
+    },
+    {
+      "member": "replay/noisy-bugfix_r04_off/epoch.json",
+      "sha256": "16ebecf3437d0ba9cb9c8c5f684a407f039b299e9c0bfd7745d1f20831c33378",
+      "valid_boundaries": false,
+      "restart_observable": false,
+      "idle_before": true,
+      "drained": true,
+      "errors": []
+    },
+    {
+      "member": "replay/noisy-bugfix_r04_on/epoch.json",
+      "sha256": "6504fb30a6ad0e6f0e79388fe4d2f43c2f210be8221c9e5db6e6043a310a03b1",
+      "valid_boundaries": false,
+      "restart_observable": false,
+      "idle_before": true,
+      "drained": true,
+      "errors": []
+    },
+    {
+      "member": "replay/noisy-bugfix_r05_off/epoch.json",
+      "sha256": "7dd26abfb2ff733ef71765378ad71e101743c30eca23321f1eb3030aeafd70ef",
+      "valid_boundaries": false,
+      "restart_observable": false,
+      "idle_before": true,
+      "drained": true,
+      "errors": []
+    },
+    {
+      "member": "replay/noisy-bugfix_r05_on/epoch.json",
+      "sha256": "727be8311ad9966dd60b461d0f1e6b2d87ccbcfc54b1120f47291029570e6e01",
+      "valid_boundaries": false,
+      "restart_observable": false,
+      "idle_before": true,
+      "drained": true,
+      "errors": []
+    }
+  ],
+  "internal_preparations": [
+    {
+      "case": "text",
+      "internal_request_id": "24f93c56-30d4-411a-9eff-d0b3699652ed",
+      "frontend_log_lines": [
+        66,
+        70
+      ],
+      "frontend_trace_lines": [],
+      "backend_log_lines": [
+        1072,
+        1073
+      ]
+    },
+    {
+      "case": "tool",
+      "internal_request_id": "7e0604ef-aead-454d-bf62-3172907a2c1f",
+      "frontend_log_lines": [
+        108,
+        112
+      ],
+      "frontend_trace_lines": [],
+      "backend_log_lines": [
+        1085,
+        1086
+      ]
+    }
+  ],
+  "limits": [
+    "This checks the recorded deployment; it does not test current main.",
+    "An absent process-start metric does not prove a restart occurred.",
+    "No frontend HTTP trace entry is expected for an internal request; the missing answer is its parent/session join.",
+    "Log adjacency establishes attribution only in these isolated checks.",
+    "Cache occupancy samples cannot identify which prepared blocks were later reused."
+  ]
+}

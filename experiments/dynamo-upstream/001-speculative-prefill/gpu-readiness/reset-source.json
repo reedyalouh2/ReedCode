@@ -1,0 +1,127 @@
+{
+  "archive": "reset-source.tar.gz",
+  "sha256": "c62c055c9e99101397dea3b92543b13cf028f342e8d2d161d4e8e916cdc7f8d3",
+  "sources": [
+    {
+      "member": "main/components/src/dynamo/vllm/worker_factory.py",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "components/src/dynamo/vllm/worker_factory.py",
+      "sha256": "02e085c3c7b87e160f78a730d932a340e419768a8f24d3045b02c972987d4f2f",
+      "bytes": 77150,
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/components/src/dynamo/vllm/worker_factory.py"
+    },
+    {
+      "member": "main/components/src/dynamo/vllm/handlers.py",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "components/src/dynamo/vllm/handlers.py",
+      "sha256": "10774466bf9d36bfe02c992d23e6a9b650266003abe0f8c32069bc9170d021fb",
+      "bytes": 213713,
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/components/src/dynamo/vllm/handlers.py"
+    },
+    {
+      "member": "main/lib/bindings/python/src/dynamo/runtime/__init__.py",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/bindings/python/src/dynamo/runtime/__init__.py",
+      "sha256": "307ad5fed92b377bee2b1e3b46a5898687e0212345981d6a7ef9d7467f1d64eb",
+      "bytes": 5109,
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/bindings/python/src/dynamo/runtime/__init__.py"
+    },
+    {
+      "member": "main/lib/bindings/python/src/dynamo/_core.pyi",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/bindings/python/src/dynamo/_core.pyi",
+      "sha256": "ab58dca7695517bb4a7e9191bbb360998c6977e118951551995daaf0f42609bd",
+      "bytes": 125965,
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/bindings/python/src/dynamo/_core.pyi"
+    },
+    {
+      "member": "main/lib/kv-router/src/zmq_wire/convert.rs",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/zmq_wire/convert.rs",
+      "sha256": "31967f48b635676034d7f08d445b11ad9df9ce53c40aa66d628a1c42efaabd44",
+      "bytes": 34502,
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/zmq_wire/convert.rs"
+    },
+    {
+      "member": "main/lib/kv-router/src/indexer/radix_tree.rs",
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "path": "lib/kv-router/src/indexer/radix_tree.rs",
+      "sha256": "c32b3c6d880cfac0dd54a883af580494e955c1cab7fcdf94de99b9381f0b0e0e",
+      "bytes": 43741,
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/kv-router/src/indexer/radix_tree.rs"
+    },
+    {
+      "member": "release/components/src/dynamo/vllm/worker_factory.py",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "components/src/dynamo/vllm/worker_factory.py",
+      "sha256": "8ae0dfabe08f8f211687195780ae9586ef725fb4519d5ef42354c184069b5d28",
+      "bytes": 72640,
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/components/src/dynamo/vllm/worker_factory.py"
+    },
+    {
+      "member": "release/components/src/dynamo/vllm/handlers.py",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "components/src/dynamo/vllm/handlers.py",
+      "sha256": "cd8d0f817cf881e66b313b140dd8029d6a03c269215b22bc8aa4f98f175250f6",
+      "bytes": 199842,
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/components/src/dynamo/vllm/handlers.py"
+    },
+    {
+      "member": "release/lib/bindings/python/src/dynamo/runtime/__init__.py",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/bindings/python/src/dynamo/runtime/__init__.py",
+      "sha256": "8160b3028aba4af3a98c7db82e661c2f4a298b827cf53a677c3d7d0b7561cc95",
+      "bytes": 4996,
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/bindings/python/src/dynamo/runtime/__init__.py"
+    },
+    {
+      "member": "release/lib/bindings/python/src/dynamo/_core.pyi",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/bindings/python/src/dynamo/_core.pyi",
+      "sha256": "6f3be8a8899f6db686046fae02e73e1ac99d4396f60a21ae30e612b276a9b1f6",
+      "bytes": 118948,
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/bindings/python/src/dynamo/_core.pyi"
+    },
+    {
+      "member": "release/lib/kv-router/src/zmq_wire/convert.rs",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/zmq_wire/convert.rs",
+      "sha256": "8ce549d6f9fd050f338b384333be49951ed4f098aa2c67c8bca3cd8b0310611a",
+      "bytes": 34102,
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/zmq_wire/convert.rs"
+    },
+    {
+      "member": "release/lib/kv-router/src/indexer/radix_tree.rs",
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "path": "lib/kv-router/src/indexer/radix_tree.rs",
+      "sha256": "c5e9b75a1e9345844e2455a26e82f092d47b8212e25a3f88a925ed95de860c23",
+      "bytes": 38176,
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/kv-router/src/indexer/radix_tree.rs"
+    },
+    {
+      "member": "vllm/vllm/v1/core/block_pool.py",
+      "revision": "2cf0a6915ce544dc493a0990f2ea38d81601128a",
+      "path": "vllm/v1/core/block_pool.py",
+      "sha256": "ddee56dccb2208411b3a035918e917ce8f56a9858471e9ca12b420d5d79bc69c",
+      "bytes": 33243,
+      "url": "https://github.com/vllm-project/vllm/blob/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/v1/core/block_pool.py"
+    },
+    {
+      "member": "vllm/vllm/v1/core/sched/scheduler.py",
+      "revision": "2cf0a6915ce544dc493a0990f2ea38d81601128a",
+      "path": "vllm/v1/core/sched/scheduler.py",
+      "sha256": "4b79ab760c3864af6838d555c01335deea3aac97c9be2be415fa0e5dab32f07e",
+      "bytes": 141223,
+      "url": "https://github.com/vllm-project/vllm/blob/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/v1/core/sched/scheduler.py"
+    },
+    {
+      "member": "vllm/vllm/distributed/kv_events.py",
+      "revision": "2cf0a6915ce544dc493a0990f2ea38d81601128a",
+      "path": "vllm/distributed/kv_events.py",
+      "sha256": "1b3d156c647d94ba7bdaf065bfebdaef7bad9bffe9f0e7ebacea4a22a2da6ac9",
+      "bytes": 18021,
+      "url": "https://github.com/vllm-project/vllm/blob/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/distributed/kv_events.py"
+    }
+  ],
+  "status": "Source inspection only; no worker or router reset executed"
+}

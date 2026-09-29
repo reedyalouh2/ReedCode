@@ -1,0 +1,36 @@
+{
+  "revision": "32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653",
+  "files": [
+    {
+      "path": "lib/runtime/src/pipeline/network.rs",
+      "url": "https://raw.githubusercontent.com/ai-dynamo/dynamo/32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653/lib/runtime/src/pipeline/network.rs",
+      "bytes": 39376,
+      "sha256": "cca3e33770bdeb29ead3017a1fcbf5a21ed473763c93667a42d97d62765eec94"
+    },
+    {
+      "path": "lib/runtime/src/pipeline/network/codec.rs",
+      "url": "https://raw.githubusercontent.com/ai-dynamo/dynamo/32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653/lib/runtime/src/pipeline/network/codec.rs",
+      "bytes": 23103,
+      "sha256": "bdc8ce7f39526aad27069d78ac744d1524c26d030e29a2c5c0f7b877d6c7c082"
+    },
+    {
+      "path": "lib/runtime/src/pipeline/network/codec/two_part.rs",
+      "url": "https://raw.githubusercontent.com/ai-dynamo/dynamo/32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653/lib/runtime/src/pipeline/network/codec/two_part.rs",
+      "bytes": 25652,
+      "sha256": "b769edf02a956f99800e2bc4dd6192633f8548113880a6d5ff56c3f2d050fc81"
+    },
+    {
+      "path": "lib/runtime/src/pipeline/network/tcp.rs",
+      "url": "https://raw.githubusercontent.com/ai-dynamo/dynamo/32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653/lib/runtime/src/pipeline/network/tcp.rs",
+      "bytes": 14768,
+      "sha256": "8aaae4b832d094f39ae0bf9ae0c750e5b0821ea66b0e88def6cb273c1f7eb75a"
+    },
+    {
+      "path": "lib/runtime/src/pipeline/network/ingress/push_handler.rs",
+      "url": "https://raw.githubusercontent.com/ai-dynamo/dynamo/32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653/lib/runtime/src/pipeline/network/ingress/push_handler.rs",
+      "bytes": 43212,
+      "sha256": "84c71e9c9b2939c89c75e6b016c6e818290f0722f7f975a2abc7226655586300"
+    }
+  ],
+  "archive_sha256": "2bef63c6d13feb2290c333fa5f7d6bc62d34ffa1e3400d570b0af571b254b931"
+}

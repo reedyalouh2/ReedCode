@@ -1,0 +1,25 @@
+     Locking 1 package to latest Rust 1.96.1 compatible version
+      Adding dynamo-renderer v5.4.0 (/tmp/reedcode-prefill-fix/renderer)
+   Compiling dynamo-renderer v5.4.0 (/tmp/reedcode-prefill-fix/renderer)
+   Compiling reedcode-prefill-fix-check v0.1.0 (/tmp/reedcode-prefill-fix/check)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.11s
+     Running unittests src/main.rs (/tmp/reedcode-current-stock-prefill/target/debug/deps/reedcode_prefill_fix_check-270fd671cf5383ac)
+
+running 14 tests
+test accumulator::tests::incomplete_or_limited_turns_skip ... ok
+test accumulator::tests::late_error_and_late_choice_skip ... ok
+test accumulator::tests::fields_and_reasoning_survive_fragments ... ok
+test accumulator::tests::raw_tool_arguments_are_never_reserialized ... ok
+test accumulator::tests::parallel_tools_are_ordered_and_unique ... ok
+test accumulator::tests::malformed_conflicting_and_multiple_choices_skip ... ok
+test tests::marker_collision_and_multimodal_history_skip ... ok
+test tests::normalized_thinking_aliases_are_preserved ... ok
+test tests::unsupported_templates_settings_and_text_skip ... ok
+test tests::multi_turn_and_parallel_results_keep_the_boundary ... ok
+test tests::pinned_tokenizer_has_a_nonmerging_boundary ... ok
+test tests::qwen_prefix_is_exact_for_thinking_and_tool_contents ... ok
+test tests::changed_tokenizer_artifacts_or_backend_skip ... ok
+test tests::nul_normalization_cannot_create_a_false_prefix ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.83s
+

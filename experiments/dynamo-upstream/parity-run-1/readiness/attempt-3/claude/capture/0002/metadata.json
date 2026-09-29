@@ -1,0 +1,97 @@
+{
+  "sequence": 2,
+  "method": "POST",
+  "path": "/v1/messages?beta=true",
+  "inference": true,
+  "admitted_inference_count": 2,
+  "started_unix_ns": 1790644448631406000,
+  "started_monotonic_ns": 677573998669750,
+  "request_headers": [
+    [
+      "Accept",
+      "application/json"
+    ],
+    [
+      "Content-Type",
+      "application/json"
+    ],
+    [
+      "User-Agent",
+      "claude-cli/2.1.81 (external, sdk-cli)"
+    ],
+    [
+      "anthropic-beta",
+      "claude-code-20250219,interleaved-thinking-2025-05-14,prompt-caching-scope-2026-01-05,effort-2025-11-24"
+    ],
+    [
+      "anthropic-version",
+      "2023-06-01"
+    ],
+    [
+      "Content-Length",
+      "86535"
+    ]
+  ],
+  "authorization_present": true,
+  "authorization_is_study_dummy": true,
+  "unexpected_credentials": false,
+  "complete": true,
+  "chunks": [
+    {
+      "received_monotonic_ns": 677574000313291,
+      "bytes": 326
+    },
+    {
+      "received_monotonic_ns": 677574007636916,
+      "bytes": 150
+    },
+    {
+      "received_monotonic_ns": 677574015280000,
+      "bytes": 178
+    },
+    {
+      "received_monotonic_ns": 677574022562250,
+      "bytes": 139
+    },
+    {
+      "received_monotonic_ns": 677574029377708,
+      "bytes": 76
+    },
+    {
+      "received_monotonic_ns": 677574035418125,
+      "bytes": 125
+    },
+    {
+      "received_monotonic_ns": 677574041992791,
+      "bytes": 160
+    },
+    {
+      "received_monotonic_ns": 677574047170375,
+      "bytes": 76
+    },
+    {
+      "received_monotonic_ns": 677574054752541,
+      "bytes": 232
+    },
+    {
+      "received_monotonic_ns": 677574062351583,
+      "bytes": 52
+    }
+  ],
+  "request_sha256": "88169bbad3b1cfe2ee5254a341faaacaf218f7d2c0ae3d27f9ce042279c5a7c3",
+  "request_bytes": 86535,
+  "response_status": 200,
+  "response_headers": [
+    [
+      "Content-Type",
+      "text/event-stream"
+    ],
+    [
+      "x-request-id",
+      "stub-request"
+    ]
+  ],
+  "response_headers_monotonic_ns": 677574000120458,
+  "response_sha256": "0df49ec3ece8a460c11fb57b156d9b5f0e788860ebce3be9758b5afb20c36c6c",
+  "ended_monotonic_ns": 677574069044541
+}

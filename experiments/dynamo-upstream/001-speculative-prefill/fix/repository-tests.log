@@ -1,0 +1,6 @@
+...........Executing <Task pending name='Task-17' coro=<DynamoWireTests.test_only_serving_metadata_changes_between_off_and_on() running at /Users/mohamed/Documents/ChatGPT/linked/ReedCode/tests/test_dynamo.py:40> wait_for=<Future pending cb=[_chain_future.<locals>._call_check_cancel() at /opt/homebrew/Cellar/python@3.13/3.13.7/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/futures.py:384, Task.task_wakeup()] created at /opt/homebrew/Cellar/python@3.13/3.13.7/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py:459> cb=[_run_until_complete_cb() at /opt/homebrew/Cellar/python@3.13/3.13.7/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py:181] created at /opt/homebrew/Cellar/python@3.13/3.13.7/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py:100> took 0.466 seconds
+................................................................................................................................................................s............................................
+----------------------------------------------------------------------
+Ran 216 tests in 29.103s
+
+OK (skipped=1)

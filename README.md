@@ -1,10 +1,25 @@
 # ReedCode
 
-ReedCode is a small coding-agent harness that runs tools through Harbor and logs token use and timing. I built it to study tool-output retention.
+ReedCode is a small coding-agent harness for studying what agents send to an inference server. It runs tools through Harbor and records token use, timing, and tool output.
 
-Built after becoming interested in the harness ↔ inference boundary in long-running coding agents.
+I started with tool-output retention after becoming interested in the boundary between the harness and inference server. That led to testing Dynamo's agent hints and prefix caching.
 
-All 15 trials in the latest study passed. Both 2K policies used less input than 20K. Head+tail used fewer fresh tokens than head-only, but took more tool calls.
+## Dynamo prototype
+
+I found that stock `speculative_prefill` drops tool definitions and parts of the assistant message. The warmup then builds a cache branch that the real follow-up cannot reuse. The fix preserves those fields and renders a prefix that matches the next tool continuation.
+
+The [GPU comparison](experiments/dynamo-upstream/combined-gpu-20260929/PREFILL.md) ran 18 trials on an A100: two saved sessions, three conditions, three repetitions. These are whole-session prefill token counts; they repeated exactly in each condition.
+
+| Session | Hint off | Stock hint | Fixed hint |
+| --- | ---: | ---: | ---: |
+| Short | 5,205 | 8,446 | 5,240 |
+| Long | 20,580 | 38,114 | 20,595 |
+
+Stock added 62.27% and 85.20% more prefill than off, without extra cache hits on real follow-ups. The fix removed the separate branch and cut prefill 37.96% and 45.96% versus stock.
+
+I also ran real Codex and Claude Code sessions through stock Dynamo, each with 15 model calls and two follow-up messages. Both reused every compatible full prefix block. Cross-turn reuse fell when Claude changed reminder text and Qwen's template removed earlier reasoning. The [parity report](experiments/dynamo-upstream/combined-gpu-20260929/PARITY.md) includes the original Claude context-limit failure and its 64K YaRN retry.
+
+The [patch and regression tests](experiments/dynamo-upstream/001-speculative-prefill/fix/README.md), [issue draft](experiments/dynamo-upstream/001-speculative-prefill/issue-draft.md), and [raw evidence with a reproduction command](experiments/dynamo-upstream/combined-gpu-20260929/README.md) are ready for review. Nothing has been submitted upstream. [Setup and hint support](docs/dynamo.md).
 
 ## How it works
 
@@ -125,9 +140,11 @@ After fixing path, timeout, and reporting bugs, I ran each task once per cap wit
 
 Total Harbor job runtime fell from 420.01 to 346.12 seconds (17.6%), including setup and verification. `sanitize-git-repo` accounts for most of the input difference. `extract-elf` used fewer input tokens at 2K but generated more output and took longer.
 
-## Server measurements and next experiments
+## Earlier Dynamo experiments
 
-Next are the ten-task and [vLLM studies](docs/self-hosted.md), followed by retaining specific errors and test results. Later, I'd like to test whether lifecycle hints from the harness help an inference scheduler.
+The [first GPU run](experiments/dynamo-20260928/README.md) passed all ten coding trials and completed 40 replay workflows. Replay time barely changed. A [follow-up probe](experiments/dynamo-prefix/gpu-20260928/README.md) found 16 extra cached tokens after correcting the small tool prefix, 528 in a synthetic long-argument case, and zero in the text control. The [survey of 42 tool continuations](experiments/dynamo-prefix/trajectory-survey.md) found a median of 80 preparable tokens. That small ceiling shifted the work toward the stock warmup bug above.
+
+Next is review of the fix and a fresh check of related issues before filing. The [work queue](docs/dynamo-upstream.md) tracks that and the remaining rendering checks. The broader [co-design plan](docs/dynamo-roadmap.md) is paused.
 
 ## Codex profile
 
@@ -207,7 +224,8 @@ Settings are read at agent creation; Python callers can pass `Settings` directly
 
 ## Limitations
 
-- The new study has five pairs on one easy repair with visible source and tests. Its intervals are exploratory; all-pass results don't prove equal success rates. There is no across-task interval, and the latency interval spans zero.
+- The September 23 retention study has five pairs on one easy repair with visible source and tests. Its intervals are exploratory; all-pass results don't prove equal success rates. There is no across-task interval, and the latency interval spans zero.
 - The pilots ran every 20K trial first. Task variation and service conditions are mixed into their differences. `regex-log` never hit either cap: its largest outputs were 426 and 457 bytes. The [experiment records](experiments/README.md) cover missing source pins and changing dependencies.
-- Hosted cache state was not reset. API latency includes network and service overhead; tokens and call counts don't measure GPU savings or identify recovery actions. The ten-task study and GPU measurements are still pending. The Codex table describes a separate run; its TTFT is a session field, and reasoning tokens are already included in output tokens.
+- Hosted cache state was not reset. API latency includes network and service overhead; tokens and call counts don't measure GPU savings or identify recovery actions. The ten-task retention study is pending. The Codex profile is a separate run; its TTFT is a session field, and reasoning tokens are already included in output tokens.
+- The September 28 Dynamo pilot kept cache state between conditions, and its server-metric comparisons failed the restart-observability check. The September 29 comparison used verified resets and process identity. Its prefill results come from controlled replays with one discarded generated token per request. Concurrent serving, agent quality and uninstrumented latency remain unmeasured. The runtime fix supports the pinned Qwen3 tool template. The completed parity sessions used different context limits and stay separate.
 - File checks are lexical; symlinks and `bash` can reach outside the workspace. Use disposable containers without sensitive mounts. Output is collected before truncation, so the cap doesn't limit subprocess memory. The [archived prototype](archive/README.md) runs commands on the host.

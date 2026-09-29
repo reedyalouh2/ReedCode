@@ -1,0 +1,1704 @@
+"""Retention policies for text returned by tools."""
+
+from dataclasses import dataclass
+import math
+import os
+
+
+@dataclass(frozen=True)
+class Settings:
+    max_turns: int = 30
+    max_tool_output: int = 20000
+    tool_timeout: int = 120
+    output_policy: str = "head"
+    model_api: str = "responses"
+    max_output_tokens: int | None = None
+    server_metrics_url: str | None = None
+    metrics_sample_interval: float = 0.1
+
+    def __post_init__(self):
+        if min(self.max_turns, self.max_tool_output, self.tool_timeout) <= 0:
+            raise ValueError("Turn, output and timeout limits must be positive")
+        if self.output_policy not in ("head", "head_tail"):
+            raise ValueError("OUTPUT_POLICY must be head or head_tail")
+        if self.model_api not in ("responses", "chat"):
+            raise ValueError("MODEL_API must be responses or chat")
+        if self.max_output_tokens is not None and self.max_output_tokens <= 0:
+            raise ValueError("MAX_OUTPUT_TOKENS must be positive when set")
+        if not math.isfinite(self.metrics_sample_interval) or self.metrics_sample_interval <= 0:
+            raise ValueError("METRICS_SAMPLE_INTERVAL must be positive and finite")
+
+    @classmethod
+    def from_env(cls):
+        return cls(
+            max_turns=int(os.getenv("MAX_TURNS", "30")),
+            max_tool_output=int(os.getenv("MAX_TOOL_OUTPUT", "20000")),
+            tool_timeout=int(os.getenv("TOOL_TIMEOUT", "120")),
+            output_policy=os.getenv("OUTPUT_POLICY", "head"),
+            model_api=os.getenv("MODEL_API", "responses"),
+            max_output_tokens=int(os.environ["MAX_OUTPUT_TOKENS"]) if os.getenv("MAX_OUTPUT_TOKENS") else None,
+            server_metrics_url=os.getenv("VLLM_METRICS_URL") or None,
+            metrics_sample_interval=float(os.getenv("METRICS_SAMPLE_INTERVAL", "0.1")),
+        )
+
+
+def retain_output(text: str, limit: int, policy: str) -> tuple[str, dict]:
+    if limit <= 0 or policy not in ("head", "head_tail"):
+        raise ValueError("Expected a positive limit and head or head_tail policy")
+    truncated = len(text) > limit
+    head = text
+    tail = ""
+    if truncated:
+        head_count = limit if policy == "head" else (limit + 1) // 2
+        tail_count = limit - head_count
+        head = text[:head_count]
+        tail = text[-tail_count:] if tail_count else ""
+    retained = head + tail
+    visible = text
+    if truncated:
+        visible = head + "\n...[output truncated]"
+        if tail:
+            visible += "\n" + tail
+    return visible, {
+        "output_policy": policy,
+        "output_limit_chars": limit,
+        "truncated": truncated,
+        "original_output_chars": len(text),
+        "original_output_bytes": len(text.encode("utf-8")),
+        "retained_output_chars": len(retained),
+        "retained_output_bytes": len(retained.encode("utf-8")),
+    }
+
+
+@dataclass(frozen=True)
+class ToolObservation:
+    text: str
+    success: bool
+    retention: dict
+
+
+def observation(text: str, success: bool, settings: Settings, prefix: str = "") -> ToolObservation:
+    visible, metadata = retain_output(text, settings.max_tool_output, settings.output_policy)
+    return ToolObservation(prefix + visible, success, metadata)
+from __future__ import annotations
+
+import asyncio
+import base64
+import json
+import posixpath
+import shlex
+import time
+
+from openai import AsyncOpenAI
+
+from harbor.agents.base import BaseAgent
+from harbor.environments.base import BaseEnvironment
+from harbor.models.agent.context import AgentContext
+
+from output_policy import Settings, ToolObservation, observation
+from model_backend import create_response, response_termination
+from server_metrics import ServerMetricsWindow
+
+
+TOOLS = [
+    {
+        "type": "function",
+        "name": "read_file",
+        "description": "Read a text file in the coding workspace.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "path": {"type": "string"},
+            },
+            "required": ["path"],
+            "additionalProperties": False,
+        },
+        "strict": True,
+    },
+    {
+        "type": "function",
+        "name": "write_file",
+        "description": "Write complete contents to a file.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "path": {"type": "string"},
+                "content": {"type": "string"},
+            },
+            "required": ["path", "content"],
+            "additionalProperties": False,
+        },
+        "strict": True,
+    },
+    {
+        "type": "function",
+        "name": "bash",
+        "description": "Run a shell command in the coding workspace.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "command": {"type": "string"},
+            },
+            "required": ["command"],
+            "additionalProperties": False,
+        },
+        "strict": True,
+    },
+]
+
+
+def add_usage(total, value):
+    return None if total is None or value is None else total + value
+
+
+class ReedCodeAgent(BaseAgent):
+    def __init__(self, *args, settings: Settings | None = None, **kwargs):
+        self.settings = settings if settings is not None else Settings.from_env()
+        super().__init__(*args, **kwargs)
+
+    @staticmethod
+    def name() -> str:
+        return "reedcode"
+
+    def version(self) -> str:
+        return "0.4.1"
+
+    async def setup(self, environment: BaseEnvironment) -> None:
+        result = await environment.exec(
+            command="pwd",
+            timeout_sec=self.settings.tool_timeout,
+        )
+
+        cwd = (result.stdout or "").strip()
+
+        if result.return_code != 0 or not posixpath.isabs(cwd):
+            raise RuntimeError(
+                "Could not determine the container working directory"
+            )
+
+        self.cwd = posixpath.normpath(cwd)
+        self.logs_dir.mkdir(parents=True, exist_ok=True)
+
+    async def run(
+        self,
+        instruction: str,
+        environment: BaseEnvironment,
+        context: AgentContext,
+    ) -> None:
+        if not self.model_name:
+            raise ValueError("A model must be supplied with --model")
+
+        history = [{"role": "user", "content": instruction}]
+        trace_path = self.logs_dir / "reedcode_trace.jsonl"
+        started = time.perf_counter()
+
+        total_input = total_cached = total_output = 0
+        model_calls = tool_calls_total = tool_failures = 0
+        model_ms = tool_ms_total = 0.0
+        stop_reason = "error"
+
+        def log(event: dict) -> None:
+            with trace_path.open("a", encoding="utf-8") as f:
+                f.write(json.dumps(event) + "\n")
+
+        log({
+            "type": "run_config",
+            "agent_version": self.version(),
+            "model": self.model_name,
+            "max_turns": self.settings.max_turns,
+            "max_tool_output_chars": self.settings.max_tool_output,
+            "output_policy": self.settings.output_policy,
+            "tool_timeout_sec": self.settings.tool_timeout,
+            "model_api": self.settings.model_api,
+            "max_output_tokens": self.settings.max_output_tokens,
+            "server_metrics_enabled": bool(self.settings.server_metrics_url),
+            "metrics_sample_interval_sec": self.settings.metrics_sample_interval,
+            "sdk_max_retries": 0,
+        })
+
+        try:
+            async with AsyncOpenAI(max_retries=0) as client:
+                for turn in range(1, self.settings.max_turns + 1):
+                    metrics = ServerMetricsWindow(
+                        self.settings.server_metrics_url,
+                        model_name=self.model_name,
+                        sample_interval=self.settings.metrics_sample_interval,
+                    )
+                    try:
+                        async with metrics:
+                            start = time.perf_counter()
+                            response = await create_response(
+                                client,
+                                api=self.settings.model_api,
+                                model=self.model_name,
+                                instructions=(
+                                    "You are a coding agent working inside a repository. "
+                                    "Inspect files, run commands, modify files when needed, "
+                                    "and verify your work before finishing."
+                                ),
+                                input=history,
+                                tools=TOOLS,
+                                max_output_tokens=self.settings.max_output_tokens,
+                            )
+                            latency_ms = (time.perf_counter() - start) * 1000
+                    except BaseException:
+                        if self.settings.server_metrics_url:
+                            log({"type": "failed_inference_metrics", "turn": turn,
+                                 "server_metrics": metrics.result})
+                        raise
+                    model_calls += 1
+                    model_ms += latency_ms
+
+                    usage = response.usage
+                    input_tokens = getattr(usage, "input_tokens", None)
+                    output_tokens = getattr(usage, "output_tokens", None)
+                    details = getattr(usage, "input_tokens_details", None)
+                    cached_tokens = getattr(details, "cached_tokens", None)
+
+                    total_input = add_usage(total_input, input_tokens)
+                    total_cached = add_usage(total_cached, cached_tokens)
+                    total_output = add_usage(total_output, output_tokens)
+
+                    tool_calls = [
+                        item
+                        for item in response.output
+                        if item.type == "function_call"
+                    ]
+                    termination = response_termination(response)
+
+                    log({
+                        "type": "inference",
+                        "turn": turn,
+                        "latency_ms": round(latency_ms, 2),
+                        "input_tokens": input_tokens,
+                        "cached_input_tokens": cached_tokens,
+                        "output_tokens": output_tokens,
+                        "tool_calls": len(tool_calls),
+                        "served_model": getattr(response, "model", None),
+                        "server_metrics": metrics.result,
+                        **termination,
+                    })
+
+                    context.n_input_tokens = total_input
+                    context.n_cache_tokens = total_cached
+                    context.n_output_tokens = total_output
+
+                    if termination["output_limit_hit"]:
+                        stop_reason = "max_output_tokens"
+                        break
+
+                    if response.status != "completed":
+                        raise RuntimeError(
+                            f"Model response status: {response.status}"
+                        )
+
+                    # Later turns need the reasoning items and tool-call IDs.
+                    history.extend(response.output)
+
+                    if not tool_calls:
+                        stop_reason = "no_tool_calls"
+
+                        (self.logs_dir / "final_answer.txt").write_text(
+                            response.output_text or "",
+                            encoding="utf-8",
+                        )
+                        break
+
+                    for call in tool_calls:
+                        start_tool = time.perf_counter()
+
+                        result = await self.execute_tool(
+                            environment,
+                            call.name,
+                            call.arguments,
+                        )
+
+                        tool_ms = (
+                            time.perf_counter() - start_tool
+                        ) * 1000
+
+                        tool_calls_total += 1
+                        tool_failures += int(not result.success)
+                        tool_ms_total += tool_ms
+
+                        log({
+                            "type": "tool",
+                            "turn": turn,
+                            "call_id": call.call_id,
+                            "tool": call.name,
+                            "duration_ms": round(tool_ms, 2),
+                            "output_bytes": len(result.text.encode("utf-8")),
+                            "success": result.success,
+                            **result.retention,
+                        })
+
+                        history.append({
+                            "type": "function_call_output",
+                            "call_id": call.call_id,
+                            "output": result.text,
+                        })
+                else:
+                    stop_reason = "max_turns"
+
+        except asyncio.CancelledError:
+            stop_reason = "cancelled_or_task_timeout"
+            # Harbor uses cancellation to enforce the task deadline.
+            raise
+
+        except Exception as exc:
+            stop_reason = "error"
+            log({
+                "type": "agent_error",
+                "error_type": type(exc).__name__,
+            })
+            raise
+
+        finally:
+            fresh_tokens = (
+                total_input - total_cached
+                if total_input is not None and total_cached is not None
+                else None
+            )
+
+            summary = {
+                "agent_version": self.version(),
+                "stop_reason": stop_reason,
+                # Finishing the agent loop says nothing about the verifier reward.
+                "agent_completed": stop_reason == "no_tool_calls",
+                "output_limit_hit": (
+                    stop_reason == "max_output_tokens"
+                    if stop_reason in ("no_tool_calls", "max_turns", "max_output_tokens")
+                    else None
+                ),
+                "model_calls": model_calls,
+                "tool_calls": tool_calls_total,
+                "tool_failures": tool_failures,
+                "total_input_tokens": total_input,
+                "total_cached_input_tokens": total_cached,
+                "total_output_tokens": total_output,
+                "fresh_input_tokens": fresh_tokens,
+                # An aborted call can leave its cost out of these totals.
+                "model_latency_ms": round(model_ms, 2),
+                "tool_latency_ms": round(tool_ms_total, 2),
+                "wall_time_ms": round(
+                    (time.perf_counter() - started) * 1000,
+                    2,
+                ),
+                "max_tool_output_chars": self.settings.max_tool_output,
+                "tool_timeout_sec": self.settings.tool_timeout,
+                "output_policy": self.settings.output_policy,
+            }
+
+            context.metadata = {
+                **(context.metadata or {}),
+                **summary,
+            }
+
+            log({"type": "task_summary", **summary})
+
+    async def execute_tool(
+        self,
+        environment: BaseEnvironment,
+        name: str,
+        arguments: str | dict,
+    ) -> ToolObservation:
+        # Return argument errors so the model can retry.
+        try:
+            args = (
+                json.loads(arguments)
+                if isinstance(arguments, str)
+                else arguments
+            )
+
+            if not isinstance(args, dict):
+                raise ValueError("Tool arguments must be a JSON object")
+
+            if name == "bash":
+                command = args["command"]
+
+                if (
+                    not isinstance(command, str)
+                    or not command.strip()
+                    or "\0" in command
+                ):
+                    raise ValueError(
+                        "command must be a nonempty string without NUL bytes"
+                    )
+
+            elif name == "read_file":
+                path = self.safe_path(args["path"])
+                command = f"cat -- {shlex.quote(path)}"
+
+            elif name == "write_file":
+                path = self.safe_path(args["path"])
+                content = args["content"]
+
+                if not isinstance(content, str):
+                    raise ValueError("content must be a string")
+
+                encoded = base64.b64encode(
+                    content.encode("utf-8")
+                ).decode("ascii")
+
+                parent = posixpath.dirname(path)
+
+                command = (
+                    f"mkdir -p -- {shlex.quote(parent)} && "
+                    f"printf '%s' {shlex.quote(encoded)} | "
+                    f"base64 -d > {shlex.quote(path)}"
+                )
+
+            else:
+                raise ValueError(f"Unknown tool: {name}")
+
+        except (ValueError, TypeError, KeyError) as exc:
+            return observation(f"ERROR: {type(exc).__name__}: {exc}", False, self.settings)
+
+        try:
+            result = await environment.exec(
+                command=command,
+                cwd=self.cwd,
+                timeout_sec=self.settings.tool_timeout,
+            )
+
+        except (TimeoutError, asyncio.TimeoutError):
+            return observation(
+                f"ERROR: command timed out after {self.settings.tool_timeout} seconds",
+                False, self.settings,
+            )
+
+        except RuntimeError as exc:
+            # Harbor's Docker backend can wrap timeouts in RuntimeError.
+            if str(exc).startswith("Command timed out after "):
+                return observation(f"ERROR: {exc}", False, self.settings)
+
+            raise
+
+        if name == "write_file" and result.return_code == 0:
+            return observation(f"Successfully wrote {path}", True, self.settings)
+        return self.format_result(result)
+
+    def format_result(self, result) -> ToolObservation:
+        output = result.stdout or ""
+        if result.stderr:
+            output += "\nSTDERR:\n" + result.stderr
+        return observation(output, result.return_code == 0, self.settings,
+                           prefix=f"EXIT CODE: {result.return_code}\n")
+
+    def safe_path(self, path: str) -> str:
+        # Symlinks and bash can bypass this lexical path check.
+        if (
+            not isinstance(path, str)
+            or not path.strip()
+            or "\0" in path
+        ):
+            raise ValueError(
+                "path must be a nonempty string without NUL bytes"
+            )
+
+        base = posixpath.normpath(self.cwd)
+        target = posixpath.normpath(posixpath.join(base, path))
+
+        if posixpath.commonpath([base, target]) != base:
+            raise ValueError(f"Path must stay inside {base}")
+
+        return target
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from types import SimpleNamespace
+
+
+@dataclass
+class ChatMessage:
+    message: dict
+    type: str = field(default="chat_message", init=False)
+
+
+@dataclass
+class ChatFunctionCall:
+    name: str
+    arguments: str
+    call_id: str
+    type: str = field(default="function_call", init=False)
+
+
+def response_termination(response) -> dict:
+    details = getattr(response, "incomplete_details", None)
+    reason = details.get("reason") if isinstance(details, dict) else getattr(details, "reason", None)
+    finish = getattr(response, "finish_reason", None)
+    status = response.status
+    return {
+        "response_status": status,
+        "finish_reason": finish,
+        "incomplete_reason": reason,
+        "output_limit_hit": status == "incomplete" and (finish == "length" or reason == "max_output_tokens"),
+    }
+
+
+def chat_messages(instructions: str, history: list) -> list[dict]:
+    messages = [{"role": "system", "content": instructions}]
+    for item in history:
+        if isinstance(item, ChatMessage):
+            # vLLM versions use different names for reasoning.
+            messages.append({
+                key: value for key, value in item.message.items()
+                if key in {"role", "content", "tool_calls", "reasoning", "reasoning_content"}
+            })
+        elif isinstance(item, ChatFunctionCall):
+            # The full assistant message already contains these calls.
+            continue
+        elif isinstance(item, dict) and item.get("type") == "function_call_output":
+            messages.append({
+                "role": "tool",
+                "tool_call_id": item["call_id"],
+                "content": item["output"],
+            })
+        elif isinstance(item, dict) and item.get("role") in {"user", "system"}:
+            messages.append(dict(item))
+        else:
+            raise ValueError("Chat history contains an unsupported item; do not switch APIs mid-run")
+    return messages
+
+
+async def create_response(
+    client, *, api: str, model: str, instructions: str,
+    input: list, tools: list[dict], max_output_tokens: int | None = None,
+):
+    if max_output_tokens is not None and max_output_tokens < 1:
+        raise ValueError("max_output_tokens must be positive")
+
+    if api == "responses":
+        options = {} if max_output_tokens is None else {"max_output_tokens": max_output_tokens}
+        return await client.responses.create(
+            model=model, instructions=instructions, input=input, tools=tools, **options,
+        )
+    if api != "chat":
+        raise ValueError(f"Unsupported model API: {api}")
+
+    chat_tools = []
+    for tool in tools:
+        if tool.get("type") != "function":
+            raise ValueError("The Chat backend supports function tools only")
+        chat_tools.append({
+            "type": "function",
+            "function": {key: value for key, value in tool.items() if key != "type"},
+        })
+    options = {} if max_output_tokens is None else {"max_completion_tokens": max_output_tokens}
+    completion = await client.chat.completions.create(
+        model=model, messages=chat_messages(instructions, input),
+        tools=chat_tools, tool_choice="auto", **options,
+    )
+    if len(completion.choices) != 1:
+        raise RuntimeError("Expected exactly one Chat completion choice")
+
+    choice = completion.choices[0]
+    message = choice.message
+    status = "completed" if choice.finish_reason in {"stop", "tool_calls"} else "incomplete"
+    output = [ChatMessage(message.model_dump(exclude_none=True))]
+    # A cut-off response may have missing IDs or unfinished arguments.
+    for call in (message.tool_calls or []) if status == "completed" else []:
+        if call.type != "function" or not call.id:
+            raise RuntimeError("Chat completion contains an unsupported tool call")
+        output.append(ChatFunctionCall(
+            name=call.function.name, arguments=call.function.arguments, call_id=call.id,
+        ))
+
+    usage = completion.usage
+    details = getattr(usage, "prompt_tokens_details", None)
+    normalized_usage = SimpleNamespace(
+        input_tokens=getattr(usage, "prompt_tokens", None),
+        output_tokens=getattr(usage, "completion_tokens", None),
+        input_tokens_details=SimpleNamespace(cached_tokens=getattr(details, "cached_tokens", None)),
+    )
+    return SimpleNamespace(
+        output=output, output_text=message.content or "", usage=normalized_usage,
+        status=status, finish_reason=choice.finish_reason, model=completion.model,
+    )
+"""Run repeated, interleaved output-retention comparisons."""
+
+import argparse
+from datetime import datetime, timezone
+import hashlib
+import itertools
+import json
+import os
+import random
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parent
+REAL_TASKS = (
+    "regex-log", "extract-elf", "sanitize-git-repo", "build-cython-ext",
+    "build-pmars", "cancel-async-tasks", "custom-memory-heap-crash",
+    "fix-git", "log-summary-date-ranges", "large-scale-text-editing",
+)
+CONDITIONS = {
+    "head_20k": (20000, "head"),
+    "head_2k": (2000, "head"),
+    "head_tail_2k": (2000, "head_tail"),
+}
+
+
+def build_plan(tasks, repeats=5, seed=20260922):
+    if repeats < 1 or not tasks or len(set(tasks)) != len(tasks):
+        raise ValueError("Use distinct tasks and a positive repetition count")
+    rng = random.Random(seed)
+    blocks = []
+    for task in tasks:
+        orders = []
+        for repeat in range(1, repeats + 1):
+            if not orders:
+                orders = list(itertools.permutations(CONDITIONS))
+                rng.shuffle(orders)
+            blocks.append((task, repeat, orders.pop()))
+    rng.shuffle(blocks)
+    plan = []
+    for block, (task, repeat, conditions) in enumerate(blocks, 1):
+        for position, condition in enumerate(conditions, 1):
+            cap, policy = CONDITIONS[condition]
+            plan.append({
+                "run_id": f"b{block:03d}_r{repeat}_{condition}",
+                "task": task, "repeat": repeat, "block": block,
+                "position": position, "condition": condition,
+                "cap_chars": cap, "output_policy": policy,
+            })
+    return plan
+
+
+def tree_hash(path):
+    digest = hashlib.sha256()
+    for file in sorted(path.rglob("*")):
+        if file.is_file():
+            digest.update(file.relative_to(path).as_posix().encode() + b"\0")
+            digest.update(hashlib.sha256(file.read_bytes()).digest())
+    return digest.hexdigest()
+
+
+def save_manifest(output, manifest):
+    pending = output / "manifest.tmp"
+    pending.write_text(json.dumps(manifest, indent=2) + "\n")
+    pending.replace(output / "manifest.json")
+
+
+def prepare_tasks(suite, tasks, output):
+    snapshots = {}
+    for task in tasks:
+        parent = output / "tasks" / task
+        parent.mkdir(parents=True)
+        if suite == "synthetic":
+            path = parent / task
+            shutil.copytree(ROOT / "evals" / task, path,
+                            ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+        else:
+            subprocess.run(["harbor", "tasks", "download", f"terminal-bench/{task}",
+                            "--output-dir", str(parent)], check=True, cwd=ROOT)
+            paths = list(parent.glob("*/task.toml"))
+            if len(paths) != 1:
+                raise RuntimeError(f"Expected one downloaded task: {task}")
+            path = paths[0].parent
+        snapshots[task] = {"path": str(path.relative_to(output)),
+                           "sha256": tree_hash(path)}
+    return snapshots
+
+
+def export_run(job, output, run_id, task, cap, returncode):
+    row = {
+        "run_id": run_id, "task": task, "cap_chars": cap,
+        "trace": None, "trace_sha256": None, "job_name": job.name,
+        "reward": None, "exception_type": None, "job_runtime_s": None,
+        "harbor_returncode": returncode,
+    }
+    trials = list(job.glob("*/result.json"))
+    if len(trials) == 1:
+        trial = json.loads(trials[0].read_text())
+        row.update({
+            "trial_name": trial.get("trial_name"),
+            "task_checksum": trial.get("task_checksum"),
+            "agent_info": trial.get("agent_info"),
+            "reward": (trial.get("verifier_result") or {}).get("rewards", {}).get("reward"),
+            "exception_type": (trial.get("exception_info") or {}).get("exception_type"),
+        })
+        traces = list(trials[0].parent.rglob("reedcode_trace.jsonl"))
+        if len(traces) == 1:
+            target = output / f"{run_id}.jsonl"
+            shutil.copyfile(traces[0], target)
+            row.update(trace=target.name, trace_sha256=hashlib.sha256(target.read_bytes()).hexdigest())
+    else:
+        row["exception_type"] = "MissingOrAmbiguousTrialResult"
+    if returncode and not row["exception_type"]:
+        row["exception_type"] = "HarborProcessError"
+    if (job / "result.json").exists():
+        data = json.loads((job / "result.json").read_text())
+        row.update(job_started_at=data.get("started_at"), job_finished_at=data.get("finished_at"))
+        if row["job_started_at"] and row["job_finished_at"]:
+            row["job_runtime_s"] = (
+                datetime.fromisoformat(row["job_finished_at"])
+                - datetime.fromisoformat(row["job_started_at"])
+            ).total_seconds()
+    return row
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("suite", choices=("synthetic", "real"))
+    parser.add_argument("--model", default=os.getenv("MODEL", "gpt-5.6-terra"))
+    parser.add_argument("--model-api", choices=("responses", "chat"), default=os.getenv("MODEL_API", "responses"))
+    parser.add_argument("--max-output-tokens", type=int, default=int(os.environ["MAX_OUTPUT_TOKENS"]) if os.getenv("MAX_OUTPUT_TOKENS") else None)
+    parser.add_argument("--output", type=Path, help="New output directory (must not exist)")
+    parser.add_argument("--repeats", type=int, default=5)
+    parser.add_argument("--seed", type=int, default=20260922, help="Schedule seed, not a model seed")
+    parser.add_argument("--tasks", nargs="+", choices=REAL_TASKS, help="Real-suite subset")
+    parser.add_argument("--dry-run", action="store_true", help="Save the schedule without downloads or model calls")
+    parser.add_argument("--check-only", action="store_true", help="Prepare task snapshots and run their oracles, without model calls")
+    args = parser.parse_args()
+    if args.max_output_tokens is not None and args.max_output_tokens <= 0:
+        parser.error("--max-output-tokens must be positive")
+    if args.tasks and args.suite != "real":
+        parser.error("--tasks is only available for the real suite")
+    if args.dry_run and args.check_only:
+        parser.error("Choose either --dry-run or --check-only")
+    tasks = (args.tasks or REAL_TASKS) if args.suite == "real" else ("noisy-bugfix",)
+    try:
+        plan = build_plan(tasks, args.repeats, args.seed)
+    except ValueError as exc:
+        parser.error(str(exc))
+    if not args.dry_run:
+        if not args.check_only and not os.getenv("OPENAI_API_KEY"):
+            parser.error("Set OPENAI_API_KEY before running model evaluations; --dry-run needs no key")
+        if not shutil.which("harbor"):
+            parser.error("harbor is not on PATH; run with uv run python run_experiments.py ...")
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    output = (args.output or ROOT / "runs" / f"{args.suite}-{stamp}").resolve()
+    output.mkdir(parents=True, exist_ok=False)
+    manifest = {
+        "schema_version": 2, "model": args.model, "schedule_seed": args.seed,
+        "model_api": args.model_api, "max_output_tokens": args.max_output_tokens,
+        "server_metrics_enabled": bool(os.getenv("VLLM_METRICS_URL")),
+        "endpoint_kind": "custom" if os.getenv("OPENAI_BASE_URL") else "openai",
+        "sdk_max_retries": 0,
+        "repeats": args.repeats, "state": "planned",
+        "protocol": "randomized task/repetition blocks; three adjacent conditions per block",
+        "max_turns": 30, "tool_timeout_sec": 120,
+        "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+                          for name in ("reedcode_harbor_agent.py", "output_policy.py",
+                                       "run_experiments.py", "reporting.py", "model_backend.py",
+                                       "server_metrics.py", "uv.lock")},
+        "plan": plan, "runs": [],
+    }
+    save_manifest(output, manifest)
+    print(f"{len(tasks)} tasks x {args.repeats} repeats x 3 conditions = {len(plan)} trials", flush=True)
+    print(f"Schedule and results: {output}", flush=True)
+    if args.dry_run:
+        return 0
+    import importlib.metadata
+    manifest["harbor_version"] = importlib.metadata.version("harbor")
+    manifest["openai_version"] = importlib.metadata.version("openai")
+    manifest["state"] = "preparing"
+    save_manifest(output, manifest)
+    manifest["tasks"] = prepare_tasks(args.suite, tasks, output)
+    manifest["preflight"] = []
+    save_manifest(output, manifest)
+    for task in tasks:
+        path = output / manifest["tasks"][task]["path"]
+        job_name = f"reedcode-{stamp}-oracle-{task}"
+        result = subprocess.run(["harbor", "run", "-p", str(path), "--agent", "oracle",
+            "--job-name", job_name, "--jobs-dir", str(ROOT / "jobs"),
+            "--n-concurrent", "1", "--n-attempts", "1", "--max-retries", "0"], cwd=ROOT)
+        row = export_run(ROOT / "jobs" / job_name, output, f"oracle-{task}", task,
+                         None, result.returncode)
+        manifest["preflight"].append(row)
+        save_manifest(output, manifest)
+    if any(r["reward"] != 1 or r["exception_type"] for r in manifest["preflight"]):
+        manifest["state"] = "preflight_failed"
+        save_manifest(output, manifest)
+        print("Oracle preflight failed; no model calls were made.", flush=True)
+        return 1
+    if args.check_only:
+        manifest["state"] = "preflight_passed"
+        save_manifest(output, manifest)
+        print("Oracle preflight passed; no model calls were made.", flush=True)
+        return 0
+    manifest["state"] = "running"
+    save_manifest(output, manifest)
+    env = dict(os.environ)
+    env["PYTHONPATH"] = str(ROOT) + os.pathsep + env.get("PYTHONPATH", "")
+    env.update(MAX_TURNS="30", TOOL_TIMEOUT="120", MODEL_API=args.model_api)
+    if args.max_output_tokens is not None:
+        env["MAX_OUTPUT_TOKENS"] = str(args.max_output_tokens)
+    else:
+        env.pop("MAX_OUTPUT_TOKENS", None)
+    for planned in plan:
+        run_id, task = planned["run_id"], planned["task"]
+        snapshot = manifest["tasks"][task]
+        task_path = output / snapshot["path"]
+        if tree_hash(task_path) != snapshot["sha256"]:
+            raise RuntimeError(f"Task snapshot changed during the experiment: {task}")
+        job_name = f"reedcode-{args.suite}-{stamp}-{run_id}"
+        command = ["harbor", "run", "-p", str(task_path),
+                   "--agent", "reedcode_harbor_agent:ReedCodeAgent", "--model", args.model,
+                   "--job-name", job_name, "--jobs-dir", str(ROOT / "jobs"),
+                   "--n-concurrent", "1", "--n-attempts", "1", "--max-retries", "0"]
+        manifest["runs"].append({**planned, "status": "running", "reward": None,
+                                 "exception_type": "UnfinishedAttempt"})
+        save_manifest(output, manifest)
+        print(f"Running {run_id}: {task}", flush=True)
+        try:
+            result = subprocess.run(command, cwd=ROOT, env={**env,
+                "MAX_TOOL_OUTPUT": str(planned["cap_chars"]),
+                "OUTPUT_POLICY": planned["output_policy"]})
+            row = export_run(ROOT / "jobs" / job_name, output, run_id, task,
+                             planned["cap_chars"], result.returncode)
+        except (OSError, KeyboardInterrupt) as exc:
+            manifest["runs"][-1].update(status="interrupted", exception_type=type(exc).__name__)
+            manifest["state"] = "interrupted"
+            save_manifest(output, manifest)
+            raise
+        manifest["runs"][-1] = {**planned, **row, "status": "finished"}
+        save_manifest(output, manifest)
+    manifest["state"] = "finished"
+    save_manifest(output, manifest)
+    from reporting import summarize
+    summarize(output)
+    return int(any(r["exception_type"] or r["reward"] is None for r in manifest["runs"]))
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+"""Read experiment manifests and summarize their traces."""
+
+import argparse
+from collections import Counter
+import hashlib
+import json
+import math
+import random
+from pathlib import Path
+from statistics import mean
+
+
+COMPARISONS = (("head_20k", "head_2k"), ("head_2k", "head_tail_2k"),
+               ("head_20k", "head_tail_2k"))
+PAIRED_METRICS = ("reward", "input_tokens", "fresh_tokens", "model_latency_ms",
+                  "model_calls", "tool_calls", "output_limit_hit")
+SERVER_METRICS = ("server_prefill_seconds", "server_decode_seconds", "server_kv_sampled_max_fraction")
+EXCLUSION_REASONS = ("missing_run", "exception", "incomplete_telemetry", "missing_metric",
+                     "missing_task_checksum", "task_checksum_mismatch")
+
+
+def known_sum(values):
+    values = list(values)
+    return None if not values or any(v is None for v in values) else sum(values)
+
+
+def finite_nonnegative(value):
+    return (isinstance(value, (int, float)) and not isinstance(value, bool)
+            and math.isfinite(value) and value >= 0)
+
+
+def valid_server_window(window):
+    if not isinstance(window, dict) or window.get("status") not in ("ok", "partial"):
+        return False
+    if window.get("attribution_warning") is not False or window.get("server_restarted") is not False:
+        return False
+    if window.get("failed_scrapes") != 0 or not finite_nonnegative(window.get("successful_scrapes")):
+        return False
+    if window["successful_scrapes"] < 2:
+        return False
+    counters, histograms = window.get("counter_deltas", {}), window.get("histograms", {})
+    if not isinstance(counters, dict) or not isinstance(histograms, dict):
+        return False
+    for item in (*counters.values(), *histograms.values()):
+        if not isinstance(item, dict) or item.get("status") in ("counter_reset", "server_restarted", "series_changed"):
+            return False
+    finished = counters.get("requests_finished", {})
+    # A valid completion delta requires both boundary scrapes.
+    return (finished.get("status") == "ok" and finite_nonnegative(finished.get("value"))
+            and finished["value"] == 1)
+
+
+def server_measurements(inference):
+    result = dict.fromkeys(SERVER_METRICS)
+    windows = [event.get("server_metrics") for event in inference]
+    if not windows or not all(valid_server_window(window) for window in windows):
+        return result
+    for phase in ("prefill", "decode"):
+        values = []
+        for window in windows:
+            histogram = window.get("histograms", {}).get(phase, {})
+            valid = (histogram.get("status") == "ok" and finite_nonnegative(histogram.get("count"))
+                     and histogram["count"] == 1 and finite_nonnegative(histogram.get("sum_seconds")))
+            values.append(histogram["sum_seconds"] if valid else None)
+        total = known_sum(values)
+        result[f"server_{phase}_seconds"] = total if finite_nonnegative(total) else None
+    cache_values = []
+    for window in windows:
+        gauge = window.get("gauges", {}).get("kv_cache_usage_fraction", {})
+        value, samples = gauge.get("during_sampled_max"), gauge.get("during_sample_count")
+        valid = (gauge.get("unit") == "fraction" and finite_nonnegative(samples) and samples >= 1
+                 and finite_nonnegative(value) and value <= 1)
+        cache_values.append(value if valid else None)
+    if all(value is not None for value in cache_values):
+        result["server_kv_sampled_max_fraction"] = max(cache_values)
+    return result
+
+
+def analyze_trace(path):
+    events = [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
+    inference = [e for e in events if e.get("type") == "inference"]
+    tools = [e for e in events if e.get("type") == "tool"]
+    summaries = [e for e in events if e.get("type") == "task_summary"]
+    summary = summaries[-1] if summaries else {}
+    stop_reason = summary.get("stop_reason")
+    if "output_limit_hit" in summary:
+        value = summary["output_limit_hit"]
+        output_limit_hit = value if isinstance(value, bool) else None
+    elif stop_reason in ("no_tool_calls", "max_turns", "max_output_tokens"):
+        output_limit_hit = stop_reason == "max_output_tokens"
+    else:
+        output_limit_hit = None
+    metrics = {
+        "input_tokens": known_sum(e.get("input_tokens") for e in inference),
+        "cached_tokens": known_sum(e.get("cached_input_tokens") for e in inference),
+        "output_tokens": known_sum(e.get("output_tokens") for e in inference),
+        "model_calls": len(inference),
+        "tool_calls": len(tools),
+        "model_latency_ms": known_sum(e.get("latency_ms") for e in inference),
+        "tool_latency_ms": known_sum(e.get("duration_ms") for e in tools) if tools else 0,
+        "tool_output_bytes": known_sum(e.get("output_bytes") for e in tools) if tools else 0,
+        "truncated_calls": known_sum(e.get("truncated") for e in tools) if tools else 0,
+        "original_output_chars": known_sum(e.get("original_output_chars") for e in tools) if tools else 0,
+        "retained_output_chars": known_sum(e.get("retained_output_chars") for e in tools) if tools else 0,
+        "telemetry_complete": stop_reason in ("no_tool_calls", "max_turns", "max_output_tokens"),
+        "output_limit_hit": output_limit_hit,
+        "server_metrics_enabled": any(e.get("server_metrics_enabled") is True or
+            (isinstance(e.get("server_metrics"), dict) and e["server_metrics"].get("status")
+             not in (None, "disabled")) for e in events),
+    }
+    metrics.update(server_measurements(inference))
+    if any(e.get("type") == "failed_inference_metrics" for e in events):
+        metrics.update(dict.fromkeys(SERVER_METRICS))
+    metrics["fresh_tokens"] = (
+        metrics["input_tokens"] - metrics["cached_tokens"]
+        if metrics["input_tokens"] is not None and metrics["cached_tokens"] is not None
+        else None
+    )
+    return metrics
+
+
+def load_rows(directory):
+    directory = Path(directory)
+    manifest = json.loads((directory / "manifest.json").read_text())
+    rows = []
+    seen = set()
+    for run in manifest["runs"]:
+        if run["run_id"] in seen:
+            raise ValueError(f"Duplicate run: {run['run_id']}")
+        seen.add(run["run_id"])
+        metrics = {key: None for key in (
+            "input_tokens", "cached_tokens", "fresh_tokens", "output_tokens",
+            "model_calls", "tool_calls", "model_latency_ms", "tool_latency_ms", "tool_output_bytes",
+            "truncated_calls", "original_output_chars", "retained_output_chars", "telemetry_complete",
+            "output_limit_hit", "server_metrics_enabled", *SERVER_METRICS,
+        )}
+        if run.get("trace"):
+            path = directory / run["trace"]
+            if hashlib.sha256(path.read_bytes()).hexdigest() != run["trace_sha256"]:
+                raise ValueError(f"Trace checksum mismatch: {path}")
+            metrics = analyze_trace(path)
+        if manifest.get("server_metrics_enabled"):
+            metrics["server_metrics_enabled"] = True
+        rows.append({**run, **metrics})
+    if not rows:
+        raise ValueError("Manifest has no runs")
+    return rows
+
+
+def average(rows, key):
+    values = [r.get(key) for r in rows]
+    return None if not values or any(v is None for v in values) else mean(values)
+
+
+def display(value):
+    return "unknown" if value is None else f"{value:,.2f}"
+
+
+def summarize(directory):
+    manifest = json.loads((Path(directory) / "manifest.json").read_text())
+    if manifest.get("schema_version", 1) >= 2:
+        return summarize_paired(directory, manifest)
+    rows = load_rows(directory)
+    metrics = (
+        "reward", "input_tokens", "cached_tokens", "fresh_tokens", "output_tokens",
+        "model_calls", "tool_calls", "model_latency_ms", "tool_latency_ms",
+        "tool_output_bytes", "job_runtime_s",
+    )
+    groups = {cap: [r for r in rows if r["cap_chars"] == cap] for cap in (20000, 2000)}
+    for cap, group in groups.items():
+        print(f"\nCAP {cap}: {len(group)} attempted trials")
+        for r in group:
+            print(f"  {r['run_id']}: reward={display(r.get('reward'))} "
+                  f"exception={r.get('exception_type') or 'none'} "
+                  f"input={display(r['input_tokens'])} fresh={display(r['fresh_tokens'])}")
+        print(f"  Passed: {sum(r.get('reward') == 1 for r in group)}/{len(group)}; "
+              f"missing rewards: {sum(r.get('reward') is None for r in group)}; "
+              f"exceptions: {sum(r.get('exception_type') is not None for r in group)}")
+        for key in metrics:
+            print(f"  {key:23} {display(average(group, key))}")
+    task_counts = lambda group: sorted(r['task'] for r in group)
+    if not groups[20000] or task_counts(groups[20000]) != task_counts(groups[2000]):
+        print("\nRelative changes unavailable: unmatched task/repetition sets.")
+        return
+    print("\n20K -> 2K (relative change in group means; all attempts included)")
+    for key in metrics:
+        a, b = (average(groups[cap], key) for cap in (20000, 2000))
+        change = "unknown" if a in (None, 0) or b is None else f"{(b-a)/a*100:+.1f}%"
+        print(f"  {key:23} {change}")
+
+def paired_estimate(values, bootstrap_samples=10000, seed=0):
+    """Bootstrap paired differences within a task; require five pairs for an interval."""
+    if not values:
+        return {"pairs": 0, "mean_delta": None, "ci95": None,
+                "ci95_status": "insufficient_pairs"}
+    estimate = {"pairs": len(values), "mean_delta": mean(values), "ci95": None,
+                "ci95_status": "insufficient_pairs"}
+    if len(values) >= 5:
+        rng = random.Random(seed)
+        samples = sorted(mean(rng.choices(values, k=len(values))) for _ in range(bootstrap_samples))
+        estimate["ci95"] = [samples[int(0.025 * bootstrap_samples)],
+                            samples[int(0.975 * bootstrap_samples) - 1]]
+        estimate["ci95_status"] = ("degenerate" if estimate["ci95"][0] == estimate["ci95"][1]
+                                   else "estimated")
+    return estimate
+
+
+def pair_exclusion(a, b, metric):
+    if a is None or b is None:
+        return "missing_run"
+    if a.get("exception_type") or b.get("exception_type"):
+        return "exception"
+    # Partial call totals would understate cost in a comparison.
+    if metric != "reward" and not (a.get("telemetry_complete") and b.get("telemetry_complete")):
+        return "incomplete_telemetry"
+    if a.get(metric) is None or b.get(metric) is None:
+        return "missing_metric"
+    if not a.get("task_checksum") or not b.get("task_checksum"):
+        return "missing_task_checksum"
+    if a["task_checksum"] != b["task_checksum"]:
+        return "task_checksum_mismatch"
+    return None
+
+
+def paired_results(rows, plan, server_metrics_enabled=False):
+    index = {}
+    for row in rows:
+        key = (row["task"], row["repeat"], row["condition"])
+        if key in index:
+            raise ValueError(f"Duplicate condition in block: {key}")
+        index[key] = row
+    results = []
+    include_server = server_metrics_enabled or any(row.get("server_metrics_enabled") or
+        any(row.get(metric) is not None for metric in SERVER_METRICS) for row in rows)
+    metrics = PAIRED_METRICS + SERVER_METRICS if include_server else PAIRED_METRICS
+    for task in sorted({p["task"] for p in plan}):
+        repeats = sorted({p["repeat"] for p in plan if p["task"] == task})
+        for baseline, candidate in COMPARISONS:
+            for metric in metrics:
+                deltas = []
+                exclusions = Counter({reason: 0 for reason in EXCLUSION_REASONS})
+                for repeat in repeats:
+                    a = index.get((task, repeat, baseline))
+                    b = index.get((task, repeat, candidate))
+                    reason = pair_exclusion(a, b, metric)
+                    if reason:
+                        exclusions[reason] += 1
+                        continue
+                    deltas.append(b[metric] - a[metric])
+                results.append({"task": task, "baseline": baseline, "candidate": candidate,
+                                "metric": metric, "planned_pairs": len(repeats),
+                                "excluded_pairs": dict(exclusions),
+                                **paired_estimate(deltas)})
+    return results
+
+
+def pooled_results(per_task_results, bootstrap_samples=10000, seed=0):
+    """Resample task means so repeated runs do not count as independent tasks."""
+    groups = {}
+    for result in per_task_results:
+        key = (result["baseline"], result["candidate"], result["metric"])
+        groups.setdefault(key, []).append(result)
+    results = []
+    for (baseline, candidate, metric), group in groups.items():
+        group = sorted(group, key=lambda r: r["task"])
+        if len({r["task"] for r in group}) != len(group):
+            raise ValueError("Duplicate task in pooled comparison")
+        included = [r for r in group if r["pairs"] > 0]
+        estimate = paired_estimate([r["mean_delta"] for r in included], bootstrap_samples, seed)
+        complete = all(r["pairs"] == r["planned_pairs"] for r in group)
+        results.append({
+            "baseline": baseline, "candidate": candidate, "metric": metric,
+            "mean_delta": estimate["mean_delta"], "ci95": estimate["ci95"],
+            "ci95_status": ("insufficient_tasks" if estimate["ci95_status"] == "insufficient_pairs"
+                            else estimate["ci95_status"]),
+            "bootstrap_unit": "task", "task_weighting": "equal",
+            "included_task_count": len(included), "planned_task_count": len(group),
+            "included_tasks": [r["task"] for r in included],
+            "excluded_tasks": [r["task"] for r in group if r["pairs"] == 0],
+            "complete_task_count": sum(r["pairs"] == r["planned_pairs"] for r in group),
+            "pairs": sum(r["pairs"] for r in group),
+            "planned_pairs": sum(r["planned_pairs"] for r in group),
+            "coverage": "none" if not included else "complete" if complete else "partial",
+            "scope": "complete_plan" if complete else "observed_subset",
+            "excluded_pairs": {reason: sum(r["excluded_pairs"][reason] for r in group)
+                               for reason in EXCLUSION_REASONS},
+        })
+    return results
+
+
+def interval_text(result, unit):
+    interval = result["ci95"]
+    if interval is None:
+        return f"unavailable (<5 {unit})"
+    text = f"[{display(interval[0])}, {display(interval[1])}]"
+    if result["ci95_status"] == "degenerate":
+        text += " (degenerate; not evidence of certainty)"
+    return text
+
+
+def condition_summaries(rows, plan):
+    summaries = []
+    for task in sorted({p["task"] for p in plan}):
+        for condition in ("head_20k", "head_2k", "head_tail_2k"):
+            group = [r for r in rows if r["task"] == task and r["condition"] == condition]
+            observed = sum(isinstance(r.get("output_limit_hit"), bool) for r in group)
+            hits = sum(r.get("output_limit_hit") is True for r in group)
+            summaries.append({
+                "task": task, "condition": condition,
+                "attempted": len(group),
+                "planned": sum(p["task"] == task and p["condition"] == condition for p in plan),
+                "passed": sum(r.get("reward") == 1 and not r.get("exception_type") for r in group),
+                "missing_rewards": sum(r.get("reward") is None for r in group),
+                "exceptions": sum(bool(r.get("exception_type")) for r in group),
+                "output_limit_hits": hits,
+                "output_limit_observed": observed,
+                "output_limit_unknown": len(group) - observed,
+                "output_limit_hit_rate": hits / observed if observed else None,
+                "truncated_calls": known_sum(r.get("truncated_calls") for r in group),
+            })
+    return summaries
+
+
+def summarize_paired(directory, manifest):
+    rows = load_rows(directory) if manifest["runs"] else []
+    plan = manifest["plan"]
+    print(f"Attempted {len(rows)}/{len(plan)} scheduled trials; state={manifest['state']}")
+    conditions = condition_summaries(rows, plan)
+    for row in conditions:
+        rate = row["output_limit_hit_rate"]
+        rate_text = "unknown" if rate is None else f"{rate:.1%}"
+        print(f"{row['task']} {row['condition']}: passed={row['passed']}/{row['attempted']} attempts, "
+              f"planned={row['planned']}, missing rewards={row['missing_rewards']}, "
+              f"exceptions={row['exceptions']}; output limit hits={row['output_limit_hits']}/"
+              f"{row['output_limit_observed']} known ({rate_text}), unknown={row['output_limit_unknown']}; "
+              f"truncated calls={display(row['truncated_calls'])}")
+    results = paired_results(rows, plan, manifest.get("server_metrics_enabled", False))
+    print("\nPaired differences (candidate minus baseline), per task:")
+    for row in results:
+        print(f"{row['task']} {row['candidate']} - {row['baseline']} {row['metric']}: "
+              f"{display(row['mean_delta'])}; 95% interval {interval_text(row, 'pairs')}; "
+              f"pairs={row['pairs']}/{row['planned_pairs']}")
+        if sum(row["excluded_pairs"].values()):
+            print("  Excluded pairs: " + ", ".join(f"{k}={v}" for k, v in row["excluded_pairs"].items() if v))
+    pooled = pooled_results(results)
+    print("\nPooled differences (equal weight per observed task; candidate minus baseline):")
+    for row in pooled:
+        print(f"{row['candidate']} - {row['baseline']} {row['metric']}: "
+              f"{display(row['mean_delta'])}; 95% task-bootstrap interval {interval_text(row, 'tasks')}; "
+              f"tasks={row['included_task_count']}/{row['planned_task_count']}; "
+              f"pairs={row['pairs']}/{row['planned_pairs']}; coverage={row['coverage']}")
+        if row["excluded_tasks"]:
+            print("  No eligible pairs for: " + ", ".join(row["excluded_tasks"]))
+    report = {
+        "schema_version": 2,
+        "method": "Per-task mean paired differences, bootstrapped over repetition blocks. "
+                  "Pooled estimate: equal-weight mean of observed task means, bootstrapped over tasks. "
+                  "10,000 resamples, seed 0, percentile 95% intervals; at least five resampling units required.",
+        "limitations": "Exploratory intervals, especially with five pairs or few tasks. Degenerate intervals do not "
+                       "establish equivalence or certainty. Missing/exception pairs are excluded and counted; partial "
+                       "coverage estimates describe the observed subset, not the complete plan. Pairing controls task "
+                       "and time block, not model randomness. Task bootstrap holds observed task means fixed; it is "
+                       "not a separate estimate of within-task run uncertainty. Selected tasks are not a random "
+                       "sample of Terminal-Bench. Model and tool calls are total workload counts, not identified "
+                       "recovery calls; inspect traces to attribute a call to hidden output. Output-token limits "
+                       "are normal budget stops: verifier rewards and completed-call telemetry remain in the "
+                       "analysis. Limit-hit rates use trials with a known marker; unknown outcomes are counted "
+                       "separately. Paired limit-hit differences are differences in 0/1 indicators. When enabled, server "
+                       "phase totals require valid samples for every model call. They are server wall times, not "
+                       "GPU kernel timings. KV occupancy is the maximum during-call sample across calls and engines, "
+                       "not a capacity-weighted fraction or a continuous peak, and excludes tool and idle time.",
+        "attempted": len(rows), "planned": len(plan), "comparisons": results,
+        "condition_summaries": conditions,
+        "pooled_comparisons": pooled,
+    }
+    (Path(directory) / "paired_report.json").write_text(json.dumps(report, indent=2) + "\n")
+    print("\nExploratory intervals; inspect pair coverage and failures before interpreting savings.")
+
+
+def main(default_directory):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("directory", nargs="?", default=default_directory)
+    args = parser.parse_args()
+    summarize(args.directory)
+"""Collect vLLM phase times and cache samples around a model call.
+
+Metric definitions: https://docs.vllm.ai/en/latest/usage/metrics/
+"""
+
+from __future__ import annotations
+
+import asyncio
+from contextlib import suppress
+import math
+import re
+import time
+from urllib.parse import urlsplit
+
+import httpx
+
+
+COUNTERS = {
+    "prompt_tokens": ("vllm:prompt_tokens_total", "vllm:prompt_tokens"),
+    "generation_tokens": ("vllm:generation_tokens_total", "vllm:generation_tokens"),
+    "prefix_cache_queries_tokens": ("vllm:prefix_cache_queries_total", "vllm:prefix_cache_queries"),
+    "prefix_cache_hits_tokens": ("vllm:prefix_cache_hits_total", "vllm:prefix_cache_hits"),
+    "requests_finished": ("vllm:request_success_total", "vllm:request_success"),
+}
+HISTOGRAMS = {
+    "prefill": "vllm:request_prefill_time_seconds",
+    "decode": "vllm:request_decode_time_seconds",
+    "queue": "vllm:request_queue_time_seconds",
+    "time_to_first_token": "vllm:time_to_first_token_seconds",
+    "end_to_end": "vllm:e2e_request_latency_seconds",
+}
+GAUGES = {
+    "kv_cache_usage_fraction": ("vllm:kv_cache_usage_perc",),
+    "requests_running": ("vllm:num_requests_running",),
+    "requests_waiting": ("vllm:num_requests_waiting",),
+}
+NAMES = {name for aliases in (*COUNTERS.values(), *GAUGES.values()) for name in aliases}
+NAMES.update(name + suffix for name in HISTOGRAMS.values() for suffix in ("_count", "_sum", "_created"))
+NAMES.update(name.removesuffix("_total") + "_created" for aliases in COUNTERS.values() for name in aliases)
+NAMES.add("process_start_time_seconds")
+SAMPLE = re.compile(r"^([a-zA-Z_:][a-zA-Z0-9_:]*)(?:\{(.*)\})?\s+([^\s]+)(?:\s+.*)?$")
+LABEL = re.compile(r'\s*([a-zA-Z_][a-zA-Z0-9_]*)="((?:[^"\\]|\\[\\"n])*)"\s*(?:,|$)')
+
+
+def parse_metrics(body: str, model_name: str | None = None) -> dict:
+    """Read the numeric Prometheus series used by this collector."""
+    metrics: dict = {}
+    for line in body.splitlines():
+        match = SAMPLE.fullmatch(line.strip())
+        if not match or match[1] not in NAMES:
+            continue
+        labels = {}
+        raw = match[2] or ""
+        cursor = 0
+        while cursor < len(raw):
+            label = LABEL.match(raw, cursor)
+            if not label or label[1] in labels:
+                raise ValueError("Invalid metric labels")
+            labels[label[1]] = re.sub(r'\\([\\"n])', lambda m: "\n" if m[1] == "n" else m[1], label[2])
+            cursor = label.end()
+        if model_name is not None and match[1] != "process_start_time_seconds":
+            if labels.get("model_name") != model_name:
+                continue
+        try:
+            value = float(match[3])
+        except ValueError:
+            continue
+        if not math.isfinite(value):
+            continue
+        key = tuple(sorted(labels.items()))
+        series = metrics.setdefault(match[1], {})
+        if key in series:
+            raise ValueError("Duplicate metric series")
+        series[key] = value
+    return metrics
+
+
+def _delta(snapshots: list[dict], aliases: tuple[str, ...]) -> dict:
+    name = next((name for name in aliases if name in snapshots[0]), None)
+    if name is None or any(name not in sample for sample in snapshots):
+        return {"value": None, "status": "missing"}
+    series = [sample[name] for sample in snapshots]
+    if any(values.keys() != series[0].keys() for values in series):
+        return {"value": None, "status": "series_changed"}
+    created = name.removesuffix("_total").removesuffix("_sum").removesuffix("_count") + "_created"
+    creation_times = [sample.get(created) for sample in snapshots]
+    if any(value != creation_times[0] for value in creation_times[1:]):
+        return {"value": None, "status": "counter_reset"}
+    for before, after in zip(series, series[1:]):
+        if any(after[key] < before[key] for key in before):
+            return {"value": None, "status": "counter_reset"}
+    return {"value": sum(series[-1][key] - value for key, value in series[0].items()), "status": "ok"}
+
+
+def _gauge(snapshot: dict | None, aliases: tuple[str, ...], maximum: bool = False) -> float | None:
+    if snapshot is None:
+        return None
+    values = next((snapshot[name].values() for name in aliases if snapshot.get(name)), None)
+    if values is None:
+        return None
+    # Engine capacities are unknown, so adding their cache fractions is meaningless.
+    return max(values) if maximum else sum(values)
+
+
+class ServerMetricsWindow:
+    """Wrap one awaited inference call; read ``result`` after the context exits.
+
+    Attribution needs a dedicated server idle at both boundaries. Only the
+    supplied URL is queried. Reports omit request bodies, keys, URLs, label
+    values, and raw exceptions to keep credentials out of saved traces.
+    """
+
+    def __init__(self, url: str | None, *, model_name: str | None = None,
+                 sample_interval: float = 0.1, timeout: float = 2.0,
+                 transport: httpx.AsyncBaseTransport | None = None):
+        if not math.isfinite(sample_interval) or not math.isfinite(timeout) or sample_interval <= 0 or timeout <= 0:
+            raise ValueError("Sampling interval and timeout must be positive")
+        self.url = url
+        self.model_name = model_name
+        self.sample_interval = sample_interval
+        self.timeout = timeout
+        self.transport = transport
+        self.result: dict = {"status": "disabled" if url is None else "not_started"}
+        self._samples: list[dict] = []
+        self._errors: list[str] = []
+        self._client = None
+        self._task = None
+
+    async def _scrape(self, phase: str) -> dict | None:
+        try:
+            response = await self._client.get(self.url)
+            response.raise_for_status()
+            metrics = parse_metrics(response.text, self.model_name)
+        except (httpx.HTTPError, httpx.InvalidURL, ValueError) as error:
+            # HTTP exception strings can contain credentials from a URL.
+            self._errors.append(type(error).__name__)
+            return None
+        self._samples.append({"phase": phase, "at": time.perf_counter(), "metrics": metrics})
+        return metrics
+
+    async def _sample_loop(self):
+        while True:
+            await asyncio.sleep(self.sample_interval)
+            await self._scrape("during")
+
+    async def __aenter__(self):
+        if self.url is None:
+            return self
+        try:
+            parsed = urlsplit(self.url)
+        except ValueError:
+            self.result = {"status": "unavailable", "errors": ["InvalidMetricsURL"]}
+            return self
+        if parsed.scheme not in {"http", "https"} or not parsed.hostname or parsed.username or parsed.password:
+            self.result = {"status": "unavailable", "errors": ["InvalidMetricsURL"]}
+            return self
+        self._client = httpx.AsyncClient(timeout=self.timeout, follow_redirects=False,
+                                        trust_env=False, transport=self.transport)
+        try:
+            self._before = await self._scrape("before")
+        except BaseException:
+            await self._client.aclose()
+            raise
+        self._task = asyncio.create_task(self._sample_loop())
+        return self
+
+    async def __aexit__(self, exc_type, exc, traceback):
+        if self._client is None:
+            return False
+        self._task.cancel()
+        with suppress(asyncio.CancelledError):
+            await self._task
+        try:
+            self._after = await self._scrape("after")
+            self.result = self._report()
+        finally:
+            await self._client.aclose()
+        return False
+
+    def _report(self) -> dict:
+        snapshots = [sample["metrics"] for sample in self._samples]
+        boundaries_valid = self._before is not None and self._after is not None
+        restarted = bool(snapshots) and any(
+            sample.get("process_start_time_seconds") != snapshots[0].get("process_start_time_seconds")
+            for sample in snapshots[1:]
+        )
+
+        def delta(aliases):
+            if not boundaries_valid:
+                return {"value": None, "status": "scrape_failed"}
+            if restarted:
+                return {"value": None, "status": "server_restarted"}
+            return _delta(snapshots, aliases)
+
+        counters = {key: {
+            **delta(names), "unit": "requests" if key == "requests_finished" else "tokens",
+            "metric": next((name for name in names if self._before is not None and name in self._before), None),
+        } for key, names in COUNTERS.items()}
+        histograms = {}
+        for key, name in HISTOGRAMS.items():
+            count, total = delta((name + "_count",)), delta((name + "_sum",))
+            valid = count["status"] == total["status"] == "ok"
+            histograms[key] = {
+                "metric": name,
+                "count": count["value"] if valid else None,
+                "sum_seconds": total["value"] if valid else None,
+                "mean_seconds": total["value"] / count["value"] if valid and count["value"] > 0 else None,
+                "status": "ok" if valid else next(item["status"] for item in (count, total) if item["status"] != "ok"),
+            }
+        gauges = {}
+        during = [sample for sample in self._samples if sample["phase"] == "during"]
+        for key, names in GAUGES.items():
+            maximum = key == "kv_cache_usage_fraction"
+            values = [_gauge(sample["metrics"], names, maximum) for sample in during]
+            values = [value for value in values if value is not None]
+            gauges[key] = {
+                "metric": names[0], "unit": "fraction" if maximum else "requests",
+                "before": _gauge(self._before, names, maximum),
+                "after": _gauge(self._after, names, maximum),
+                "during_sample_count": len(values),
+                "during_sampled_max": max(values) if values else None,
+            }
+
+        warnings = ["Server-wide metrics require a dedicated idle server; sampling cannot rule out other traffic.",
+                    "Server phase times are wall times, not GPU kernel times. Sampled occupancy can miss the peak."]
+        busy = any(
+            gauges[key][boundary] is not None and gauges[key][boundary] > 0
+            for key in ("requests_running", "requests_waiting") for boundary in ("before", "after")
+        )
+        concurrent = any(
+            sum(_gauge(sample["metrics"], GAUGES[key]) or 0 for key in ("requests_running", "requests_waiting")) > 1
+            for sample in during
+        )
+        finished = counters["requests_finished"]["value"]
+        if busy or concurrent or (finished is not None and finished > 1):
+            warnings.append("Other or unfinished requests were observed; do not attribute these deltas to one call.")
+        if finished != 1:
+            warnings.append("Exactly one completion was not observed. Metrics may be missing or published after the final scrape.")
+        idle_unknown = any(value["before"] is None or value["after"] is None for key, value in gauges.items() if key != "kv_cache_usage_fraction")
+        if idle_unknown:
+            warnings.append("Idle server boundaries could not be checked because request gauges were missing.")
+        available = any(item["value"] is not None for item in counters.values()) or any(
+            item["sum_seconds"] is not None for item in histograms.values()
+        ) or any(item["before"] is not None or item["during_sample_count"] for item in gauges.values())
+        complete = all(item["status"] == "ok" for item in (*counters.values(), *histograms.values()))
+        status = "ok" if complete and not self._errors else "partial" if available else "unavailable"
+        return {
+            "status": status, "scope": "server_window", "sample_interval_seconds": self.sample_interval,
+            "successful_scrapes": len(self._samples), "failed_scrapes": len(self._errors),
+            "errors": sorted(set(self._errors)), "server_restarted": restarted,
+            "counter_deltas": counters, "histograms": histograms, "gauges": gauges,
+            "attribution_warning": busy or concurrent or idle_unknown or finished != 1,
+            "warnings": warnings,
+        }
+import os
+from pathlib import Path
+import unittest
+from unittest.mock import patch
+
+from output_policy import Settings, retain_output
+
+
+class OutputPolicyTests(unittest.TestCase):
+    def test_boundary_no_truncation(self):
+        for policy in ("head", "head_tail"):
+            for text in ("", "a", "abcde"):
+                result, meta = retain_output(text, 5, policy)
+                self.assertEqual(result, text)
+                self.assertFalse(meta["truncated"])
+
+    def test_head_tail_retains_budget_without_overlap(self):
+        text = "0123456789é"
+        for limit in (1, 2, 3, 10):
+            result, meta = retain_output(text, limit, "head_tail")
+            self.assertTrue(meta["truncated"])
+            self.assertEqual(meta["retained_output_chars"], limit)
+            self.assertEqual(meta["original_output_bytes"], 12)
+            self.assertTrue(result.startswith(text[:(limit + 1) // 2]))
+            if limit > 1:
+                self.assertTrue(result.endswith(text[-(limit // 2):]))
+
+    def test_settings_are_read_per_instance_and_validate(self):
+        with patch.dict(os.environ, {"MAX_TOOL_OUTPUT": "7", "OUTPUT_POLICY": "head_tail"}):
+            first = Settings.from_env()
+        with patch.dict(os.environ, {"MAX_TOOL_OUTPUT": "11", "OUTPUT_POLICY": "head"}):
+            second = Settings.from_env()
+        self.assertEqual(first.max_tool_output, 7)
+        self.assertEqual(second.max_tool_output, 11)
+        for kwargs in ({"max_turns": 0}, {"max_tool_output": -1}, {"tool_timeout": 0},
+                       {"output_policy": "unknown"}, {"model_api": "unknown"},
+                       {"max_output_tokens": 0}, {"metrics_sample_interval": float("nan")},
+                       {"metrics_sample_interval": 0}):
+            with self.assertRaises(ValueError):
+                Settings(**kwargs)
+
+    def test_inference_settings_do_not_store_credentials(self):
+        with patch.dict(os.environ, {"MODEL_API": "chat", "MAX_OUTPUT_TOKENS": "4096",
+                                     "OPENAI_API_KEY": "private-test-value",
+                                     "VLLM_METRICS_URL": "http://localhost:8000/metrics"}):
+            settings = Settings.from_env()
+        self.assertEqual(settings.model_api, "chat")
+        self.assertEqual(settings.max_output_tokens, 4096)
+        self.assertEqual(settings.server_metrics_url, "http://localhost:8000/metrics")
+        self.assertNotIn("private-test-value", repr(settings))
+
+    def test_verifier_uses_the_same_pristine_suite(self):
+        task = Path(__file__).resolve().parents[1] / "evals" / "noisy-bugfix"
+        self.assertEqual((task / "tests/test_pricing.py").read_bytes(),
+                         (task / "environment/data/test_pricing.py").read_bytes())
+
+
+if __name__ == "__main__":
+    unittest.main()
+from collections import Counter
+from contextlib import redirect_stdout
+import io
+import json
+import os
+from pathlib import Path
+import tempfile
+from types import SimpleNamespace
+import unittest
+from unittest.mock import patch
+
+import run_experiments as runner
+from reporting import analyze_trace, paired_estimate, paired_results, summarize
+from run_experiments import build_plan, REAL_TASKS, CONDITIONS
+
+
+class ExperimentDesignTests(unittest.TestCase):
+    def test_plan_is_reproducible_complete_and_interleaved(self):
+        plan = build_plan(REAL_TASKS)
+        self.assertEqual(len(plan), 150)
+        self.assertEqual(plan, build_plan(REAL_TASKS))
+        self.assertNotEqual(plan, build_plan(REAL_TASKS, seed=1))
+        self.assertEqual(len({row["run_id"] for row in plan}), 150)
+        counts = Counter((p["task"], p["condition"]) for p in plan)
+        self.assertTrue(all(n == 5 for n in counts.values()))
+        for offset in range(0, len(plan), 3):
+            block = plan[offset:offset + 3]
+            self.assertEqual(len({(p["task"], p["repeat"]) for p in block}), 1)
+            self.assertEqual({p["condition"] for p in block}, set(CONDITIONS))
+        for task in REAL_TASKS:
+            orders = {tuple(p["condition"] for p in plan if p["task"] == task and p["repeat"] == r)
+                      for r in range(1, 6)}
+            self.assertEqual(len(orders), 5)
+
+    def test_pairing_keeps_failures_and_reports_missing_pairs(self):
+        plan = build_plan(["task"])
+        rows = [{**p, "input_tokens": 100 if p["condition"] == "head_20k" else 60,
+                 "reward": 0, "task_checksum": "same", "telemetry_complete": True,
+                 "exception_type": None} for p in plan]
+        result = next(r for r in paired_results(rows, plan) if r["baseline"] == "head_20k"
+                      and r["candidate"] == "head_2k" and r["metric"] == "input_tokens")
+        self.assertEqual(result["mean_delta"], -40)
+        self.assertEqual(result["pairs"], 5)
+        self.assertEqual(result["ci95"], [-40, -40])
+        damaged = next(r for r in rows if r["condition"] == "head_2k")
+        for field, value in (("exception_type", "Timeout"), ("telemetry_complete", False),
+                             ("input_tokens", None), ("task_checksum", "changed")):
+            before = damaged[field]
+            damaged[field] = value
+            result = next(r for r in paired_results(rows, plan) if r["baseline"] == "head_20k"
+                          and r["candidate"] == "head_2k" and r["metric"] == "input_tokens")
+            self.assertEqual(result["pairs"], 4)
+            self.assertEqual(result["planned_pairs"], 5)
+            self.assertIsNone(result["ci95"])
+            damaged[field] = before
+
+    def test_bootstrap_and_duplicate_block_checks(self):
+        estimate = paired_estimate([-3, -1, 0, 2, 7])
+        self.assertEqual(estimate["mean_delta"], 1)
+        self.assertLess(estimate["ci95"][0], 1)
+        self.assertGreater(estimate["ci95"][1], 1)
+        self.assertIsNone(paired_estimate([1])["ci95"])
+        plan = build_plan(["task"], repeats=1)
+        with self.assertRaisesRegex(ValueError, "Duplicate condition"):
+            paired_results([plan[0], plan[0]], plan)
+
+    def test_old_traces_have_unknown_truncation_and_plan_is_not_results(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            trace = root / "trace.jsonl"
+            trace.write_text(json.dumps({"type": "tool", "output_bytes": 100}) + "\n")
+            self.assertIsNone(analyze_trace(trace)["truncated_calls"])
+            (root / "manifest.json").write_text(json.dumps({"schema_version": 2,
+                "state": "planned", "runs": [], "plan": build_plan(["task"])}))
+            with redirect_stdout(io.StringIO()) as out:
+                summarize(root)
+            self.assertIn("Attempted 0/15", out.getvalue())
+            report = json.loads((root / "paired_report.json").read_text())
+            self.assertTrue(all(r["pairs"] == 0 for r in report["comparisons"]))
+
+    def test_runner_records_three_conditions_and_stops_on_bad_oracle(self):
+        for oracle_reward in (0, 1):
+            with self.subTest(oracle_reward=oracle_reward), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                for name in ("reedcode_harbor_agent.py", "output_policy.py", "run_experiments.py",
+                             "reporting.py", "model_backend.py", "server_metrics.py", "uv.lock"):
+                    (root / name).write_text("test source")
+                source = root / "evals/noisy-bugfix"
+                source.mkdir(parents=True)
+                (source / "task.toml").write_text('version = "1.0"\n')
+                output = root / "output"
+                model_conditions = []
+
+                def fake_harbor(command, **kwargs):
+                    oracle = command[command.index("--agent") + 1] == "oracle"
+                    job = root / "jobs" / command[command.index("--job-name") + 1]
+                    trial = job / "trial"
+                    trial.mkdir(parents=True)
+                    (trial / "result.json").write_text(json.dumps({
+                        "task_checksum": "fixed-task", "verifier_result": {
+                            "rewards": {"reward": oracle_reward if oracle else 0}},
+                    }))
+                    if not oracle:
+                        env = kwargs["env"]
+                        model_conditions.append((int(env["MAX_TOOL_OUTPUT"]), env["OUTPUT_POLICY"]))
+                        events = [
+                            {"type": "inference", "input_tokens": 10, "cached_input_tokens": 2,
+                             "output_tokens": 1, "latency_ms": 5},
+                            {"type": "task_summary", "stop_reason": "no_tool_calls"},
+                        ]
+                        (trial / "reedcode_trace.jsonl").write_text(
+                            "\n".join(json.dumps(e) for e in events) + "\n")
+                    return SimpleNamespace(returncode=0)
+
+                argv = ["runner", "synthetic", "--repeats", "1", "--output", str(output)]
+                with patch.object(runner, "ROOT", root), patch("sys.argv", argv), \
+                     patch.dict(os.environ, {"OPENAI_API_KEY": "unused-test-placeholder"}), \
+                     patch.object(runner.shutil, "which", return_value="harbor"), \
+                     patch.object(runner.subprocess, "run", side_effect=fake_harbor), \
+                     redirect_stdout(io.StringIO()):
+                    status = runner.main()
+                manifest = json.loads((output / "manifest.json").read_text())
+                if oracle_reward:
+                    self.assertEqual(status, 0)
+                    self.assertEqual(set(model_conditions), set(CONDITIONS.values()))
+                    self.assertEqual(len(manifest["runs"]), 3)
+                    self.assertTrue(all(r["reward"] == 0 for r in manifest["runs"]))
+                    self.assertEqual(manifest["state"], "finished")
+                    self.assertTrue((output / "paired_report.json").exists())
+                else:
+                    self.assertEqual(status, 1)
+                    self.assertEqual(model_conditions, [])
+                    self.assertEqual(manifest["runs"], [])
+                    self.assertEqual(manifest["state"], "preflight_failed")
+
+
+if __name__ == "__main__":
+    unittest.main()

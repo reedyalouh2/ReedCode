@@ -1,0 +1,83 @@
+{
+  "recorded_unix": 1790661783.842449,
+  "budget_usd": 5,
+  "stop_new_requests_utc": "2026-09-29T07:27:25Z",
+  "delete_by_utc": "2026-09-29T07:37:25Z",
+  "authorized_changes": [
+    {
+      "change": "Readiness deadline waived to prioritize real parity sessions",
+      "authority": "User instructed not to let the readiness cutoff take out parity sessions",
+      "limits_unchanged": [
+        "total budget",
+        "130-minute request cutoff",
+        "140-minute deletion"
+      ]
+    },
+    {
+      "change": "Clean parity start established by explicit cached_tokens=0 on first real request",
+      "authority": "User approved substitution if reset-log trace remained unavailable",
+      "scope": "parity only; reset ACK, raw KV clear, canary and identity retained"
+    },
+    {
+      "change": "NVIDIA recommended frontend flags applied before measured parity",
+      "authority": "User requested --enable-anthropic-api --strip-anthropic-preamble --enable-streaming-tool-dispatch plus worker parsers",
+      "supported_in_stock_1_5_0": true
+    },
+    {
+      "change": "Conditional Claude-only YaRN retry",
+      "authority": "User requested on this turn",
+      "condition": "At least40 minutes remain before07:27:25UTC after the prefill comparison",
+      "configuration": "Stock parity frontend, documented Qwen3 YaRN64K or131K; unchanged original harness protocol",
+      "otherwise": "Export and delete, then propose a short Claude-only follow-up",
+      "decision_deadline_utc": "2026-09-29T06:47:25Z"
+    }
+  ],
+  "operational_changes": [
+    {
+      "change": "DYN_TCP_RPC_PORT=0 for frontend",
+      "reason": "Fixed-port registration failed with TCP RPC port not initialized; stock supported dynamic-port configuration registers successfully",
+      "binary_patch": false
+    },
+    {
+      "change": "Continue same Claude session after client API errors",
+      "reason": "Original controller aborted after first-turn HTTP400; standalone continuation sent both scheduled follow-ups, retained first error and original 15-call/25-minute caps",
+      "script": "/tmp/reedcode-resume-claude-followups.py",
+      "sha256": "7e57e4c9bf9a4124c106899dd73c20e78307871a5b1c2600df0980b40c44cc3e"
+    },
+    {
+      "change": "Explicit same-host backend address in passive decoder",
+      "address": "172.24.0.2",
+      "reason": "RPC traffic captured on lo uses the container eth0 address; decoder remains restricted to equal source/destination and observed study ports",
+      "network_identity_evidence": "network-identity.json",
+      "decoder_sha256": "4af584f669e697810965131de69aa85bc81c5b11fc8f443258620c8b8ed080f6"
+    },
+    {
+      "change": "Repin identity sidecar after switch launcher exit, before any measured trial",
+      "reason": "Backend parent changed to PID1; backend/enginePIDs,startticks,tree membership,engine parent links,bootID and socketinodes remain checked",
+      "serving_code_changed": false,
+      "original_identity_preserved": true
+    }
+  ],
+  "order": "Claude smoke, recommended frontend restart, Claude full and scheduled continuation, fresh backend, Codex smoke, Codex full, prefill if time remains",
+  "claude_original_outcome": {
+    "session_id": "ee70f63b-4924-4051-bdd3-71b5bae3490e",
+    "admitted_requests": 7,
+    "http_200": 4,
+    "http_400": 3,
+    "followups_attempted": 2,
+    "valid_cross_turn_backend_requests": 0,
+    "reason": "input plus requested output exceeds 32768"
+  },
+  "upstream_actions": "none",
+  "prefill_attempt_1": {
+    "epoch": "00748a31eacf496691698fb49d22e684",
+    "actual_generated_tool_smokes": "stock and fixed passed capture checks",
+    "stock_prefix_tokens": 18,
+    "stock_warmup_tokens": 65,
+    "fixed_prefix_tokens": 220,
+    "fixed_warmup_tokens": 220,
+    "completed_controlled_trials": 0,
+    "failure": "Identity sidecar returns503 after the backend launcher parent exits; backend PID/start_ticks and engine identity remained unchanged in saved snapshots",
+    "preserve_raw": true
+  }
+}

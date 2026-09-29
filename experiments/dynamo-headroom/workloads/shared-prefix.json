@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "kind": "synthetic_cost_model",
+  "description": "One revealed prefix is shared; cancelling one workflow leaves it available to the other.",
+  "cache_blocks": 12,
+  "speculative_block_budget": 32,
+  "speculative_chunk_blocks": 2,
+  "prefill_block_ms": 2,
+  "horizon_ms": 100,
+  "workflows": [
+    {
+      "id": "cancelled-owner",
+      "arrival_ms": 0,
+      "turns": [
+        {
+          "prompt_blocks": [
+            "shared",
+            "initial-a"
+          ],
+          "generated_blocks": [
+            "call-a"
+          ],
+          "decode_ms": 2,
+          "wait_ms": 0
+        },
+        {
+          "prompt_blocks": [
+            "shared",
+            "prepared",
+            "tool-a"
+          ],
+          "generated_blocks": [],
+          "decode_ms": 2,
+          "wait_ms": 40,
+          "intent": [
+            "shared",
+            "prepared"
+          ],
+          "updates": [
+            {
+              "at_ms": 20,
+              "cancel": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "consumer",
+      "arrival_ms": 0,
+      "turns": [
+        {
+          "prompt_blocks": [
+            "shared",
+            "initial-b"
+          ],
+          "generated_blocks": [
+            "call-b"
+          ],
+          "decode_ms": 2,
+          "wait_ms": 0
+        },
+        {
+          "prompt_blocks": [
+            "shared",
+            "prepared",
+            "tool-b"
+          ],
+          "generated_blocks": [],
+          "decode_ms": 2,
+          "wait_ms": 40,
+          "intent": [
+            "shared",
+            "prepared"
+          ]
+        }
+      ]
+    }
+  ]
+}

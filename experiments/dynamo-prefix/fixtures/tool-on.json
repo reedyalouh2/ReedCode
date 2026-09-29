@@ -1,0 +1,199 @@
+[
+  {
+    "session_id": "prefix-check-tool-on-876561371a894b4e885dffbcaf4d0f51",
+    "request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Run identifier: 1310f41001ee43489ec3f5690fef2854. Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value exactly once with value ready. Do not answer in prose."
+        }
+      ],
+      "temperature": 0,
+      "max_completion_tokens": 128,
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "Record a short string.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "response": {
+      "id": "chatcmpl-59fd1e70-5c6a-48a3-9642-a2305cb37fee",
+      "choices": [
+        {
+          "finish_reason": "tool_calls",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "content": null,
+            "refusal": null,
+            "role": "assistant",
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [
+              {
+                "id": "call-be1ad8f3-d43c-41e0-8f8d-a4e37d338845",
+                "function": {
+                  "arguments": "{\"value\": \"ready\"}",
+                  "name": "record_value"
+                },
+                "type": "function"
+              }
+            ]
+          }
+        }
+      ],
+      "created": 0,
+      "model": "Qwen/Qwen3-8B",
+      "object": "chat.completion",
+      "moderation": null,
+      "service_tier": null,
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 20,
+        "prompt_tokens": 202,
+        "total_tokens": 222,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 0
+        }
+      }
+    },
+    "timing": {
+      "first_output_ms": 419.979750062339,
+      "stream_ms": 421.1732919793576,
+      "chunks": 3
+    }
+  },
+  {
+    "session_id": "prefix-check-tool-on-876561371a894b4e885dffbcaf4d0f51",
+    "request": {
+      "model": "Qwen/Qwen3-8B",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Run identifier: 1310f41001ee43489ec3f5690fef2854. Follow the user instruction."
+        },
+        {
+          "role": "user",
+          "content": "Call record_value exactly once with value ready. Do not answer in prose."
+        },
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call-be1ad8f3-d43c-41e0-8f8d-a4e37d338845",
+              "function": {
+                "arguments": "{\"value\": \"ready\"}",
+                "name": "record_value"
+              },
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call-be1ad8f3-d43c-41e0-8f8d-a4e37d338845",
+          "content": "Recorded successfully. Now reply with exactly done."
+        }
+      ],
+      "temperature": 0,
+      "max_completion_tokens": 128,
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "record_value",
+            "description": "Record a short string.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "response": {
+      "id": "chatcmpl-d5a3f0ff-0cdf-407a-ae67-207807687e79",
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "content": "done",
+            "refusal": null,
+            "role": "assistant",
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": null
+          }
+        }
+      ],
+      "created": 0,
+      "model": "Qwen/Qwen3-8B",
+      "object": "chat.completion",
+      "moderation": null,
+      "service_tier": null,
+      "system_fingerprint": null,
+      "usage": {
+        "completion_tokens": 2,
+        "prompt_tokens": 244,
+        "total_tokens": 246,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 192
+        }
+      }
+    },
+    "timing": {
+      "first_output_ms": 209.86237504985183,
+      "stream_ms": 210.43233305681497,
+      "chunks": 3
+    }
+  }
+]

@@ -1,0 +1,653 @@
+{
+  "schema_version": 1,
+  "evidence": "constructed_template_mechanism_probe",
+  "real_agent_sessions": 0,
+  "model_calls": 0,
+  "gpu_measurements": false,
+  "model": "Qwen/Qwen3-8B",
+  "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+  "template_sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+  "source_sha256": {
+    "user_boundary.py": "a59f2df8a1fe7dea97a60b7c7aad4fa63f1fdde10b8263b7917df9477b52aa7c",
+    "audit.py": "47a47d7c6c19e14e46b7dc91bbba364afa71ddb6f77aaf702ad76c3d2b56c0b0"
+  },
+  "limits": [
+    "All reasoning, tool output, and assistant replies are authored fixtures.",
+    "The four user instructions were never executed or graded.",
+    "Inputs use the pinned template; no thinking-on server fingerprints were collected.",
+    "Lost prior blocks include removed reasoning; they do not measure work the next request must repeat.",
+    "Next-input suffix counts include new material; neither token count predicts GPU time.",
+    "ReedCode has no compaction path; this probe introduces none.",
+    "Frequency, shared-cache residency, quality, and concurrency effects remain unmeasured."
+  ],
+  "cases": [
+    {
+      "synthetic_reasoning_words_per_user_turn": 0,
+      "synthetic_tool_lines_per_user_turn": 16,
+      "fixture_sha256": "965cff7aff3a6ccdb6064f7bdda1a450f1b15b3f81fc9c897c75932dbb2ae7f9",
+      "boundaries": [
+        {
+          "user_boundary": 1,
+          "cause": "append_only",
+          "prior_input_tokens": 378,
+          "following_input_tokens": 402,
+          "common_prefix_tokens": 378,
+          "common_complete_block_tokens": 368,
+          "prior_complete_block_tokens_past_divergence": 0,
+          "following_tokens_past_shared_blocks": 34,
+          "old_reasoning_marker_present": false,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [],
+          "first_differing_new_ids": [
+            18930,
+            2033,
+            13,
+            2308,
+            2038,
+            572,
+            15695,
+            13
+          ],
+          "old_window": "",
+          "new_window": "Fixture response. No code was executed."
+        },
+        {
+          "user_boundary": 2,
+          "cause": "append_only",
+          "prior_input_tokens": 623,
+          "following_input_tokens": 648,
+          "common_prefix_tokens": 623,
+          "common_complete_block_tokens": 608,
+          "prior_complete_block_tokens_past_divergence": 0,
+          "following_tokens_past_shared_blocks": 40,
+          "old_reasoning_marker_present": false,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [],
+          "first_differing_new_ids": [
+            18930,
+            2033,
+            13,
+            2308,
+            2038,
+            572,
+            15695,
+            13
+          ],
+          "old_window": "",
+          "new_window": "Fixture response. No code was executed."
+        },
+        {
+          "user_boundary": 3,
+          "cause": "append_only",
+          "prior_input_tokens": 869,
+          "following_input_tokens": 895,
+          "common_prefix_tokens": 869,
+          "common_complete_block_tokens": 864,
+          "prior_complete_block_tokens_past_divergence": 0,
+          "following_tokens_past_shared_blocks": 31,
+          "old_reasoning_marker_present": false,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [],
+          "first_differing_new_ids": [
+            18930,
+            2033,
+            13,
+            2308,
+            2038,
+            572,
+            15695,
+            13
+          ],
+          "old_window": "",
+          "new_window": "Fixture response. No code was executed."
+        }
+      ]
+    },
+    {
+      "synthetic_reasoning_words_per_user_turn": 1,
+      "synthetic_tool_lines_per_user_turn": 16,
+      "fixture_sha256": "218ff7be323197deed9cc48cd00141f95f07394f207bf0f7f416768cd164151a",
+      "boundaries": [
+        {
+          "user_boundary": 1,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 385,
+          "following_input_tokens": 402,
+          "common_prefix_tokens": 157,
+          "common_complete_block_tokens": 144,
+          "prior_complete_block_tokens_past_divergence": 240,
+          "following_tokens_past_shared_blocks": 258,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            715,
+            151668,
+            271,
+            40
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic \n</think>\n\nI",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        },
+        {
+          "user_boundary": 2,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 630,
+          "following_input_tokens": 648,
+          "common_prefix_tokens": 402,
+          "common_complete_block_tokens": 400,
+          "prior_complete_block_tokens_past_divergence": 224,
+          "following_tokens_past_shared_blocks": 248,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            715,
+            151668,
+            271,
+            40
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic \n</think>\n\nI",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        },
+        {
+          "user_boundary": 3,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 876,
+          "following_input_tokens": 895,
+          "common_prefix_tokens": 648,
+          "common_complete_block_tokens": 640,
+          "prior_complete_block_tokens_past_divergence": 224,
+          "following_tokens_past_shared_blocks": 255,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            715,
+            151668,
+            271,
+            40
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic \n</think>\n\nI",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        }
+      ]
+    },
+    {
+      "synthetic_reasoning_words_per_user_turn": 256,
+      "synthetic_tool_lines_per_user_turn": 16,
+      "fixture_sha256": "ea40090b6f98302aec1df20921b9a838cf28348e2134f36a1597bb53323bedf3",
+      "boundaries": [
+        {
+          "user_boundary": 1,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 640,
+          "following_input_tokens": 402,
+          "common_prefix_tokens": 157,
+          "common_complete_block_tokens": 144,
+          "prior_complete_block_tokens_past_divergence": 496,
+          "following_tokens_past_shared_blocks": 258,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            27268,
+            27268,
+            27268,
+            27268
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic synthetic synthetic synthetic synthetic",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        },
+        {
+          "user_boundary": 2,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 885,
+          "following_input_tokens": 648,
+          "common_prefix_tokens": 402,
+          "common_complete_block_tokens": 400,
+          "prior_complete_block_tokens_past_divergence": 480,
+          "following_tokens_past_shared_blocks": 248,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            27268,
+            27268,
+            27268,
+            27268
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic synthetic synthetic synthetic synthetic",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        },
+        {
+          "user_boundary": 3,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 1131,
+          "following_input_tokens": 895,
+          "common_prefix_tokens": 648,
+          "common_complete_block_tokens": 640,
+          "prior_complete_block_tokens_past_divergence": 480,
+          "following_tokens_past_shared_blocks": 255,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            27268,
+            27268,
+            27268,
+            27268
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic synthetic synthetic synthetic synthetic",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        }
+      ]
+    },
+    {
+      "synthetic_reasoning_words_per_user_turn": 2048,
+      "synthetic_tool_lines_per_user_turn": 16,
+      "fixture_sha256": "e1b465b740a3078815200c3569282c6362b784ec227b275ba79a7439e6b9e3cf",
+      "boundaries": [
+        {
+          "user_boundary": 1,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 2432,
+          "following_input_tokens": 402,
+          "common_prefix_tokens": 157,
+          "common_complete_block_tokens": 144,
+          "prior_complete_block_tokens_past_divergence": 2288,
+          "following_tokens_past_shared_blocks": 258,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            27268,
+            27268,
+            27268,
+            27268
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic synthetic synthetic synthetic synthetic",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        },
+        {
+          "user_boundary": 2,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 2677,
+          "following_input_tokens": 648,
+          "common_prefix_tokens": 402,
+          "common_complete_block_tokens": 400,
+          "prior_complete_block_tokens_past_divergence": 2272,
+          "following_tokens_past_shared_blocks": 248,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            27268,
+            27268,
+            27268,
+            27268
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic synthetic synthetic synthetic synthetic",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        },
+        {
+          "user_boundary": 3,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 2923,
+          "following_input_tokens": 895,
+          "common_prefix_tokens": 648,
+          "common_complete_block_tokens": 640,
+          "prior_complete_block_tokens_past_divergence": 2272,
+          "following_tokens_past_shared_blocks": 255,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            27268,
+            27268,
+            27268,
+            27268
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic synthetic synthetic synthetic synthetic",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        }
+      ]
+    },
+    {
+      "synthetic_reasoning_words_per_user_turn": 1,
+      "synthetic_tool_lines_per_user_turn": 512,
+      "fixture_sha256": "10e6a4b474f1014baf70495a512dc5bfa46b25569aba206503a5c265c4ecf1b9",
+      "boundaries": [
+        {
+          "user_boundary": 1,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 6749,
+          "following_input_tokens": 6766,
+          "common_prefix_tokens": 157,
+          "common_complete_block_tokens": 144,
+          "prior_complete_block_tokens_past_divergence": 6592,
+          "following_tokens_past_shared_blocks": 6622,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            715,
+            151668,
+            271,
+            40
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic \n</think>\n\nI",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        },
+        {
+          "user_boundary": 2,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 13358,
+          "following_input_tokens": 13376,
+          "common_prefix_tokens": 6766,
+          "common_complete_block_tokens": 6752,
+          "prior_complete_block_tokens_past_divergence": 6592,
+          "following_tokens_past_shared_blocks": 6624,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            715,
+            151668,
+            271,
+            40
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic \n</think>\n\nI",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        },
+        {
+          "user_boundary": 3,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 19968,
+          "following_input_tokens": 19987,
+          "common_prefix_tokens": 13376,
+          "common_complete_block_tokens": 13376,
+          "prior_complete_block_tokens_past_divergence": 6592,
+          "following_tokens_past_shared_blocks": 6611,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            715,
+            151668,
+            271,
+            40
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic \n</think>\n\nI",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        }
+      ]
+    },
+    {
+      "synthetic_reasoning_words_per_user_turn": 2048,
+      "synthetic_tool_lines_per_user_turn": 512,
+      "fixture_sha256": "a7f35d1b565f83f243d83db18aaae9b29e894162bffbf9aa4262716c2389c268",
+      "boundaries": [
+        {
+          "user_boundary": 1,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 8796,
+          "following_input_tokens": 6766,
+          "common_prefix_tokens": 157,
+          "common_complete_block_tokens": 144,
+          "prior_complete_block_tokens_past_divergence": 8640,
+          "following_tokens_past_shared_blocks": 6622,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            27268,
+            27268,
+            27268,
+            27268
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic synthetic synthetic synthetic synthetic",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        },
+        {
+          "user_boundary": 2,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 15405,
+          "following_input_tokens": 13376,
+          "common_prefix_tokens": 6766,
+          "common_complete_block_tokens": 6752,
+          "prior_complete_block_tokens_past_divergence": 8640,
+          "following_tokens_past_shared_blocks": 6624,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            27268,
+            27268,
+            27268,
+            27268
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic synthetic synthetic synthetic synthetic",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        },
+        {
+          "user_boundary": 3,
+          "cause": "template_history_rewrite",
+          "prior_input_tokens": 22015,
+          "following_input_tokens": 19987,
+          "common_prefix_tokens": 13376,
+          "common_complete_block_tokens": 13376,
+          "prior_complete_block_tokens_past_divergence": 8624,
+          "following_tokens_past_shared_blocks": 6611,
+          "old_reasoning_marker_present": true,
+          "following_reasoning_marker_present": false,
+          "first_differing_old_ids": [
+            151667,
+            198,
+            20339,
+            17556,
+            27268,
+            27268,
+            27268,
+            27268
+          ],
+          "first_differing_new_ids": [
+            40,
+            686,
+            24085,
+            279,
+            1034,
+            624,
+            151657,
+            198
+          ],
+          "old_window": "<think>\nsynthetic synthetic synthetic synthetic synthetic",
+          "new_window": "I will inspect the file.\n<tool_call>\n"
+        }
+      ]
+    }
+  ]
+}

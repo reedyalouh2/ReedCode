@@ -1,0 +1,16 @@
+{
+  "image": "ttl.sh/reedcode-dynamo-92cfdea446c94719b36df5db02cc8189@sha256:0a0741342e709bbfa6689e688c8306090af4a65d0f366ec38ec0269d63c201c6",
+  "image_id": "sha256:0a0741342e709bbfa6689e688c8306090af4a65d0f366ec38ec0269d63c201c6",
+  "docker_reported_image_size_bytes": 32491414475,
+  "expected_manifest_digest": "sha256:0a0741342e709bbfa6689e688c8306090af4a65d0f366ec38ec0269d63c201c6",
+  "image_config_and_rootfs_verified": true,
+  "image_config_user": "0",
+  "runtime_user_override": null,
+  "elapsed_seconds": 17.158213138580322,
+  "exit_code": 0,
+  "evidence_copy_exit_code": 0,
+  "setup_helper_sha256": "22139e30a1bb0549e713e40eb40e3e2be88e2e73fc9a7bb16fa24aaaef0502f0",
+  "cpu_only": true,
+  "host_mounts": false,
+  "container_removed": true
+}

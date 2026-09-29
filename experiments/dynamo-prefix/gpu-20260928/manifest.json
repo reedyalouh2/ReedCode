@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "experiment": "explicit_prefix_cache_probe",
+  "attempts": [
+    {
+      "name": "initial",
+      "probe": "probe.json",
+      "metrics": "metrics.json",
+      "note": "Normal collector shutdown interrupted an identity bracket. Cache assertions passed; server metrics invalid."
+    },
+    {
+      "name": "verified",
+      "probe": "probe-verified.json",
+      "metrics": "metrics-verified.json",
+      "note": "Fresh prefixes after graceful sampler shutdown fix. All cache assertions and epoch boundaries passed."
+    }
+  ],
+  "source_note": "Copied collector source is the final version used by the verified attempt. The initial attempt used the cancellation-at-shutdown version.",
+  "sha256": {
+    "audit.py": "75c83f84e0f89ec481bdc14238e7dfd15c136c4835edf43548c8f9dc16c7a761",
+    "deployment.json": "61056ea27c052d724bd1eaa06bbfe273ca9925f645257689a3375ef574768705",
+    "dynamo_metrics.py": "a605236ddbb4e144739967b5b0ccf5d54bf4455a56c0c766a868b682b93352a3",
+    "final-metrics.prom": "163a738ca98b257513b75157c720301967a7f2d009db922e11920f15741626c9",
+    "metrics-verified.json": "9c8ff5120bfcd3fb2c0b4882b86c01133e674f86230508e4b976e9929fc93478",
+    "metrics.json": "a23b0f55bea7e6f5771e884965a4f1b02ca4ca771534c61dde42c68d56e8315a",
+    "metrics_identity.py": "75cd067c1149b3dee4f1f1d815c7e5df3ac567a306fc0698af1f4b0cc05fa5c8",
+    "model-snapshots.txt": "881adc7f9f2454310cea1d071879517780b87b1c45ed2921cc98464b63f11e25",
+    "probe-verified.json": "db95832cbd534c497bc9521db9f85eb1c116f75ad1e4c9ce6721740f13db9e72",
+    "probe.json": "bc88e200d35fdb7af6aa32bd0c14662fe3ed5b12ce7dd5ebcf5703b1f3cebb91",
+    "probe_gpu.py": "dd767c2b2c508b87ce74a27d810066492b5790b3905c39f0fbebf9c13a152d81",
+    "processes-after.json": "3eab40d006ade4bdc08024a0c5ec05b31e4edce662ea3695650070a63cc9eede",
+    "processes.json": "3eab40d006ade4bdc08024a0c5ec05b31e4edce662ea3695650070a63cc9eede",
+    "run_probe.py": "c9ad4816fc2e6bdf9559c5acc302ca4e691a7ca6cd5108a4cd03ebd110beadda",
+    "run_probe_verified.py": "96f96b6d72bd7be17c5184f146c5d5ddcdba8848188dd98d6c01b623f4352fb1",
+    "server-records.tar.gz": "603edc7afd9a6e9e5ed15d929312c921c6d605a97ddf1312729706ee0c520284",
+    "billing.json": "158cc9c624b9c349c2501a5cfb8895098c9839fc73ec014bfeb951639b4d3e41"
+  }
+}

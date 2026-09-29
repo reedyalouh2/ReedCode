@@ -1,0 +1,67 @@
+[
+  {
+    "name": "claude-32k",
+    "client": "claude",
+    "configuration": {
+      "context_limit": 32768,
+      "rope_scaling": null,
+      "thinking": true
+    },
+    "segments": [
+      "claude-32k-original",
+      "claude-32k-continuation"
+    ],
+    "worker_id": "465616373221327427",
+    "epoch": "1506f4ecedb54ba29a5d0502405d0cf5",
+    "pod_directory": "parity",
+    "identity_file": "parity/processes-at-stop.json",
+    "frontend_logs": [
+      "parity/image-1506f4ecedb54ba29a5d0502405d0cf5.log",
+      "parity/image-180c517e3dbf438bb78805b4123ecdc1.log",
+      "parity/image-14af7e573647461c8b9378c97a2613dc.log",
+      "parity/image-f35860a24a8a42fb9b529b4d9911428e.log"
+    ]
+  },
+  {
+    "name": "codex-32k",
+    "client": "codex",
+    "configuration": {
+      "context_limit": 32768,
+      "rope_scaling": null,
+      "thinking": true
+    },
+    "segments": [
+      "codex-32k"
+    ],
+    "worker_id": "9424057673726694015",
+    "epoch": "1661b2352f704c199e748877d3a38a46",
+    "pod_directory": "parity/epochs/1661b2352f704c199e748877d3a38a46",
+    "identity_file": "parity/epochs/1661b2352f704c199e748877d3a38a46/backend-process-tree.json",
+    "frontend_logs": [
+      "parity/epochs/1661b2352f704c199e748877d3a38a46/frontend.log"
+    ]
+  },
+  {
+    "name": "claude-yarn-64k",
+    "client": "claude",
+    "configuration": {
+      "context_limit": 65536,
+      "rope_scaling": {
+        "rope_type": "yarn",
+        "factor": 2.0,
+        "original_max_position_embeddings": 32768
+      },
+      "thinking": true
+    },
+    "segments": [
+      "claude-yarn-64k"
+    ],
+    "worker_id": "17494075999525123974",
+    "epoch": "8fbb1b335a3847f1bd0f366f6e0d89a6",
+    "pod_directory": "parity/epochs/8fbb1b335a3847f1bd0f366f6e0d89a6",
+    "identity_file": "parity/epochs/8fbb1b335a3847f1bd0f366f6e0d89a6/backend-process-tree.json",
+    "frontend_logs": [
+      "parity/epochs/8fbb1b335a3847f1bd0f366f6e0d89a6/frontend.log"
+    ]
+  }
+]

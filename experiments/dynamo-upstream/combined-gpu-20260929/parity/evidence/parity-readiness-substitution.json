@@ -1,0 +1,13 @@
+{
+  "status": "user_authorized_parity_continuation",
+  "at_unix": 1790660900.662101,
+  "approval": "User authorized replacing reset-log trace with first request cached_tokens=0 and instructed not to let readiness cutoff terminate parity sessions.",
+  "clean_start_requirement": "Check first real request cached_tokens=0; preserve any failed or unknown result.",
+  "prefill_readiness": "not_yet_verified",
+  "unchanged_limits": {
+    "total_budget_usd": 5,
+    "stop_new_requests_minutes": 130,
+    "delete_minutes": 140
+  },
+  "sequence": "Claude Code parity, Codex parity, then prefill if time remains"
+}

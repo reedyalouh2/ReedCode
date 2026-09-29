@@ -1,0 +1,26 @@
+{
+  "status": "uploading_final_layer_in_chunks",
+  "updated_unix": 1790656869.5155258,
+  "gpu_allocated": false,
+  "cpu_transfer_helper_allocated": false,
+  "cpu_transfer_helper_approval": "pending",
+  "cpu_checks_passed": 127,
+  "parent_root_capture_check": "passed",
+  "published_derivative_cpu_check": "pending",
+  "bundle": "/tmp/reedcode-combined-retry-01.tar.gz",
+  "bundle_manifest_sha256": "fe7d3f0ddffca8e5aff6d1f85533330cdb14ddfa225a109c73909c7f9e90956c",
+  "original_total_budget_usd": 5,
+  "prior_gpu_attempt_reserve_usd": 0.17,
+  "source_transfer_logs": [
+    "/tmp/reedcode-image-copy.log",
+    "/tmp/reedcode-image-copy-fast.log"
+  ],
+  "layers_completed": 62,
+  "unique_layers": 63,
+  "final_layer_checkpoint": "/tmp/reedcode-final-layer-upload.json",
+  "final_layer_file": "/tmp/reedcode-final-layer.tar.gz",
+  "final_layer_committed_bytes": 605028352,
+  "uploader": "experiments/dynamo-upstream/gpu-readiness/upload_final_layer.py",
+  "monolithic_upload_error": "HTTP 502; failed upload session returned 404",
+  "monolithic_upload_running": false
+}

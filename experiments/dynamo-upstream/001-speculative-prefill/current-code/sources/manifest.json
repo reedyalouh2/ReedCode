@@ -1,0 +1,189 @@
+{
+  "fetched_at": "2026-09-28T22:23:13.928373+00:00",
+  "repository": "ai-dynamo/dynamo",
+  "release_tag": "v1.5.0",
+  "release_sha": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+  "main_sha": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+  "files": [
+    {
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "label": "release",
+      "repository_path": "lib/llm/src/preprocessor/speculative_prefill.rs",
+      "local_path": "release/speculative_prefill.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/llm/src/preprocessor/speculative_prefill.rs",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/lib/llm/src/preprocessor/speculative_prefill.rs?ref=b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "git_blob_sha": "d5027759f0d92beb67acd56564f8ca95fb3f3c46",
+      "bytes": 6918,
+      "sha256": "a8f4bebc8c3db3c7022f8a2a29c1d6f7499b7f944df1e6a91c7f033a3a12d794"
+    },
+    {
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "label": "release",
+      "repository_path": "Cargo.toml",
+      "local_path": "release/Cargo.toml",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/Cargo.toml",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/Cargo.toml?ref=b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "git_blob_sha": "2602f0b4a611f4bd913bb13d5b281b38182a103b",
+      "bytes": 7664,
+      "sha256": "173ae2fcd39e81372afd732173728938fa25c67ba0d9f4da4222d8b68e4bb75d"
+    },
+    {
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "label": "release",
+      "repository_path": "Cargo.lock",
+      "local_path": "release/Cargo.lock",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/Cargo.lock",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/Cargo.lock?ref=b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "git_blob_sha": "351821513b76b87bf217310e1ee52c7f46971a44",
+      "bytes": 276978,
+      "sha256": "efb72b6d9437d3998589e68b12dddbaf1f9c619039c852efe029d0f066696b75"
+    },
+    {
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "label": "release",
+      "repository_path": "lib/llm/Cargo.toml",
+      "local_path": "release/llm-Cargo.toml",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/llm/Cargo.toml",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/lib/llm/Cargo.toml?ref=b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "git_blob_sha": "623375c2355cce1aabf0b84438b1114df414218d",
+      "bytes": 8726,
+      "sha256": "0f642f5c5864bd6fa4844991001783930a687eb28039273adcd984c226004ea6"
+    },
+    {
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "label": "main",
+      "repository_path": "lib/llm/src/preprocessor/speculative_prefill.rs",
+      "local_path": "main/speculative_prefill.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/llm/src/preprocessor/speculative_prefill.rs",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/lib/llm/src/preprocessor/speculative_prefill.rs?ref=f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "git_blob_sha": "ded325493147f37b0c0f8ed0865b0951c53fbcaf",
+      "bytes": 51509,
+      "sha256": "d1ea24631f4d7c9e731615948bc9a128afdd70a4326bad87cf1569200b1535fb"
+    },
+    {
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "label": "main",
+      "repository_path": "Cargo.toml",
+      "local_path": "main/Cargo.toml",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/Cargo.toml",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/Cargo.toml?ref=f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "git_blob_sha": "88b6f8101f75280ddfcb57794c0fa30e1dae41cb",
+      "bytes": 8368,
+      "sha256": "d06666c9ba92e8987092e45b97ddb32ab22c94e152ca3e306578e4496e6abbf5"
+    },
+    {
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "label": "main",
+      "repository_path": "Cargo.lock",
+      "local_path": "main/Cargo.lock",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/Cargo.lock",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/Cargo.lock?ref=f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "git_blob_sha": "04956f1da750ab91cdc303b4d801e3b6a6088133",
+      "bytes": 284050,
+      "sha256": "216a8e5f8c399c36b35c380733b8b7dec0095756b3ee1c0f452b81b6728bb649"
+    },
+    {
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "label": "main",
+      "repository_path": "lib/llm/Cargo.toml",
+      "local_path": "main/llm-Cargo.toml",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/llm/Cargo.toml",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/lib/llm/Cargo.toml?ref=f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "git_blob_sha": "084ae6e9dadf556dae5f995d47baf37ffa77e659",
+      "bytes": 9067,
+      "sha256": "4853e1d120989081fb6c189e005cc11b4a33d7060c2aa31c0a9668fc42a144f1"
+    },
+    {
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "label": "release",
+      "repository_path": "docs/fern/pages/use-cases/agents/agent-hints.md",
+      "local_path": "release/agent-hints.md",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/docs/fern/pages/use-cases/agents/agent-hints.md",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/docs/fern/pages/use-cases/agents/agent-hints.md?ref=b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "git_blob_sha": "bbfd963f3acacb69667b655f8815957e10c63588",
+      "bytes": 2914,
+      "sha256": "43b5424b25f64c119100f1905b8f76960ad24f15b4f2fa587b9c5a190974e208"
+    },
+    {
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "label": "release",
+      "repository_path": "docs/fern/pages/blog/2026/agentic-inference-optimizations.mdx",
+      "local_path": "release/agentic-inference-optimizations.mdx",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/docs/fern/pages/blog/2026/agentic-inference-optimizations.mdx",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/docs/fern/pages/blog/2026/agentic-inference-optimizations.mdx?ref=b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "git_blob_sha": "1a320cefd14f6dd2386fb40778e9295dceadaad9",
+      "bytes": 23060,
+      "sha256": "9d2fa3890d1e9a5228c2e5413be59b1fb2bbeac3aef4c697b0643b1400ca07cb"
+    },
+    {
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "label": "release",
+      "repository_path": "docs/fern/pages/developer-guide/additional-resources/nvidia-request-extensions-nvext.md",
+      "local_path": "release/nvidia-request-extensions-nvext.md",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/docs/fern/pages/developer-guide/additional-resources/nvidia-request-extensions-nvext.md",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/docs/fern/pages/developer-guide/additional-resources/nvidia-request-extensions-nvext.md?ref=b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "git_blob_sha": "28ef0272733b56a7bbb6b6da4bf0efe39bdd117f",
+      "bytes": 16130,
+      "sha256": "b7ac0ba6ab83adc3c720e2fb724a3ec1f2e7bd86e2e3941a113236217cb8377a"
+    },
+    {
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "label": "main",
+      "repository_path": "docs/fern/pages/use-cases/agents/agent-hints.md",
+      "local_path": "main/agent-hints.md",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/docs/fern/pages/use-cases/agents/agent-hints.md",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/docs/fern/pages/use-cases/agents/agent-hints.md?ref=f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "git_blob_sha": "085705870bb221fbf52b4044c698f4a31cb62257",
+      "bytes": 3001,
+      "sha256": "5870cad335d252c88c8fac97b52b6ad3bff6f1746acc4dc6874e8f872d3f4069"
+    },
+    {
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "label": "main",
+      "repository_path": "docs/fern/pages/blog/2026/agentic-inference-optimizations.mdx",
+      "local_path": "main/agentic-inference-optimizations.mdx",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/docs/fern/pages/blog/2026/agentic-inference-optimizations.mdx",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/docs/fern/pages/blog/2026/agentic-inference-optimizations.mdx?ref=f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "git_blob_sha": "1a320cefd14f6dd2386fb40778e9295dceadaad9",
+      "bytes": 23060,
+      "sha256": "9d2fa3890d1e9a5228c2e5413be59b1fb2bbeac3aef4c697b0643b1400ca07cb"
+    },
+    {
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "label": "main",
+      "repository_path": "docs/fern/pages/developer-guide/additional-resources/nvidia-request-extensions-nvext.md",
+      "local_path": "main/nvidia-request-extensions-nvext.md",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/docs/fern/pages/developer-guide/additional-resources/nvidia-request-extensions-nvext.md",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/docs/fern/pages/developer-guide/additional-resources/nvidia-request-extensions-nvext.md?ref=f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "git_blob_sha": "fcd7a1bd4d24beaecdfbd0f0fe99418e28a04e30",
+      "bytes": 17186,
+      "sha256": "89ec87f72e644110bcd0b0b2f2f7c85a79ca03536129c8289655b5363b7308f7"
+    },
+    {
+      "revision": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "label": "release",
+      "repository_path": "lib/llm/src/preprocessor.rs",
+      "local_path": "release/preprocessor.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/b83b1d9304ebfc624709ac46db32b1b6f1ff1615/lib/llm/src/preprocessor.rs",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/lib/llm/src/preprocessor.rs?ref=b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+      "git_blob_sha": "6921185fb82840d8968beb5506ecdaf242cfe819",
+      "bytes": 475236,
+      "sha256": "c24e256b65cf3e3cde6b34acc771507c726105f81e1a741185eed4216b23d06f"
+    },
+    {
+      "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "label": "main",
+      "repository_path": "lib/llm/src/preprocessor.rs",
+      "local_path": "main/preprocessor.rs",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/f5d3353e2167bb0f0d729085eb5bc9183bf4b222/lib/llm/src/preprocessor.rs",
+      "api_url": "https://api.github.com/repos/ai-dynamo/dynamo/contents/lib/llm/src/preprocessor.rs?ref=f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+      "git_blob_sha": "ac7c9a69fbf13cb5742df08c97a8b55219dacd92",
+      "bytes": 527162,
+      "sha256": "ce2b5c8bb93886748d03931b5f7855f357faf937fa28c1be1cb28333bbe86e04"
+    }
+  ],
+  "metadata_sha256": "21129d60ff8816da5547faefcf0e82d12755591162cb66e6d1a5ea5f8bdbbd2b",
+  "docs_fetched_at": "2026-09-28T22:24:12.938034+00:00",
+  "dependency_pins_sha256": "bd73e613354647f886e2e4c1c2c5adfd9eb9791c26e7f6d51c370cc87e8524fe",
+  "preprocessor_fetched_at": "2026-09-28T22:24:29.320902+00:00"
+}

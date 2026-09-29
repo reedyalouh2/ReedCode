@@ -1,0 +1,1 @@
+Add regression tests for the tail policy: empty output, output exactly at the limit, a one-character limit, and multibyte Unicode. Check retained character and UTF-8 byte counts. Run the focused suite again. Preserve the changes from the previous turn.

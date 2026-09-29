@@ -1,0 +1,65 @@
+{
+  "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)\nbinary: rustc\ncommit-hash: 31fca3adb283cc9dfd56b49cdee9a96eb9c96ffd\ncommit-date: 2026-06-26\nhost: aarch64-apple-darwin\nrelease: 1.96.1\nLLVM version: 22.1.2\n",
+  "cargo": "cargo 1.96.1 (356927216 2026-06-26)",
+  "checkout": "/private/tmp/reedcode-dynamo-prefill-fix",
+  "renderer": "/private/tmp/reedcode-prefill-fix/renderer",
+  "environment": {
+    "RUSTC": "/tmp/reedcode-rustup/toolchains/1.96.1-aarch64-apple-darwin/bin/rustc",
+    "RUSTUP_HOME": "/tmp/reedcode-rustup",
+    "CARGO_HOME": "/tmp/reedcode-renderer-cargo",
+    "CARGO_TARGET_DIR": "/tmp/reedcode-dynamo-integration-target",
+    "CARGO_BUILD_JOBS": "2",
+    "PROTOC": "/tmp/reedcode-protoc-29.5/bin/protoc",
+    "SWAGGER_UI_DOWNLOAD_URL": "file:///tmp/reedcode-swagger-ui-v5.17.14.zip"
+  },
+  "gpu_used": false,
+  "commands": [
+    {
+      "argv": [
+        "/tmp/reedcode-rustup/toolchains/1.96.1-aarch64-apple-darwin/bin/cargo",
+        "check",
+        "--tests",
+        "--offline",
+        "--no-default-features",
+        "-p",
+        "dynamo-llm",
+        "--config",
+        "patch.crates-io.dynamo-renderer.path=\"/private/tmp/reedcode-prefill-fix/renderer\""
+      ],
+      "exit_code": 0,
+      "log": "integration-build.log",
+      "sha256": "9908d074d85df37bed441d916fad5aa86074badfe8feb4c031a958dcbf4de1b1"
+    },
+    {
+      "argv": [
+        "/tmp/reedcode-rustup/toolchains/1.96.1-aarch64-apple-darwin/bin/cargo",
+        "test",
+        "--lib",
+        "preprocessor::speculative_prefill",
+        "--offline",
+        "--no-default-features",
+        "-p",
+        "dynamo-llm",
+        "--config",
+        "patch.crates-io.dynamo-renderer.path=\"/private/tmp/reedcode-prefill-fix/renderer\""
+      ],
+      "exit_code": 0,
+      "log": "integration-tests.log",
+      "sha256": "293a9aa40400f1c2051941fb7e25b4ca63530fd362a4a8612b013da1ca90f124"
+    }
+  ],
+  "files": {
+    "dynamo/preprocessor.rs": "a8a26c3b553bd03987676cc71049c7388d2a33c2dcf29a9542ffb24087ca1f1e",
+    "dynamo/speculative_prefill.rs": "2fa51db73e8d43f0702dd5369083b086cbbb0241989c9f5fc08baf02e627e3dc",
+    "dynamo/accumulator.rs": "c8a7b09ff996ac86c5b6a40965867ec4205474905da514aea70bfe869d97908d",
+    "dynamo/contract.rs": "0606b7500b9fcb9176ec60b715f5b3f42bc0292864001a7d4f6b393f372f0397",
+    "dynamo.patch": "533ef5a467bc92674fa7170b954b34a295328856ca6251eeeda9bdb552bd3f39",
+    "renderer.patch": "f6bac08a4a8ba8b72b0c2a9b3db120e5f36f2b1c3af9ca4745e22fbf4bf93f78",
+    "integration_check.py": "4bba0e8789c30053847cb82794b7a085ce4c7086bbbf568551008198b4b102fc",
+    "adapt_lifecycle.py": "dd8d5a960eb30ee93651a0f4f2b6f9d321777add5fc0ed4480d72d9fe83f11f2"
+  },
+  "upstream_cargo_config_sha256": "3564e05693050c32ab682a5f0f2c21aef5347debef1344796f4897fe47d90c98",
+  "patched_lock_sha256": "515589d08d659bfda2bdabbf789f2032685298c74b534c903663497a5c6476be"
+}

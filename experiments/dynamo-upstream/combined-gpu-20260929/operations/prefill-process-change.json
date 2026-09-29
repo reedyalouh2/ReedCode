@@ -1,0 +1,81 @@
+{
+  "startup": [
+    {
+      "pid": 4695,
+      "parent_pid": 4679,
+      "start_ticks": 1065053478,
+      "comm": "python3",
+      "cmdline": [
+        "python3",
+        "-m",
+        "dynamo.vllm",
+        "--model",
+        "Qwen/Qwen3-8B",
+        "--revision",
+        "b968826d9c46dd6066d109eabc6255188de91218",
+        "--discovery-backend",
+        "file",
+        "--request-plane",
+        "tcp",
+        "--dtype",
+        "bfloat16",
+        "--kv-cache-dtype",
+        "auto",
+        "--tensor-parallel-size",
+        "1",
+        "--max-model-len",
+        "32768",
+        "--gpu-memory-utilization",
+        "0.80",
+        "--enable-prefix-caching",
+        "--block-size",
+        "16",
+        "--kv-events-config",
+        "{\"enable_kv_cache_events\":true,\"publisher\":\"zmq\",\"topic\":\"kv-events\",\"endpoint\":\"tcp://*:5557\"}",
+        "--dyn-tool-call-parser",
+        "hermes",
+        "--dyn-reasoning-parser",
+        "qwen3",
+        "--dyn-default-thinking-mode",
+        "disabled"
+      ]
+    },
+    {
+      "pid": 5104,
+      "parent_pid": 4695,
+      "start_ticks": 1065055277,
+      "comm": "python3",
+      "cmdline": [
+        "/usr/bin/python3",
+        "-c",
+        "from multiprocessing.resource_tracker import main;main(64)"
+      ]
+    },
+    {
+      "pid": 5105,
+      "parent_pid": 4695,
+      "start_ticks": 1065055278,
+      "comm": "VLLM::EngineCor",
+      "cmdline": [
+        "VLLM::EngineCore"
+      ]
+    }
+  ],
+  "at_stop": [
+    {
+      "pid": 4695,
+      "parent_pid": 1,
+      "start_ticks": 1065053478
+    },
+    {
+      "pid": 5104,
+      "parent_pid": 4695,
+      "start_ticks": 1065055277
+    },
+    {
+      "pid": 5105,
+      "parent_pid": 4695,
+      "start_ticks": 1065055278
+    }
+  ]
+}

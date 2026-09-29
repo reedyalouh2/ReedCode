@@ -1,0 +1,194 @@
+nvcr.io/nvidia/ai-dynamo/vllm-runtime@sha256:d18389c89eb319401fdd73f1fbbaff10d9382f634b879941dfba75bbf7260c1e: Pulling from nvidia/ai-dynamo/vllm-runtime
+c567a87f21d2: Pulling fs layer
+3839330dd334: Pulling fs layer
+de239a20edaa: Pulling fs layer
+08903cef568c: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+526d5438c009: Pulling fs layer
+f5a5ccb1c8c8: Pulling fs layer
+124def62380d: Pulling fs layer
+4e984f274174: Pulling fs layer
+c283ba79b6fe: Pulling fs layer
+02d3d86cc73d: Pulling fs layer
+bc4f85d7f832: Pulling fs layer
+befd997f2310: Pulling fs layer
+870df5e96c69: Pulling fs layer
+039f741cc8ff: Pulling fs layer
+0860838787bd: Pulling fs layer
+548eb7f2b11c: Pulling fs layer
+46b428c4247d: Pulling fs layer
+d94fdbcc4fd7: Pulling fs layer
+6520570a921f: Pulling fs layer
+c0053fe8f36c: Pulling fs layer
+479d06c1256e: Pulling fs layer
+4bd14bb3fec0: Pulling fs layer
+f8eaebbd12f7: Pulling fs layer
+e3ebc8df0f7e: Pulling fs layer
+c5a5a249e142: Pulling fs layer
+0e4d8d9c1401: Pulling fs layer
+2268e4a7e43c: Pulling fs layer
+3839330dd334: Pulling fs layer
+8e3d66a18924: Pulling fs layer
+43dcca1a2e21: Pulling fs layer
+903e3a5386ad: Pulling fs layer
+70f87b6ed43e: Pulling fs layer
+fac18222e21a: Pulling fs layer
+36de89ed84a2: Pulling fs layer
+ec78d3e2d460: Pulling fs layer
+0b3b5bd92824: Pulling fs layer
+8686bf52ccb2: Pulling fs layer
+451bd1df2472: Pulling fs layer
+50d211c6b90f: Pulling fs layer
+72db1a423964: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+a4e56eda59b2: Pulling fs layer
+24dc519cd476: Pulling fs layer
+371bdb69ee8c: Pulling fs layer
+d46ec5def492: Pulling fs layer
+1c08ecc224c6: Pulling fs layer
+2c9631175f07: Pulling fs layer
+77e01caa209c: Pulling fs layer
+05df35caae47: Pulling fs layer
+bd0ff3c4ac51: Pulling fs layer
+6e25f86864e3: Pulling fs layer
+f35c2144f85e: Pulling fs layer
+152026e39df3: Pulling fs layer
+d64956c42c68: Pulling fs layer
+de9e54e589c6: Pulling fs layer
+d3aca8a871d5: Pulling fs layer
+0a5d4a4895d4: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+4e287adbcb0a: Pulling fs layer
+aa9754132e31: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+b299ab37a1d8: Pulling fs layer
+8fc125d30d84: Pulling fs layer
+da704d2c56b0: Pulling fs layer
+008bde7520d6: Pulling fs layer
+4f4fb700ef54: Already exists
+124def62380d: Download complete
+008bde7520d6: Download complete
+08903cef568c: Download complete
+3839330dd334: Download complete
+4bd14bb3fec0: Download complete
+8686bf52ccb2: Download complete
+451bd1df2472: Download complete
+4e984f274174: Download complete
+f5a5ccb1c8c8: Download complete
+36de89ed84a2: Download complete
+c567a87f21d2: Download complete
+479d06c1256e: Download complete
+72db1a423964: Download complete
+c567a87f21d2: Pull complete
+50d211c6b90f: Download complete
+c283ba79b6fe: Download complete
+0b3b5bd92824: Download complete
+e3ebc8df0f7e: Download complete
+f8eaebbd12f7: Download complete
+a4e56eda59b2: Download complete
+c5a5a249e142: Download complete
+befd997f2310: Download complete
+0b3b5bd92824: Pull complete
+bc4f85d7f832: Download complete
+0e4d8d9c1401: Download complete
+371bdb69ee8c: Download complete
+d94fdbcc4fd7: Download complete
+24dc519cd476: Download complete
+2268e4a7e43c: Download complete
+d46ec5def492: Download complete
+43dcca1a2e21: Download complete
+02d3d86cc73d: Download complete
+039f741cc8ff: Download complete
+1c08ecc224c6: Download complete
+870df5e96c69: Download complete
+2c9631175f07: Download complete
+70f87b6ed43e: Download complete
+de239a20edaa: Download complete
+903e3a5386ad: Download complete
+70f87b6ed43e: Pull complete
+77e01caa209c: Download complete
+526d5438c009: Download complete
+548eb7f2b11c: Download complete
+05df35caae47: Download complete
+526d5438c009: Pull complete
+fac18222e21a: Download complete
+bd0ff3c4ac51: Download complete
+46b428c4247d: Download complete
+ec78d3e2d460: Download complete
+a4e56eda59b2: Pull complete
+ec78d3e2d460: Pull complete
+6e25f86864e3: Download complete
+6520570a921f: Download complete
+4e287adbcb0a: Download complete
+c0053fe8f36c: Download complete
+aa9754132e31: Download complete
+f35c2144f85e: Download complete
+de9e54e589c6: Download complete
+d3aca8a871d5: Download complete
+d64956c42c68: Download complete
+152026e39df3: Download complete
+b299ab37a1d8: Download complete
+0a5d4a4895d4: Download complete
+de9e54e589c6: Pull complete
+8e3d66a18924: Download complete
+da704d2c56b0: Download complete
+8e3d66a18924: Pull complete
+f8eaebbd12f7: Pull complete
+4bd14bb3fec0: Pull complete
+36de89ed84a2: Pull complete
+e3ebc8df0f7e: Pull complete
+fac18222e21a: Pull complete
+152026e39df3: Pull complete
+3839330dd334: Pull complete
+0860838787bd: Download complete
+8fc125d30d84: Download complete
+8fc125d30d84: Pull complete
+0860838787bd: Pull complete
+008bde7520d6: Pull complete
+24dc519cd476: Pull complete
+da704d2c56b0: Pull complete
+8686bf52ccb2: Pull complete
+aa9754132e31: Pull complete
+903e3a5386ad: Pull complete
+50d211c6b90f: Pull complete
+b299ab37a1d8: Pull complete
+c5a5a249e142: Pull complete
+43dcca1a2e21: Pull complete
+d3aca8a871d5: Pull complete
+1c08ecc224c6: Pull complete
+124def62380d: Pull complete
+c283ba79b6fe: Pull complete
+2268e4a7e43c: Pull complete
+bd0ff3c4ac51: Pull complete
+0e4d8d9c1401: Pull complete
+77e01caa209c: Pull complete
+72db1a423964: Pull complete
+de239a20edaa: Pull complete
+6e25f86864e3: Pull complete
+f5a5ccb1c8c8: Pull complete
+f35c2144f85e: Pull complete
+d64956c42c68: Pull complete
+039f741cc8ff: Pull complete
+46b428c4247d: Pull complete
+befd997f2310: Pull complete
+02d3d86cc73d: Pull complete
+6520570a921f: Pull complete
+c0053fe8f36c: Pull complete
+4f4fb700ef54: Pull complete
+548eb7f2b11c: Pull complete
+870df5e96c69: Pull complete
+0a5d4a4895d4: Pull complete
+4e287adbcb0a: Pull complete
+371bdb69ee8c: Pull complete
+d46ec5def492: Pull complete
+2c9631175f07: Pull complete
+08903cef568c: Pull complete
+479d06c1256e: Pull complete
+4e984f274174: Pull complete
+05df35caae47: Pull complete
+bc4f85d7f832: Pull complete
+d94fdbcc4fd7: Pull complete
+451bd1df2472: Pull complete
+Digest: sha256:d18389c89eb319401fdd73f1fbbaff10d9382f634b879941dfba75bbf7260c1e
+Status: Downloaded newer image for nvcr.io/nvidia/ai-dynamo/vllm-runtime@sha256:d18389c89eb319401fdd73f1fbbaff10d9382f634b879941dfba75bbf7260c1e
+nvcr.io/nvidia/ai-dynamo/vllm-runtime@sha256:d18389c89eb319401fdd73f1fbbaff10d9382f634b879941dfba75bbf7260c1e

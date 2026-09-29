@@ -1,0 +1,55 @@
+{
+  "client": "claude",
+  "exit_code": 143,
+  "timed_out": true,
+  "inference_requests": 5,
+  "paths": [
+    "/v1/messages?beta=true"
+  ],
+  "models": [
+    "Qwen/Qwen3-8B"
+  ],
+  "first_request_stream": true,
+  "first_request_tool_count": 22,
+  "first_request_thinking": {
+    "budget_tokens": 4096,
+    "type": "enabled"
+  },
+  "first_request_reasoning": null,
+  "first_request_max_tokens": 8192,
+  "thinking_echoed_on_tool_followup": false,
+  "tool_results_returned": 0,
+  "tool_result_contains_fixture": false,
+  "unexpected_credentials": false,
+  "request_bytes_match_upstream": true,
+  "received_final_answer": false,
+  "complete_captures": false,
+  "version": "2.1.81 (Claude Code)",
+  "executable": "/Users/mohamed/.local/share/claude/versions/2.1.81",
+  "executable_sha256": "d014162177fc18bfeb7f93d942130dd964f7424e4101f6ad569de66e6eddca03",
+  "command": [
+    "/Users/mohamed/.local/bin/claude",
+    "--print",
+    "--verbose",
+    "--output-format",
+    "stream-json",
+    "--include-partial-messages",
+    "--strict-mcp-config",
+    "--mcp-config",
+    "{\"mcpServers\":{}}",
+    "--setting-sources",
+    "",
+    "--settings",
+    "{\"alwaysThinkingEnabled\":true}",
+    "--allowedTools",
+    "Read",
+    "--no-chrome",
+    "Read fixture.txt using a normal file or shell tool, then briefly report its contents."
+  ],
+  "temporary_state": "/private/tmp/reedcode-parity-stub-claude-9mrowyjj",
+  "external_network_denied": true,
+  "personal_state_reads_denied": true,
+  "parent_home_variables_unchanged": true,
+  "stub_only": true,
+  "model_requests_made": 0
+}

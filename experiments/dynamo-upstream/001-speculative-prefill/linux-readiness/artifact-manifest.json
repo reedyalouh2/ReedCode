@@ -1,0 +1,31 @@
+{
+  "revision": "f5d3353e2167bb0f0d729085eb5bc9183bf4b222",
+  "artifact_root": "/tmp/reedcode-linux-readiness/artifacts",
+  "target": "x86_64-unknown-linux-gnu",
+  "profile": "release",
+  "python_abi": "cp310-abi3",
+  "wheels": {
+    "common": {
+      "path": "common/ai_dynamo-1.6.0-py3-none-any.whl",
+      "sha256": "84e0c881565a46ec3dab3f2ab12b193a40d305569b2883af24a4f66677dc898b",
+      "bytes": 3779879
+    },
+    "stock": {
+      "path": "stock/ai_dynamo_runtime-1.6.0-cp310-abi3-linux_x86_64.whl",
+      "sha256": "54ab219c358d3d29ca8508f531595e0bec3e4594a0127d08ecbe756e1381e82b",
+      "bytes": 66052228,
+      "core_path": "dynamo/_core.abi3.so",
+      "core_sha256": "63a61f7f48fa4eef1fa6c93a0676940c8bdef8e96f1f6554c01b7278850654fd"
+    },
+    "fixed": {
+      "path": "fixed/ai_dynamo_runtime-1.6.0-cp310-abi3-linux_x86_64.whl",
+      "sha256": "99f8b59d3dbfc0906701de89641efef247f51e35853623bbb9134d39ad998365",
+      "bytes": 66296033,
+      "core_path": "dynamo/_core.abi3.so",
+      "core_sha256": "b88460a5e570c7745a542af1c594e3154abf1110ee3402f7b15780e4cd5f5706"
+    }
+  },
+  "stock_fixed_normal_input_ids_equal": true,
+  "installed_warmup_checks_passed": true,
+  "gpu_used": false
+}

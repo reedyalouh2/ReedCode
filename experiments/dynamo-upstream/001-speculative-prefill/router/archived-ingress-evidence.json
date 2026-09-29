@@ -1,0 +1,49 @@
+{
+  "archive_sha256": "4a4650d97c06173e817e21657a651daa7d9d1be20441db92869fb42a584a1cb1",
+  "deployment_member": "setup/deployment.json",
+  "deployment_sha256": "ce79f74fc652857a54055badb807c8ced26d35f07de4a609c7608d6868ca980c",
+  "frontend_member": "server/frontend.log",
+  "frontend_sha256": "fcbde084ff254d1564029e00cbc8b3c8c9b137c7c12a305c45e784af1a8c23cb",
+  "ingress_records": [
+    {
+      "source_line_1based": 28,
+      "record": {
+        "time": "2026-09-28T09:48:01.333963Z",
+        "level": "INFO",
+        "file": "/opt/dynamo/lib/runtime/src/transports/event_plane/zmq_transport.rs",
+        "line": 385,
+        "target": "dynamo_runtime::transports::event_plane::zmq_transport",
+        "message": "ZMQ single-consumer stream connected",
+        "endpoint": "tcp://172.19.0.2:33601",
+        "rcvhwm": 1024,
+        "topic": "active_sequences_events"
+      }
+    },
+    {
+      "source_line_1based": 29,
+      "record": {
+        "time": "2026-09-28T09:48:01.334044Z",
+        "level": "INFO",
+        "file": "/opt/dynamo/lib/llm/src/kv_router/indexer/recovery/subscriber.rs",
+        "line": 532,
+        "target": "dynamo_llm::kv_router::indexer::recovery::subscriber",
+        "message": "Using direct-ZMQ KV event ingress on the application runtime"
+      }
+    },
+    {
+      "source_line_1based": 31,
+      "record": {
+        "time": "2026-09-28T09:48:01.334668Z",
+        "level": "INFO",
+        "file": "/opt/dynamo/lib/runtime/src/transports/event_plane/zmq_transport.rs",
+        "line": 385,
+        "target": "dynamo_runtime::transports::event_plane::zmq_transport",
+        "message": "ZMQ single-consumer stream connected",
+        "endpoint": "tcp://172.19.0.2:35525",
+        "rcvhwm": 100000,
+        "topic": "kv-events"
+      }
+    }
+  ],
+  "limitation": "No per-warmup KV Stored/Removed event dump or index snapshot was captured."
+}

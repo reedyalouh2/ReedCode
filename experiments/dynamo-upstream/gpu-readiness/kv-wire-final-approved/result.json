@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "gpu_used": false,
+  "model_inference": false,
+  "vllm_source_sha256": "1b3d156c647d94ba7bdaf065bfebdaef7bad9bffe9f0e7ebacea4a22a2da6ac9",
+  "archive_sha256": "c62c055c9e99101397dea3b92543b13cf028f342e8d2d161d4e8e916cdc7f8d3",
+  "msgspec_version": "0.21.1",
+  "pyzmq_version": "27.1.0",
+  "batches": 3,
+  "event_classes": "AST-extracted from pinned vLLM source",
+  "transport": "local XPUB/SUB with vLLM multipart layout",
+  "scope": "encoding and collection only; no engine or physical allocation"
+}

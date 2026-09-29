@@ -1,0 +1,309 @@
+{
+  "scope": "CPU gates complete. The replacement pod must still pass its own capture, live serving and reset checks within the rental readiness window.",
+  "gates": {
+    "linux_match": true,
+    "installed_warmup": true,
+    "real_clients": true,
+    "passive_capture": true,
+    "kv_collector": true,
+    "reset_replay": true,
+    "launch_packet": true
+  },
+  "artifacts": [
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/001-speculative-prefill/gpu-readiness/check.py",
+      "sha256": "85f420ae743d66283c2019502e3b9cb8efc81be578fb26c3f335f8d9fc8cd3b7"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/001-speculative-prefill/gpu-readiness/cpu-validation.json",
+      "sha256": "caaa61e6521b61c25ba003bf18f7b66d03dae1728886e2de6a220b3daaaa192c"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/001-speculative-prefill/gpu-readiness/live_hint_smoke.py",
+      "sha256": "175ee3dda2d63091db5afa6fb50e49bdb0dd1f527276986e4652bf9987c90753"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/001-speculative-prefill/gpu-readiness/phase_control.py",
+      "sha256": "467eb411737cb35df69f04e0fdd126c04e4505071b8e46d6bdd852f40d0054c6"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/001-speculative-prefill/gpu-readiness/test_readiness.py",
+      "sha256": "0102eb4d0cb276898d222e976574af1423cf0b3bb8e0b905843b34986881babf"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/001-speculative-prefill/linux-readiness/artifact-manifest.json",
+      "sha256": "1f6f29e28ca1f96854fe2a80a877dad82f104c493109ffb260cdd8ed85d9c3a7"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/001-speculative-prefill/linux-readiness/fresh_frontend.py",
+      "sha256": "51eb6a72c18caf9ca917d486f047cb5070d3cf3598ef05ee970b47e04a95edfa"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/001-speculative-prefill/linux-readiness/installed-runtime-evidence.tar.gz",
+      "sha256": "6f8f64bb897c2646b30f1f88e7693bd9f50b2d1ff0669828b1d9d72a8d988d7f"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/001-speculative-prefill/linux-readiness/installed-runtime-summary.json",
+      "sha256": "bccb14f5c6770834dd4b84663c240d0da463928e4b691cb4a7d644e3e886c0c2"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/create_once.py",
+      "sha256": "6abf2cf1ec33f63e09b10f5f84f3ff6ad48609fcef29d377eb19cb0db37a05f9"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/create_transfer.py",
+      "sha256": "d0415656e80a2136f88891a69a0127e68ea43738fdfc9cb1f82c43bf014db822"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/kv-wire-final-approved/result.json",
+      "sha256": "ac681b361d26add21f5dd4e18b0223d88c4b813d3d37ed9474fbd50b770d41ae"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/README.md",
+      "sha256": "ea9b19f21a62dce318ad4b2a58c822526a1473da54f4398009431ab556553683"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/config.json",
+      "sha256": "4581e23cd1b443bc88ee41539b50d82ddbda97b3357c084bea9d59b0fe2a625d"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/cpu-validation/container-check/result.json",
+      "sha256": "b82e4c49ad92961dac39b64d357c17b7831d0680a948d05bf71dd5952fe326c5"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/cpu-validation/cpu-run.json",
+      "sha256": "3dbda89f20623ecc189f68bb27a5392adac3c6d7614c8139e07d9426e2213570"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/cpu-validation/evidence-manifest.json",
+      "sha256": "97ab3cc47680f8c8b3a0620f94953e5836a0d1530cfdf8a0577e9ce9ff95f33d"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/container-check/apt-install.log",
+      "sha256": "2397523daca4ffd8cb90b671fc406717e748109f7b04bac0429526bbb0dece77"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/container-check/apt-update.log",
+      "sha256": "69bfb68007e806f37383906d65a5a0f4c3b1384a93d5c2602e6638e887b99712"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/container-check/base-packages-after.json",
+      "sha256": "77241baea40df4b46654d2361b4a3e28ed84360d2e5057bb8aab4e49679bb2c4"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/container-check/base-packages-before.json",
+      "sha256": "77241baea40df4b46654d2361b4a3e28ed84360d2e5057bb8aab4e49679bb2c4"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/container-check/capture-decoded.txt",
+      "sha256": "597bdbf9755f873334e21a22f8ec0c654d130e747de3b89aaf87a8e47ecf562e"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/container-check/capture-result.json",
+      "sha256": "48a8684f7cab9562ef1bab3c9433887e311e72fbaa436475abaca51a8731c4b6"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/container-check/capture.log",
+      "sha256": "3d2b7df000eef4dfde918acd243bbb34916b6af1aa01e561abba35483a53b4a7"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/container-check/capture.pcap",
+      "sha256": "14eb1b7fa13b9f37d0814183f7684679338bb6672593696cf2da88bf560aa4d8"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/container-check/identity.json",
+      "sha256": "a984177116cd52767a9b075b689e77324e2f5a21ef6fde22b5b23949e484b8fe"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/container-check/result.json",
+      "sha256": "b82e4c49ad92961dac39b64d357c17b7831d0680a948d05bf71dd5952fe326c5"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/container-check/tcpdump-version.txt",
+      "sha256": "4e5a2356a1fb3c231ebe2415624fffd7985dea275b8d73fd0be4d92940090a8b"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/cpu-check.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/cpu-check.stdout",
+      "sha256": "da9b16a11b19407211fd29298e965d924efac0646ae9795ab32e578938d64a71"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/cpu-run.json",
+      "sha256": "3e04a0a3db50181da8e7092c0c6cde6983b1157225143d3c66b7a910e8576328"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/evidence-manifest.json",
+      "sha256": "b3a61219287e0ec4164b88c6a05cc6151e6c1520b62000b7acde62eea499e138"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/image-inspect.json",
+      "sha256": "c238f7ca6c9044fade3e2ce15ce0d3521ca1f7d3ac1d38ce285798140f42015a"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/pull-status.json",
+      "sha256": "8278d6d4606d3414e77b08e57b234abea7feeaf2f32d106b3cd6ff01e386227b"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/pull.log",
+      "sha256": "fb79fc1a86098f49172bde5910c4945d5614f368e3f98b69510a7ca086c6e3d2"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/setup_pod.used.py",
+      "sha256": "22139e30a1bb0549e713e40eb40e3e2be88e2e73fc9a7bb16fa24aaaef0502f0"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/manifest.json",
+      "sha256": "0a0741342e709bbfa6689e688c8306090af4a65d0f366ec38ec0269d63c201c6"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/proof.json",
+      "sha256": "9e226e403bbab209dddc2b38379a49dfa2b82b7d533c852ee5cd86ebde63fd97"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/offline-tests/clients-approved.log",
+      "sha256": "5b64309fe421aab04360f3e2cbf391d8981c4eddb429fb8ff68d00b3b4aa075e"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/offline-tests/clients-final.log",
+      "sha256": "97867b523e68b852dfba01eb44645029d520264a1df8bb8097615dd28225fece"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/offline-tests/clients-verified.log",
+      "sha256": "b067d472f583009ab1d3660b2b875d42b6d72ade9baafe1273f57b38fe0a52fc"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/offline-tests/clients.log",
+      "sha256": "2809872e35031a00167bc12d01becbe4beae93b71ed5dfe1e06944870c6b3812"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/offline-tests/control.log",
+      "sha256": "77655e9038c2defd63e47c3db15534016d44c30b80eace603ef1596af8326602"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/offline-tests/decoder.log",
+      "sha256": "4fdd00c06f5cd18043a10796c6b111b8a2efca8f8f0782e9281b5e29939c40e7"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/offline-tests/hooks.log",
+      "sha256": "55e1b39434afe155207314b9504477a5d90e05d522165023d4cdd94461b90f09"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/offline-tests/phase.log",
+      "sha256": "cabff54a7dd3aa662838538d7472678c7cb7c3ac5bb09a4b8cd5f9ee302d797c"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/offline-tests/reports.log",
+      "sha256": "6bb724b230bd92cd97ac25e9b92f1825ad5b0c33d761491c037c52e9dcbce1e5"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/offline-tests/reset-live.log",
+      "sha256": "95cd4864efc99d2434ef0a186def4817390a48f9543bd9cfd042abfa08f35b66"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/publication.json",
+      "sha256": "8c7c1508f94c3b7022c9191deabf4a50ed74dd1a836def7314a0fbc7719d5652"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/publish_metadata.py",
+      "sha256": "20bec4afd67788eec7966c73566501c0a39f1a287907669d43141ee5d26a022b"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/run_cpu_check.py",
+      "sha256": "4ae84229464f22cee0a3d42a2fa0a074f4bb1374db7765e08f07cf8f287beef2"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/setup_pod.py",
+      "sha256": "22139e30a1bb0549e713e40eb40e3e2be88e2e73fc9a7bb16fa24aaaef0502f0"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/test_create_once.py",
+      "sha256": "1cb679612e319f69451ca846a7aed3ba0104b8eab4ccfce43eab63b3b01ae2da"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/gpu-readiness/test_create_transfer.py",
+      "sha256": "734f1ee94f16742e8649447966b005a300dfc1904358aba5978af3641ba15c9d"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/parity-run-1/join_wire.py",
+      "sha256": "c669b2be65481385c02a768fc23039dd613d33fa3d9faa5183e0e8e3c5ce08f1"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/parity-run-1/readiness/launch-packet.json",
+      "sha256": "4a985c7f244a930f34ed471cf58444418722fc7b4e6752de022011a2b3c4c1da"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/parity-run-1/readiness/launch_study.py",
+      "sha256": "96eb1d512a7ab9471c18dbab727fab211a60f31e56a26ab8f816efdfe3a7ab70"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/parity-run-1/readiness/manifest.json",
+      "sha256": "7d80fd266c2e66a77fd15b77d46fe464a05c05238de524782a5ec548336f7178"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/parity-run-1/readiness/reset_live.py",
+      "sha256": "29678c3556c0d52a243dcf18b299ed80ce1450756210f1ae9da04c5ec9c3ed18"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/parity-run-1/readiness/runner-summary.json",
+      "sha256": "690ba9babf8673dc961eabd31ef42cbf6027cca940fb7afbb4ea93ac653418a9"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/parity-run-1/readiness/test_launch_study.py",
+      "sha256": "059a58fc493745f5da46cf8846d2a4b7ef9ad94bc71073d78bdbe294299ae63e"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/parity-run-1/readiness/test_reset_live.py",
+      "sha256": "be453da2bc068b0be7b26ffac4f9c364e87990121a32b596a2ecc313ca7f8ad0"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/parity-run-1/test_join_wire.py",
+      "sha256": "00280ad1c592ee88798700dd08aa744955e08a889dd1cb261bab33c165ece9c3"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/parity-run-1/wire-capture/evidence.tar.gz",
+      "sha256": "0c3e7dbb64a6cc6558f890a45bb67de295466db7db4f571a659bec4b1c28219a"
+    },
+    {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/parity-run-1/wire-capture/results.json",
+      "sha256": "b84d772447ec5051c47025eb24b87784de2709ff2a48d288719f6f979e96b358"
+    }
+  ],
+  "updated_at": "2026-09-29T05:17:01.746076+00:00",
+  "retry_image_status": {
+    "parent_cpu_user0_passed": true,
+    "derived_image_published": true,
+    "published_derived_cpu_passed": true,
+    "image": "ttl.sh/reedcode-dynamo-92cfdea446c94719b36df5db02cc8189@sha256:0a0741342e709bbfa6689e688c8306090af4a65d0f366ec38ec0269d63c201c6",
+    "runtime_user_override": null
+  },
+  "pending": [],
+  "offline_test_results": {
+    "control": {
+      "passed": 39
+    },
+    "phase": {
+      "passed": 27
+    },
+    "hooks": {
+      "passed": 8
+    },
+    "reports": {
+      "passed": 21
+    },
+    "decoder": {
+      "passed": 12
+    },
+    "clients": {
+      "passed": 20
+    },
+    "distinct_checks_passed": 127,
+    "limits": "Client tests require normal local filesystem and socket access. These are CPU tests using scripted or mocked traffic; no provider or model requests."
+  },
+  "resolved_checks": [
+    "Pinned git archive and client suite pass with normal filesystem access; restricted-wrapper timeout logs retained.",
+    "Client suite uses the existing repository Python environment for httpx."
+  ]
+}

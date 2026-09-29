@@ -1,0 +1,1265 @@
+{
+  "schema_version": 1,
+  "evidence": "compiled_rust_formatter_constructed_fixture_comparison",
+  "renderer_version": "5.1.0",
+  "protocols_version": "5.4.0",
+  "dynamo_tokenizers_version": "1.8.0",
+  "binary_sha256": "41bf3ae496359240eebebb06ae771c48e9fb338ea4c70b67ffadc933930fd4af",
+  "cargo_lock_sha256": "88606f887e3b6a1b63a425087fd357010fc60d1fccc2866d910f929866fc1e9a",
+  "source_sha256": {
+    "Cargo.toml": "665362d618b4fa83ae165d753046e21b6d93bf8c15b1e6beab3e2605605ce417",
+    "src/main.rs": "c9392648f28f68b088b4d52d623d8d5d7de82069eb639f075b3188659a2065ea",
+    "compare.py": "86434560ab2cb6beea56105793c473a68866ad1de40f4b11383005e2f032c10a"
+  },
+  "gpu_measurements": false,
+  "model_calls": 0,
+  "constructed_cases": 44,
+  "text_matches": 40,
+  "rust_errors": 4,
+  "limits": [
+    "The Rust code calls the real pinned standalone formatter; no Dynamo server was launched.",
+    "Python reference uses each official template directly, without Dynamo's message normalization.",
+    "Nemotron reference arguments are mappings; the equivalent OpenAI wire request serializes them as JSON strings.",
+    "Both rendered strings are tokenized by the same pinned Python tokenizer; this does not test Rust tokenization.",
+    "Native formatter selection, model-default merging, multimodal processing, engine prefixes and cache reuse are untested.",
+    "Every message is an authored fixture. No generated model trajectory or performance measurement is implied."
+  ],
+  "cases": [
+    {
+      "id": "qwen3/plain-current",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "f1dbc9d6dc1389db3e3761661a893f8bbb5d37971ec50bbf2cca7b31629db1a8",
+      "reference_tokens": 27,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "f1dbc9d6dc1389db3e3761661a893f8bbb5d37971ec50bbf2cca7b31629db1a8",
+      "rust_tokens": 27,
+      "shared_prefix_tokens": 27,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nAnswer.<|im_end|>\n<|im_start|>assistant\n",
+      "reference_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nAnswer.<|im_end|>\n<|im_start|>assistant\n"
+    },
+    {
+      "id": "qwen3/plain-current-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "2e698a2e24a0f297662b309e61b791a70238370999a326da5b9fa514a3278842",
+      "reference_tokens": 31,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "2e698a2e24a0f297662b309e61b791a70238370999a326da5b9fa514a3278842",
+      "rust_tokens": 31,
+      "shared_prefix_tokens": 31,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nAnswer.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "reference_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nAnswer.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "id": "qwen3/plain-next-user",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "b0c155cea0b60866ee7d36dfd906204188c00dd1d4507e7668b783a3ce57339d",
+      "reference_tokens": 26,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "b0c155cea0b60866ee7d36dfd906204188c00dd1d4507e7668b783a3ce57339d",
+      "rust_tokens": 26,
+      "shared_prefix_tokens": 26,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\nAnswer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n",
+      "reference_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\nAnswer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n"
+    },
+    {
+      "id": "qwen3/plain-next-user-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "5e1ac0b8b3ff556115115d40ab6d82ca578ebde2b2ec5d3ab7636c5b92a619d2",
+      "reference_tokens": 30,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "5e1ac0b8b3ff556115115d40ab6d82ca578ebde2b2ec5d3ab7636c5b92a619d2",
+      "rust_tokens": 30,
+      "shared_prefix_tokens": 30,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\nAnswer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "reference_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\nAnswer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "id": "qwen3/separate-field-current",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "f1dbc9d6dc1389db3e3761661a893f8bbb5d37971ec50bbf2cca7b31629db1a8",
+      "reference_tokens": 27,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "f1dbc9d6dc1389db3e3761661a893f8bbb5d37971ec50bbf2cca7b31629db1a8",
+      "rust_tokens": 27,
+      "shared_prefix_tokens": 27,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nAnswer.<|im_end|>\n<|im_start|>assistant\n",
+      "reference_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nAnswer.<|im_end|>\n<|im_start|>assistant\n"
+    },
+    {
+      "id": "qwen3/separate-field-current-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "2e698a2e24a0f297662b309e61b791a70238370999a326da5b9fa514a3278842",
+      "reference_tokens": 31,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "2e698a2e24a0f297662b309e61b791a70238370999a326da5b9fa514a3278842",
+      "rust_tokens": 31,
+      "shared_prefix_tokens": 31,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nAnswer.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "reference_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nAnswer.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "id": "qwen3/separate-field-next-user",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "b0c155cea0b60866ee7d36dfd906204188c00dd1d4507e7668b783a3ce57339d",
+      "reference_tokens": 26,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "b0c155cea0b60866ee7d36dfd906204188c00dd1d4507e7668b783a3ce57339d",
+      "rust_tokens": 26,
+      "shared_prefix_tokens": 26,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\nAnswer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n",
+      "reference_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\nAnswer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n"
+    },
+    {
+      "id": "qwen3/separate-field-next-user-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "5e1ac0b8b3ff556115115d40ab6d82ca578ebde2b2ec5d3ab7636c5b92a619d2",
+      "reference_tokens": 30,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "5e1ac0b8b3ff556115115d40ab6d82ca578ebde2b2ec5d3ab7636c5b92a619d2",
+      "rust_tokens": 30,
+      "shared_prefix_tokens": 30,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\nAnswer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "reference_text": "<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\nAnswer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "id": "qwen3/tool-current",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "7d710b609e7f2370a2fc05d89051db69c6fea3f63f1a7036882699f268f6f438",
+      "reference_tokens": 60,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "7d710b609e7f2370a2fc05d89051db69c6fea3f63f1a7036882699f268f6f438",
+      "rust_tokens": 60,
+      "shared_prefix_tokens": 60,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>assistant\n",
+      "reference_text": "<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>assistant\n"
+    },
+    {
+      "id": "qwen3/tool-current-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "fe9784a420561d52c8ff283714548b903aeddb0ac3e15e466dcc669e25571f6d",
+      "reference_tokens": 64,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "fe9784a420561d52c8ff283714548b903aeddb0ac3e15e466dcc669e25571f6d",
+      "rust_tokens": 64,
+      "shared_prefix_tokens": 64,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "reference_text": "<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "id": "qwen3/tool-next-user",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "905cac858a0f292992fff64b1457187d87342afa6d37821ec13071c3f9bc9d87",
+      "reference_tokens": 59,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "905cac858a0f292992fff64b1457187d87342afa6d37821ec13071c3f9bc9d87",
+      "rust_tokens": 59,
+      "shared_prefix_tokens": 59,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n",
+      "reference_text": "<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n"
+    },
+    {
+      "id": "qwen3/tool-next-user-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "b26c6cf67e7d86199014c58825d0b578948ea454ebbd05947ebb4a9523d7f102",
+      "reference_tokens": 63,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "b26c6cf67e7d86199014c58825d0b578948ea454ebbd05947ebb4a9523d7f102",
+      "rust_tokens": 63,
+      "shared_prefix_tokens": 63,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "reference_text": "<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "id": "qwen3/tool-current-with-schema",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "7ae16deb5f27ea75feac546e8d8926b4ce71df792c123d0e9d9101c0f1878716",
+      "reference_tokens": 196,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "7ae16deb5f27ea75feac546e8d8926b4ce71df792c123d0e9d9101c0f1878716",
+      "rust_tokens": 196,
+      "shared_prefix_tokens": 196,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>system\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{\"type\": \"function\", \"function\": {\"name\": \"read_file\", \"description\": \"Read a file.\", \"parameters\": {\"type\": \"object\", \"properties\": {\"path\": {\"type\": \"string\"}}, \"required\": [\"path\"]}}}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>assistant\n",
+      "reference_text": "<|im_start|>system\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{\"type\": \"function\", \"function\": {\"name\": \"read_file\", \"description\": \"Read a file.\", \"parameters\": {\"type\": \"object\", \"properties\": {\"path\": {\"type\": \"string\"}}, \"required\": [\"path\"]}}}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>assistant\n"
+    },
+    {
+      "id": "qwen3/tool-current-with-schema-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "6a9eaf6c24a7477955c23295dbc134db41933c5b5e1f26eb0097b05fd599ba2c",
+      "reference_tokens": 200,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "6a9eaf6c24a7477955c23295dbc134db41933c5b5e1f26eb0097b05fd599ba2c",
+      "rust_tokens": 200,
+      "shared_prefix_tokens": 200,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>system\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{\"type\": \"function\", \"function\": {\"name\": \"read_file\", \"description\": \"Read a file.\", \"parameters\": {\"type\": \"object\", \"properties\": {\"path\": {\"type\": \"string\"}}, \"required\": [\"path\"]}}}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "reference_text": "<|im_start|>system\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{\"type\": \"function\", \"function\": {\"name\": \"read_file\", \"description\": \"Read a file.\", \"parameters\": {\"type\": \"object\", \"properties\": {\"path\": {\"type\": \"string\"}}, \"required\": [\"path\"]}}}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\n\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "id": "qwen3/tool-next-user-with-schema",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "6a82a97c567135bc02b289f57a2318a55d5a3d43a829e2920e5fd654cb2cb313",
+      "reference_tokens": 195,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "6a82a97c567135bc02b289f57a2318a55d5a3d43a829e2920e5fd654cb2cb313",
+      "rust_tokens": 195,
+      "shared_prefix_tokens": 195,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>system\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{\"type\": \"function\", \"function\": {\"name\": \"read_file\", \"description\": \"Read a file.\", \"parameters\": {\"type\": \"object\", \"properties\": {\"path\": {\"type\": \"string\"}}, \"required\": [\"path\"]}}}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n",
+      "reference_text": "<|im_start|>system\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{\"type\": \"function\", \"function\": {\"name\": \"read_file\", \"description\": \"Read a file.\", \"parameters\": {\"type\": \"object\", \"properties\": {\"path\": {\"type\": \"string\"}}, \"required\": [\"path\"]}}}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n"
+    },
+    {
+      "id": "qwen3/tool-next-user-with-schema-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "qwen3",
+        "model": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "config": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-prefix/fixtures/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-prefix-tokenizer/tokenizer.json"
+      },
+      "config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "5e2d46763250cfecfa08bf19a445001a370560d897bb5044324927809c588234",
+      "reference_tokens": 199,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "5e2d46763250cfecfa08bf19a445001a370560d897bb5044324927809c588234",
+      "rust_tokens": 199,
+      "shared_prefix_tokens": 199,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>system\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{\"type\": \"function\", \"function\": {\"name\": \"read_file\", \"description\": \"Read a file.\", \"parameters\": {\"type\": \"object\", \"properties\": {\"path\": {\"type\": \"string\"}}, \"required\": [\"path\"]}}}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "reference_text": "<|im_start|>system\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{\"type\": \"function\", \"function\": {\"name\": \"read_file\", \"description\": \"Read a file.\", \"parameters\": {\"type\": \"object\", \"properties\": {\"path\": {\"type\": \"string\"}}, \"required\": [\"path\"]}}}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\nCalling now.\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\":\"file.py\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response><|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "id": "deepseek-r1/plain-current",
+      "rust_status": "rendered",
+      "template_args": {},
+      "supports_thinking_toggle": false,
+      "source": {
+        "family": "deepseek-r1",
+        "model": "deepseek-ai/DeepSeek-R1",
+        "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+        "config": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer.json"
+      },
+      "config_sha256": "99e80c96269ca4430f1e67f67b5766cb096cbac96fed7a7c611c6ee088b3a039",
+      "tokenizer_sha256": "ecb6f9fc369894346f0511f4074ca75cee5cd5f3b06d02f1ba35fcd39f8e121d",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "238f376019b769ab111f172cced9ca6a4ec9b31e56e5296040d1fef6af1bd9f7",
+      "reference_tokens": 12,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "238f376019b769ab111f172cced9ca6a4ec9b31e56e5296040d1fef6af1bd9f7",
+      "rust_tokens": 12,
+      "shared_prefix_tokens": 12,
+      "rust_thought_retained": false,
+      "rust_text": "<｜begin▁of▁sentence｜><｜User｜>First question.<｜Assistant｜>Answer.<｜end▁of▁sentence｜><｜Assistant｜><think>\n",
+      "reference_text": "<｜begin▁of▁sentence｜><｜User｜>First question.<｜Assistant｜>Answer.<｜end▁of▁sentence｜><｜Assistant｜><think>\n"
+    },
+    {
+      "id": "deepseek-r1/plain-next-user",
+      "rust_status": "rendered",
+      "template_args": {},
+      "supports_thinking_toggle": false,
+      "source": {
+        "family": "deepseek-r1",
+        "model": "deepseek-ai/DeepSeek-R1",
+        "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+        "config": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer.json"
+      },
+      "config_sha256": "99e80c96269ca4430f1e67f67b5766cb096cbac96fed7a7c611c6ee088b3a039",
+      "tokenizer_sha256": "ecb6f9fc369894346f0511f4074ca75cee5cd5f3b06d02f1ba35fcd39f8e121d",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "ede981f14b5340ed3fc0037404aebef3fd689376b4cc2d1f1dfd292ede43a0d5",
+      "reference_tokens": 16,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "ede981f14b5340ed3fc0037404aebef3fd689376b4cc2d1f1dfd292ede43a0d5",
+      "rust_tokens": 16,
+      "shared_prefix_tokens": 16,
+      "rust_thought_retained": false,
+      "rust_text": "<｜begin▁of▁sentence｜><｜User｜>First question.<｜Assistant｜>Answer.<｜end▁of▁sentence｜><｜User｜>Next question.<｜Assistant｜><think>\n",
+      "reference_text": "<｜begin▁of▁sentence｜><｜User｜>First question.<｜Assistant｜>Answer.<｜end▁of▁sentence｜><｜User｜>Next question.<｜Assistant｜><think>\n"
+    },
+    {
+      "id": "deepseek-r1/separate-field-current",
+      "rust_status": "rendered",
+      "template_args": {},
+      "supports_thinking_toggle": false,
+      "source": {
+        "family": "deepseek-r1",
+        "model": "deepseek-ai/DeepSeek-R1",
+        "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+        "config": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer.json"
+      },
+      "config_sha256": "99e80c96269ca4430f1e67f67b5766cb096cbac96fed7a7c611c6ee088b3a039",
+      "tokenizer_sha256": "ecb6f9fc369894346f0511f4074ca75cee5cd5f3b06d02f1ba35fcd39f8e121d",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "238f376019b769ab111f172cced9ca6a4ec9b31e56e5296040d1fef6af1bd9f7",
+      "reference_tokens": 12,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "238f376019b769ab111f172cced9ca6a4ec9b31e56e5296040d1fef6af1bd9f7",
+      "rust_tokens": 12,
+      "shared_prefix_tokens": 12,
+      "rust_thought_retained": false,
+      "rust_text": "<｜begin▁of▁sentence｜><｜User｜>First question.<｜Assistant｜>Answer.<｜end▁of▁sentence｜><｜Assistant｜><think>\n",
+      "reference_text": "<｜begin▁of▁sentence｜><｜User｜>First question.<｜Assistant｜>Answer.<｜end▁of▁sentence｜><｜Assistant｜><think>\n"
+    },
+    {
+      "id": "deepseek-r1/separate-field-next-user",
+      "rust_status": "rendered",
+      "template_args": {},
+      "supports_thinking_toggle": false,
+      "source": {
+        "family": "deepseek-r1",
+        "model": "deepseek-ai/DeepSeek-R1",
+        "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+        "config": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer.json"
+      },
+      "config_sha256": "99e80c96269ca4430f1e67f67b5766cb096cbac96fed7a7c611c6ee088b3a039",
+      "tokenizer_sha256": "ecb6f9fc369894346f0511f4074ca75cee5cd5f3b06d02f1ba35fcd39f8e121d",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "ede981f14b5340ed3fc0037404aebef3fd689376b4cc2d1f1dfd292ede43a0d5",
+      "reference_tokens": 16,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "ede981f14b5340ed3fc0037404aebef3fd689376b4cc2d1f1dfd292ede43a0d5",
+      "rust_tokens": 16,
+      "shared_prefix_tokens": 16,
+      "rust_thought_retained": false,
+      "rust_text": "<｜begin▁of▁sentence｜><｜User｜>First question.<｜Assistant｜>Answer.<｜end▁of▁sentence｜><｜User｜>Next question.<｜Assistant｜><think>\n",
+      "reference_text": "<｜begin▁of▁sentence｜><｜User｜>First question.<｜Assistant｜>Answer.<｜end▁of▁sentence｜><｜User｜>Next question.<｜Assistant｜><think>\n"
+    },
+    {
+      "id": "deepseek-r1/tool-current",
+      "rust_status": "error",
+      "template_args": {},
+      "supports_thinking_toggle": false,
+      "source": {
+        "family": "deepseek-r1",
+        "model": "deepseek-ai/DeepSeek-R1",
+        "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+        "config": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer.json"
+      },
+      "config_sha256": "99e80c96269ca4430f1e67f67b5766cb096cbac96fed7a7c611c6ee088b3a039",
+      "tokenizer_sha256": "ecb6f9fc369894346f0511f4074ca75cee5cd5f3b06d02f1ba35fcd39f8e121d",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "72f4f2a23487f8bdaf51ebc23812d5b5abc1841158f8cc3af3644dca14adb83a",
+      "reference_tokens": 48,
+      "reference_thought_retained": true,
+      "error": "invalid operation: tried to use + operator on unsupported types string and map (in default:1)"
+    },
+    {
+      "id": "deepseek-r1/tool-next-user",
+      "rust_status": "error",
+      "template_args": {},
+      "supports_thinking_toggle": false,
+      "source": {
+        "family": "deepseek-r1",
+        "model": "deepseek-ai/DeepSeek-R1",
+        "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+        "config": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer.json"
+      },
+      "config_sha256": "99e80c96269ca4430f1e67f67b5766cb096cbac96fed7a7c611c6ee088b3a039",
+      "tokenizer_sha256": "ecb6f9fc369894346f0511f4074ca75cee5cd5f3b06d02f1ba35fcd39f8e121d",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "3cf039d240ff8230781bf180f9cd4c9a9cb21e84c2fb5221abd94bb87e08fe48",
+      "reference_tokens": 54,
+      "reference_thought_retained": true,
+      "error": "invalid operation: tried to use + operator on unsupported types string and map (in default:1)"
+    },
+    {
+      "id": "deepseek-r1/tool-current-with-schema",
+      "rust_status": "error",
+      "template_args": {},
+      "supports_thinking_toggle": false,
+      "source": {
+        "family": "deepseek-r1",
+        "model": "deepseek-ai/DeepSeek-R1",
+        "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+        "config": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer.json"
+      },
+      "config_sha256": "99e80c96269ca4430f1e67f67b5766cb096cbac96fed7a7c611c6ee088b3a039",
+      "tokenizer_sha256": "ecb6f9fc369894346f0511f4074ca75cee5cd5f3b06d02f1ba35fcd39f8e121d",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "72f4f2a23487f8bdaf51ebc23812d5b5abc1841158f8cc3af3644dca14adb83a",
+      "reference_tokens": 48,
+      "reference_thought_retained": true,
+      "error": "invalid operation: tried to use + operator on unsupported types string and map (in tool_use:1)"
+    },
+    {
+      "id": "deepseek-r1/tool-next-user-with-schema",
+      "rust_status": "error",
+      "template_args": {},
+      "supports_thinking_toggle": false,
+      "source": {
+        "family": "deepseek-r1",
+        "model": "deepseek-ai/DeepSeek-R1",
+        "revision": "56d4cbbb4d29f4355bab4b9a39ccb717a14ad5ad",
+        "config": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/deepseek-r1/tokenizer.json"
+      },
+      "config_sha256": "99e80c96269ca4430f1e67f67b5766cb096cbac96fed7a7c611c6ee088b3a039",
+      "tokenizer_sha256": "ecb6f9fc369894346f0511f4074ca75cee5cd5f3b06d02f1ba35fcd39f8e121d",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "3cf039d240ff8230781bf180f9cd4c9a9cb21e84c2fb5221abd94bb87e08fe48",
+      "reference_tokens": 54,
+      "reference_thought_retained": true,
+      "error": "invalid operation: tried to use + operator on unsupported types string and map (in tool_use:1)"
+    },
+    {
+      "id": "nemotron-3-nano/plain-current",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "a1ce36eb762dec5e7c84e0c47884080597f7a05e3173bef44c34ec5190e22991",
+      "reference_tokens": 36,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "a1ce36eb762dec5e7c84e0c47884080597f7a05e3173bef44c34ec5190e22991",
+      "rust_tokens": 36,
+      "shared_prefix_tokens": 36,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Answer.<|im_end|>\n<|im_start|>assistant\n<think>\n",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Answer.<|im_end|>\n<|im_start|>assistant\n<think>\n"
+    },
+    {
+      "id": "nemotron-3-nano/plain-current-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "9dd427dae51b845e5b96f21c79f98d22b32369eda41d70d084fb98b8cd2e9403",
+      "reference_tokens": 36,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "9dd427dae51b845e5b96f21c79f98d22b32369eda41d70d084fb98b8cd2e9403",
+      "rust_tokens": 36,
+      "shared_prefix_tokens": 36,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Answer.<|im_end|>\n<|im_start|>assistant\n<think></think>",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Answer.<|im_end|>\n<|im_start|>assistant\n<think></think>"
+    },
+    {
+      "id": "nemotron-3-nano/plain-next-user",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "1654531f742bd6ea144aa09a92faca899e8dfa779c7d596ebad7f780e585e8c3",
+      "reference_tokens": 37,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "1654531f742bd6ea144aa09a92faca899e8dfa779c7d596ebad7f780e585e8c3",
+      "rust_tokens": 37,
+      "shared_prefix_tokens": 37,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think></think>Answer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think></think>Answer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n"
+    },
+    {
+      "id": "nemotron-3-nano/plain-next-user-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "e35274278f594d278f82543141ea366f4588c4a0e24c30acadd32b01307582e1",
+      "reference_tokens": 37,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "e35274278f594d278f82543141ea366f4588c4a0e24c30acadd32b01307582e1",
+      "rust_tokens": 37,
+      "shared_prefix_tokens": 37,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think></think>Answer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think></think>",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think></think>Answer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think></think>"
+    },
+    {
+      "id": "nemotron-3-nano/separate-field-current",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "55429af959e9701ce7ddec45d643b228c9672a0b23a17acd734db0d4510530bf",
+      "reference_tokens": 39,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "55429af959e9701ce7ddec45d643b228c9672a0b23a17acd734db0d4510530bf",
+      "rust_tokens": 39,
+      "shared_prefix_tokens": 39,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\nAnswer.<|im_end|>\n<|im_start|>assistant\n<think>\n",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\nAnswer.<|im_end|>\n<|im_start|>assistant\n<think>\n"
+    },
+    {
+      "id": "nemotron-3-nano/separate-field-current-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "eefdc12fab83147d37f09a6ea98439c80f9de7a2d0c1af88fc6a71f9a1786001",
+      "reference_tokens": 39,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "eefdc12fab83147d37f09a6ea98439c80f9de7a2d0c1af88fc6a71f9a1786001",
+      "rust_tokens": 39,
+      "shared_prefix_tokens": 39,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\nAnswer.<|im_end|>\n<|im_start|>assistant\n<think></think>",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>\nTHOUGHT_MARKER\n</think>\nAnswer.<|im_end|>\n<|im_start|>assistant\n<think></think>"
+    },
+    {
+      "id": "nemotron-3-nano/separate-field-next-user",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "07977e148571851765dbff5f1364488a3a856caabd429d03ed76b88ea05f8a33",
+      "reference_tokens": 38,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "07977e148571851765dbff5f1364488a3a856caabd429d03ed76b88ea05f8a33",
+      "rust_tokens": 38,
+      "shared_prefix_tokens": 38,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think></think>\nAnswer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think></think>\nAnswer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n"
+    },
+    {
+      "id": "nemotron-3-nano/separate-field-next-user-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "aefe6f624d9e95675e7872a81f8688103f6b93c919c114c527967225c0904ca1",
+      "reference_tokens": 38,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "aefe6f624d9e95675e7872a81f8688103f6b93c919c114c527967225c0904ca1",
+      "rust_tokens": 38,
+      "shared_prefix_tokens": 38,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think></think>\nAnswer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think></think>",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think></think>\nAnswer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think></think>"
+    },
+    {
+      "id": "nemotron-3-nano/tool-current",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": true,
+      "reference_text_sha256": "9835b3c353ec6eaec725d80900d8b71df10ff86c58386188ae8307bf26aace0f",
+      "reference_tokens": 75,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "9835b3c353ec6eaec725d80900d8b71df10ff86c58386188ae8307bf26aace0f",
+      "rust_tokens": 75,
+      "shared_prefix_tokens": 75,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>assistant\n<think>\n",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>assistant\n<think>\n"
+    },
+    {
+      "id": "nemotron-3-nano/tool-current-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": true,
+      "reference_text_sha256": "a1ad81ca851b1ae32a37fcd5fe51ec36f849ea50c577b5854983f1fd8e7bc92e",
+      "reference_tokens": 75,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "a1ad81ca851b1ae32a37fcd5fe51ec36f849ea50c577b5854983f1fd8e7bc92e",
+      "rust_tokens": 75,
+      "shared_prefix_tokens": 75,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>assistant\n<think></think>",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>assistant\n<think></think>"
+    },
+    {
+      "id": "nemotron-3-nano/tool-next-user",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": true,
+      "reference_text_sha256": "d7172d888b20ba98cb09f97806cbf90bf2eb735a99a851bef947489187c7b86f",
+      "reference_tokens": 76,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "d7172d888b20ba98cb09f97806cbf90bf2eb735a99a851bef947489187c7b86f",
+      "rust_tokens": 76,
+      "shared_prefix_tokens": 76,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think></think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think></think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n"
+    },
+    {
+      "id": "nemotron-3-nano/tool-next-user-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": true,
+      "reference_text_sha256": "ebb9f0aa0d634aa998753224667c86e7562e21311c8ebd6e91fc4a99d8a0f03d",
+      "reference_tokens": 76,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "ebb9f0aa0d634aa998753224667c86e7562e21311c8ebd6e91fc4a99d8a0f03d",
+      "rust_tokens": 76,
+      "shared_prefix_tokens": 76,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think></think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think></think>",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think></think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think></think>"
+    },
+    {
+      "id": "nemotron-3-nano/plain-next-user-keep",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true,
+        "truncate_history_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "78f54a212c63dd8087d3f008dda6939869dd69cd8536283276bd5b0d16229c79",
+      "reference_tokens": 44,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "78f54a212c63dd8087d3f008dda6939869dd69cd8536283276bd5b0d16229c79",
+      "rust_tokens": 44,
+      "shared_prefix_tokens": 44,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Answer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Answer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n"
+    },
+    {
+      "id": "nemotron-3-nano/plain-next-user-keep-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false,
+        "truncate_history_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": false,
+      "reference_text_sha256": "c13263064c1065467e7a5cf1aa92f3ab8780db4ecee745e8ee65af1d95190aa9",
+      "reference_tokens": 44,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "c13263064c1065467e7a5cf1aa92f3ab8780db4ecee745e8ee65af1d95190aa9",
+      "rust_tokens": 44,
+      "shared_prefix_tokens": 44,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Answer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think></think>",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nFirst question.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Answer.<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think></think>"
+    },
+    {
+      "id": "nemotron-3-nano/tool-next-user-keep",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true,
+        "truncate_history_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": true,
+      "reference_text_sha256": "84e02007717ca1611f068009e836dc17da46d2124634811f6462103cc2d89dc5",
+      "reference_tokens": 83,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "84e02007717ca1611f068009e836dc17da46d2124634811f6462103cc2d89dc5",
+      "rust_tokens": 83,
+      "shared_prefix_tokens": 83,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n"
+    },
+    {
+      "id": "nemotron-3-nano/tool-next-user-keep-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false,
+        "truncate_history_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": true,
+      "reference_text_sha256": "c4bd0ad951497f6284e0deb7a5dc93d96650430da1f424e0c4753828b5388ef2",
+      "reference_tokens": 83,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "c4bd0ad951497f6284e0deb7a5dc93d96650430da1f424e0c4753828b5388ef2",
+      "rust_tokens": 83,
+      "shared_prefix_tokens": 83,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think></think>",
+      "reference_text": "<|im_start|>system\n<|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think></think>"
+    },
+    {
+      "id": "nemotron-3-nano/tool-current-with-schema",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": true,
+      "reference_text_sha256": "01e8f6506ec4004205cc3baea7deb68d6ae61aa8b1b5c943303814df5e657fc0",
+      "reference_tokens": 323,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "01e8f6506ec4004205cc3baea7deb68d6ae61aa8b1b5c943303814df5e657fc0",
+      "rust_tokens": 323,
+      "shared_prefix_tokens": 323,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>system\n# Tools\n\nYou have access to the following functions:\n\n<tools>\n<function>\n<name>read_file</name>\n<description>Read a file.</description>\n<parameters>\n<parameter>\n<name>path</name>\n<type>string</type>\n</parameter>\n<required>[\"path\"]</required>\n</parameters>\n</function>\n</tools>\n\nIf you choose to call a function ONLY reply in the following format with NO suffix:\n\n<tool_call>\n<function=example_function_name>\n<parameter=example_parameter_1>\nvalue_1\n</parameter>\n<parameter=example_parameter_2>\nThis is the value for the second parameter\nthat can span\nmultiple lines\n</parameter>\n</function>\n</tool_call>\n\n<IMPORTANT>\nReminder:\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\n- Required parameters MUST be specified\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\n</IMPORTANT><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>assistant\n<think>\n",
+      "reference_text": "<|im_start|>system\n# Tools\n\nYou have access to the following functions:\n\n<tools>\n<function>\n<name>read_file</name>\n<description>Read a file.</description>\n<parameters>\n<parameter>\n<name>path</name>\n<type>string</type>\n</parameter>\n<required>[\"path\"]</required>\n</parameters>\n</function>\n</tools>\n\nIf you choose to call a function ONLY reply in the following format with NO suffix:\n\n<tool_call>\n<function=example_function_name>\n<parameter=example_parameter_1>\nvalue_1\n</parameter>\n<parameter=example_parameter_2>\nThis is the value for the second parameter\nthat can span\nmultiple lines\n</parameter>\n</function>\n</tool_call>\n\n<IMPORTANT>\nReminder:\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\n- Required parameters MUST be specified\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\n</IMPORTANT><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>assistant\n<think>\n"
+    },
+    {
+      "id": "nemotron-3-nano/tool-current-with-schema-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": true,
+      "reference_text_sha256": "4b1bc0368f18fabb1a74bfe4e003ccaf8b27cdfbd0b177224fc20509f9e5f100",
+      "reference_tokens": 323,
+      "reference_thought_retained": true,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "4b1bc0368f18fabb1a74bfe4e003ccaf8b27cdfbd0b177224fc20509f9e5f100",
+      "rust_tokens": 323,
+      "shared_prefix_tokens": 323,
+      "rust_thought_retained": true,
+      "rust_text": "<|im_start|>system\n# Tools\n\nYou have access to the following functions:\n\n<tools>\n<function>\n<name>read_file</name>\n<description>Read a file.</description>\n<parameters>\n<parameter>\n<name>path</name>\n<type>string</type>\n</parameter>\n<required>[\"path\"]</required>\n</parameters>\n</function>\n</tools>\n\nIf you choose to call a function ONLY reply in the following format with NO suffix:\n\n<tool_call>\n<function=example_function_name>\n<parameter=example_parameter_1>\nvalue_1\n</parameter>\n<parameter=example_parameter_2>\nThis is the value for the second parameter\nthat can span\nmultiple lines\n</parameter>\n</function>\n</tool_call>\n\n<IMPORTANT>\nReminder:\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\n- Required parameters MUST be specified\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\n</IMPORTANT><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>assistant\n<think></think>",
+      "reference_text": "<|im_start|>system\n# Tools\n\nYou have access to the following functions:\n\n<tools>\n<function>\n<name>read_file</name>\n<description>Read a file.</description>\n<parameters>\n<parameter>\n<name>path</name>\n<type>string</type>\n</parameter>\n<required>[\"path\"]</required>\n</parameters>\n</function>\n</tools>\n\nIf you choose to call a function ONLY reply in the following format with NO suffix:\n\n<tool_call>\n<function=example_function_name>\n<parameter=example_parameter_1>\nvalue_1\n</parameter>\n<parameter=example_parameter_2>\nThis is the value for the second parameter\nthat can span\nmultiple lines\n</parameter>\n</function>\n</tool_call>\n\n<IMPORTANT>\nReminder:\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\n- Required parameters MUST be specified\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\n</IMPORTANT><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think>THOUGHT_MARKER</think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>assistant\n<think></think>"
+    },
+    {
+      "id": "nemotron-3-nano/tool-next-user-with-schema",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": true
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": true,
+      "reference_text_sha256": "58407079c253f922d067fab8a246b9d6e5a9fe570e18dc03ba62f96db19c7d00",
+      "reference_tokens": 324,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "58407079c253f922d067fab8a246b9d6e5a9fe570e18dc03ba62f96db19c7d00",
+      "rust_tokens": 324,
+      "shared_prefix_tokens": 324,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>system\n# Tools\n\nYou have access to the following functions:\n\n<tools>\n<function>\n<name>read_file</name>\n<description>Read a file.</description>\n<parameters>\n<parameter>\n<name>path</name>\n<type>string</type>\n</parameter>\n<required>[\"path\"]</required>\n</parameters>\n</function>\n</tools>\n\nIf you choose to call a function ONLY reply in the following format with NO suffix:\n\n<tool_call>\n<function=example_function_name>\n<parameter=example_parameter_1>\nvalue_1\n</parameter>\n<parameter=example_parameter_2>\nThis is the value for the second parameter\nthat can span\nmultiple lines\n</parameter>\n</function>\n</tool_call>\n\n<IMPORTANT>\nReminder:\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\n- Required parameters MUST be specified\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\n</IMPORTANT><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think></think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n",
+      "reference_text": "<|im_start|>system\n# Tools\n\nYou have access to the following functions:\n\n<tools>\n<function>\n<name>read_file</name>\n<description>Read a file.</description>\n<parameters>\n<parameter>\n<name>path</name>\n<type>string</type>\n</parameter>\n<required>[\"path\"]</required>\n</parameters>\n</function>\n</tools>\n\nIf you choose to call a function ONLY reply in the following format with NO suffix:\n\n<tool_call>\n<function=example_function_name>\n<parameter=example_parameter_1>\nvalue_1\n</parameter>\n<parameter=example_parameter_2>\nThis is the value for the second parameter\nthat can span\nmultiple lines\n</parameter>\n</function>\n</tool_call>\n\n<IMPORTANT>\nReminder:\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\n- Required parameters MUST be specified\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\n</IMPORTANT><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think></think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think>\n"
+    },
+    {
+      "id": "nemotron-3-nano/tool-next-user-with-schema-thinking-off",
+      "rust_status": "rendered",
+      "template_args": {
+        "enable_thinking": false
+      },
+      "supports_thinking_toggle": true,
+      "source": {
+        "family": "nemotron-3-nano",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+        "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+        "config": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer_config.json",
+        "tokenizer": "/tmp/reedcode-family-template-audit/nemotron-3-nano/tokenizer.json"
+      },
+      "config_sha256": "3d568e506d0905285ae90a3fdd1482be7b6d0bf0b8ca9514d75dad4257b0827a",
+      "tokenizer_sha256": "c6021eb6847e682f89aa52d5eb6e8c7d902a23acfc8137e25211cf84828f1592",
+      "reference_arguments_serialized_for_wire": true,
+      "reference_text_sha256": "31c91cabcc39d937f5460b6609be00756bd99606a82c1a876f655c2613c76b49",
+      "reference_tokens": 324,
+      "reference_thought_retained": false,
+      "text_equal": true,
+      "token_ids_equal": true,
+      "rust_text_sha256": "31c91cabcc39d937f5460b6609be00756bd99606a82c1a876f655c2613c76b49",
+      "rust_tokens": 324,
+      "shared_prefix_tokens": 324,
+      "rust_thought_retained": false,
+      "rust_text": "<|im_start|>system\n# Tools\n\nYou have access to the following functions:\n\n<tools>\n<function>\n<name>read_file</name>\n<description>Read a file.</description>\n<parameters>\n<parameter>\n<name>path</name>\n<type>string</type>\n</parameter>\n<required>[\"path\"]</required>\n</parameters>\n</function>\n</tools>\n\nIf you choose to call a function ONLY reply in the following format with NO suffix:\n\n<tool_call>\n<function=example_function_name>\n<parameter=example_parameter_1>\nvalue_1\n</parameter>\n<parameter=example_parameter_2>\nThis is the value for the second parameter\nthat can span\nmultiple lines\n</parameter>\n</function>\n</tool_call>\n\n<IMPORTANT>\nReminder:\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\n- Required parameters MUST be specified\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\n</IMPORTANT><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think></think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think></think>",
+      "reference_text": "<|im_start|>system\n# Tools\n\nYou have access to the following functions:\n\n<tools>\n<function>\n<name>read_file</name>\n<description>Read a file.</description>\n<parameters>\n<parameter>\n<name>path</name>\n<type>string</type>\n</parameter>\n<required>[\"path\"]</required>\n</parameters>\n</function>\n</tools>\n\nIf you choose to call a function ONLY reply in the following format with NO suffix:\n\n<tool_call>\n<function=example_function_name>\n<parameter=example_parameter_1>\nvalue_1\n</parameter>\n<parameter=example_parameter_2>\nThis is the value for the second parameter\nthat can span\nmultiple lines\n</parameter>\n</function>\n</tool_call>\n\n<IMPORTANT>\nReminder:\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\n- Required parameters MUST be specified\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\n</IMPORTANT><|im_end|>\n<|im_start|>user\nRead the file.<|im_end|>\n<|im_start|>assistant\n<think></think>Calling now.\n<tool_call>\n<function=read_file>\n<parameter=path>\nfile.py\n</parameter>\n</function>\n</tool_call>\n<|im_end|>\n<|im_start|>user\n<tool_response>\nThe file contents.\n</tool_response>\n<|im_end|>\n<|im_start|>user\nNext question.<|im_end|>\n<|im_start|>assistant\n<think></think>"
+    }
+  ]
+}

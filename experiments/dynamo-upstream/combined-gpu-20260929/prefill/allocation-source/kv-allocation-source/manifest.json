@@ -1,0 +1,50 @@
+{
+  "revision": "2cf0a6915ce544dc493a0990f2ea38d81601128a",
+  "sources": [
+    {
+      "path": "/tmp/reedcode-gpu-evidence-02/kv-allocation-source/vllm/v1/kv_cache_interface.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/v1/kv_cache_interface.py",
+      "sha256": "932e9175796706506c34c3014cc3c69b146e199426dbbacf19f24056f7332ec3"
+    },
+    {
+      "path": "/tmp/reedcode-gpu-evidence-02/kv-allocation-source/vllm/config/cache.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/config/cache.py",
+      "sha256": "8790351601be188ed1cc7ad9de2af1978b238269da4724873af1185c91165ef6"
+    },
+    {
+      "path": "/tmp/reedcode-gpu-evidence-02/kv-allocation-source/vllm/utils/torch_utils.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/utils/torch_utils.py",
+      "sha256": "996a632d3c41d9fa0f64e9b0407010105fa320813472c376ec8d4071c7200192"
+    },
+    {
+      "path": "/tmp/reedcode-gpu-evidence-02/kv-allocation-source/vllm/model_executor/layers/attention/attention.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/model_executor/layers/attention/attention.py",
+      "sha256": "64a1b218f04a7178d9d41c12fc6ae08f6cff648031bf118216019a48d15572c7"
+    },
+    {
+      "path": "/tmp/reedcode-gpu-evidence-02/kv-allocation-source/vllm/v1/worker/gpu_model_runner.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/v1/worker/gpu_model_runner.py",
+      "sha256": "7f2890eefca1efe25565bf1c7e5906a87948ae922610a7aaac620b28b46f26aa"
+    },
+    {
+      "path": "/tmp/reedcode-gpu-evidence-02/kv-allocation-source/vllm/v1/core/kv_cache_utils.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/v1/core/kv_cache_utils.py",
+      "sha256": "088f2201bee86fade694e78141b6e99a5cd0cdd23c5c7ab3526dd119f76e4aec"
+    },
+    {
+      "path": "/tmp/reedcode-gpu-evidence-02/kv-allocation-source/vllm/v1/attention/backends/flash_attn.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/v1/attention/backends/flash_attn.py",
+      "sha256": "44f4f0b560f0b09575d52a9e7a44f064bb600796079edd548aab2e21b4f31064"
+    },
+    {
+      "path": "/tmp/reedcode-gpu-evidence-02/kv-allocation-source/vllm/model_executor/models/qwen3.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/model_executor/models/qwen3.py",
+      "sha256": "ec8bc9c090f6f5242b2f572366644ef73573137b3e48b03b39c0f083fbb21ab4"
+    },
+    {
+      "path": "/tmp/reedcode-gpu-evidence-02/kv-allocation-source/vllm/v1/attention/backend.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2cf0a6915ce544dc493a0990f2ea38d81601128a/vllm/v1/attention/backend.py",
+      "sha256": "d77652795155fc743c3d8233b064cf855090d72aca485a48732b4fb3a1b736db"
+    }
+  ]
+}

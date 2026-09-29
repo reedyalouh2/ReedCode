@@ -1,0 +1,116 @@
+{
+  "evidence": "explicit_prefix_cache_probe",
+  "workflow_speedup_measured": false,
+  "attempts": [
+    {
+      "attempt": "initial",
+      "server_metrics_valid": false,
+      "requests": 15,
+      "cases": [
+        {
+          "case": "tool",
+          "condition": "off",
+          "cached_tokens": 224,
+          "cached_tokens_beyond_ordinary_prefix": 0,
+          "requests": 2,
+          "reported_completion_tokens": 2
+        },
+        {
+          "case": "tool",
+          "condition": "explicit_preparation",
+          "cached_tokens": 240,
+          "cached_tokens_beyond_ordinary_prefix": 16,
+          "requests": 3,
+          "reported_completion_tokens": 3
+        },
+        {
+          "case": "text",
+          "condition": "off",
+          "cached_tokens": 80,
+          "cached_tokens_beyond_ordinary_prefix": 0,
+          "requests": 2,
+          "reported_completion_tokens": 2
+        },
+        {
+          "case": "text",
+          "condition": "explicit_preparation",
+          "cached_tokens": 80,
+          "cached_tokens_beyond_ordinary_prefix": 0,
+          "requests": 3,
+          "reported_completion_tokens": 3
+        },
+        {
+          "case": "tool_long",
+          "condition": "off",
+          "cached_tokens": 224,
+          "cached_tokens_beyond_ordinary_prefix": 0,
+          "requests": 2,
+          "reported_completion_tokens": 2
+        },
+        {
+          "case": "tool_long",
+          "condition": "explicit_preparation",
+          "cached_tokens": 752,
+          "cached_tokens_beyond_ordinary_prefix": 528,
+          "requests": 3,
+          "reported_completion_tokens": 3
+        }
+      ]
+    },
+    {
+      "attempt": "verified",
+      "server_metrics_valid": true,
+      "requests": 15,
+      "cases": [
+        {
+          "case": "tool",
+          "condition": "off",
+          "cached_tokens": 224,
+          "cached_tokens_beyond_ordinary_prefix": 0,
+          "requests": 2,
+          "reported_completion_tokens": 2
+        },
+        {
+          "case": "tool",
+          "condition": "explicit_preparation",
+          "cached_tokens": 240,
+          "cached_tokens_beyond_ordinary_prefix": 16,
+          "requests": 3,
+          "reported_completion_tokens": 3
+        },
+        {
+          "case": "text",
+          "condition": "off",
+          "cached_tokens": 80,
+          "cached_tokens_beyond_ordinary_prefix": 0,
+          "requests": 2,
+          "reported_completion_tokens": 2
+        },
+        {
+          "case": "text",
+          "condition": "explicit_preparation",
+          "cached_tokens": 80,
+          "cached_tokens_beyond_ordinary_prefix": 0,
+          "requests": 3,
+          "reported_completion_tokens": 3
+        },
+        {
+          "case": "tool_long",
+          "condition": "off",
+          "cached_tokens": 224,
+          "cached_tokens_beyond_ordinary_prefix": 0,
+          "requests": 2,
+          "reported_completion_tokens": 2
+        },
+        {
+          "case": "tool_long",
+          "condition": "explicit_preparation",
+          "cached_tokens": 752,
+          "cached_tokens_beyond_ordinary_prefix": 528,
+          "requests": 3,
+          "reported_completion_tokens": 3
+        }
+      ]
+    }
+  ]
+}

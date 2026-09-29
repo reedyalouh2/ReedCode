@@ -1,0 +1,9 @@
+{"summary": "/private/tmp/reedcode-prefill-attribution-corrected/summary.json", "epoch": "267e605d0db348158ba0f551f5ac87e8", "trials": 18, "requests": 108, "pool_blocks": 21691, "bytes_per_full_block": 2359296}
+long fixed {'followup_completion_seconds': 0.41985760256648064, 'all_request_seconds': 2.120662615944942, 'replay_wall_seconds': 2.4991265137990317, 'warmup_request_seconds': 0.08773293284078439}
+long off {'followup_completion_seconds': 0.43688338808715343, 'all_request_seconds': 2.0518820378929377, 'replay_wall_seconds': 2.32765785853068, 'warmup_request_seconds': 0}
+long stock {'followup_completion_seconds': 0.4354761205613613, 'all_request_seconds': 3.67691632732749, 'replay_wall_seconds': 4.050728956858317, 'warmup_request_seconds': 1.6194575509677331}
+short fixed {'followup_completion_seconds': 0.4058656928439935, 'all_request_seconds': 0.5424647567172846, 'replay_wall_seconds': 1.7646337350209553, 'warmup_request_seconds': 0.09737562450269859}
+short off {'followup_completion_seconds': 0.4299479555338621, 'all_request_seconds': 0.46981787495315075, 'replay_wall_seconds': 1.7696152528127034, 'warmup_request_seconds': 0}
+short stock {'followup_completion_seconds': 0.4296616781502962, 'all_request_seconds': 0.7535231014092764, 'replay_wall_seconds': 1.9483098189036052, 'warmup_request_seconds': 0.28396125696599483}
+short paired percentages [('stock minus off', 62.267050912584054), ('fixed minus stock', -37.95879706369879), ('fixed minus off', 0.6724303554274735)]
+long paired percentages [('stock minus off', 85.19922254616132), ('fixed minus stock', -45.964737366846826), ('fixed minus off', 0.0728862973760933)]

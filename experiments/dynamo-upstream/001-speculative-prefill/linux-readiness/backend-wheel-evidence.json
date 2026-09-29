@@ -1,0 +1,25 @@
+{
+  "image": "nvcr.io/nvidia/ai-dynamo/vllm-runtime@sha256:d18389c89eb319401fdd73f1fbbaff10d9382f634b879941dfba75bbf7260c1e",
+  "manifest_digest_verified": true,
+  "layer": {
+    "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+    "digest": "sha256:f35c2144f85ef29725912d2b45d2872859df3d6187a36f65b1d70ab0845c38de",
+    "size": 164727426
+  },
+  "layer_digest_verified": true,
+  "layer_index_zero_based": 42,
+  "wheels": [
+    {
+      "name": "ai_dynamo-1.5.0-py3-none-any.whl",
+      "sha256": "65bf119fcdad0b1ce5df2ea6c1b94f2b70c8a904fb8b1d5113a25b057f5ace79",
+      "bytes": 3480706
+    },
+    {
+      "name": "ai_dynamo_runtime-1.5.0-cp310-abi3-manylinux_2_28_x86_64.whl",
+      "sha256": "792c3320153b30fad0ef1c0b4d95787b418ebfde0b532ce6f79ae776eeeb552d",
+      "bytes": 65939130
+    }
+  ],
+  "extraction_only": true,
+  "limitation": "These are the actual shipped wheels; no CUDA/vLLM engine was started."
+}

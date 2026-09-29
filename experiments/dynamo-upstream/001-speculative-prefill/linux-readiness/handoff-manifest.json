@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-09-29T02:46:00.869432+00:00",
+  "unit_checks_passed": 8,
+  "live_process_restart_verified": false,
+  "files": {
+    "setup-frontends.sh": "df5fdaa9532e3e429c92543d1f9746db1517e846e36daa1a7a922ea2169348bf",
+    "launch-on-pod.sh": "0be55491c48c8d70567397a2fd7d53034d9ebc4a27b8fbc05050dd44f7e33bf1",
+    "fresh_frontend.py": "51eb6a72c18caf9ca917d486f047cb5070d3cf3598ef05ee970b47e04a95edfa",
+    "hooks.template.json": "66ca407980eac2adf8b03d84c5632733d0ca760047fa3de86a23b9d0a04ea8c8",
+    "test_fresh_frontend.py": "77924748f18d9ef3006a176841e11d2a70bba24cb6bf73d65cd10df15f72c053"
+  }
+}

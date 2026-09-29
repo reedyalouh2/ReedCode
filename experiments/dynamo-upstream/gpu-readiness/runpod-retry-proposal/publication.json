@@ -1,0 +1,12 @@
+{
+  "repository": "ttl.sh/reedcode-dynamo-92cfdea446c94719b36df5db02cc8189",
+  "tag": "ttl.sh/reedcode-dynamo-92cfdea446c94719b36df5db02cc8189:24h",
+  "derived_digest": "sha256:0a0741342e709bbfa6689e688c8306090af4a65d0f366ec38ec0269d63c201c6",
+  "purpose": "Runtime-user-only deployment image for the approved study",
+  "includes_repository_source": false,
+  "includes_credentials": false,
+  "status": "published_and_verified",
+  "image": "ttl.sh/reedcode-dynamo-92cfdea446c94719b36df5db02cc8189@sha256:0a0741342e709bbfa6689e688c8306090af4a65d0f366ec38ec0269d63c201c6",
+  "parent_layers_verified": 67,
+  "config_user": "0"
+}

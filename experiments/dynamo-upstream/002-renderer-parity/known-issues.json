@@ -1,0 +1,3233 @@
+{
+  "checked_at": "2026-09-28T20:18:55.016594+00:00",
+  "queries": [
+    {
+      "query": "repo:ai-dynamo/dynamo \"DeepSeek\" \"arguments\"",
+      "url": "https://api.github.com/search/issues?q=repo%3Aai-dynamo%2Fdynamo+%22DeepSeek%22+%22arguments%22&per_page=100",
+      "total_count": 224,
+      "returned_count": 100,
+      "complete_page_coverage": false,
+      "incomplete_results": false,
+      "items": [
+        {
+          "number": 14616,
+          "title": "feat(llm): add native DeepSeek V4.1 frontend support",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14616",
+          "state": "open"
+        },
+        {
+          "number": 13037,
+          "title": "fix(recipes): declare decode mode in the DeepSeek-R1 vLLM disagg recipe",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13037",
+          "state": "open"
+        },
+        {
+          "number": 14438,
+          "title": "docs: update Fluid DGD examples to the current deployment API",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14438",
+          "state": "open"
+        },
+        {
+          "number": 13903,
+          "title": "feat(llm): integrate structural tags with parsers v2",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13903",
+          "state": "open"
+        },
+        {
+          "number": 13570,
+          "title": "test(sglang): restore disaggregated KV routing",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13570",
+          "state": "open"
+        },
+        {
+          "number": 14664,
+          "title": "docs(sizing): clarify AISimulate ownership of retained AIC workflows",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14664",
+          "state": "open"
+        },
+        {
+          "number": 13654,
+          "title": "feat: K3 structural tag default",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13654",
+          "state": "open"
+        },
+        {
+          "number": 14660,
+          "title": "docs(examples): add validated diffusion deployment templates",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14660",
+          "state": "open"
+        },
+        {
+          "number": 11655,
+          "title": "aggregated recipe for qwen3 0.6b",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11655",
+          "state": "open"
+        },
+        {
+          "number": 11767,
+          "title": "docs(recipes): include sku in recipe paths",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11767",
+          "state": "open"
+        },
+        {
+          "number": 14441,
+          "title": "fix(docs): deliver enum badge styles with reference pages",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14441",
+          "state": "open"
+        },
+        {
+          "number": 14950,
+          "title": "feat: UnifiedParser (v2) parser routing by default",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14950",
+          "state": "open"
+        },
+        {
+          "number": 15153,
+          "title": "fix(frontend): validate explicitly strict function-tool schemas",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/15153",
+          "state": "open"
+        },
+        {
+          "number": 11206,
+          "title": "test(frontend): add CPU-only tool and reasoning e2e matrix",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11206",
+          "state": "open"
+        },
+        {
+          "number": 7831,
+          "title": "fix: guided decoding for reasoning models via structural_tag (TRT-LLM)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7831",
+          "state": "open"
+        },
+        {
+          "number": 15030,
+          "title": "feat: Backport DeepSeek v4.1 support to main",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/15030",
+          "state": "closed"
+        },
+        {
+          "number": 8037,
+          "title": "feat(trtllm): ModelExpress P2P weight transfer with auto-detect source/target",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8037",
+          "state": "open"
+        },
+        {
+          "number": 14320,
+          "title": "fix(test): treat `sh -lc` workers as shell-invoked, not argv (OPS-8533)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14320",
+          "state": "open"
+        },
+        {
+          "number": 13712,
+          "title": "feat(recipes): add A.X K2 NVFP4 B200 recipes",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13712",
+          "state": "open"
+        },
+        {
+          "number": 14690,
+          "title": "feat(llm): add native DeepSeek V4.1 frontend support",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14690",
+          "state": "closed"
+        },
+        {
+          "number": 15063,
+          "title": "feat(ais): migrate perf-model consumers to canonical configuration",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/15063",
+          "state": "open"
+        },
+        {
+          "number": 14318,
+          "title": "feat(recipes): add A.X-K2 H200 vLLM recipes with 2P2D disagg benchmark",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14318",
+          "state": "open"
+        },
+        {
+          "number": 13979,
+          "title": "test: assert tool results are actually used, locally and on any recipe (OPS-8412, OPS-8418)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13979",
+          "state": "open"
+        },
+        {
+          "number": 10533,
+          "title": "[BUG]: Reasoning parser disabled when last message is tool call for Kimi K2.6",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/10533",
+          "state": "open"
+        },
+        {
+          "number": 11315,
+          "title": "docs(security): document authentication and production hardening",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11315",
+          "state": "open"
+        },
+        {
+          "number": 15120,
+          "title": "feat(sglang): support thinking token budgets",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/15120",
+          "state": "open"
+        },
+        {
+          "number": 14755,
+          "title": "fix(frontend): integrate Kimi dynamic tools from frontend-crates",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14755",
+          "state": "closed"
+        },
+        {
+          "number": 12332,
+          "title": "fix(llm): normalize tool_call arguments from JSON string to object before template render",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12332",
+          "state": "closed"
+        },
+        {
+          "number": 13605,
+          "title": "fix(sglang): drop --skip-tokenizer-init from k8s text-generation paths",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13605",
+          "state": "closed"
+        },
+        {
+          "number": 15261,
+          "title": "test(sglang): add EAGLE3 disagg KV-router e2e",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/15261",
+          "state": "open"
+        },
+        {
+          "number": 13135,
+          "title": "fix(recipes): parameterize DeepSeek-V4 model download so H200 recipes get the FP8 checkpoint",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13135",
+          "state": "closed"
+        },
+        {
+          "number": 13340,
+          "title": "feat(llm): serve Muse-Glimmer through the v2 unified parser",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13340",
+          "state": "closed"
+        },
+        {
+          "number": 13580,
+          "title": "feat(operator): render an on-demand elastic-EP follower on the non-Grove path (Phase 4)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13580",
+          "state": "open"
+        },
+        {
+          "number": 11821,
+          "title": "DevX improvement plan",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/11821",
+          "state": "open"
+        },
+        {
+          "number": 12162,
+          "title": "fix(trtllm): decouple KV events from performance metrics",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12162",
+          "state": "closed"
+        },
+        {
+          "number": 14541,
+          "title": "fix(simulation): upgrade AISimulate to 0.12.0.dev1",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14541",
+          "state": "closed"
+        },
+        {
+          "number": 12953,
+          "title": "fix(sglang): publish ratio-based HiCache capacity",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12953",
+          "state": "closed"
+        },
+        {
+          "number": 10577,
+          "title": "fix(frontend): keep DSv4 tool_call arguments as JSON string for encode_messages",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10577",
+          "state": "closed"
+        },
+        {
+          "number": 13504,
+          "title": "chore(release): backport Qwen3.8-2.4T with vLLM 0.27.1",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13504",
+          "state": "closed"
+        },
+        {
+          "number": 14800,
+          "title": "fix(sglang): stop an unsupported --dcp-size worker from crashing mid-request",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14800",
+          "state": "closed"
+        },
+        {
+          "number": 14556,
+          "title": "feat(vllm): add Solar Open2 250B runtime support",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14556",
+          "state": "closed"
+        },
+        {
+          "number": 12592,
+          "title": "perf: remove trtllm postprocessing workers from the args as post processing workers are not effective in dynamo",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12592",
+          "state": "closed"
+        },
+        {
+          "number": 13216,
+          "title": "test(router): use page_size 64 for the sglang router suite",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13216",
+          "state": "closed"
+        },
+        {
+          "number": 13930,
+          "title": "fix(frontend): preserve typed v1 jail errors",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13930",
+          "state": "closed"
+        },
+        {
+          "number": 8728,
+          "title": "test(parsers): unified cases \u00d7 all parsers, coverage matrix (step 1)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8728",
+          "state": "closed"
+        },
+        {
+          "number": 12215,
+          "title": "docs: replace the compatibility CUDA checker with a generated support matrix",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12215",
+          "state": "closed"
+        },
+        {
+          "number": 12687,
+          "title": "fix(preprocessor): bridge thinking_mode for MiniMax M3",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12687",
+          "state": "closed"
+        },
+        {
+          "number": 3557,
+          "title": "fix: deepseek tool parsing fixed",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3557",
+          "state": "closed"
+        },
+        {
+          "number": 9322,
+          "title": "refactor(llm): Deduplicate DeepSeek prompt encoders v3.2 and v4",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9322",
+          "state": "closed"
+        },
+        {
+          "number": 8671,
+          "title": "[INVESTIGATE] sglang + DSv4: kwarg workaround breaks live \u2014 needs diagnosis",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8671",
+          "state": "closed"
+        },
+        {
+          "number": 8665,
+          "title": "chore(frontend):  Add DeepSeek V4 parser support + Test Cases",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8665",
+          "state": "closed"
+        },
+        {
+          "number": 8721,
+          "title": "test(parsers): cross-parser contract test scaffold (DIS-1842 part 1)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8721",
+          "state": "closed"
+        },
+        {
+          "number": 11205,
+          "title": "fix:  Fix guided decoding for force-reasoning parsers",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11205",
+          "state": "closed"
+        },
+        {
+          "number": 10856,
+          "title": "test(parsers-v2): GPU-free e2e for two-frame streaming tool-call consumer (name-first, args-only)",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/10856",
+          "state": "closed"
+        },
+        {
+          "number": 8670,
+          "title": "chore: DeepSeek V4 hardening follow-up",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8670",
+          "state": "closed"
+        },
+        {
+          "number": 9606,
+          "title": "test(parsers): deprecate Rust tests duplicated by YAML fixtures",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9606",
+          "state": "closed"
+        },
+        {
+          "number": 10101,
+          "title": "fix(parser): add large integer tool-calling parity cases and fix glm47 precision",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10101",
+          "state": "closed"
+        },
+        {
+          "number": 10950,
+          "title": "docs: enables disagg mode for decode worker",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10950",
+          "state": "closed"
+        },
+        {
+          "number": 10723,
+          "title": "chore(deps): vllm 0.23.0 bump",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10723",
+          "state": "closed"
+        },
+        {
+          "number": 6107,
+          "title": "feat: support `reasoning_content` context management (DeepSeek v3.2 & GLM-4.7 & Kimi-2.5)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6107",
+          "state": "closed"
+        },
+        {
+          "number": 14822,
+          "title": "feat(recipes): add K-EXAONE 2.0 750B-A37B NVFP4 vLLM recipes for B200",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14822",
+          "state": "closed"
+        },
+        {
+          "number": 10133,
+          "title": "fix(tool-calling): recover bare DeepSeek tool calls without outer wrapper",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10133",
+          "state": "closed"
+        },
+        {
+          "number": 9711,
+          "title": "feat: Add structural tag generation for tool calls",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9711",
+          "state": "closed"
+        },
+        {
+          "number": 9524,
+          "title": "fix(parsers): align DeepSeek v4 (DSML) parser with vLLM prefix-only normal_text",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9524",
+          "state": "closed"
+        },
+        {
+          "number": 3995,
+          "title": "fix: slipping <tool_calls_end> tool call parsing for DeepSeek v3.1",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3995",
+          "state": "closed"
+        },
+        {
+          "number": 9999,
+          "title": "test(parser): add malformed wrapper stream case",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9999",
+          "state": "closed"
+        },
+        {
+          "number": 10114,
+          "title": "fix(sglang): support OpenAI thinking payload",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10114",
+          "state": "closed"
+        },
+        {
+          "number": 2832,
+          "title": "feat: add deepseek_v3_1 tool parser with lib refactoring",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2832",
+          "state": "closed"
+        },
+        {
+          "number": 3631,
+          "title": "fix: add additional tool call end tokens for deepseek_parser.rs",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3631",
+          "state": "closed"
+        },
+        {
+          "number": 8668,
+          "title": "feat: add experimental DeepSeek-V4-Flash + V4-Pro vLLM agg recipes",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8668",
+          "state": "closed"
+        },
+        {
+          "number": 8724,
+          "title": "test(parsers): add cross-parser contract test scaffold (part 1)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8724",
+          "state": "closed"
+        },
+        {
+          "number": 7906,
+          "title": "feat: map reasoning_effort to model-specific chat template args",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7906",
+          "state": "closed"
+        },
+        {
+          "number": 6236,
+          "title": "feat: reasoning effort parsing for the DeepSeek V3.2 model",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6236",
+          "state": "closed"
+        },
+        {
+          "number": 9317,
+          "title": "refactor(llm): Deduplicate DeepSeek prompt encoders",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/9317",
+          "state": "closed"
+        },
+        {
+          "number": 10508,
+          "title": "test(serve): shrink heavy CI model footprints to speed up GPU test packing",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10508",
+          "state": "closed"
+        },
+        {
+          "number": 9154,
+          "title": "feat: unify per-model reasoning disable logic + wire reasoning_effort to template args",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9154",
+          "state": "closed"
+        },
+        {
+          "number": 10988,
+          "title": "fix(toolcalling): publish fragmented tool calls on finish instead of end-of-stream",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10988",
+          "state": "closed"
+        },
+        {
+          "number": 14033,
+          "title": "feat(recipes): add Qwen3.8-Flash-Next vLLM recipes for B200 (agg + disagg)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14033",
+          "state": "closed"
+        },
+        {
+          "number": 9462,
+          "title": "fix(parsers): align qwen3_coder + minimax_m2 XML parsers with official spec",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9462",
+          "state": "closed"
+        },
+        {
+          "number": 14679,
+          "title": "perf(replay): generate synthetic prompts on concurrency admission",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14679",
+          "state": "open"
+        },
+        {
+          "number": 9268,
+          "title": "fix(recipes): dsv4 vllm \u2014 disable flashinfer autotune",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9268",
+          "state": "closed"
+        },
+        {
+          "number": 12141,
+          "title": "test(vllm): validate classify and pooling endpoints",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12141",
+          "state": "closed"
+        },
+        {
+          "number": 5223,
+          "title": "fix: vllm default behaviour for generation prompt",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5223",
+          "state": "closed"
+        },
+        {
+          "number": 12944,
+          "title": "docs: K3 refreshed recipes",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12944",
+          "state": "closed"
+        },
+        {
+          "number": 9659,
+          "title": "test(parsers): add streaming parser YAML fixtures",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9659",
+          "state": "closed"
+        },
+        {
+          "number": 9536,
+          "title": "fix(parsers): handle semicolon-separated parallel tool calls in Llama 3.x JSON parser",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9536",
+          "state": "closed"
+        },
+        {
+          "number": 4948,
+          "title": "feat: Pass tool definitions to parsers",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4948",
+          "state": "closed"
+        },
+        {
+          "number": 10709,
+          "title": "feat: support streaming tool calls in sglang_prepost",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10709",
+          "state": "closed"
+        },
+        {
+          "number": 13482,
+          "title": "fix(test): cap DeepEP smoke payloads at 128 output tokens",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13482",
+          "state": "closed"
+        },
+        {
+          "number": 14123,
+          "title": "feat(router): add pluggable router flow control",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14123",
+          "state": "closed"
+        },
+        {
+          "number": 3891,
+          "title": "feat: restructure dsr1 recipes and add gb200",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3891",
+          "state": "closed"
+        },
+        {
+          "number": 11805,
+          "title": "refactor(router): remove durable KV events [DYN-2203]",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11805",
+          "state": "closed"
+        },
+        {
+          "number": 7786,
+          "title": "feat(kvbm): add MLA support for DeepSeek-V2 and extend determinism tests",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7786",
+          "state": "closed"
+        },
+        {
+          "number": 4383,
+          "title": "fix: point to new sglang container and rm references to old",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4383",
+          "state": "closed"
+        },
+        {
+          "number": 10414,
+          "title": "ci(kvbm): add KVBM test to post-merge CI",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10414",
+          "state": "closed"
+        },
+        {
+          "number": 9363,
+          "title": "test(parser): port over vLLM's tests (categories PARSER.batch.{2,4,5,6,7}.*), part 2",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9363",
+          "state": "closed"
+        },
+        {
+          "number": 10144,
+          "title": "fix(parsers): recover Top-N damaged tool calls",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10144",
+          "state": "closed"
+        },
+        {
+          "number": 9620,
+          "title": "test(parity): expand PARSER.batch cases based on SGLang tests",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9620",
+          "state": "closed"
+        },
+        {
+          "number": 9844,
+          "title": "fix: correct thinking behavior for harmony parser",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9844",
+          "state": "closed"
+        },
+        {
+          "number": 2218,
+          "title": "fix: Kprashanth/trtllm rc4 cherry pick",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2218",
+          "state": "closed"
+        }
+      ]
+    },
+    {
+      "query": "repo:ai-dynamo/dynamo \"renderer\" \"normalization\"",
+      "url": "https://api.github.com/search/issues?q=repo%3Aai-dynamo%2Fdynamo+%22renderer%22+%22normalization%22&per_page=100",
+      "total_count": 57,
+      "returned_count": 57,
+      "complete_page_coverage": true,
+      "incomplete_results": false,
+      "items": [
+        {
+          "number": 15163,
+          "title": "fix(frontend): preserve message rewrites during rendering",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/15163",
+          "state": "open"
+        },
+        {
+          "number": 14616,
+          "title": "feat(llm): add native DeepSeek V4.1 frontend support",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14616",
+          "state": "open"
+        },
+        {
+          "number": 15152,
+          "title": "fix(preprocessor): order tool-result media by tool call order",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/15152",
+          "state": "open"
+        },
+        {
+          "number": 14988,
+          "title": "fix(operator): normalize Docker Hub pull-secret discovery",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14988",
+          "state": "open"
+        },
+        {
+          "number": 14806,
+          "title": "chore(deps): [cherry-pick 1.5.1] bump dynamo-renderer to 5.1.2 and dynamo-protocols to 5.4.1 (#14595, #14154)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14806",
+          "state": "open"
+        },
+        {
+          "number": 12109,
+          "title": "fix(glm52): chat template parity fixes \u2014 arguments normalization and streaming tool_call recovery",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12109",
+          "state": "open"
+        },
+        {
+          "number": 11532,
+          "title": "feat(vllm): complete exact MM routing for generate",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11532",
+          "state": "open"
+        },
+        {
+          "number": 12625,
+          "title": "feat(operator): add DisaggregatedSet workload program",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12625",
+          "state": "open"
+        },
+        {
+          "number": 14721,
+          "title": "fix(operator): normalize equivalent worker hash inputs",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14721",
+          "state": "closed"
+        },
+        {
+          "number": 14916,
+          "title": "fix(operator): normalize default compilation cache paths in worker hashes",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14916",
+          "state": "closed"
+        },
+        {
+          "number": 15235,
+          "title": "fix(frontend): honor disabled thinking for MiniMax named tool calls",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/15235",
+          "state": "closed"
+        },
+        {
+          "number": 11661,
+          "title": "DEP: EPP Embedded SelectionService Interface",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/11661",
+          "state": "open"
+        },
+        {
+          "number": 14059,
+          "title": "fix(container): patch vLLM 0.26.0 DSpark rejection sampler and FlashMLA empty prefill chunks",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14059",
+          "state": "open"
+        },
+        {
+          "number": 14755,
+          "title": "fix(frontend): integrate Kimi dynamic tools from frontend-crates",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14755",
+          "state": "closed"
+        },
+        {
+          "number": 15030,
+          "title": "feat: Backport DeepSeek v4.1 support to main",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/15030",
+          "state": "closed"
+        },
+        {
+          "number": 11588,
+          "title": "feat(frontend): add exact MM routing for generate",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11588",
+          "state": "closed"
+        },
+        {
+          "number": 14854,
+          "title": "feat(triton): Update Triton Base Image to 26.08",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14854",
+          "state": "closed"
+        },
+        {
+          "number": 15182,
+          "title": "build(vllm): upgrade vLLM to v0.30.0",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/15182",
+          "state": "closed"
+        },
+        {
+          "number": 11804,
+          "title": "feat: add native vLLM gRPC sidecar backend",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11804",
+          "state": "open"
+        },
+        {
+          "number": 9012,
+          "title": "feat(frontend): add /tokenize and /detokenize endpoints",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9012",
+          "state": "open"
+        },
+        {
+          "number": 14420,
+          "title": "DEP: North Star: Make DGD workload materialization and logical wiring orthogonal",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/14420",
+          "state": "open"
+        },
+        {
+          "number": 12332,
+          "title": "fix(llm): normalize tool_call arguments from JSON string to object before template render",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12332",
+          "state": "closed"
+        },
+        {
+          "number": 13580,
+          "title": "feat(operator): render an on-demand elastic-EP follower on the non-Grove path (Phase 4)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13580",
+          "state": "open"
+        },
+        {
+          "number": 10510,
+          "title": "fix(renderer): default missing tool description to empty string",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10510",
+          "state": "closed"
+        },
+        {
+          "number": 12687,
+          "title": "fix(preprocessor): bridge thinking_mode for MiniMax M3",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12687",
+          "state": "closed"
+        },
+        {
+          "number": 14477,
+          "title": "feat(operator): add explicit component role replicas",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14477",
+          "state": "closed"
+        },
+        {
+          "number": 7889,
+          "title": "feat(container): add SGLang CPU Docker support",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7889",
+          "state": "open"
+        },
+        {
+          "number": 11653,
+          "title": "fix: Fix multi-turn reasoning in Kimi 2.5/2.6",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11653",
+          "state": "closed"
+        },
+        {
+          "number": 9946,
+          "title": "refactor: extract chat-template rendering into standalone dynamo-renderer crate",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9946",
+          "state": "closed"
+        },
+        {
+          "number": 11047,
+          "title": "feat: Support deployment-level thinking defaults for chat templates",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11047",
+          "state": "closed"
+        },
+        {
+          "number": 9089,
+          "title": "fix(omni): support Qwen3-Omni async chunk stage workers",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9089",
+          "state": "closed"
+        },
+        {
+          "number": 11869,
+          "title": "fix(codeowners): harden policy gate and document contributor workflow",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11869",
+          "state": "closed"
+        },
+        {
+          "number": 12219,
+          "title": "fix: DeepSeek-V4 serving fixes, streaming 4xx, deployment default_thinking",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12219",
+          "state": "closed"
+        },
+        {
+          "number": 12110,
+          "title": "docs(api): generate typed language references with rendered docstrings",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12110",
+          "state": "closed"
+        },
+        {
+          "number": 9255,
+          "title": "build: DYN-2940 update vLLM-Omni to v0.20.0",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9255",
+          "state": "closed"
+        },
+        {
+          "number": 9778,
+          "title": "fix(llm): support GPT-OSS tool calling from Codex on Dynamo",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9778",
+          "state": "closed"
+        },
+        {
+          "number": 10673,
+          "title": "fix(frontend): normalize multimodal content shapes on sglang chat-processor path",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10673",
+          "state": "closed"
+        },
+        {
+          "number": 10114,
+          "title": "fix(sglang): support OpenAI thinking payload",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10114",
+          "state": "closed"
+        },
+        {
+          "number": 9945,
+          "title": "refactor: extract chat-template rendering into standalone dynamo-prompt crate",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9945",
+          "state": "closed"
+        },
+        {
+          "number": 7275,
+          "title": "fix: vLLM 0.17.1 compatibility fixes for vllm_processor",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7275",
+          "state": "closed"
+        },
+        {
+          "number": 14071,
+          "title": "feat(metrics): export metrics over OTLP from a typed engine contract",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14071",
+          "state": "closed"
+        },
+        {
+          "number": 12769,
+          "title": "fix(operator): suffix Grove worker namespaces",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12769",
+          "state": "closed"
+        },
+        {
+          "number": 12890,
+          "title": "refactor(discovery): reconcile models through desired state [DYN-3847]",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12890",
+          "state": "closed"
+        },
+        {
+          "number": 8519,
+          "title": "chore(attributions): add repo-root ATTRIBUTIONS-*.md generator (supersedes #7402)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8519",
+          "state": "closed"
+        },
+        {
+          "number": 9891,
+          "title": "test: update reasoning parity fixtures (part 2)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9891",
+          "state": "closed"
+        },
+        {
+          "number": 8671,
+          "title": "[INVESTIGATE] sglang + DSv4: kwarg workaround breaks live \u2014 needs diagnosis",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8671",
+          "state": "closed"
+        },
+        {
+          "number": 8739,
+          "title": "feat(container): add planner test stage and unify test image builds via inline _test stages",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8739",
+          "state": "closed"
+        },
+        {
+          "number": 11352,
+          "title": "fix(planner): read worker runtime namespace from DGD status",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11352",
+          "state": "closed"
+        },
+        {
+          "number": 10149,
+          "title": "feat(backend): Enable log_probs for unified backends",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10149",
+          "state": "closed"
+        },
+        {
+          "number": 13943,
+          "title": "feat(triton): Deliver Build, Test, and CI Functionality",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13943",
+          "state": "closed"
+        },
+        {
+          "number": 13438,
+          "title": "fix(llm): bound speculative prefill warmup lifetime",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13438",
+          "state": "closed"
+        },
+        {
+          "number": 10166,
+          "title": "feat(vllm/omni): realtime (bidirectional) vLLM-Omni worker",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10166",
+          "state": "closed"
+        },
+        {
+          "number": 9579,
+          "title": "test(parity): flag Dynamo tool call leaks (\u21af marker) + chart UX",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9579",
+          "state": "closed"
+        },
+        {
+          "number": 13059,
+          "title": "chore(vllm): bump vLLM to 0.27.1",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13059",
+          "state": "closed"
+        },
+        {
+          "number": 3051,
+          "title": "feat: add Jinja2 templating system for Dockerfiles",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3051",
+          "state": "closed"
+        },
+        {
+          "number": 14570,
+          "title": "feat(router): unify frontend and standalone selection core",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14570",
+          "state": "closed"
+        },
+        {
+          "number": 9682,
+          "title": "feat(power-agent): per-node power-cap enforcement DaemonSet",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9682",
+          "state": "closed"
+        }
+      ]
+    },
+    {
+      "query": "repo:ai-dynamo/dynamo \"R1\" \"template\"",
+      "url": "https://api.github.com/search/issues?q=repo%3Aai-dynamo%2Fdynamo+%22R1%22+%22template%22&per_page=100",
+      "total_count": 273,
+      "returned_count": 100,
+      "complete_page_coverage": false,
+      "incomplete_results": false,
+      "items": [
+        {
+          "number": 14971,
+          "title": "DEP (light): Path-independent worker admission and relay identity",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/14971",
+          "state": "open"
+        },
+        {
+          "number": 7831,
+          "title": "fix: guided decoding for reasoning models via structural_tag (TRT-LLM)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7831",
+          "state": "open"
+        },
+        {
+          "number": 13765,
+          "title": "feat(profiler): add Sweeper DGD materialization entrypoint",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13765",
+          "state": "open"
+        },
+        {
+          "number": 15086,
+          "title": "test(sidecar): cover DEP rank-aware KV routing",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/15086",
+          "state": "open"
+        },
+        {
+          "number": 7927,
+          "title": "test(kvbm): add MLA CI tests for vLLM and TensorRT-LLM",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7927",
+          "state": "open"
+        },
+        {
+          "number": 6932,
+          "title": "feat: Nemotron-3-Super-120B agg recipe",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6932",
+          "state": "open"
+        },
+        {
+          "number": 9630,
+          "title": "test(mocker): pin concurrent-prefill overwrite on wait_for_decode_ready",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9630",
+          "state": "open"
+        },
+        {
+          "number": 9006,
+          "title": "bug(sglang): guided decoding silently fails when reasoning/thinking is enabled",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/9006",
+          "state": "open"
+        },
+        {
+          "number": 12276,
+          "title": "fix(recipes): nemotron-3-super-fp8 TRT-LLM disagg cannot initialize without max_tokens_in_buffer",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12276",
+          "state": "open"
+        },
+        {
+          "number": 5418,
+          "title": "docs: fix aicBackendVersion documentation and add link to support matrix",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5418",
+          "state": "open"
+        },
+        {
+          "number": 11206,
+          "title": "test(frontend): add CPU-only tool and reasoning e2e matrix",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11206",
+          "state": "open"
+        },
+        {
+          "number": 8399,
+          "title": "feat: add DYN_WORKER_DISABLE_GC to disable Python GC on workers",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8399",
+          "state": "open"
+        },
+        {
+          "number": 13121,
+          "title": "DEP: Dynamo-managed Elastic EP on Kubernetes",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/13121",
+          "state": "open"
+        },
+        {
+          "number": 13979,
+          "title": "test: assert tool results are actually used, locally and on any recipe (OPS-8412, OPS-8418)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13979",
+          "state": "open"
+        },
+        {
+          "number": 13605,
+          "title": "fix(sglang): drop --skip-tokenizer-init from k8s text-generation paths",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13605",
+          "state": "closed"
+        },
+        {
+          "number": 10626,
+          "title": "Recipes audit: several recipes are packaged benchmark-first, not deployment-first",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/10626",
+          "state": "open"
+        },
+        {
+          "number": 7651,
+          "title": "feat(recipes): add GAIE recipe for llama-3-70b vLLM disagg-multi-node",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7651",
+          "state": "open"
+        },
+        {
+          "number": 8037,
+          "title": "feat(trtllm): ModelExpress P2P weight transfer with auto-detect source/target",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8037",
+          "state": "open"
+        },
+        {
+          "number": 14602,
+          "title": "fix(frontend): honor explicit SGLang skip_special_tokens",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14602",
+          "state": "closed"
+        },
+        {
+          "number": 15014,
+          "title": "feat(mm-routing): add Qwen video-aware KV routing for SGLang",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/15014",
+          "state": "open"
+        },
+        {
+          "number": 8354,
+          "title": "feat(examples): Add XPU aggregated launch scripts and update docs",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8354",
+          "state": "open"
+        },
+        {
+          "number": 7286,
+          "title": "fix: respect per-request chat_template_kwargs for DeepSeek V3.2 thinking mode",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7286",
+          "state": "closed"
+        },
+        {
+          "number": 14570,
+          "title": "feat(router): unify frontend and standalone selection core",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14570",
+          "state": "closed"
+        },
+        {
+          "number": 7906,
+          "title": "feat: map reasoning_effort to model-specific chat template args",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7906",
+          "state": "closed"
+        },
+        {
+          "number": 8479,
+          "title": "fix(profiler): pass total_gpus to AIC enumerate so candidates respect budget",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8479",
+          "state": "closed"
+        },
+        {
+          "number": 6401,
+          "title": "fix: add TRITON_*_PATH env vars to vLLM runtime Dockerfile",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6401",
+          "state": "closed"
+        },
+        {
+          "number": 11205,
+          "title": "fix:  Fix guided decoding for force-reasoning parsers",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11205",
+          "state": "closed"
+        },
+        {
+          "number": 9154,
+          "title": "feat: unify per-model reasoning disable logic + wire reasoning_effort to template args",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9154",
+          "state": "closed"
+        },
+        {
+          "number": 6442,
+          "title": "fix(api): preserve interleaved reasoning order for KV cache correctness",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6442",
+          "state": "closed"
+        },
+        {
+          "number": 14492,
+          "title": "build(deps): upgrade AIPerf to 0.12.0",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14492",
+          "state": "closed"
+        },
+        {
+          "number": 14088,
+          "title": "fix(frontend): align Python frontend output postprocessing for structured output, forced tool calls, and parser markers",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14088",
+          "state": "open"
+        },
+        {
+          "number": 9180,
+          "title": "fix: drop hardcoded 4k max_output_tokens default in Responses API",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9180",
+          "state": "closed"
+        },
+        {
+          "number": 4253,
+          "title": "feat: Support toolcall parser for DeepSeek V3 and R1",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4253",
+          "state": "closed"
+        },
+        {
+          "number": 3349,
+          "title": "fix: Polling from exhausted stream in preprocessor",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3349",
+          "state": "closed"
+        },
+        {
+          "number": 9181,
+          "title": "fix: drop hardcoded 4k max_output_tokens default in Responses API",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9181",
+          "state": "closed"
+        },
+        {
+          "number": 10913,
+          "title": "docs: removes the nvext ignore_eos extra input for the recipes",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10913",
+          "state": "closed"
+        },
+        {
+          "number": 3891,
+          "title": "feat: restructure dsr1 recipes and add gb200",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3891",
+          "state": "closed"
+        },
+        {
+          "number": 10057,
+          "title": "fix(parser): document Nemotron Nano reasoning parity",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10057",
+          "state": "closed"
+        },
+        {
+          "number": 10134,
+          "title": "test(parsers): document Nemotron Nano and DeepSeek V3 SGLang reasoning parity",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10134",
+          "state": "closed"
+        },
+        {
+          "number": 5179,
+          "title": "fix: remove old docs and unify model paths",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5179",
+          "state": "closed"
+        },
+        {
+          "number": 4383,
+          "title": "fix: point to new sglang container and rm references to old",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4383",
+          "state": "closed"
+        },
+        {
+          "number": 6629,
+          "title": "feat: Full Anthropic Messages API cache_control support (top-level, per-block, system block arrays)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6629",
+          "state": "closed"
+        },
+        {
+          "number": 5010,
+          "title": "fix: Remove debug logging from aiperf benchmarking",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5010",
+          "state": "closed"
+        },
+        {
+          "number": 2700,
+          "title": "feat: enable --dyn-reasoning-parser flag to set reasoning parser for \u2026",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2700",
+          "state": "closed"
+        },
+        {
+          "number": 12350,
+          "title": "fix(frontend): derive reasoning default from SGLang instead of a local table",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12350",
+          "state": "closed"
+        },
+        {
+          "number": 7133,
+          "title": "fix: Reduce max_num_tokens in wide_ep dsr1 prefill worker",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7133",
+          "state": "closed"
+        },
+        {
+          "number": 2305,
+          "title": "docs: Deploy readme update",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2305",
+          "state": "closed"
+        },
+        {
+          "number": 7714,
+          "title": "feat: add kvbm-bench and kvbm-registry crate scaffolding",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7714",
+          "state": "closed"
+        },
+        {
+          "number": 13034,
+          "title": "fix(recipes): parameterize DeepSeek-V4 model download so H200 recipes get the FP8 checkpoint",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13034",
+          "state": "closed"
+        },
+        {
+          "number": 10688,
+          "title": "chore: bump version references to v1.2.1",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10688",
+          "state": "closed"
+        },
+        {
+          "number": 13639,
+          "title": "fix(agent-skills): correct mechanical defects in the optimization skill pack (OPS-8324)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13639",
+          "state": "closed"
+        },
+        {
+          "number": 8570,
+          "title": "chore: bump version references to v1.0.2",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8570",
+          "state": "closed"
+        },
+        {
+          "number": 3062,
+          "title": "feat: add audit logging for chat completions",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3062",
+          "state": "closed"
+        },
+        {
+          "number": 6300,
+          "title": "fix: wire reasoning parser from worker runtime config into frontend",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6300",
+          "state": "closed"
+        },
+        {
+          "number": 5189,
+          "title": "fix: Cherry-pick Resolving wrong model for testing (#5135)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5189",
+          "state": "closed"
+        },
+        {
+          "number": 10206,
+          "title": "[BUG] Codex first turn fails: System message must be at the beginning (instructions + developer in /v1/responses)",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/10206",
+          "state": "closed"
+        },
+        {
+          "number": 2218,
+          "title": "fix: Kprashanth/trtllm rc4 cherry pick",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2218",
+          "state": "closed"
+        },
+        {
+          "number": 7285,
+          "title": "fix: respect chat_template_kwargs thinking override in DeepSeek V3.2 native formatter",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7285",
+          "state": "closed"
+        },
+        {
+          "number": 5564,
+          "title": "docs: add NIXL backend configuration and fix multiple typos",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5564",
+          "state": "closed"
+        },
+        {
+          "number": 2303,
+          "title": "docs: update main deploy README from main",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2303",
+          "state": "closed"
+        },
+        {
+          "number": 8387,
+          "title": "docs: pin all image tags to 1.0.1, remove my-tag placeholders",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8387",
+          "state": "closed"
+        },
+        {
+          "number": 11061,
+          "title": "chore: upgrade the aiperf version in dynamo repo",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11061",
+          "state": "closed"
+        },
+        {
+          "number": 4417,
+          "title": "feat: Pr 4159 fixes",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4417",
+          "state": "closed"
+        },
+        {
+          "number": 3659,
+          "title": "feat(frontend): Get model config files (`tokenizer.json` et al.) from MX",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3659",
+          "state": "closed"
+        },
+        {
+          "number": 5223,
+          "title": "fix: vllm default behaviour for generation prompt",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5223",
+          "state": "closed"
+        },
+        {
+          "number": 4115,
+          "title": "fix: update planner + docs now that profiling results are stored in /data (#4098)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4115",
+          "state": "closed"
+        },
+        {
+          "number": 10283,
+          "title": "fix(frontend): merge leading system messages to fix Codex CLI first-turn failure",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10283",
+          "state": "closed"
+        },
+        {
+          "number": 3989,
+          "title": "fix: use full path for recipes directory",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3989",
+          "state": "closed"
+        },
+        {
+          "number": 7137,
+          "title": "feat(anthropic): add thinking block support and preamble stripping to /v1/messages",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7137",
+          "state": "closed"
+        },
+        {
+          "number": 2335,
+          "title": "fix: nil pointer deref in dynamo controller",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2335",
+          "state": "closed"
+        },
+        {
+          "number": 11897,
+          "title": "chore: bump version references to v1.3.0",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11897",
+          "state": "closed"
+        },
+        {
+          "number": 9051,
+          "title": "chore: bump version references to v1.1.0",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9051",
+          "state": "closed"
+        },
+        {
+          "number": 3772,
+          "title": "refactor: move engine configs out of components directory",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3772",
+          "state": "closed"
+        },
+        {
+          "number": 3456,
+          "title": "chore: Update vLLM DSR1 launch script to support PD disaggregation",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3456",
+          "state": "closed"
+        },
+        {
+          "number": 10131,
+          "title": "test(parser): document non-Harmony reasoning boundary cases n/a",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10131",
+          "state": "closed"
+        },
+        {
+          "number": 1908,
+          "title": "[BUG]: occasionally race condition during vllm v1 engine inits",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/1908",
+          "state": "closed"
+        },
+        {
+          "number": 2174,
+          "title": "docs: Examples README/restructuring",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2174",
+          "state": "closed"
+        },
+        {
+          "number": 8665,
+          "title": "chore(frontend):  Add DeepSeek V4 parser support + Test Cases",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8665",
+          "state": "closed"
+        },
+        {
+          "number": 2670,
+          "title": "fix: prevent crash looping hello world #2625",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2670",
+          "state": "closed"
+        },
+        {
+          "number": 3189,
+          "title": "fix: creating quickstart.md, updating README, and small updates ",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3189",
+          "state": "closed"
+        },
+        {
+          "number": 3725,
+          "title": "feat: Add KV event consolidator for KVBM (vllm) and router integration",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3725",
+          "state": "closed"
+        },
+        {
+          "number": 10030,
+          "title": "fix: Fix guided decoding for DSV4",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10030",
+          "state": "closed"
+        },
+        {
+          "number": 3972,
+          "title": "docs: Adding redirects",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3972",
+          "state": "closed"
+        },
+        {
+          "number": 11251,
+          "title": "fix(llm): keep Nemotron reasoning parsing for force_nonempty_content requests",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11251",
+          "state": "closed"
+        },
+        {
+          "number": 6698,
+          "title": "docs: restructure vLLM docs and add startup banners to launch scripts",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6698",
+          "state": "closed"
+        },
+        {
+          "number": 4240,
+          "title": "fix: merge main 4197 (remaining deprecated DYN_SYSTEM_ENABLED var) to 0.7.0",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4240",
+          "state": "closed"
+        },
+        {
+          "number": 3621,
+          "title": "chore: update sglang to 0.5.3.post1 to take advantage of container + doc cleanup",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3621",
+          "state": "closed"
+        },
+        {
+          "number": 9346,
+          "title": "chore: bump version references to v1.1.1",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9346",
+          "state": "closed"
+        },
+        {
+          "number": 6276,
+          "title": "limit bootstrap room to range 0-2^63-1",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6276",
+          "state": "closed"
+        },
+        {
+          "number": 9441,
+          "title": "fix: MM-aware KV routing for Phi-3, Qwen2-VL, Qwen2.5-VL",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9441",
+          "state": "closed"
+        },
+        {
+          "number": 6260,
+          "title": "fix: move ffmpeg copy before USER dynamo to fix permission denied",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6260",
+          "state": "closed"
+        },
+        {
+          "number": 7015,
+          "title": "feat(kvbm): KVBM MLA support optimization",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7015",
+          "state": "closed"
+        },
+        {
+          "number": 10138,
+          "title": "docs(parity): tag nemotron parser rows with model generations",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10138",
+          "state": "closed"
+        },
+        {
+          "number": 5710,
+          "title": "docs: DYN-1967 update metrics docs after kvstats removal",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5710",
+          "state": "closed"
+        },
+        {
+          "number": 8866,
+          "title": "chore(recipes): refresh DeepSeek-R1 and Kimi-K2.5 TensorRT-LLM configs",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8866",
+          "state": "closed"
+        },
+        {
+          "number": 7059,
+          "title": "chore: remove stale example assets",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7059",
+          "state": "closed"
+        },
+        {
+          "number": 11311,
+          "title": "fix(runtime): [cherry-pick 1.3.0] give event publishers unique discovery identities (DYN-3359) (#11014)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11311",
+          "state": "closed"
+        },
+        {
+          "number": 9430,
+          "title": "docs: add Fastokens tokenizer user guide",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9430",
+          "state": "closed"
+        },
+        {
+          "number": 5286,
+          "title": "feat: GPU Memory Service",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5286",
+          "state": "closed"
+        },
+        {
+          "number": 7225,
+          "title": "fix: add force_nonempty_content for nemotron",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7225",
+          "state": "closed"
+        }
+      ]
+    },
+    {
+      "query": "repo:ai-dynamo/dynamo \"DeepSeek-R1\" \"normalization\"",
+      "url": "https://api.github.com/search/issues?q=repo%3Aai-dynamo%2Fdynamo+%22DeepSeek-R1%22+%22normalization%22&per_page=100",
+      "total_count": 22,
+      "returned_count": 22,
+      "complete_page_coverage": true,
+      "incomplete_results": false,
+      "items": [
+        {
+          "number": 11206,
+          "title": "test(frontend): add CPU-only tool and reasoning e2e matrix",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11206",
+          "state": "open"
+        },
+        {
+          "number": 13216,
+          "title": "test(router): use page_size 64 for the sglang router suite",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13216",
+          "state": "closed"
+        },
+        {
+          "number": 10913,
+          "title": "docs: removes the nvext ignore_eos extra input for the recipes",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10913",
+          "state": "closed"
+        },
+        {
+          "number": 10201,
+          "title": "feat(tokenizers): multi-turn L1 prefix-cache extension on a moka W-TinyLFU backend",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10201",
+          "state": "closed"
+        },
+        {
+          "number": 2700,
+          "title": "feat: enable --dyn-reasoning-parser flag to set reasoning parser for \u2026",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2700",
+          "state": "closed"
+        },
+        {
+          "number": 13639,
+          "title": "fix(agent-skills): correct mechanical defects in the optimization skill pack (OPS-8324)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13639",
+          "state": "closed"
+        },
+        {
+          "number": 3239,
+          "title": "feat: add sglang-wideep support to container/build.sh",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3239",
+          "state": "closed"
+        },
+        {
+          "number": 2930,
+          "title": "chore: Update trtllm version to 1.1.0rc3",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2930",
+          "state": "closed"
+        },
+        {
+          "number": 7137,
+          "title": "feat(anthropic): add thinking block support and preamble stripping to /v1/messages",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7137",
+          "state": "closed"
+        },
+        {
+          "number": 10096,
+          "title": "fix: add reasoning parser mapping to sglang",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10096",
+          "state": "closed"
+        },
+        {
+          "number": 14570,
+          "title": "feat(router): unify frontend and standalone selection core",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14570",
+          "state": "closed"
+        },
+        {
+          "number": 3440,
+          "title": "docs: move all md files from components to docs",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3440",
+          "state": "closed"
+        },
+        {
+          "number": 11311,
+          "title": "fix(runtime): [cherry-pick 1.3.0] give event publishers unique discovery identities (DYN-3359) (#11014)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11311",
+          "state": "closed"
+        },
+        {
+          "number": 6154,
+          "title": "feat(profiler): TRT-LLM DEP/TEP profiling with WIDEEP support",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6154",
+          "state": "closed"
+        },
+        {
+          "number": 8671,
+          "title": "[INVESTIGATE] sglang + DSv4: kwarg workaround breaks live \u2014 needs diagnosis",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8671",
+          "state": "closed"
+        },
+        {
+          "number": 13135,
+          "title": "fix(recipes): parameterize DeepSeek-V4 model download so H200 recipes get the FP8 checkpoint",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13135",
+          "state": "closed"
+        },
+        {
+          "number": 9484,
+          "title": "feat(profiler): Add XPU (Intel b60) integration test coverage",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9484",
+          "state": "closed"
+        },
+        {
+          "number": 6258,
+          "title": "feat: workflow error classifier and commentor",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6258",
+          "state": "closed"
+        },
+        {
+          "number": 9433,
+          "title": "chore: update all doc/examples to use v1beta1",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9433",
+          "state": "closed"
+        },
+        {
+          "number": 2573,
+          "title": "feat: use consistent small models across all deploy examples",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2573",
+          "state": "closed"
+        },
+        {
+          "number": 4166,
+          "title": "feat: add dynamoModel CRD",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4166",
+          "state": "closed"
+        },
+        {
+          "number": 1101,
+          "title": "[BUG]: Error 803: CUDA driver/display driver mismatch when running dynamo serve with vLLM",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/1101",
+          "state": "closed"
+        }
+      ]
+    },
+    {
+      "query": "repo:ai-dynamo/dynamo \"string and map\"",
+      "url": "https://api.github.com/search/issues?q=repo%3Aai-dynamo%2Fdynamo+%22string+and+map%22&per_page=100",
+      "total_count": 86,
+      "returned_count": 86,
+      "complete_page_coverage": true,
+      "incomplete_results": false,
+      "items": [
+        {
+          "number": 14612,
+          "title": "fix(epp): return 431 for oversized metadata headers and carry typed MetadataHeaderError",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14612",
+          "state": "closed"
+        },
+        {
+          "number": 13326,
+          "title": "fix(logging): parse DYN_LOG filter directives when deriving engine log level",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13326",
+          "state": "open"
+        },
+        {
+          "number": 14395,
+          "title": "refactor(errors): unify semantic error classification",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14395",
+          "state": "closed"
+        },
+        {
+          "number": 14530,
+          "title": "fix(kv-router): decode SGLang BlockStored metadata in positional KV events",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14530",
+          "state": "closed"
+        },
+        {
+          "number": 14326,
+          "title": "feat(vllm): support incremental realtime text input",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14326",
+          "state": "open"
+        },
+        {
+          "number": 14957,
+          "title": "fix(llm): report KServe datatypes by their wire names, not protobuf variants",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14957",
+          "state": "closed"
+        },
+        {
+          "number": 11745,
+          "title": "feat(examples): add XPU LoRA DRA deployment templates",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11745",
+          "state": "open"
+        },
+        {
+          "number": 13118,
+          "title": "fix(llm): read the FinishReason string form workers emit",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13118",
+          "state": "closed"
+        },
+        {
+          "number": 14770,
+          "title": "fix(llm): report KServe datatypes by their wire names, not protobuf variants",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14770",
+          "state": "closed"
+        },
+        {
+          "number": 9819,
+          "title": "fix(trtllm): warn on --extra-engine-args collisions via the shared override walker",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9819",
+          "state": "open"
+        },
+        {
+          "number": 14802,
+          "title": "perf(backend): decode MessagePack token arrays directly",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14802",
+          "state": "open"
+        },
+        {
+          "number": 6529,
+          "title": "feat: video and image protocols python bindings",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6529",
+          "state": "closed"
+        },
+        {
+          "number": 13888,
+          "title": "fix(llm): reject unsupported reasoning parser names",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13888",
+          "state": "open"
+        },
+        {
+          "number": 13806,
+          "title": "feat(router): retrieve optional session_id field from vLLM engine KV events",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13806",
+          "state": "closed"
+        },
+        {
+          "number": 11874,
+          "title": "feat(sglang): add mock gRPC server for sidecar tests",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11874",
+          "state": "closed"
+        },
+        {
+          "number": 7831,
+          "title": "fix: guided decoding for reasoning models via structural_tag (TRT-LLM)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7831",
+          "state": "open"
+        },
+        {
+          "number": 12109,
+          "title": "fix(glm52): chat template parity fixes \u2014 arguments normalization and streaming tool_call recovery",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12109",
+          "state": "open"
+        },
+        {
+          "number": 10969,
+          "title": "feat(backend): cross-language encoder_result handoff contract",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10969",
+          "state": "closed"
+        },
+        {
+          "number": 7626,
+          "title": "fix: #6291 add reset_prefix_cache route to frontend HTTP service",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7626",
+          "state": "open"
+        },
+        {
+          "number": 10366,
+          "title": "fix(parsers): reasoning parser to recover Harmony analysis-channel tool calls",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10366",
+          "state": "closed"
+        },
+        {
+          "number": 4771,
+          "title": "fix: have frontend populate \"stop\" field in OpenAI request",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4771",
+          "state": "closed"
+        },
+        {
+          "number": 12332,
+          "title": "fix(llm): normalize tool_call arguments from JSON string to object before template render",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12332",
+          "state": "closed"
+        },
+        {
+          "number": 2426,
+          "title": "feat: logprob handling",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2426",
+          "state": "closed"
+        },
+        {
+          "number": 8090,
+          "title": "fix(frontend): classify cancelled requests as 499 instead of 500",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8090",
+          "state": "closed"
+        },
+        {
+          "number": 8674,
+          "title": "fix(streaming): propagate backend errors in SSE streams",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8674",
+          "state": "closed"
+        },
+        {
+          "number": 14622,
+          "title": "fix(operator): stop the topology label controller reconciling pods silently",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14622",
+          "state": "closed"
+        },
+        {
+          "number": 8724,
+          "title": "test(parsers): add cross-parser contract test scaffold (part 1)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8724",
+          "state": "closed"
+        },
+        {
+          "number": 9205,
+          "title": "feat: dedicated realtime-API protocol types for /v1/realtime",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9205",
+          "state": "closed"
+        },
+        {
+          "number": 12140,
+          "title": "feat(llm): add classify and pooling model support",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12140",
+          "state": "closed"
+        },
+        {
+          "number": 12999,
+          "title": "perf(frontend): flush detokenization metrics once",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12999",
+          "state": "closed"
+        },
+        {
+          "number": 11124,
+          "title": "feat(dgdr): add version-aware DGD override merger",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11124",
+          "state": "closed"
+        },
+        {
+          "number": 6098,
+          "title": "feat: add embedding transfer sender and receiver",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6098",
+          "state": "closed"
+        },
+        {
+          "number": 2619,
+          "title": "feat: [vLLM] implement cli args for tool and reasoning parsers",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2619",
+          "state": "closed"
+        },
+        {
+          "number": 6492,
+          "title": "fix(chrek): fix multi-GPU UUID mapping and CUDA PID discovery",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6492",
+          "state": "closed"
+        },
+        {
+          "number": 5842,
+          "title": "feat: Add per-worker Prometheus metrics for router load monitoring",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5842",
+          "state": "closed"
+        },
+        {
+          "number": 12625,
+          "title": "feat(operator): add DisaggregatedSet workload program",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12625",
+          "state": "open"
+        },
+        {
+          "number": 9322,
+          "title": "refactor(llm): Deduplicate DeepSeek prompt encoders v3.2 and v4",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9322",
+          "state": "closed"
+        },
+        {
+          "number": 7847,
+          "title": "fix: Handle anyOf/oneOf parameter schemas in Qwen3Coder tool parser",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7847",
+          "state": "closed"
+        },
+        {
+          "number": 12263,
+          "title": "refactor(operator): extract Grove workload rendering from graph controller",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12263",
+          "state": "closed"
+        },
+        {
+          "number": 9626,
+          "title": "chore: Remove HTTP request plane",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9626",
+          "state": "closed"
+        },
+        {
+          "number": 11739,
+          "title": "fix(frontend): standardize resolving thinking controls",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11739",
+          "state": "closed"
+        },
+        {
+          "number": 11036,
+          "title": "feat(operator): add SGLang selection topology controller",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11036",
+          "state": "closed"
+        },
+        {
+          "number": 11645,
+          "title": "feat(operator): add DisaggregatedSet pathway",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11645",
+          "state": "closed"
+        },
+        {
+          "number": 8721,
+          "title": "test(parsers): cross-parser contract test scaffold (DIS-1842 part 1)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8721",
+          "state": "closed"
+        },
+        {
+          "number": 3925,
+          "title": "chore: update to match new gitlab config",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3925",
+          "state": "closed"
+        },
+        {
+          "number": 8671,
+          "title": "[INVESTIGATE] sglang + DSv4: kwarg workaround breaks live \u2014 needs diagnosis",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8671",
+          "state": "closed"
+        },
+        {
+          "number": 9160,
+          "title": "Sttts dgdr fuzz tests",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9160",
+          "state": "closed"
+        },
+        {
+          "number": 5240,
+          "title": "fix: prevent services adding/removal in dgd",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5240",
+          "state": "closed"
+        },
+        {
+          "number": 11144,
+          "title": "etcd watchers should resync full prefix state after reconnect to avoid stale lease-bound discovery state",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/11144",
+          "state": "closed"
+        },
+        {
+          "number": 9662,
+          "title": "feat: Add first-class context metadata propagation",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9662",
+          "state": "closed"
+        },
+        {
+          "number": 3650,
+          "title": "chore: tool calling -- sglang e2e tests",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3650",
+          "state": "closed"
+        },
+        {
+          "number": 9402,
+          "title": "[do not merge] rust sidecar bridge to SGLang's native gRPC server",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9402",
+          "state": "closed"
+        },
+        {
+          "number": 2393,
+          "title": "chore: Refactor tool calling for wider support in the future",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2393",
+          "state": "closed"
+        },
+        {
+          "number": 8783,
+          "title": "feat: Rust ext_proc Server for EPP. Fixes [DYN-2909]",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8783",
+          "state": "closed"
+        },
+        {
+          "number": 6517,
+          "title": "feat: make KV cache events and routing LoRA-aware",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6517",
+          "state": "closed"
+        },
+        {
+          "number": 3016,
+          "title": "feat: add chat_template_kwargs param to v1/chat/completion ",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3016",
+          "state": "closed"
+        },
+        {
+          "number": 4992,
+          "title": "refactor: frontend/grpc tests to use dynamic ports",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4992",
+          "state": "closed"
+        },
+        {
+          "number": 8740,
+          "title": "feat: Support a single snapshot agent across multiple namespaces",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8740",
+          "state": "closed"
+        },
+        {
+          "number": 2709,
+          "title": "feat: parse normal text along with tool calls",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2709",
+          "state": "closed"
+        },
+        {
+          "number": 3761,
+          "title": "feat: Extend TensorRequest and TensorResponse to contains extra parameters",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3761",
+          "state": "closed"
+        },
+        {
+          "number": 2490,
+          "title": "feat: dynamo namespace isolation for backend component + vllm-fix",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2490",
+          "state": "closed"
+        },
+        {
+          "number": 14455,
+          "title": "fix(RL): stop RL worker discovery returning an empty list on Kubernetes",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14455",
+          "state": "closed"
+        },
+        {
+          "number": 4604,
+          "title": "refactor(storage): Remove the stuttering from key_value_store.",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4604",
+          "state": "closed"
+        },
+        {
+          "number": 5446,
+          "title": "feat: Decomposed pipeline for EPP integration [DEP-730]",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5446",
+          "state": "closed"
+        },
+        {
+          "number": 4946,
+          "title": "feat: add python bridge",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4946",
+          "state": "closed"
+        },
+        {
+          "number": 3875,
+          "title": "chore(runtime): Watched storage buckets now also return Delete events",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3875",
+          "state": "closed"
+        },
+        {
+          "number": 4197,
+          "title": "fix: remove remaining DYN_SYSTEM_ENABLED references",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4197",
+          "state": "closed"
+        },
+        {
+          "number": 8750,
+          "title": "feat: integrate EmbeddingCache awareness into weighted device routing",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8750",
+          "state": "closed"
+        },
+        {
+          "number": 14364,
+          "title": "fix(frontend): label aliased model metrics with the primary name",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14364",
+          "state": "closed"
+        },
+        {
+          "number": 6845,
+          "title": "feat(llm): early tool-call completion via streaming args tracker",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6845",
+          "state": "closed"
+        },
+        {
+          "number": 11626,
+          "title": "feat(http): Python-loadable frontend route extensions",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11626",
+          "state": "closed"
+        },
+        {
+          "number": 2629,
+          "title": "chore: use token ids for reasoning parsing instead of strings directly",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2629",
+          "state": "closed"
+        },
+        {
+          "number": 8491,
+          "title": "feat: formalize video streaming",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8491",
+          "state": "closed"
+        },
+        {
+          "number": 8093,
+          "title": "fix: Remove double tokenization in EPP Integration fixes [DYN-2076]",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8093",
+          "state": "closed"
+        },
+        {
+          "number": 12331,
+          "title": "fix(frontend): track Codex subagent threads",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12331",
+          "state": "closed"
+        },
+        {
+          "number": 12562,
+          "title": "fix(sglang): suppress matched stop markers",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12562",
+          "state": "closed"
+        },
+        {
+          "number": 3981,
+          "title": "feat: use configmap instead of PVC for profiling results ",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3981",
+          "state": "closed"
+        },
+        {
+          "number": 2859,
+          "title": "feat: Endpoint health check",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2859",
+          "state": "closed"
+        },
+        {
+          "number": 2484,
+          "title": "fix: set frontend defaults",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2484",
+          "state": "closed"
+        },
+        {
+          "number": 9235,
+          "title": "feat(operator): Migrate Operator DCD/DGD Controllers To v1beta1 API Types",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9235",
+          "state": "closed"
+        },
+        {
+          "number": 8069,
+          "title": "DEP: DynamoGraphDeployment and DynamoComponentDeployment API graduation to v1beta1",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/8069",
+          "state": "closed"
+        },
+        {
+          "number": 3548,
+          "title": "feat: add custom GPU resources",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3548",
+          "state": "closed"
+        },
+        {
+          "number": 2827,
+          "title": "refactor: standardize e2e tests across 3 frameworks",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2827",
+          "state": "closed"
+        },
+        {
+          "number": 1396,
+          "title": "feat: kubernetes overrides for the entrypoint and cmd",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/1396",
+          "state": "closed"
+        },
+        {
+          "number": 6286,
+          "title": "feat(chrek): external restore, signal-based IPC, and package refactor",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6286",
+          "state": "closed"
+        },
+        {
+          "number": 2269,
+          "title": "feat: add grove multinode support",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2269",
+          "state": "closed"
+        }
+      ]
+    },
+    {
+      "query": "repo:ai-dynamo/dynamo \"R1\" \"arguments\" \"template\"",
+      "url": "https://api.github.com/search/issues?q=repo%3Aai-dynamo%2Fdynamo+%22R1%22+%22arguments%22+%22template%22&per_page=100",
+      "total_count": 74,
+      "returned_count": 74,
+      "complete_page_coverage": true,
+      "incomplete_results": false,
+      "items": [
+        {
+          "number": 7831,
+          "title": "fix: guided decoding for reasoning models via structural_tag (TRT-LLM)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7831",
+          "state": "open"
+        },
+        {
+          "number": 13979,
+          "title": "test: assert tool results are actually used, locally and on any recipe (OPS-8412, OPS-8418)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13979",
+          "state": "open"
+        },
+        {
+          "number": 11206,
+          "title": "test(frontend): add CPU-only tool and reasoning e2e matrix",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11206",
+          "state": "open"
+        },
+        {
+          "number": 13605,
+          "title": "fix(sglang): drop --skip-tokenizer-init from k8s text-generation paths",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13605",
+          "state": "closed"
+        },
+        {
+          "number": 13121,
+          "title": "DEP: Dynamo-managed Elastic EP on Kubernetes",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/13121",
+          "state": "open"
+        },
+        {
+          "number": 8037,
+          "title": "feat(trtllm): ModelExpress P2P weight transfer with auto-detect source/target",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8037",
+          "state": "open"
+        },
+        {
+          "number": 8354,
+          "title": "feat(examples): Add XPU aggregated launch scripts and update docs",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8354",
+          "state": "open"
+        },
+        {
+          "number": 7906,
+          "title": "feat: map reasoning_effort to model-specific chat template args",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7906",
+          "state": "closed"
+        },
+        {
+          "number": 11205,
+          "title": "fix:  Fix guided decoding for force-reasoning parsers",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11205",
+          "state": "closed"
+        },
+        {
+          "number": 14570,
+          "title": "feat(router): unify frontend and standalone selection core",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/14570",
+          "state": "closed"
+        },
+        {
+          "number": 5223,
+          "title": "fix: vllm default behaviour for generation prompt",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5223",
+          "state": "closed"
+        },
+        {
+          "number": 9154,
+          "title": "feat: unify per-model reasoning disable logic + wire reasoning_effort to template args",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9154",
+          "state": "closed"
+        },
+        {
+          "number": 5010,
+          "title": "fix: Remove debug logging from aiperf benchmarking",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5010",
+          "state": "closed"
+        },
+        {
+          "number": 4383,
+          "title": "fix: point to new sglang container and rm references to old",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4383",
+          "state": "closed"
+        },
+        {
+          "number": 3891,
+          "title": "feat: restructure dsr1 recipes and add gb200",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3891",
+          "state": "closed"
+        },
+        {
+          "number": 8665,
+          "title": "chore(frontend):  Add DeepSeek V4 parser support + Test Cases",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8665",
+          "state": "closed"
+        },
+        {
+          "number": 5189,
+          "title": "fix: Cherry-pick Resolving wrong model for testing (#5135)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5189",
+          "state": "closed"
+        },
+        {
+          "number": 2218,
+          "title": "fix: Kprashanth/trtllm rc4 cherry pick",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2218",
+          "state": "closed"
+        },
+        {
+          "number": 3989,
+          "title": "fix: use full path for recipes directory",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3989",
+          "state": "closed"
+        },
+        {
+          "number": 13487,
+          "title": "fix(vllm): keep response reasoning parser active",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13487",
+          "state": "closed"
+        },
+        {
+          "number": 3456,
+          "title": "chore: Update vLLM DSR1 launch script to support PD disaggregation",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3456",
+          "state": "closed"
+        },
+        {
+          "number": 8671,
+          "title": "[INVESTIGATE] sglang + DSv4: kwarg workaround breaks live \u2014 needs diagnosis",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8671",
+          "state": "closed"
+        },
+        {
+          "number": 8275,
+          "title": "fix(responses): own input chain in dynamo-protocols to accept Codex/Agents-SDK shapes",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8275",
+          "state": "closed"
+        },
+        {
+          "number": 2656,
+          "title": "feat: add gpt oss reasoning parser through harmony",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2656",
+          "state": "closed"
+        },
+        {
+          "number": 2030,
+          "title": "feat: deploy SLA profiler to k8s",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2030",
+          "state": "closed"
+        },
+        {
+          "number": 5953,
+          "title": "fix(recipes): correct GPU counts in DeepSeek-R1 READMEs",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5953",
+          "state": "closed"
+        },
+        {
+          "number": 10252,
+          "title": "feat(sglang): Support reasoning-parser while guided decoding (--dyn-chat-processor sglang)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/10252",
+          "state": "closed"
+        },
+        {
+          "number": 11251,
+          "title": "fix(llm): keep Nemotron reasoning parsing for force_nonempty_content requests",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11251",
+          "state": "closed"
+        },
+        {
+          "number": 4051,
+          "title": "fix: add prefill load balance method args for deepseek-r1",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4051",
+          "state": "closed"
+        },
+        {
+          "number": 8670,
+          "title": "chore: DeepSeek V4 hardening follow-up",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8670",
+          "state": "closed"
+        },
+        {
+          "number": 6076,
+          "title": "fix: add watchdog timeout for sglang dsr1 recipe",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6076",
+          "state": "closed"
+        },
+        {
+          "number": 7015,
+          "title": "feat(kvbm): KVBM MLA support optimization",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7015",
+          "state": "closed"
+        },
+        {
+          "number": 7589,
+          "title": "fix: tool_choice=required bypasses format-specific parsers (#6821)",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7589",
+          "state": "closed"
+        },
+        {
+          "number": 2223,
+          "title": "feat: sglang + gb200 ",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2223",
+          "state": "closed"
+        },
+        {
+          "number": 4086,
+          "title": "fix: Updating the GPU footprint mentioned in the DS R1 disagg recipe",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4086",
+          "state": "closed"
+        },
+        {
+          "number": 5260,
+          "title": "fix: add mem frac for sglang dsr1 8gpu",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5260",
+          "state": "closed"
+        },
+        {
+          "number": 4533,
+          "title": "feat: Extend the KV Event Consolidator to support TensorRT-LLM",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4533",
+          "state": "closed"
+        },
+        {
+          "number": 5389,
+          "title": "chore: Clean up vLLM DSR1 wideEP recipe",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5389",
+          "state": "closed"
+        },
+        {
+          "number": 3185,
+          "title": "feat: support MoE model in SLA Planner Sglang ",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3185",
+          "state": "closed"
+        },
+        {
+          "number": 3850,
+          "title": "fix: sglang dsr1 recipes",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3850",
+          "state": "closed"
+        },
+        {
+          "number": 4285,
+          "title": "ci: add workflow to build frontend image",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4285",
+          "state": "closed"
+        },
+        {
+          "number": 4747,
+          "title": "feat: slurm jobs added fp4 and 8k1k",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4747",
+          "state": "closed"
+        },
+        {
+          "number": 4095,
+          "title": "fix: use mc backend for disagg ",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4095",
+          "state": "closed"
+        },
+        {
+          "number": 13135,
+          "title": "fix(recipes): parameterize DeepSeek-V4 model download so H200 recipes get the FP8 checkpoint",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/13135",
+          "state": "closed"
+        },
+        {
+          "number": 4302,
+          "title": "fix: remove wideep image ref from recipes",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4302",
+          "state": "closed"
+        },
+        {
+          "number": 1756,
+          "title": "refactor: vllm v1 examples",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/1756",
+          "state": "closed"
+        },
+        {
+          "number": 9484,
+          "title": "feat(profiler): Add XPU (Intel b60) integration test coverage",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/9484",
+          "state": "closed"
+        },
+        {
+          "number": 8497,
+          "title": "docs(agents): improve tool/reasoning parser docs",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8497",
+          "state": "closed"
+        },
+        {
+          "number": 6267,
+          "title": "fix: vLLM decode worker logging format bug causing CrashLoopBackOff",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6267",
+          "state": "closed"
+        },
+        {
+          "number": 3708,
+          "title": "fix: cherry pick sglang bump + fix k8s yamls",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3708",
+          "state": "closed"
+        },
+        {
+          "number": 5254,
+          "title": "docs: update Qwen3-235B-A22B-FP8 recipes",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5254",
+          "state": "closed"
+        },
+        {
+          "number": 3849,
+          "title": "refactor: move backend deploy, launch and slurm files from components to examples",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3849",
+          "state": "closed"
+        },
+        {
+          "number": 3858,
+          "title": "fix: consistent model recipes and update simplified doc",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3858",
+          "state": "closed"
+        },
+        {
+          "number": 2482,
+          "title": "docs: Bring back some missed release/0.4.0 doc changes, fix broken links, add lychee link checker github action",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2482",
+          "state": "closed"
+        },
+        {
+          "number": 1391,
+          "title": "fix: Use Rust Ingress (dynamo-run) for the Frontend",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/1391",
+          "state": "closed"
+        },
+        {
+          "number": 6868,
+          "title": "feat: add an auto GPU VRAM estimator for disagg-same-GPU",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6868",
+          "state": "closed"
+        },
+        {
+          "number": 3627,
+          "title": "chore: separate config modifier into multiple files",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3627",
+          "state": "closed"
+        },
+        {
+          "number": 7879,
+          "title": "draft: kvbm g2pb global peer offloading",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/7879",
+          "state": "closed"
+        },
+        {
+          "number": 6154,
+          "title": "feat(profiler): TRT-LLM DEP/TEP profiling with WIDEEP support",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6154",
+          "state": "closed"
+        },
+        {
+          "number": 6083,
+          "title": "feat(responses): add stateful storage, session middleware, and feature flag",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6083",
+          "state": "closed"
+        },
+        {
+          "number": 4778,
+          "title": "feat: SLA Planner support for DEP and TEP with vllm and trtllm",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/4778",
+          "state": "closed"
+        },
+        {
+          "number": 6248,
+          "title": "fix(operator): shell-quote mpirun args + add nodeSelector to DGDR profilingConfig",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6248",
+          "state": "closed"
+        },
+        {
+          "number": 2626,
+          "title": "feat: enable dynamo metrics on KVBM",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2626",
+          "state": "closed"
+        },
+        {
+          "number": 3528,
+          "title": "feat: Replace genai-perf with aiperf in components/backends",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3528",
+          "state": "closed"
+        },
+        {
+          "number": 6050,
+          "title": "docs: full migration of docs/ to fern format in fern/",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/6050",
+          "state": "closed"
+        },
+        {
+          "number": 1323,
+          "title": "feat: sglang integration of dynamo event manager",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/1323",
+          "state": "closed"
+        },
+        {
+          "number": 8355,
+          "title": "feat(recipes): add Qwen3-0.6B GAIE and Qwen3.6-35B-A3B agg vLLM recipes",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/8355",
+          "state": "closed"
+        },
+        {
+          "number": 2046,
+          "title": "chore(sglang): Move examples/sglang to components/backends/sglang",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2046",
+          "state": "closed"
+        },
+        {
+          "number": 5445,
+          "title": "docs: migrate existing docs to fern",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/5445",
+          "state": "closed"
+        },
+        {
+          "number": 3809,
+          "title": "fix: disagg dp attention needs host 0.0.0.0",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/3809",
+          "state": "closed"
+        },
+        {
+          "number": 2573,
+          "title": "feat: use consistent small models across all deploy examples",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/2573",
+          "state": "closed"
+        },
+        {
+          "number": 1884,
+          "title": "refactor:  Refactor the TRTLLM examples remove dynamo SDK",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/1884",
+          "state": "closed"
+        },
+        {
+          "number": 401,
+          "title": "ERROR _core: Failed to send response: SendError",
+          "url": "https://github.com/ai-dynamo/dynamo/issues/401",
+          "state": "closed"
+        },
+        {
+          "number": 1730,
+          "title": "feat: automate slurm handling in sglang example.",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/1730",
+          "state": "closed"
+        }
+      ]
+    },
+    {
+      "query": "repo:ai-dynamo/frontend-crates \"arguments\"",
+      "url": "https://api.github.com/search/issues?q=repo%3Aai-dynamo%2Ffrontend-crates+%22arguments%22&per_page=100",
+      "total_count": 68,
+      "returned_count": 68,
+      "complete_page_coverage": true,
+      "incomplete_results": false,
+      "items": [
+        {
+          "number": 268,
+          "title": "fix(parsers): preserve nullable GLM tool arguments as null",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/268",
+          "state": "open"
+        },
+        {
+          "number": 251,
+          "title": "fix(parsers): preserve non-nullable Qwen string arguments containing null",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/251",
+          "state": "open"
+        },
+        {
+          "number": 289,
+          "title": "fix(parsers): resolve $ref param types in GLM-4.7 arguments",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/289",
+          "state": "open"
+        },
+        {
+          "number": 267,
+          "title": "test(conformance): add parser regression coverage",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/267",
+          "state": "open"
+        },
+        {
+          "number": 291,
+          "title": "feat: aggregate Michael\u2019s open parser and conformance fixes",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/291",
+          "state": "open"
+        },
+        {
+          "number": 196,
+          "title": "feat: Kimi K3 structural tag default",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/196",
+          "state": "open"
+        },
+        {
+          "number": 280,
+          "title": "fix(parsers): retain GLM scalar types for non-string unions in v1",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/280",
+          "state": "open"
+        },
+        {
+          "number": 286,
+          "title": "fix(parsers): preserve literal entities in GLM-4.7 arguments",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/286",
+          "state": "closed"
+        },
+        {
+          "number": 249,
+          "title": "fix(parsers-v2): preserve literal entities in GLM arguments",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/249",
+          "state": "closed"
+        },
+        {
+          "number": 287,
+          "title": "test(conformance): cover null schemas for Qwen, GLM and MiniMax",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/287",
+          "state": "open"
+        },
+        {
+          "number": 245,
+          "title": "fix(parsers-v2): preserve MiniMax M2 wrapper markers in arguments",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/245",
+          "state": "closed"
+        },
+        {
+          "number": 261,
+          "title": "perf(renderer): reduce message copies across chat renderers",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/261",
+          "state": "open"
+        },
+        {
+          "number": 215,
+          "title": "fix(parsers): keep string-typed GLM tool arguments verbatim",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/215",
+          "state": "closed"
+        },
+        {
+          "number": 201,
+          "title": "fix(parsers): stream native Qwen XML arguments",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/201",
+          "state": "closed"
+        },
+        {
+          "number": 220,
+          "title": "fix(parsers): serialize GLM tool-call arguments in source order",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/220",
+          "state": "closed"
+        },
+        {
+          "number": 221,
+          "title": "v1 shared XML tool parser returns arguments in nondeterministic key order",
+          "url": "https://github.com/ai-dynamo/frontend-crates/issues/221",
+          "state": "closed"
+        },
+        {
+          "number": 210,
+          "title": "Responses: function_call_output with an input_image part (detail omitted) fails with untagged enum InputParam 400; images in tool output are dropped",
+          "url": "https://github.com/ai-dynamo/frontend-crates/issues/210",
+          "state": "open"
+        },
+        {
+          "number": 260,
+          "title": "fix(parsers): split content bundled with a tool-call opener into its own chunk",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/260",
+          "state": "open"
+        },
+        {
+          "number": 288,
+          "title": "perf(tokenizers): serve segmented encodes from the L1 prefix cache",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/288",
+          "state": "open"
+        },
+        {
+          "number": 272,
+          "title": "fix(parsers): preserve nested GLM argument markers",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/272",
+          "state": "closed"
+        },
+        {
+          "number": 290,
+          "title": "feat(parsers): add GLM-4.7 structural tag builder for v1 parser",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/290",
+          "state": "open"
+        },
+        {
+          "number": 248,
+          "title": "fix(parsers): retain GLM scalar types for non-string unions",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/248",
+          "state": "closed"
+        },
+        {
+          "number": 190,
+          "title": "feat(parsers): shared scanner params, and guided tool-call fragment streaming",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/190",
+          "state": "closed"
+        },
+        {
+          "number": 234,
+          "title": "feat: add GLM-5.3 UnifiedParser support (part 1)",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/234",
+          "state": "closed"
+        },
+        {
+          "number": 224,
+          "title": "feat(frontend): add native DeepSeek V4.1 support",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/224",
+          "state": "closed"
+        },
+        {
+          "number": 252,
+          "title": "feat(parsers): expose DeepSeek V4.1 through the tool-only API",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/252",
+          "state": "closed"
+        },
+        {
+          "number": 193,
+          "title": "feat(parsers): stream guided tool-call fragments, and the contract cost of doing so",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/193",
+          "state": "closed"
+        },
+        {
+          "number": 194,
+          "title": "feat(parsers): stream guided tool calls in v1 and v2",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/194",
+          "state": "closed"
+        },
+        {
+          "number": 198,
+          "title": "feat(protocols): add Responses API input-token counting",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/198",
+          "state": "closed"
+        },
+        {
+          "number": 197,
+          "title": "feat(parsers-v2): add guided tool calls for Muse Glimmer",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/197",
+          "state": "closed"
+        },
+        {
+          "number": 250,
+          "title": "fix(parsers): accept DeepSeek V4.1 JSON invocation bodies",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/250",
+          "state": "closed"
+        },
+        {
+          "number": 247,
+          "title": "fix(parsers): preserve DeepSeek V4 string whitespace",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/247",
+          "state": "closed"
+        },
+        {
+          "number": 228,
+          "title": "feat(frontend): add native DeepSeek V4.1 support",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/228",
+          "state": "closed"
+        },
+        {
+          "number": 200,
+          "title": "fix: preserve guided marker prose and backfill conformance",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/200",
+          "state": "closed"
+        },
+        {
+          "number": 191,
+          "title": "feat(parsers): port kimi_k2 to the v2 parser",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/191",
+          "state": "closed"
+        },
+        {
+          "number": 278,
+          "title": "Contributor PR edge-case fixes",
+          "url": "https://github.com/ai-dynamo/frontend-crates/issues/278",
+          "state": "open"
+        },
+        {
+          "number": 179,
+          "title": "feat(renderer): add `fromjson` chat-template filter",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/179",
+          "state": "closed"
+        },
+        {
+          "number": 180,
+          "title": "chore: bump minijinja to 2.22.0",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/180",
+          "state": "closed"
+        },
+        {
+          "number": 141,
+          "title": "perf(parsers): switch Pythonic parser to Ruff",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/141",
+          "state": "closed"
+        },
+        {
+          "number": 163,
+          "title": "feat(parsers): Dynamo request modes on the UnifiedParser \u2014 prefill and guided JSON, qwen3 coverage",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/163",
+          "state": "closed"
+        },
+        {
+          "number": 66,
+          "title": "feat(parsers-v2): emit DSv4 DSML tool name eagerly in streaming",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/66",
+          "state": "closed"
+        },
+        {
+          "number": 202,
+          "title": "fix(protocols): omit absent optional fields in chat completion responses",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/202",
+          "state": "closed"
+        },
+        {
+          "number": 185,
+          "title": "feat(parsers-v2): add Muse Glimmer unified and streaming tool-call parsers",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/185",
+          "state": "closed"
+        },
+        {
+          "number": 178,
+          "title": "refactor(parsers): align the unified parser surface with peer traits, and let vendors supply their own",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/178",
+          "state": "closed"
+        },
+        {
+          "number": 69,
+          "title": "feat: jamba never-leaks tool-call markup on malformed input",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/69",
+          "state": "closed"
+        },
+        {
+          "number": 79,
+          "title": "fix(parsers-v2): drop DSv4 tool calls truncated mid-call to match v1 batch",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/79",
+          "state": "closed"
+        },
+        {
+          "number": 94,
+          "title": "perf: Make tool-call jail completion incremental",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/94",
+          "state": "closed"
+        },
+        {
+          "number": 73,
+          "title": "test: add integration test for DSv4 two-frame streaming consumer",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/73",
+          "state": "closed"
+        },
+        {
+          "number": 226,
+          "title": "feat(mm-preprocessor): [PR 3/N] prompt layout, content identity, spec resolution",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/226",
+          "state": "closed"
+        },
+        {
+          "number": 133,
+          "title": "fix(parsers): Harden MiniMax M3 parser",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/133",
+          "state": "closed"
+        },
+        {
+          "number": 146,
+          "title": "test(conformance): add UnifiedParser UNIFIED.* cases for gemma4/qwen3/kimi_k2 against a golden oracle",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/146",
+          "state": "closed"
+        },
+        {
+          "number": 132,
+          "title": "fix(parser-v2): parser bugs due to chunking in gemma4 and deepseek_v4",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/132",
+          "state": "closed"
+        },
+        {
+          "number": 225,
+          "title": "feat(mm-preprocessor): [PR 2/N] pixel primitives and the fan-out seam",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/225",
+          "state": "closed"
+        },
+        {
+          "number": 63,
+          "title": "fix(parsers): align hermes tool-call parser to never leak markup",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/63",
+          "state": "closed"
+        },
+        {
+          "number": 244,
+          "title": "perf(tokenizers): reuse prefix hashes on cache hits and misses",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/244",
+          "state": "closed"
+        },
+        {
+          "number": 60,
+          "title": "fix(parsers): stop mistral parser leaking [TOOL_CALLS] into content",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/60",
+          "state": "closed"
+        },
+        {
+          "number": 118,
+          "title": "chore(fixtures): move conformance fixtures to git-lfs in-repo, drop the HF pipeline; path-scoped version bumps",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/118",
+          "state": "closed"
+        },
+        {
+          "number": 232,
+          "title": "fix: align Unified conformance and guided recovery across models",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/232",
+          "state": "closed"
+        },
+        {
+          "number": 155,
+          "title": "refactor(renderer): let the worker declare K3's per-image token",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/155",
+          "state": "closed"
+        },
+        {
+          "number": 80,
+          "title": "feat(parsers-v2): streaming tool-call parsers for Gemma 4, GLM, Kimi K2, MiniMax M2/M3 (preserve surrounding text)",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/80",
+          "state": "closed"
+        },
+        {
+          "number": 120,
+          "title": "feat(parsers): add Inkling tool-call and reasoning parsers",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/120",
+          "state": "closed"
+        },
+        {
+          "number": 6,
+          "title": "sync(parsers): pull dynamo @ ad997e7",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/6",
+          "state": "closed"
+        },
+        {
+          "number": 135,
+          "title": "test(parsers/v1): NO PARSER CHANGE \u2014 add n>1 per-choice interleave isolation lane (DIS-2381)",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/135",
+          "state": "closed"
+        },
+        {
+          "number": 61,
+          "title": "fix(parsers): stop qwen25 tool-call parser from leaking <tool_call> markup",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/61",
+          "state": "closed"
+        },
+        {
+          "number": 32,
+          "title": "feat(parsers-v2): add v2 streaming tool-call parser (Harmony)",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/32",
+          "state": "closed"
+        },
+        {
+          "number": 205,
+          "title": "feat(protocols): support Kimi system tools and Partial Mode",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/205",
+          "state": "closed"
+        },
+        {
+          "number": 166,
+          "title": "feat(parsers): gemma4 on the v2 UnifiedParser \u2014 one ordered stream, with Dynamo request modes",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/166",
+          "state": "closed"
+        },
+        {
+          "number": 174,
+          "title": "feat(parsers): add Qwen3 unified request modes",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/174",
+          "state": "closed"
+        }
+      ]
+    },
+    {
+      "query": "repo:ai-dynamo/frontend-crates \"DeepSeek\" \"R1\"",
+      "url": "https://api.github.com/search/issues?q=repo%3Aai-dynamo%2Ffrontend-crates+%22DeepSeek%22+%22R1%22&per_page=100",
+      "total_count": 5,
+      "returned_count": 5,
+      "complete_page_coverage": true,
+      "incomplete_results": false,
+      "items": [
+        {
+          "number": 110,
+          "title": "fix(tokenizer): support tokenizer options",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/110",
+          "state": "closed"
+        },
+        {
+          "number": 30,
+          "title": "chore: sync from dynamo @ 628904d",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/30",
+          "state": "closed"
+        },
+        {
+          "number": 29,
+          "title": "Sync drift detected vs ai-dynamo/dynamo@0096472",
+          "url": "https://github.com/ai-dynamo/frontend-crates/issues/29",
+          "state": "closed"
+        },
+        {
+          "number": 174,
+          "title": "feat(parsers): add Qwen3 unified request modes",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/174",
+          "state": "closed"
+        },
+        {
+          "number": 163,
+          "title": "feat(parsers): Dynamo request modes on the UnifiedParser \u2014 prefill and guided JSON, qwen3 coverage",
+          "url": "https://github.com/ai-dynamo/frontend-crates/pull/163",
+          "state": "closed"
+        }
+      ]
+    }
+  ],
+  "selected_pull_requests": [
+    {
+      "number": 14806,
+      "url": "https://github.com/ai-dynamo/dynamo/pull/14806",
+      "title": "chore(deps): [cherry-pick 1.5.1] bump dynamo-renderer to 5.1.2 and dynamo-protocols to 5.4.1 (#14595, #14154)",
+      "state": "open",
+      "merged_at": null,
+      "head_sha": "e6080b61f75a1a95f137f26cec44d33cdc77aab2",
+      "body": "add #14595 to release"
+    },
+    {
+      "number": 14595,
+      "url": "https://github.com/ai-dynamo/dynamo/pull/14595",
+      "title": "chore(deps): bump dynamo-renderer to 5.1.2",
+      "state": "closed",
+      "merged_at": "2026-09-10T13:10:11Z",
+      "head_sha": "72b3525aa08b5b038a8e7c299950000511796f4d",
+      "body": "## Overview:\n\nBump `dynamo-renderer` from 5.1.0 to 5.1.2. This release includes the strict-system-template handling added in ai-dynamo/frontend-crates#164, resolving the Anthropic Messages API failure reported in #14550.\n\nThe failure occurs when Claude Code sends a non-leading `system` message and the target model uses a chat template that requires all system content to appear first.\n\n## Details:\n\n- Upgrade `dynamo-renderer` from 5.1.0 to 5.1.2.\n- Upgrade `dynamo-tokenizers` from 1.8.0 to 1.8.1 to satisfy the renderer's dependency requirement.\n- Refresh the root, Python binding, and KVBM lockfiles without unrelated dependency churn.\n- Add a focused regression test for rendering a Claude Code-shaped Anthropic request through a template that requires the system message to be first.\n\n## Where should the reviewer start?\n\n- `Cargo.toml` for the frontend crate version updates.\n- `lib/llm/src/preprocessor.rs` for the accompanying regression test.\n\n## Compatibility Notes\n\nThis upgrade also includes the DeepSeek V4 reasoning-effort fixes from ai-dynamo/frontend-crates#199:\n\n- Omitted or invalid effort defaults to `high`.\n- `minimal` and `low` keep thinking enabled without an effort prefix.\n- `medium`, `high`, and `xhigh` use the high-effort prefix.\n- `max` uses the maximum-effort prefix.\n- `none` disables thinking.\n- Top-level `reasoning_effort` takes precedence over the template argument.\n\nThese changes are unrelated to #14550 but are included in `dynamo-renderer` 5.1.1.\n\n## Validation\n\n- `cargo test -j 8 -p dynamo-llm --lib --locked preprocessor::tests::test_nonleading_system_message_normalized_for_strict_template -- --exact --nocapture`\n- `cargo test -j 8 -p dynamo-llm --lib template -- --nocapture` - 27 passed\n- Claude Code 2.1.263 end-to-end test through the Anthropic streaming endpoint, Qwen3.5 strict chat template, TCP request plane, and mocker worker - four `/v1/messages?beta=true` requests completed with HTTP 200 and `status=success`; no strict-template error was emitted. The CLI eventually reached the test's 32-token output cap because the mocker does not emit a model EOS.\n- `cargo metadata --locked --no-deps --format-version 1`\n- `cargo metadata --locked --no-deps --format-version 1 --manifest-path lib/bindings/python/Cargo.toml`\n- `cargo metadata --locked --no-deps --format-version 1 --manifest-path lib/bindings/kvbm/Cargo.toml`\n- `cargo clippy -j 8 -p dynamo-llm --lib --locked -- -D warnings`\n- `cargo fmt --all -- --check`\n- `pre-commit run --files Cargo.toml Cargo.lock lib/bindings/python/Cargo.lock lib/bindings/kvbm/Cargo.lock lib/llm/src/preprocessor.rs`\n\n## Related Issues\n\n**This PR is linked to an issue:**\n\n- Closes #14550\n\n<!-- This is an auto-generated comment: release notes by coderabbit.ai -->\n\n## Summary by CodeRabbit\n\n- **Bug Fixes**\n  - Improved chat request preprocessing when a top-level system prompt is followed by another system message.\n  - Preserves the initial system instructions while correctly handling subsequent content in the rendered conversation.\n\n<!-- end of auto-generated comment: release notes by coderabbit.ai -->"
+    },
+    {
+      "number": 14154,
+      "url": "https://github.com/ai-dynamo/dynamo/pull/14154",
+      "title": "chore: update dynamo-protocols to 5.4.1",
+      "state": "closed",
+      "merged_at": "2026-09-03T19:41:36Z",
+      "head_sha": "5dab00cb4d273d2fc985e484c8502fabf2426e7f",
+      "body": "## Overview:\r\n\r\nBumps the pinned `dynamo-protocols` dependency from 5.4.0 to 5.4.1, which picks up ai-dynamo/frontend-crates#202 (closes ai-dynamo/frontend-crates#157). That release aligns `/v1/chat/completions` response serialization with the OpenAI spec: optional fields are omitted when absent instead of being emitted as explicit `null`, and the required-and-nullable `refusal` field is always present.\r\n\r\nWire changes visible to clients after this bump:\r\n\r\n| Field | Before | After |\r\n| -- | -- | -- |\r\n| top-level `usage` / `service_tier` / `system_fingerprint` (non-stream + stream) | `null` when absent | omitted |\r\n| stream tool-call chunk `id` / `type` / `function.name` on continuation chunks | `null` | omitted |\r\n| `message.reasoning_content` (Dynamo extension) | `null` when absent | omitted |\r\n| `usage.prompt_tokens_details.audio_tokens` etc. | `null` when absent | omitted |\r\n| `message.refusal` | omitted | always present (`null` when no refusal), matching OpenAI |\r\n| `finish_reason`, non-stream `logprobs`, `message.content` | unchanged | unchanged (spec-required) |\r\n\r\nDeserialization is unaffected in both directions: payloads with or without the keys decode identically, so mixed-version frontend/worker deployments are safe. Official OpenAI SDKs (pydantic/zod models) are unaffected; only raw dict indexing such as `chunk[\"usage\"]` on intermediate stream chunks would observe the change \u2014 and that code already fails against api.openai.com, which never emits those keys.\r\n\r\n## Details:\r\n\r\nRoot `Cargo.toml` moves the pin from `=5.4.0` to `=5.4.1`. That is the only pin site in the tree; `lib/llm/Cargo.toml` and `lib/backend-common/Cargo.toml` inherit it via `workspace = true`.\r\n\r\nThe three lockfiles are refreshed to match: `Cargo.lock`, `lib/bindings/kvbm/Cargo.lock`, and `lib/bindings/python/Cargo.lock` (the two bindings crates are separate workspaces with their own lockfiles). Each moves exactly one package, `dynamo-protocols 5.4.0 -> 5.4.1`; no other dependency changes.\r\n\r\nNo Dynamo source changes: 5.4.1 keeps every public type identity (`CompletionUsage` etc. remain upstream re-exports), so this is a pure pin bump.\r\n\r\n## Where should the reviewer start?\r\n\r\n`Cargo.toml` line 71. Everything else is lockfile churn from `cargo update -p dynamo-protocols --precise 5.4.1`.\r\n\r\n## Related Issues\r\n\r\n**\ud83d\udd17 This PR is linked to an issue:**\r\n\r\n- Relates to ai-dynamo/frontend-crates#157\r\n- Picks up ai-dynamo/frontend-crates#202\r\n\r\n\r\n<!-- This is an auto-generated comment: release notes by coderabbit.ai -->\r\n\r\n## Summary by CodeRabbit\r\n\r\n* **Chores**\r\n  * Updated the Dynamo protocols package to version 5.4.1.\r\n\r\n<!-- end of auto-generated comment: release notes by coderabbit.ai -->"
+    },
+    {
+      "number": 15163,
+      "url": "https://github.com/ai-dynamo/dynamo/pull/15163",
+      "title": "fix(frontend): preserve message rewrites during rendering",
+      "state": "open",
+      "merged_at": null,
+      "head_sha": "d7f7f407b98c16783d3291c42c8e242f9ccd0658",
+      "body": "## Summary\n\n`NormalizedArgsRequest` rewrites tool arguments and adds the marker used by `continue_final_message`, but its `typed_messages()` override returns the original history. Renderers that prefer typed messages skip those transformations.\n\nRemove that override so this adapter uses its transformed `messages()` representation. Ordinary requests keep the typed fast path. This is the companion fix for [frontend-crates #261](https://github.com/ai-dynamo/frontend-crates/pull/261) and must land before Dynamo adopts that renderer update. Dependency pins remain unchanged.\n\n## Validation\n\n- The new adapter regression checks argument normalization, the continuation marker, rendering, and final truncation; it passed against the patched renderer.\n- Existing `continue_final_message` tests passed against the same renderer override.\n- The override uses renderer source `466d240f50bc179e449cb4e21b3ffe6222f9a8aa` with the published 5.2.0 dependency manifest, preserving Dynamo's protocol/tokenizer pins and all locked package versions. Override files and lock changes are excluded from this PR.\n- `cargo fmt --all -- --check` and `git diff --check` passed.\n\nLocal test commands used `cargo test -p dynamo-llm --no-default-features --lib`, filtered to `normalized_args_request_preserves_render_transformations` and `continue_final_message`, with the temporary renderer path override.\n\n\n<!-- This is an auto-generated comment: release notes by coderabbit.ai -->\n\n## Summary by CodeRabbit\n\n- **Bug Fixes**\n  - Improved message rendering to consistently use normalized message content.\n  - Corrected rendering of tool-call arguments and continuation markers in final messages.\n\n- **Tests**\n  - Added regression coverage to help ensure normalized tool-call arguments and continuation markers remain correctly rendered.\n\n<!-- end of auto-generated comment: release notes by coderabbit.ai -->"
+    },
+    {
+      "number": 12204,
+      "url": "https://github.com/ai-dynamo/dynamo/pull/12204",
+      "title": "fix(llm): GLM-5.2 chat template compatibility \u2014 argument normalization and tool_call recovery",
+      "state": "open",
+      "merged_at": null,
+      "head_sha": "ecc561f783b37e72ca59973112fd057b6cedcf47",
+      "human_reviews": []
+    },
+    {
+      "number": 12109,
+      "url": "https://github.com/ai-dynamo/dynamo/pull/12109",
+      "title": "fix(glm52): chat template parity fixes \u2014 arguments normalization and streaming tool_call recovery",
+      "state": "open",
+      "merged_at": null,
+      "head_sha": "ad0044ed5339a4d08b74e0541f0cfc9b66e74446",
+      "human_reviews": []
+    },
+    {
+      "number": 12332,
+      "url": "https://github.com/ai-dynamo/dynamo/pull/12332",
+      "title": "fix(llm): normalize tool_call arguments from JSON string to object before template render",
+      "state": "closed",
+      "merged_at": "2026-08-11T19:32:06Z",
+      "head_sha": "b82be34e614a9158df3efb5a4cda7100f4e66506",
+      "human_reviews": [
+        {
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12332#discussion_r3692581461",
+          "author": "rmccorm4",
+          "body": "**[P1] Shared normalization breaks native DeepSeek V3.2 rendering.** The new mutation in [OAIChatLikeRequest::messages()](https://github.com/ai-dynamo/dynamo/blob/6889de80f26dcbd40705cc9a7cad5118f0e17e49/lib/llm/src/preprocessor/prompt.rs#L93-L96) converts arguments to objects for every renderer, but DeepSeek V3.2 requires the original JSON string. Both local testing and [GitHub Actions](https://github.com/ai-dynamo/dynamo/actions/runs/30650810134/job/91223385279) fail the same two existing tests with `Missing or invalid 'arguments' field`. Move normalization to the MiniJinja boundary."
+        }
+      ]
+    }
+  ],
+  "prior_evidence_archive": {
+    "path": "../001-speculative-prefill/search-evidence.tar.gz",
+    "sha256": "f27121f9227281635340d84dc6e3b073d2011339fa709d435ab331a21cef7012"
+  },
+  "conclusion": "Argument-format compatibility is already known. No exact R1 MiniJinja concatenation report identified in this bounded search. Current renderer and full-server behavior remain untested."
+}

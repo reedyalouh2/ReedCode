@@ -1,0 +1,49 @@
+{
+  "status": "frozen workload; model sessions not run",
+  "repo": "https://github.com/reedyalouh2/ReedCode",
+  "revision": "d72cf6dfba2660e1571ed1aa3a0d798e7ee67b31",
+  "public_commit_api": "https://api.github.com/repos/reedyalouh2/ReedCode/commits/d72cf6dfba2660e1571ed1aa3a0d798e7ee67b31",
+  "public_commit_verified_on": "2026-09-28",
+  "user_messages": [
+    "Add a tail policy to output_policy.py that retains the last limit characters of tool output. Wire it through Settings and Settings.from_env, and keep the retention metadata accurate. Preserve the existing head and head_tail behavior. Read the relevant code and tests, make the change, and run python3 -m unittest discover -s tests -p test_output_policy.py. Keep the change focused; do not commit or push.",
+    "Add regression tests for the tail policy: empty output, output exactly at the limit, a one-character limit, and multibyte Unicode. Check retained character and UTF-8 byte counts. Run the focused suite again. Preserve the changes from the previous turn.",
+    "For truncated tail output, put the truncation notice before the retained text so that the result ends with the original final characters. Add or update a test for the visible output, check that head and head_tail still behave as before, and rerun the focused suite."
+  ],
+  "sessions": {
+    "claude_code": "independent clean copy; same session for follow-ups",
+    "codex": "independent clean copy; same session for follow-ups"
+  },
+  "maximum_inference_requests_per_session": 15,
+  "maximum_session_seconds": 1500,
+  "target_followup_delay_seconds_max": 10,
+  "first_turn_request_allowance": 7,
+  "second_turn_request_allowance": 4,
+  "limits_include_retries_and_auxiliary_inference": true,
+  "baseline": {
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_output_policy.py"
+    ],
+    "python_version": "Python 3.13.7",
+    "exit_code": 0,
+    "tests_passed": 5,
+    "log_sha256": "6273232de4d3ef7acd4ecafa5c86beeeb974f56586b21089a2990b3f72facbe6"
+  },
+  "source_sha256": {
+    "output_policy.py": "a613fcd749c95e1d3ff0439789fb482ec7126e1ff81e7cb1a2a75c14c4e2bdd7",
+    "tests/test_output_policy.py": "e036ab3fd25ec145024c3ff81c5692e242a286a43cbc58a9f84d75ac6e3c7edc",
+    "pyproject.toml": "8082231739a51c85989a6c1047d6633704ce2ef345b2761a969c784c1e88858b",
+    "uv.lock": "2e82d91c1fa7727be90bbc2dde6ca03ea39fd06cd8dd7698042a542f86413883"
+  },
+  "observed_local_clients": {
+    "codex": "0.155.1",
+    "claude_code": "2.1.81"
+  },
+  "model_requests_made": 0
+}

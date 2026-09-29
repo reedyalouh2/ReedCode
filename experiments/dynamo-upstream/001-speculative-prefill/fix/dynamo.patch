@@ -1,0 +1,972 @@
+--- a/lib/llm/src/preprocessor/speculative_prefill.rs
++++ b/lib/llm/src/preprocessor/speculative_prefill.rs
+@@ -1,12 +1,8 @@
+ // SPDX-FileCopyrightText: Copyright (c) 2025-2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
+ 
+-//! Speculative next-turn prefill for reasoning models.
+-//!
+-//! After an assistant turn completes, we know what the next turn's prompt prefix
+-//! will look like: the full conversation history (with thinking content stripped by
+-//! the Jinja template for non-last assistant turns). We render it, tokenize it,
+-//! and send a `max_tokens=1` request through the pipeline to warm the KV cache.
++//! Warm supported tool-continuation prefixes after a complete assistant stream.
++//! Unknown rendering or tokenizer contracts skip optional preparation.
+ 
+ use std::pin::Pin;
+ use std::sync::{Arc, LazyLock};
+@@ -14,12 +10,15 @@
+ 
+ use anyhow::Result;
+ use dynamo_protocols::types::{
+-    ChatCompletionMessageContent, ChatCompletionRequestAssistantMessage,
+-    ChatCompletionRequestAssistantMessageContent, ChatCompletionRequestMessage,
++    ChatCompletionRequestAssistantMessage, ChatCompletionRequestMessage,
+ };
+ use futures::Stream;
+ use futures::stream::StreamExt;
+-use minijinja::value::Value;
++#[path = "speculative_prefill_accumulator.rs"]
++mod accumulator;
++use accumulator::CompletedToolTurn;
++#[path = "speculative_prefill_contract.rs"]
++pub(super) mod contract;
+ use parking_lot::Mutex;
+ use tokio::sync::Semaphore;
+ use tokio_util::sync::CancellationToken;
+@@ -35,7 +34,7 @@
+     NvCreateChatCompletionRequest, NvCreateChatCompletionStreamResponse,
+ };
+ use crate::tokenizers::traits::Tokenizer;
+-use dynamo_renderer::{OAIChatLikeRequest, OAIPromptFormatter};
++use dynamo_renderer::OAIPromptFormatter;
+ 
+ /// Maximum asynchronous warmup lifetime after the client turn completes.
+ /// Started synchronous preprocessing may outlive this deadline.
+@@ -102,50 +101,8 @@
+     }
+ }
+ 
+-/// A minimal `OAIChatLikeRequest` for speculative next-turn prefill.
+-/// Holds the full conversation (including a new assistant message) and
+-/// renders with `add_generation_prompt = false` so the result is the
+-/// exact prefix the next user turn will see.
+-pub struct SpeculativePrefillRequest {
+-    messages: Vec<ChatCompletionRequestMessage>,
+-}
+-
+-impl SpeculativePrefillRequest {
+-    pub fn new(messages: Vec<ChatCompletionRequestMessage>) -> Self {
+-        Self { messages }
+-    }
+-}
+-
+-impl OAIChatLikeRequest for SpeculativePrefillRequest {
+-    fn model(&self) -> String {
+-        "speculative_prefill".to_string()
+-    }
+-
+-    fn messages(&self) -> Value {
+-        let json = serde_json::to_value(&self.messages).unwrap();
+-        Value::from_serialize(&json)
+-    }
+-
+-    fn typed_messages(&self) -> Option<&[ChatCompletionRequestMessage]> {
+-        Some(&self.messages)
+-    }
+-
+-    fn should_add_generation_prompt(&self) -> bool {
+-        false
+-    }
+-}
+-
+-/// Optionally wraps a chat completion response stream to enable speculative
+-/// next-turn prefill. When `nvext.speculative_prefill` is set, the returned
+-/// stream accumulates the assistant response text and, on completion, spawns
+-/// a background task that renders the next-turn prefix and fires a
+-/// `max_tokens=1` request through the pipeline to warm the KV cache.
+-///
+-/// Timeout or cancellation prevents late dispatch and bounds downstream cleanup.
+-/// Blocking preprocessing retains its admission slot and tracking until it returns.
+-/// If preprocessing admission is full, the optional warmup is skipped.
+-///
+-/// When the flag is not set, returns the stream unmodified with zero overhead.
++/// Preserve the client stream while collecting one complete tool-call turn.
++/// Existing cancellation, admission and timeout bounds apply to preparation.
+ pub(super) fn maybe_wrap_stream(
+     stream: Pin<Box<dyn Stream<Item = Annotated<NvCreateChatCompletionStreamResponse>> + Send>>,
+     request: &NvCreateChatCompletionRequest,
+@@ -156,6 +113,7 @@
+     formatter: &Arc<dyn OAIPromptFormatter>,
+     tokenizer: &Arc<dyn Tokenizer>,
+     tasks: &PrefillTasks,
++    cache_identity_supported: bool,
+ ) -> Pin<Box<dyn Stream<Item = Annotated<NvCreateChatCompletionStreamResponse>> + Send>> {
+     let enabled = request
+         .nvext
+@@ -164,21 +122,31 @@
+         .and_then(|hints| hints.speculative_prefill)
+         .unwrap_or(false);
+ 
+-    if !enabled {
++    if !enabled
++        || !cache_identity_supported
++        || request.inner.n.unwrap_or(1) != 1
++        || request.common.continue_final_message == Some(true)
++    {
++        if enabled {
++            tracing::debug!(
++                request_id,
++                "Skipping speculative prefill: unsupported request identity or shape"
++            );
++        }
+         return stream;
+     }
+ 
+-    let (tx, rx) = tokio::sync::oneshot::channel::<String>();
++    let (tx, rx) = tokio::sync::oneshot::channel::<ChatCompletionRequestAssistantMessage>();
+ 
+     let next = next.clone();
+     let preprocessing = tasks.preprocessing(formatter.clone(), tokenizer.clone());
+-    let messages = request.inner.messages.clone();
++    let render_request = request.clone();
+     let cancel = tasks.cancel.clone();
+     let request_id = request_id.to_string();
+     let model = request.inner.model.clone();
+     tasks.tracker.spawn(async move {
+         // The warmup timeout begins after the client turn completes.
+-        let response_text = tokio::select! {
++        let assistant = tokio::select! {
+             biased;
+ 
+             // Biased selects must check cancellation before ready work.
+@@ -193,7 +161,7 @@
+ 
+             received = rx => {
+                 match received {
+-                    Ok(response_text) => response_text,
++                    Ok(assistant) => assistant,
+                     Err(_) => return,
+                 }
+             }
+@@ -205,8 +173,8 @@
+         let mut warmup = std::pin::pin!(prefill_task(
+             next,
+             preprocessing,
+-            messages,
+-            response_text,
++            render_request,
++            assistant,
+             &context_slot,
+             &warmup_cancel,
+         ));
+@@ -277,26 +245,23 @@
+         }
+     });
+ 
+-    let mut accumulated_text = String::new();
+-    let mut prefill_tx = Some(tx);
+-    Box::pin(stream.map(move |item| {
+-        if let Some(ref resp) = item.data {
+-            for choice in &resp.inner.choices {
+-                if let Some(ChatCompletionMessageContent::Text(ref text)) = choice.delta.content {
+-                    accumulated_text.push_str(text);
+-                }
+-                // Send accumulated text once we see finish_reason (works
+-                // regardless of whether usage reporting is enabled).
+-                if choice.finish_reason.is_some()
+-                    && let Some(tx) = prefill_tx.take()
+-                {
+-                    let _ = tx.send(accumulated_text.clone());
+-                }
+-            }
+-        }
+-
+-        item
+-    }))
++    Box::pin(async_stream::stream! {
++        let mut stream = stream;
++        let mut completed = CompletedToolTurn::default();
++        while let Some(item) = stream.next().await {
++            if item.error.is_some() || item.event.as_deref() == Some("error") {
++                completed.reject();
++            }
++            if let Some(response) = &item.data {
++                completed.observe(&response.inner);
++            }
++            yield item;
++        }
++        // EOF rules out a later error or second choice before optional dispatch.
++        if let Some(assistant) = completed.finish() {
++            let _ = tx.send(assistant);
++        }
++    })
+ }
+ 
+ /// Signals downstream; the caller must keep polling for cleanup to run.
+@@ -313,8 +278,8 @@
+         dyn AsyncEngine<SingleIn<PreprocessedRequest>, ManyOut<Annotated<BackendOutput>>, Error>,
+     >,
+     preprocessing: PrefillPreprocessing,
+-    original_messages: Vec<ChatCompletionRequestMessage>,
+-    response_text: String,
++    mut render_request: NvCreateChatCompletionRequest,
++    assistant: ChatCompletionRequestAssistantMessage,
+     context_slot: &PrefillContextSlot,
+     cancel: &CancellationToken,
+ ) -> Result<()> {
+@@ -331,18 +296,11 @@
+         tracing::debug!("Skipping speculative prefill: preprocessing admission is full");
+         return Ok(());
+     };
+-    let assistant_msg =
+-        ChatCompletionRequestMessage::Assistant(ChatCompletionRequestAssistantMessage {
+-            content: Some(ChatCompletionRequestAssistantMessageContent::Text(
+-                response_text,
+-            )),
+-            ..Default::default()
+-        });
+-
+-    let mut messages = original_messages;
+-    messages.push(assistant_msg);
+-
+-    let prefill_request = SpeculativePrefillRequest::new(messages);
++    let model = render_request.inner.model.clone();
++    render_request
++        .inner
++        .messages
++        .push(ChatCompletionRequestMessage::Assistant(assistant));
+     let preprocessing_cancel = cancel.clone();
+     // The tracker token and permit belong to the closure, not its JoinHandle.
+     // Cancelling the async warmup cannot free admission while this work continues.
+@@ -352,11 +310,27 @@
+             if preprocessing_cancel.is_cancelled() {
+                 return Ok(None);
+             }
+-            let formatted_prompt = formatter.render(&prefill_request)?;
++            if !contract::supported_tokenizer(tokenizer.as_ref())
++                || preprocessing_cancel.is_cancelled()
++            {
++                tracing::debug!("Skipping speculative prefill: unsupported tokenizer contract");
++                return Ok(None);
++            }
++            let Some(formatted_prompt) =
++                formatter.render_speculative_tool_prefix(&render_request)?
++            else {
++                tracing::debug!("Skipping speculative prefill: unsupported continuation template");
++                return Ok(None);
++            };
+             if preprocessing_cancel.is_cancelled() {
+                 return Ok(None);
+             }
+             let encoding = tokenizer.encode(&formatted_prompt)?;
++            let closed = tokenizer.encode("<|im_end|>")?;
++            if closed.token_ids() != [151645] || encoding.token_ids().last() != Some(&151645) {
++                tracing::debug!("Skipping speculative prefill: incompatible tokenizer boundary");
++                return Ok(None);
++            }
+             Ok(Some(encoding.token_ids().to_vec()))
+         })
+         .await??;
+@@ -366,7 +340,7 @@
+ 
+     let num_tokens = token_ids.len();
+     let preprocessed = PreprocessedRequest::builder()
+-        .model("speculative_prefill".to_string())
++        .model(model)
+         .token_ids(token_ids)
+         .stop_conditions(StopConditions {
+             max_tokens: Some(1),
+@@ -402,25 +376,28 @@
+     Ok(())
+ }
+ 
++// Adapted from pinned Dynamo main for completed tool continuations.
++// Original test names and assertions are retained with tool-call fixtures.
++// Source SHA256: d1ea24631f4d7c9e731615948bc9a128afdd70a4326bad87cf1569200b1535fb
++
+ #[cfg(test)]
+ mod tests {
+-    use std::path::PathBuf;
+     use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
+     use std::task::Poll;
+ 
+     use async_trait::async_trait;
+     use dynamo_protocols::types::{
+-        ChatChoiceStream, ChatCompletionRequestUserMessage,
++        ChatChoiceStream, ChatCompletionMessageContent, ChatCompletionRequestUserMessage,
+         ChatCompletionRequestUserMessageContent, ChatCompletionStreamResponseDelta,
+         CreateChatCompletionRequest, CreateChatCompletionStreamResponse, FinishReason,
+     };
+-    use dynamo_renderer::PromptFormatter;
++    use dynamo_renderer::OAIChatLikeRequest;
+     use dynamo_runtime::pipeline::ResponseStream;
+     use tokio::time::Instant;
+ 
+-    use crate::model_card::ModelDeploymentCard;
+-    use crate::preprocessor::prompt::prompt_formatter_from_mdc;
+     use crate::protocols::common::extensions::{AgentHints, NvExt};
++    use crate::tokenizers::traits::{Decoder, Encoder};
++    use crate::tokenizers::{DecodeResult, Encoding};
+ 
+     use super::*;
+ 
+@@ -582,14 +559,87 @@
+         }
+     }
+ 
++    // Lifecycle tests use a supported boundary without loading a model fixture.
++    // Renderer and tokenizer parity are covered by the separate CPU regressions.
++    struct LifecycleFormatter;
++
++    impl OAIPromptFormatter for LifecycleFormatter {
++        fn supports_add_generation_prompt(&self) -> bool {
++            true
++        }
++
++        fn render(&self, request: &dyn OAIChatLikeRequest) -> Result<String> {
++            let messages = request.typed_messages().expect("typed fixture messages");
++            let Some(ChatCompletionRequestMessage::Assistant(assistant)) = messages.last() else {
++                anyhow::bail!("lifecycle fixture must end with its completed assistant");
++            };
++            assert!(
++                assistant
++                    .tool_calls
++                    .as_ref()
++                    .is_some_and(|calls| !calls.is_empty())
++            );
++            Ok("fixture prefix<|im_end|>".to_string())
++        }
++
++        fn render_speculative_tool_prefix(
++            &self,
++            request: &dyn OAIChatLikeRequest,
++        ) -> Result<Option<String>> {
++            self.render(request).map(Some)
++        }
++    }
++
++    struct LifecycleTokenizer;
++
++    impl Encoder for LifecycleTokenizer {
++        fn encode(&self, input: &str) -> Result<Encoding> {
++            match input {
++                "<|im_end|>" => Ok(Encoding::Sp(vec![151645])),
++                "fixture prefix<|im_end|>" => Ok(Encoding::Sp(vec![42, 43, 151645])),
++                _ => anyhow::bail!("unexpected lifecycle fixture input"),
++            }
++        }
++
++        fn encode_batch(&self, inputs: &[&str]) -> Result<Vec<Encoding>> {
++            inputs.iter().map(|input| self.encode(input)).collect()
++        }
++    }
++
++    impl Decoder for LifecycleTokenizer {
++        fn decode(&self, _token_ids: &[u32], _skip_special_tokens: bool) -> Result<DecodeResult> {
++            Ok(DecodeResult::Complete(
++                "fixture prefix<|im_end|>".to_string(),
++            ))
++        }
++    }
++
++    impl Tokenizer for LifecycleTokenizer {
++        fn validate_prefix_cache(&self) -> Result<()> {
++            Ok(())
++        }
++        fn token_to_id(&self, token: &str) -> Result<Option<u32>> {
++            Ok((token == "<|im_end|>").then_some(151645))
++        }
++        fn special_token_ids(&self) -> Result<Vec<u32>> {
++            Ok(vec![151645])
++        }
++        fn num_special_tokens_added(&self) -> Result<usize> {
++            Ok(0)
++        }
++    }
++
+     fn sample_model_parts() -> (Arc<dyn OAIPromptFormatter>, Arc<dyn Tokenizer>) {
+-        let model_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+-            .join("tests/data/sample-models/mock-llama-3.1-8b-instruct");
+-        let mdc = ModelDeploymentCard::load_from_disk(model_path, None).unwrap();
+-        let PromptFormatter::OAI(formatter) = prompt_formatter_from_mdc(&mdc).unwrap();
+-        let tokenizer = mdc.tokenizer().unwrap();
+-        let tokenizer: Arc<dyn Tokenizer> = (*tokenizer).clone();
+-        (formatter, tokenizer)
++        (Arc::new(LifecycleFormatter), Arc::new(LifecycleTokenizer))
++    }
++
++    fn completed_assistant() -> ChatCompletionRequestAssistantMessage {
++        serde_json::from_value(serde_json::json!({
++            "content": "8849 m tall.",
++            "tool_calls": [{"id": "call-height", "type": "function",
++                "function": {"name": "lookup_height", "arguments": "{}"}}]
++        }))
++        .unwrap()
+     }
+ 
+     fn chat_request(speculative_prefill: bool) -> NvCreateChatCompletionRequest {
+@@ -612,7 +662,14 @@
+ 
+         NvCreateChatCompletionRequest {
+             inner: CreateChatCompletionRequest {
+-                model: "mock-llama".to_string(),
++                model: "lifecycle-fixture".to_string(),
++                tools: Some(
++                    serde_json::from_value(serde_json::json!([
++                        {"type": "function", "function": {"name": "lookup_height",
++                            "parameters": {"type": "object", "properties": {}}}}
++                    ]))
++                    .unwrap(),
++                ),
+                 messages,
+                 stream: Some(true),
+                 ..Default::default()
+@@ -635,12 +692,18 @@
+             delta: ChatCompletionStreamResponseDelta {
+                 role: None,
+                 content: Some(ChatCompletionMessageContent::Text(text.to_string())),
+-                tool_calls: None,
++                tool_calls: finish.then(|| {
++                    serde_json::from_value(serde_json::json!([
++                        {"index": 0, "id": "call-height", "type": "function",
++                            "function": {"name": "lookup_height", "arguments": "{}"}}
++                    ]))
++                    .unwrap()
++                }),
+                 function_call: None,
+                 refusal: None,
+                 reasoning_content: None,
+             },
+-            finish_reason: finish.then_some(FinishReason::Stop),
++            finish_reason: finish.then_some(FinishReason::ToolCalls),
+             logprobs: None,
+         };
+ 
+@@ -649,7 +712,7 @@
+                 id: "chatcmpl-test".to_string(),
+                 object: "chat.completion.chunk".to_string(),
+                 created: 0,
+-                model: "mock-llama".to_string(),
++                model: "lifecycle-fixture".to_string(),
+                 system_fingerprint: None,
+                 service_tier: None,
+                 choices: vec![choice],
+@@ -750,6 +813,13 @@
+         impl OAIPromptFormatter for GatedFormatter {
+             fn supports_add_generation_prompt(&self) -> bool {
+                 self.inner.supports_add_generation_prompt()
++            }
++
++            fn render_speculative_tool_prefix(
++                &self,
++                request: &dyn OAIChatLikeRequest,
++            ) -> Result<Option<String>> {
++                self.render(request).map(Some)
+             }
+ 
+             fn render(&self, request: &dyn OAIChatLikeRequest) -> Result<String> {
+@@ -798,6 +868,7 @@
+                 &formatter,
+                 &tokenizer,
+                 &tasks,
++                true,
+             );
+             assert_eq!(wrapped.collect::<Vec<_>>().await.len(), 2);
+             wait_for_dispatch(&entered).await;
+@@ -840,6 +911,7 @@
+                     &formatter,
+                     &tokenizer,
+                     &replacement,
++                    true,
+                 );
+                 assert_eq!(wrapped.collect::<Vec<_>>().await.len(), 2);
+                 replacement.tracker.close();
+@@ -876,6 +948,7 @@
+                 &normal_formatter,
+                 &tokenizer,
+                 &replacement,
++                true,
+             );
+             assert_eq!(wrapped.collect::<Vec<_>>().await.len(), 2);
+             wait_for_dispatch(&backend.dispatched).await;
+@@ -915,6 +988,13 @@
+         impl OAIPromptFormatter for BlockingFormatter {
+             fn supports_add_generation_prompt(&self) -> bool {
+                 self.inner.supports_add_generation_prompt()
++            }
++
++            fn render_speculative_tool_prefix(
++                &self,
++                request: &dyn OAIChatLikeRequest,
++            ) -> Result<Option<String>> {
++                self.render(request).map(Some)
+             }
+ 
+             fn render(&self, request: &dyn OAIChatLikeRequest) -> Result<String> {
+@@ -952,8 +1032,8 @@
+             prefill_task(
+                 backend.clone(),
+                 tasks.preprocessing(formatter, tokenizer),
+-                chat_request(true).inner.messages,
+-                "8849 m tall.".to_string(),
++                chat_request(true),
++                completed_assistant(),
+                 &context_slot,
+                 &cancel,
+             ),
+@@ -980,8 +1060,12 @@
+ 
+         impl Encoder for BlockingTokenizer {
+             fn encode(&self, input: &str) -> Result<Encoding> {
+-                self.entered.lock().take().unwrap().send(()).unwrap();
+-                self.release.lock().recv_timeout(Duration::from_secs(10))?;
++                if input != "<|im_end|>" {
++                    if let Some(entered) = self.entered.lock().take() {
++                        entered.send(()).unwrap();
++                        self.release.lock().recv_timeout(Duration::from_secs(10))?;
++                    }
++                }
+                 self.inner.encode(input)
+             }
+ 
+@@ -1003,6 +1087,15 @@
+         impl Tokenizer for BlockingTokenizer {
+             fn validate_prefix_cache(&self) -> Result<()> {
+                 self.inner.validate_prefix_cache()
++            }
++            fn token_to_id(&self, token: &str) -> Result<Option<u32>> {
++                self.inner.token_to_id(token)
++            }
++            fn special_token_ids(&self) -> Result<Vec<u32>> {
++                self.inner.special_token_ids()
++            }
++            fn num_special_tokens_added(&self) -> Result<usize> {
++                self.inner.num_special_tokens_added()
+             }
+         }
+ 
+@@ -1033,8 +1126,8 @@
+             prefill_task(
+                 backend.clone(),
+                 tasks.preprocessing(formatter, tokenizer),
+-                chat_request(true).inner.messages,
+-                "8849 m tall.".to_string(),
++                chat_request(true),
++                completed_assistant(),
+                 &context_slot,
+                 &cancel,
+             ),
+@@ -1067,6 +1160,7 @@
+             &formatter,
+             &tokenizer,
+             &tasks,
++            true,
+         );
+         drop(engine);
+         let items: Vec<_> = wrapped.collect().await;
+@@ -1106,6 +1200,7 @@
+             &formatter,
+             &tokenizer,
+             &tasks,
++            true,
+         );
+         drop(engine);
+         assert_eq!(tracker.len(), 1);
+@@ -1134,6 +1229,7 @@
+             &formatter,
+             &tokenizer,
+             &tasks,
++            true,
+         );
+         drop(engine);
+ 
+@@ -1188,6 +1284,7 @@
+             &formatter,
+             &tokenizer,
+             &tasks,
++            true,
+         );
+         drop(engine);
+ 
+@@ -1242,6 +1339,7 @@
+             &formatter,
+             &tokenizer,
+             &tasks,
++            true,
+         );
+         drop(engine);
+ 
+@@ -1289,6 +1387,7 @@
+             &formatter,
+             &tokenizer,
+             &tasks,
++            true,
+         );
+         drop(engine);
+ 
+@@ -1338,6 +1437,7 @@
+             &formatter,
+             &tokenizer,
+             &tasks,
++            true,
+         );
+         drop(engine);
+ 
+@@ -1381,6 +1481,7 @@
+             &formatter,
+             &tokenizer,
+             &tasks,
++            true,
+         );
+         drop(engine);
+ 
+@@ -1426,6 +1527,7 @@
+             &formatter,
+             &tokenizer,
+             &tasks,
++            true,
+         );
+         drop(engine);
+ 
+--- a/lib/llm/src/preprocessor.rs
++++ b/lib/llm/src/preprocessor.rs
+@@ -1641,6 +1641,7 @@
+ }
+ 
+ pub struct OpenAIPreprocessor {
++    speculative_artifacts_supported: bool,
+     mdcsum: String,
+     formatter: Arc<dyn OAIPromptFormatter>,
+     tokenizer: Arc<dyn Tokenizer>,
+@@ -2368,6 +2369,14 @@
+         embedding_tokenizers: Option<EmbeddingTokenizerState>,
+         speculative_prefill_cancel: Option<CancellationToken>,
+     ) -> Result<Arc<Self>> {
++        let speculative_artifacts_supported = speculative_prefill::contract::supported_artifacts(
++            mdc.tokenizer.as_ref().map(|t| t.checksum()).as_deref(),
++            mdc.prompt_formatter
++                .as_ref()
++                .map(|t| t.checksum())
++                .as_deref(),
++            mdc.runtime_config.effective_tokenizer_backend().as_str(),
++        );
+         let mdcsum = mdc.mdcsum().to_string();
+         let tokenizer: Arc<dyn Tokenizer> = (*tokenizer).clone();
+         let lora_name = mdc.lora.as_ref().map(|l| l.name.clone());
+@@ -2701,6 +2710,7 @@
+             embedding_tokenizers,
+             model_info,
+             mdcsum,
++            speculative_artifacts_supported,
+             lora_name,
+             runtime_config,
+             kv_cache_block_size,
+@@ -7207,6 +7217,27 @@
+         // Attach the timing tracker to the request so downstream components can record metrics
+         common_request.tracker = tracker;
+ 
++        // This first continuation contract supports unnamespaced text models only.
++        let speculative_identity_supported = self.speculative_artifacts_supported
++            && request
++                .nvext
++                .as_ref()
++                .and_then(|n| n.agent_hints.as_ref())
++                .and_then(|h| h.speculative_prefill)
++                == Some(true)
++            && !self.normalize_tool_call_args
++            && request.nvext.as_ref().and_then(|n| n.use_raw_prompt) != Some(true)
++            && request
++                .nvext
++                .as_ref()
++                .and_then(|n| n.token_data.as_ref())
++                .is_none()
++            && common_request.prompt_embeds.is_none()
++            && common_request.multi_modal_data.is_none()
++            && common_request.routing.as_ref().is_none_or(|r| {
++                serde_json::to_value(r).ok() == serde_json::to_value(RoutingHints::default()).ok()
++            });
++
+         // Capture media counts before `common_request` is moved into the context.
+         let mm_counts = MultimodalCounts::from_preprocessed(&common_request);
+ 
+@@ -7296,6 +7327,7 @@
+             &self.formatter,
+             &self.tokenizer,
+             &self.speculative_prefill_tasks,
++            speculative_identity_supported,
+         );
+ 
+         let final_stream =
+--- /dev/null
++++ b/lib/llm/src/preprocessor/speculative_prefill_accumulator.rs
+@@ -0,0 +1,242 @@
++// SPDX-License-Identifier: Apache-2.0
++
++use dynamo_protocols::types::{
++    ChatCompletionRequestAssistantMessage, CreateChatCompletionStreamResponse,
++};
++use serde_json::{Value, json};
++use std::collections::BTreeMap;
++
++#[derive(Default)]
++pub(super) struct CompletedToolTurn {
++    content: Option<String>,
++    reasoning: Option<String>,
++    tools: BTreeMap<u32, Value>,
++    finished: bool,
++    failed: bool,
++}
++
++impl CompletedToolTurn {
++    pub(super) fn reject(&mut self) {
++        self.failed = true;
++    }
++
++    pub(super) fn observe(&mut self, response: &CreateChatCompletionStreamResponse) {
++        // A usage-only frame is valid after the terminal choice.
++        if response.choices.is_empty() {
++            return;
++        }
++        if self.failed
++            || self.finished
++            || response.choices.len() != 1
++            || response.choices[0].index != 0
++        {
++            self.reject();
++            return;
++        }
++        let choice = &response.choices[0];
++        let delta = serde_json::to_value(&choice.delta).expect("protocol delta is serializable");
++        if delta.get("function_call").is_some_and(|v| !v.is_null())
++            || delta.get("refusal").is_some_and(|v| !v.is_null())
++            || delta
++                .get("role")
++                .is_some_and(|v| !v.is_null() && v != "assistant")
++        {
++            self.reject();
++            return;
++        }
++        for (key, target) in [
++            ("content", &mut self.content),
++            ("reasoning_content", &mut self.reasoning),
++        ] {
++            if let Some(value) = delta.get(key).filter(|v| !v.is_null()) {
++                if let Some(text) = value.as_str() {
++                    target.get_or_insert_with(String::new).push_str(text);
++                } else {
++                    self.failed = true;
++                    return;
++                }
++            }
++        }
++        if let Some(chunks) = &choice.delta.tool_calls {
++            for chunk in chunks {
++                let incoming = serde_json::to_value(chunk).expect("tool delta is serializable");
++                let existing = self
++                    .tools
++                    .entry(chunk.index)
++                    .or_insert_with(|| json!({"type":"function", "function":{"arguments":""}}));
++                for key in ["id", "type"] {
++                    if let Some(value) = incoming.get(key).filter(|v| !v.is_null()) {
++                        if existing.get(key).is_some_and(|old| old != value) {
++                            self.failed = true;
++                            return;
++                        }
++                        existing[key] = value.clone();
++                    }
++                }
++                if let Some(function) = incoming.get("function").filter(|v| !v.is_null()) {
++                    if let Some(name) = function.get("name").filter(|v| !v.is_null()) {
++                        if existing["function"]
++                            .get("name")
++                            .is_some_and(|old| old != name)
++                        {
++                            self.failed = true;
++                            return;
++                        }
++                        existing["function"]["name"] = name.clone();
++                    }
++                    if let Some(args) = function.get("arguments").and_then(Value::as_str) {
++                        let old = existing["function"]["arguments"].as_str().unwrap();
++                        existing["function"]["arguments"] = Value::String(format!("{old}{args}"));
++                    }
++                }
++            }
++        }
++        if let Some(reason) = choice.finish_reason {
++            self.finished = true;
++            if serde_json::to_value(reason).ok().as_ref() != Some(&json!("tool_calls")) {
++                self.reject();
++            }
++        }
++    }
++
++    pub(super) fn finish(self) -> Option<ChatCompletionRequestAssistantMessage> {
++        if self.failed || !self.finished || self.tools.is_empty() {
++            return None;
++        }
++        let mut ids = std::collections::HashSet::new();
++        for (expected, (index, tool)) in self.tools.iter().enumerate() {
++            let id = tool["id"].as_str()?;
++            let name = tool["function"]["name"].as_str()?;
++            let args = tool["function"]["arguments"].as_str()?;
++            if *index as usize != expected
++                || id.is_empty()
++                || name.is_empty()
++                || !ids.insert(id)
++                || tool["type"] != "function"
++                || !serde_json::from_str::<Value>(args).ok()?.is_object()
++            {
++                return None;
++            }
++        }
++        serde_json::from_value(
++            json!({"content":self.content, "reasoning_content":self.reasoning,
++            "tool_calls":self.tools.into_values().collect::<Vec<_>>()}),
++        )
++        .ok()
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super as accumulator;
++    use super::*;
++    use serde_json::Value as Json;
++    fn chunk(delta: Json, reason: Json) -> CreateChatCompletionStreamResponse {
++        serde_json::from_value(json!({"id":"x","model":"m","object":"chat.completion.chunk","created":0,"choices":[{"index":0,"delta":delta,"finish_reason":reason,"logprobs":null}]})).unwrap()
++    }
++    fn initial() -> Json {
++        json!({"role":"assistant","tool_calls":[{"index":0,"id":"c1","type":"function","function":{"name":"read","arguments":"{"}}]})
++    }
++    fn ending() -> Json {
++        json!({"tool_calls":[{"index":0,"function":{"arguments":"\"path\": \"x\"}"}}]})
++    }
++
++    #[test]
++    fn fields_and_reasoning_survive_fragments() {
++        let mut a = accumulator::CompletedToolTurn::default();
++        a.observe(&chunk(initial(), Json::Null));
++        a.observe(&chunk(
++            json!({"content":"hello","reasoning_content":"think"}),
++            Json::Null,
++        ));
++        a.observe(&chunk(ending(), json!("tool_calls")));
++        let mut usage = chunk(json!({}), Json::Null);
++        usage.choices.clear();
++        a.observe(&usage);
++        let result = serde_json::to_value(a.finish().unwrap()).unwrap();
++        assert_eq!(
++            result["tool_calls"][0]["function"]["arguments"],
++            "{\"path\": \"x\"}"
++        );
++        assert_eq!(result["reasoning_content"], "think");
++        assert_eq!(result["content"], "hello");
++    }
++    #[test]
++    fn incomplete_or_limited_turns_skip() {
++        for reason in [
++            Json::Null,
++            json!("length"),
++            json!("stop"),
++            json!("content_filter"),
++        ] {
++            let mut a = accumulator::CompletedToolTurn::default();
++            a.observe(&chunk(initial(), Json::Null));
++            a.observe(&chunk(ending(), reason));
++            assert!(a.finish().is_none());
++        }
++    }
++    #[test]
++    fn malformed_conflicting_and_multiple_choices_skip() {
++        for bad in [
++            json!({"tool_calls":[{"index":0,"id":"different"}]}),
++            json!({"tool_calls":[{"index":0,"function":{"name":"other"}}]}),
++            json!({"content":[{"type":"text","text":"parts"}]}),
++            json!({"refusal":"no"}),
++            json!({"function_call":{"name":"legacy"}}),
++        ] {
++            let mut a = accumulator::CompletedToolTurn::default();
++            a.observe(&chunk(initial(), Json::Null));
++            a.observe(&chunk(bad, Json::Null));
++            a.observe(&chunk(ending(), json!("tool_calls")));
++            assert!(a.finish().is_none());
++        }
++        let mut c = chunk(initial(), Json::Null);
++        c.choices.push(c.choices[0].clone());
++        c.choices[1].index = 1;
++        let mut a = accumulator::CompletedToolTurn::default();
++        a.observe(&c);
++        a.observe(&chunk(ending(), json!("tool_calls")));
++        assert!(a.finish().is_none());
++    }
++    #[test]
++    fn late_error_and_late_choice_skip() {
++        for late_choice in [true, false] {
++            let mut a = accumulator::CompletedToolTurn::default();
++            a.observe(&chunk(initial(), Json::Null));
++            a.observe(&chunk(ending(), json!("tool_calls")));
++            if late_choice {
++                a.observe(&chunk(json!({"content":"late"}), Json::Null));
++            } else {
++                a.reject();
++            }
++            assert!(a.finish().is_none());
++        }
++    }
++    #[test]
++    fn raw_tool_arguments_are_never_reserialized() {
++        let args = "{ \"x\" : 123456789012345678901234567890 }";
++        let mut d = initial();
++        d["tool_calls"][0]["function"]["arguments"] = json!(args);
++        let mut a = accumulator::CompletedToolTurn::default();
++        a.observe(&chunk(d, json!("tool_calls")));
++        let result = serde_json::to_value(a.finish().unwrap()).unwrap();
++        assert_eq!(result["tool_calls"][0]["function"]["arguments"], args);
++    }
++    #[test]
++    fn parallel_tools_are_ordered_and_unique() {
++        let mut a = accumulator::CompletedToolTurn::default();
++        a.observe(&chunk(json!({"tool_calls":[{"index":1,"id":"c2","type":"function","function":{"name":"read","arguments":"{}"}},{"index":0,"id":"c1","type":"function","function":{"name":"read","arguments":"{}"}}]}),json!("tool_calls")));
++        let v = serde_json::to_value(a.finish().unwrap()).unwrap();
++        assert_eq!(v["tool_calls"][0]["id"], "c1");
++        assert_eq!(v["tool_calls"][1]["id"], "c2");
++        for calls in [
++            json!([{"index":1,"id":"c1","type":"function","function":{"name":"read","arguments":"{}"}}]),
++            json!([{"index":0,"id":"c1","type":"function","function":{"name":"read","arguments":"{}"}},{"index":1,"id":"c1","type":"function","function":{"name":"read","arguments":"{}"}}]),
++            json!([{"index":0,"id":"c1","type":"function","function":{"name":"read","arguments":"{broken"}}]),
++        ] {
++            let mut a = accumulator::CompletedToolTurn::default();
++            a.observe(&chunk(json!({"tool_calls":calls}), json!("tool_calls")));
++            assert!(a.finish().is_none());
++        }
++    }
++}
+--- /dev/null
++++ b/lib/llm/src/preprocessor/speculative_prefill_contract.rs
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: Apache-2.0
++use dynamo_renderer::dynamo_tokenizers::traits::Tokenizer;
++
++pub(crate) fn supported_artifacts(
++    tokenizer: Option<&str>,
++    config: Option<&str>,
++    backend: &str,
++) -> bool {
++    tokenizer == Some("blake3:b0cb923fc505fdf0a53f0287654fa26577d3f333d4134350da0a97664b228739")
++        && config == Some("blake3:4422061cdcb205f75bc448b09f4017f8f2f92f172aeb2cf0248f4ce2f0f360e6")
++        && backend == "default"
++}
++
++pub(super) fn supported_tokenizer(tokenizer: &dyn Tokenizer) -> bool {
++    tokenizer.validate_prefix_cache().is_ok()
++        && tokenizer.num_special_tokens_added().ok() == Some(0)
++        && tokenizer.token_to_id("<|im_end|>").ok().flatten() == Some(151645)
++        && tokenizer
++            .special_token_ids()
++            .is_ok_and(|ids| ids.contains(&151645))
++        && tokenizer
++            .encode("<|im_end|>")
++            .is_ok_and(|e| e.token_ids() == [151645])
++}

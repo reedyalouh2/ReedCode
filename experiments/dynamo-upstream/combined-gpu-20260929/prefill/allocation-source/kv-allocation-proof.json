@@ -1,0 +1,179 @@
+{
+  "status": "slot_payload_derived_from_live_configuration_and_pinned_allocation_source",
+  "physical_allocator_bytes_directly_measured": false,
+  "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "inputs": {
+    "deployment_snapshot": {
+      "path": "/tmp/reedcode-gpu-evidence-02/deployment-snapshot-3.json",
+      "sha256": "3dc73706f8e6b54e2ef713a4eced4f971f560bd7775f2051c6d4d2ca07c9a965",
+      "bytes": 191377
+    },
+    "matching_model_config": {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/001-speculative-prefill/kv-footprint/model-config.json",
+      "sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
+      "bytes": 728
+    },
+    "source_manifest": {
+      "path": "/tmp/reedcode-gpu-evidence-02/kv-allocation-source/manifest.json",
+      "sha256": "a8d52342caff030fed12d8e6fd79783265701821d8412195db515dc1d5c58e05",
+      "bytes": 3135
+    },
+    "export_manifest": {
+      "path": "/tmp/reedcode-gpu-evidence-02/analysis-claude-02/export/snapshot-manifest.json",
+      "sha256": "893b73c14911c3bd5f4b3394cdc7f099afd2e83002b2b9b9c5dd0ec0bc9afbfe",
+      "bytes": 15850
+    }
+  },
+  "geometry": {
+    "layers": 36,
+    "kv_heads_per_layer_per_rank": 8,
+    "head_dim": 128,
+    "key_value_factor": 2,
+    "bytes_per_bfloat16_element": 2,
+    "tokens_per_block": 16,
+    "tensor_parallel_size": 1,
+    "attention_backend": "FLASH_ATTN version2",
+    "cache_dtype_argument": "auto",
+    "resolved_dtype_from_loaded_model_and_source": "torch.bfloat16"
+  },
+  "arithmetic": {
+    "formula": "layers * key_value_factor * tokens_per_block * kv_heads_per_rank * head_dim * dtype_bytes",
+    "bytes_per_layer_full_block": 65536,
+    "bytes_per_full_token_all_layers": 147456,
+    "bytes_per_full_block_all_layers": 2359296,
+    "MiB_per_full_block_all_layers": 2.25
+  },
+  "observed_epochs": [
+    {
+      "label": "bootstrap-parity",
+      "worker_epoch": "1506f4ecedb54ba29a5d0502405d0cf5",
+      "worker_id": "676339fdf768243",
+      "engine": "0",
+      "num_gpu_blocks_reported": 21238,
+      "capacity_tokens_reported": 339808,
+      "available_memory_gib_rounded_log": 46.67,
+      "derived_pool_payload_bytes": 50106728448,
+      "derived_pool_payload_gib": 46.66552734375,
+      "rounded_available_memory_consistent": true,
+      "backend_log": {
+        "path": "/tmp/reedcode-gpu-evidence-02/analysis-claude-02/export/parity/backend-1506f4ecedb54ba29a5d0502405d0cf5.log",
+        "sha256": "b92a8682458d878b48c8f3480a49a84543f783969aeceb60119c725d9ee0486a",
+        "bytes": 200912,
+        "snapshot_member_hash_verified": true
+      },
+      "backend_log_rows": [
+        {
+          "line": 34,
+          "text": "(EngineCore pid=1800) INFO 09-29 05:33:11 [core.py:122] Initializing a V1 LLM engine (v0.28.0) with config: model='Qwen/Qwen3-8B', speculative_config=None, tokenizer='Qwen/Qwen3-8B', skip_tokenizer_init=False, tokenizer_mode=auto, revision=b968826d9c46dd6066d109eabc6255188de91218, tokenizer_revision=b968826d9c46dd6066d109eabc6255188de91218, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=32768, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=Qwen/Qwen3-8B, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [2048], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, enable_bf16x3_router_gemm=False, moe_backend='auto', linear_backend='auto')"
+        },
+        {
+          "line": 39,
+          "text": "(EngineCore pid=1800) INFO 09-29 05:33:13 [cuda.py:486] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION']."
+        },
+        {
+          "line": 40,
+          "text": "(EngineCore pid=1800) INFO 09-29 05:33:13 [flash_attn.py:866] Using FlashAttention version 2"
+        },
+        {
+          "line": 68,
+          "text": "(EngineCore pid=1800) INFO 09-29 05:34:03 [gpu_worker.py:578] Available KV cache memory: 46.67 GiB"
+        },
+        {
+          "line": 69,
+          "text": "(EngineCore pid=1800) INFO 09-29 05:34:03 [kv_cache_utils.py:1869] GPU KV cache size: 339,808 tokens, Maximum concurrency for 32,768 tokens per request: 10.37x"
+        }
+      ],
+      "metrics": {
+        "path": "/tmp/reedcode-gpu-evidence-02/analysis-claude-02/export/parity/reset-proofs/e0ac4811762944b3b9525117a02e7be5/before.metrics.txt",
+        "sha256": "ed18f806efc9799afa2a308611c145bf02a78d089eedfce3331296c5a1b27f5a",
+        "bytes": 120372,
+        "snapshot_member_hash_verified": true
+      },
+      "cache_config_info_line": "vllm:cache_config_info{_block_size_resolved=\"True\",block_size=\"16\",cache_dtype=\"auto\",dynamo_component=\"backend\",dynamo_endpoint=\"generate\",dynamo_namespace=\"dynamo\",enable_prefix_caching=\"True\",engine=\"0\",gpu_memory_utilization=\"0.8\",is_attention_free=\"False\",kv_cache_dtype_skip_layers=\"[]\",kv_cache_max_concurrency=\"10.3701171875\",kv_cache_memory_bytes=\"None\",kv_cache_size_tokens=\"339808\",kv_offloading_backend=\"native\",kv_offloading_size=\"None\",kv_sharing_fast_prefill=\"False\",mamba_block_size=\"None\",mamba_cache_dtype=\"auto\",mamba_cache_mode=\"none\",mamba_page_size_padded=\"None\",mamba_ssm_cache_dtype=\"auto\",model=\"Qwen/Qwen3-8B\",model_name=\"Qwen/Qwen3-8B\",num_cpu_blocks=\"None\",num_gpu_blocks=\"21238\",num_gpu_blocks_override=\"None\",prefix_caching_hash_algo=\"sha256\",prefix_match_unit=\"None\",replayssm_buffer_len=\"16\",skip_page_size_padded=\"None\",sliding_window=\"None\",use_replayssm=\"False\",user_specified_block_size=\"True\",user_specified_mamba_block_size=\"False\",worker_id=\"676339fdf768243\"} 1.0"
+    },
+    {
+      "label": "codex-parity",
+      "worker_epoch": "1661b2352f704c199e748877d3a38a46",
+      "worker_id": "82c8fa860146127f",
+      "engine": "0",
+      "num_gpu_blocks_reported": 21691,
+      "capacity_tokens_reported": 347056,
+      "available_memory_gib_rounded_log": 47.66,
+      "derived_pool_payload_bytes": 51175489536,
+      "derived_pool_payload_gib": 47.660888671875,
+      "rounded_available_memory_consistent": true,
+      "backend_log": {
+        "path": "/tmp/reedcode-gpu-evidence-02/analysis-claude-02/export/parity/epochs/1661b2352f704c199e748877d3a38a46/backend.log",
+        "sha256": "c1c70df44e5088d05f5ccd7a529268ce458f14d243af391c34b0ddaf8229ee22",
+        "bytes": 47992,
+        "snapshot_member_hash_verified": true
+      },
+      "backend_log_rows": [
+        {
+          "line": 28,
+          "text": "(EngineCore pid=3807) INFO 09-29 06:01:00 [core.py:122] Initializing a V1 LLM engine (v0.28.0) with config: model='Qwen/Qwen3-8B', speculative_config=None, tokenizer='Qwen/Qwen3-8B', skip_tokenizer_init=False, tokenizer_mode=auto, revision=b968826d9c46dd6066d109eabc6255188de91218, tokenizer_revision=b968826d9c46dd6066d109eabc6255188de91218, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=32768, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=Qwen/Qwen3-8B, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [2048], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, enable_bf16x3_router_gemm=False, moe_backend='auto', linear_backend='auto')"
+        },
+        {
+          "line": 33,
+          "text": "(EngineCore pid=3807) INFO 09-29 06:01:02 [cuda.py:486] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION']."
+        },
+        {
+          "line": 34,
+          "text": "(EngineCore pid=3807) INFO 09-29 06:01:02 [flash_attn.py:866] Using FlashAttention version 2"
+        },
+        {
+          "line": 59,
+          "text": "(EngineCore pid=3807) INFO 09-29 06:01:08 [gpu_worker.py:578] Available KV cache memory: 47.66 GiB"
+        },
+        {
+          "line": 60,
+          "text": "(EngineCore pid=3807) INFO 09-29 06:01:08 [kv_cache_utils.py:1869] GPU KV cache size: 347,056 tokens, Maximum concurrency for 32,768 tokens per request: 10.59x"
+        }
+      ],
+      "metrics": {
+        "path": "/tmp/reedcode-gpu-evidence-02/analysis-claude-02/export/parity/epochs/1661b2352f704c199e748877d3a38a46/reset-proofs/699babd2590441378bfe6005d2a787fc/before.metrics.txt",
+        "sha256": "dd197697ca287bbbf63ffd4cbe03896b1928a3b8a4dde1063cfe2352232a7d44",
+        "bytes": 120795,
+        "snapshot_member_hash_verified": true
+      },
+      "cache_config_info_line": "vllm:cache_config_info{_block_size_resolved=\"True\",block_size=\"16\",cache_dtype=\"auto\",dynamo_component=\"backend\",dynamo_endpoint=\"generate\",dynamo_namespace=\"dynamo\",enable_prefix_caching=\"True\",engine=\"0\",gpu_memory_utilization=\"0.8\",is_attention_free=\"False\",kv_cache_dtype_skip_layers=\"[]\",kv_cache_max_concurrency=\"10.59130859375\",kv_cache_memory_bytes=\"None\",kv_cache_size_tokens=\"347056\",kv_offloading_backend=\"native\",kv_offloading_size=\"None\",kv_sharing_fast_prefill=\"False\",mamba_block_size=\"None\",mamba_cache_dtype=\"auto\",mamba_cache_mode=\"none\",mamba_page_size_padded=\"None\",mamba_ssm_cache_dtype=\"auto\",model=\"Qwen/Qwen3-8B\",model_name=\"Qwen/Qwen3-8B\",num_cpu_blocks=\"None\",num_gpu_blocks=\"21691\",num_gpu_blocks_override=\"None\",prefix_caching_hash_algo=\"sha256\",prefix_match_unit=\"None\",replayssm_buffer_len=\"16\",skip_page_size_padded=\"None\",sliding_window=\"None\",use_replayssm=\"False\",user_specified_block_size=\"True\",user_specified_mamba_block_size=\"False\",worker_id=\"82c8fa860146127f\"} 1.0"
+    }
+  ],
+  "source_points": [
+    {
+      "file": "vllm/utils/torch_utils.py",
+      "symbol": "kv_cache_dtype_str_to_dtype",
+      "meaning": "auto returns loaded model_config.dtype"
+    },
+    {
+      "file": "vllm/model_executor/layers/attention/attention.py",
+      "symbol": "get_kv_cache_spec",
+      "meaning": "non-sliding decoder attention produces FullAttentionSpec"
+    },
+    {
+      "file": "vllm/v1/attention/backends/flash_attn.py",
+      "symbol": "get_kv_cache_shape",
+      "meaning": "dense shape(num_blocks,num_kv_heads,block_size,2*head_size); no padding dimension"
+    },
+    {
+      "file": "vllm/v1/kv_cache_interface.py",
+      "symbol": "AttentionSpec.page_size_bytes",
+      "meaning": "dense K+V element payload or explicit padded page"
+    },
+    {
+      "file": "vllm/v1/worker/gpu_model_runner.py",
+      "symbol": "_allocate_kv_cache_tensors",
+      "meaning": "KV tensor backing is allocated from full configured pool sizes at initialization"
+    }
+  ],
+  "reporting_rule": "For a complete gap-free GPU/group0 event ledger, multiply unique retained warmup-only full blocks by2359296 and label the result derived occupied KV-pool payload bytes. Divide by contemporaneous real-context full-block payload for the requested branch ratio; report partial context and retained-history denominators separately.",
+  "limitations": [
+    "Saved records do not dump live tensor storage nbytes, CUDA allocation addresses, allocator padding, or allocator-reserved totals; exact physical allocator bytes are unmeasured.",
+    "Pinned source files are from the recorded vLLM revision; this check does not independently hash the installed GPU files against those sources.",
+    "The observed pool counts are from the two named parity epochs. Prefill starts a new engine epoch and its own cache_config_info/startup values must be saved and checked before reusing this conversion.",
+    "Warming occupies slots in an already allocated pool; occupied payload bytes are not incremental nvidia-smi memory or bytes newly malloced for that request.",
+    "Published full cache blocks omit active partial blocks, request block tables, metadata, graphs and other GPU memory. Block pool capacity may include reserved/null slots.",
+    "An event publication can repeat a prior logical block. Deduplicate by valid ancestry and process epoch, and account for removal/reset; event count alone is not physical occupancy.",
+    "This check does not establish evictions, latency impact, multi-worker behavior, or a causal effect of speculative_prefill."
+  ]
+}

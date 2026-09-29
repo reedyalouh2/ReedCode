@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "evidence": "local_rendering_audit",
+  "model": "Qwen/Qwen3-8B",
+  "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "block_size": 16,
+  "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+  "template_sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+  "renderer": {
+    "engine": "Jinja2",
+    "version": "3.1.6",
+    "tokenizers_version": "0.23.2",
+    "rust_renderer_executed": false
+  },
+  "cases": [
+    {
+      "case": "text",
+      "initial_prompt_tokens": 60,
+      "next_prompt_tokens": 78,
+      "recorded_prompt_lengths_match": true,
+      "variants": {
+        "stock": {
+          "tokens": 64,
+          "matching_prefix_tokens": 56,
+          "matching_full_blocks": 3,
+          "entire_candidate_is_prefix": false
+        },
+        "tools_only": {
+          "tokens": 64,
+          "matching_prefix_tokens": 56,
+          "matching_full_blocks": 3,
+          "entire_candidate_is_prefix": false
+        },
+        "all_fields_without_future_role": {
+          "tokens": 64,
+          "matching_prefix_tokens": 56,
+          "matching_full_blocks": 3,
+          "entire_candidate_is_prefix": false
+        },
+        "closed_assistant_candidate": {
+          "tokens": 48,
+          "matching_prefix_tokens": 48,
+          "matching_full_blocks": 3,
+          "entire_candidate_is_prefix": true
+        }
+      },
+      "closed_prefix_tokens_before_block_rounding": 59,
+      "ordinary_decode_prefix_bounds": {
+        "lower_tokens": 56,
+        "upper_tokens": 56,
+        "reason": "The mismatch occurs before any sampled output token.",
+        "lower_full_blocks": 3,
+        "upper_full_blocks": 3
+      },
+      "candidate_blocks_beyond_ordinary_decode_upper_bound": 0,
+      "candidate_gpu_cache_reuse": null,
+      "capture_sha256": "eee1af9f580325b348f52924bdb03f695ab1cbd09f5e1c27719feb3b70527369"
+    },
+    {
+      "case": "tool",
+      "initial_prompt_tokens": 202,
+      "next_prompt_tokens": 244,
+      "recorded_prompt_lengths_match": true,
+      "variants": {
+        "stock": {
+          "tokens": 72,
+          "matching_prefix_tokens": 40,
+          "matching_full_blocks": 2,
+          "entire_candidate_is_prefix": false
+        },
+        "tools_only": {
+          "tokens": 204,
+          "matching_prefix_tokens": 198,
+          "matching_full_blocks": 12,
+          "entire_candidate_is_prefix": false
+        },
+        "all_fields_without_future_role": {
+          "tokens": 223,
+          "matching_prefix_tokens": 198,
+          "matching_full_blocks": 12,
+          "entire_candidate_is_prefix": false
+        },
+        "closed_assistant_candidate": {
+          "tokens": 208,
+          "matching_prefix_tokens": 208,
+          "matching_full_blocks": 13,
+          "entire_candidate_is_prefix": true
+        }
+      },
+      "closed_prefix_tokens_before_block_rounding": 218,
+      "ordinary_decode_prefix_bounds": {
+        "lower_tokens": 198,
+        "upper_tokens": 198,
+        "reason": "The mismatch occurs before any sampled output token.",
+        "lower_full_blocks": 12,
+        "upper_full_blocks": 12
+      },
+      "candidate_blocks_beyond_ordinary_decode_upper_bound": 1,
+      "candidate_gpu_cache_reuse": null,
+      "capture_sha256": "9cfb8648bcb0eb58ffa9eb1c5f90bacb5f3db0f9b56b96154d41e00ce2ddc74b"
+    }
+  ],
+  "gpu_validation": "The corrected candidate has not run on a GPU."
+}

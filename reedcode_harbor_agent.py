@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import asyncio
 import base64
+from datetime import datetime, timezone
 import json
+import os
 import posixpath
 import shlex
 import time
+from uuid import uuid4
 
 from openai import AsyncOpenAI
 
@@ -16,6 +19,7 @@ from harbor.models.agent.context import AgentContext
 from output_policy import Settings, ToolObservation, observation
 from model_backend import create_response, response_termination
 from server_metrics import ServerMetricsWindow
+from dynamo_support import finish_session
 
 
 TOOLS = [
@@ -105,10 +109,13 @@ class ReedCodeAgent(BaseAgent):
     ) -> None:
         if not self.model_name:
             raise ValueError("A model must be supplied with --model")
+        if self.settings.dynamo is not None and not os.getenv("OPENAI_BASE_URL"):
+            raise ValueError("Set OPENAI_BASE_URL to the Dynamo frontend before enabling hints")
 
         history = [{"role": "user", "content": instruction}]
         trace_path = self.logs_dir / "reedcode_trace.jsonl"
         started = time.perf_counter()
+        session_id = f"reedcode-{uuid4().hex}" if self.settings.dynamo is not None else None
 
         total_input = total_cached = total_output = 0
         model_calls = tool_calls_total = tool_failures = 0
@@ -116,11 +123,20 @@ class ReedCodeAgent(BaseAgent):
         stop_reason = "error"
 
         def log(event: dict) -> None:
+            if session_id is not None:
+                event = {"session_id": session_id,
+                         "elapsed_ms": round((time.perf_counter() - started) * 1000, 3),
+                         **event}
             with trace_path.open("a", encoding="utf-8") as f:
                 f.write(json.dumps(event) + "\n")
 
+        def boundary(phase: str, **fields) -> None:
+            if session_id is not None:
+                log({"type": "lifecycle", "phase": phase, **fields})
+
         log({
             "type": "run_config",
+            "started_at": datetime.now(timezone.utc).isoformat(),
             "agent_version": self.version(),
             "model": self.model_name,
             "max_turns": self.settings.max_turns,
@@ -132,11 +148,17 @@ class ReedCodeAgent(BaseAgent):
             "server_metrics_enabled": bool(self.settings.server_metrics_url),
             "metrics_sample_interval_sec": self.settings.metrics_sample_interval,
             "sdk_max_retries": 0,
+            "capture_requests": self.settings.capture_requests,
+            "dynamo": None if self.settings.dynamo is None else {
+                "speculative_prefill": self.settings.dynamo.speculative_prefill,
+                "hint_application": "unverified",
+            },
         })
 
         try:
             async with AsyncOpenAI(max_retries=0) as client:
                 for turn in range(1, self.settings.max_turns + 1):
+                    boundary("model_start", turn=turn)
                     metrics = ServerMetricsWindow(
                         self.settings.server_metrics_url,
                         model_name=self.model_name,
@@ -157,9 +179,19 @@ class ReedCodeAgent(BaseAgent):
                                 input=history,
                                 tools=TOOLS,
                                 max_output_tokens=self.settings.max_output_tokens,
+                                dynamo=self.settings.dynamo,
+                                session_id=session_id,
+                                stream=self.settings.dynamo is not None,
+                                capture=(lambda request: log({"type": "request", "turn": turn,
+                                                              "request": request}))
+                                if self.settings.capture_requests else None,
                             )
                             latency_ms = (time.perf_counter() - start) * 1000
-                    except BaseException:
+                    except BaseException as exc:
+                        if session_id is not None:
+                            log({"type": "failed_inference", "turn": turn,
+                                 "error_type": type(exc).__name__,
+                                 "stream_timing": getattr(exc, "stream_timing", None)})
                         if self.settings.server_metrics_url:
                             log({"type": "failed_inference_metrics", "turn": turn,
                                  "server_metrics": metrics.result})
@@ -194,8 +226,14 @@ class ReedCodeAgent(BaseAgent):
                         "tool_calls": len(tool_calls),
                         "served_model": getattr(response, "model", None),
                         "server_metrics": metrics.result,
+                        "completion_id": getattr(response, "completion_id", None),
+                        "stream_timing": getattr(response, "stream_timing", None),
                         **termination,
                     })
+                    if self.settings.capture_requests:
+                        for item in response.output:
+                            if item.type == "chat_message":
+                                log({"type": "assistant_message", "turn": turn, "message": item.message})
 
                     context.n_input_tokens = total_input
                     context.n_cache_tokens = total_cached
@@ -222,7 +260,9 @@ class ReedCodeAgent(BaseAgent):
                         )
                         break
 
+                    boundary("tools_start", turn=turn, pending_calls=len(tool_calls))
                     for call in tool_calls:
+                        boundary("tool_start", turn=turn, call_id=call.call_id, tool=call.name)
                         start_tool = time.perf_counter()
 
                         result = await self.execute_tool(
@@ -255,6 +295,7 @@ class ReedCodeAgent(BaseAgent):
                             "call_id": call.call_id,
                             "output": result.text,
                         })
+                    boundary("tools_complete", turn=turn)
                 else:
                     stop_reason = "max_turns"
 
@@ -272,6 +313,10 @@ class ReedCodeAgent(BaseAgent):
             raise
 
         finally:
+            if session_id is not None:
+                async with AsyncOpenAI(max_retries=0, timeout=5) as client:
+                    final_notice = await finish_session(client, self.model_name, session_id)
+                log({"type": "session_final", **final_notice})
             fresh_tokens = (
                 total_input - total_cached
                 if total_input is not None and total_cached is not None

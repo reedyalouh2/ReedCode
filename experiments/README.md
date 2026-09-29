@@ -1,6 +1,20 @@
 # Experiment records
 
+The active [Dynamo upstream queue](../docs/dynamo-upstream.md) packages existing evidence into reviewable findings. The speculative-prefill packet is in [`dynamo-upstream/001-speculative-prefill/`](dynamo-upstream/001-speculative-prefill/README.md). The earlier research studies are paused.
+
 ## Saved studies
+
+September 29, 2026 UTC:
+
+- [`dynamo-upstream/combined-gpu-20260929/`](dynamo-upstream/combined-gpu-20260929/README.md): 18 stock/fixed/off prefill trials and real Codex and Claude Code sessions. Stock warmups added prefill without additional real-request reuse. The fix removed the parallel branch. Both completed parity sessions matched the compatible-prefix reference; the incomplete Claude 32K attempt remains included.
+
+September 28, 2026 UTC:
+
+- [`dynamo-20260928/`](dynamo-20260928/README.md): ten coding trials and 40 replay workflows on an A100 80GB, plus isolated prefix checks. Includes server traces, metric-validation failures, and a checksummed archive.
+- [`dynamo-prefix/`](dynamo-prefix/README.md): pinned-tokenizer reproduction of the mismatch, a corrected candidate, and two 15-request GPU cache probes. The repeat has valid server metrics. The long-argument case is synthetic.
+- [`dynamo-prefix/trajectory-survey.md`](dynamo-prefix/trajectory-survey.md): analysis of all ten captured coding runs. Checks 52 requests against server fingerprints and measures additional preparation across 42 continuations. Includes a reproducible replay export.
+- [`dynamo-prefix/boundary-detail.md`](dynamo-prefix/boundary-detail.md): exact four-token mismatch in all 42 transitions. The separate new-user probe uses constructed inputs; the [research note](../docs/dynamo-research-gap.md) distinguishes those checks from genuine session evidence.
+- [`dynamo-headroom/`](dynamo-headroom/README.md): deterministic local scheduling checks with synthetic costs. These test the experiment's mechanics.
 
 September 23, 2026 UTC:
 
@@ -12,7 +26,7 @@ September 21, 2026 UTC:
 - `real_ab/`: six Terminal-Bench runs with ReedCode 0.2.0.
 - `codex_profile/`: a separate Codex run on `make-mips-interpreter` that failed verification without a Harbor exception.
 
-Manifests contain Harbor rewards and exceptions, task checksums, agent/model versions, job timestamps, and SHA-256 trace hashes. The unchanged traces contain per-call metrics. Raw sessions and Harbor jobs stay out of the repository because they contain task text, tool output, and local configuration.
+Manifests contain Harbor rewards and exceptions, task checksums, agent/model versions, job timestamps, and SHA-256 trace hashes. The unchanged traces contain per-call metrics. Harbor job directories remain local. The Dynamo archive includes captured synthetic requests and server logs.
 
 ## Recompute the reports
 

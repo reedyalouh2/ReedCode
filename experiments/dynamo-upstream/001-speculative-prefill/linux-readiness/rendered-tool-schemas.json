@@ -1,0 +1,94 @@
+[
+  {
+    "client": "codex",
+    "request": 1,
+    "rendered_tool_schema_names": [
+      "exec_command",
+      "write_stdin",
+      "request_user_input",
+      "view_image",
+      "close_agent",
+      "resume_agent",
+      "send_input",
+      "spawn_agent",
+      "wait_agent",
+      "get_goal",
+      "create_goal",
+      "update_goal"
+    ]
+  },
+  {
+    "client": "codex",
+    "request": 2,
+    "rendered_tool_schema_names": [
+      "exec_command",
+      "write_stdin",
+      "request_user_input",
+      "view_image",
+      "close_agent",
+      "resume_agent",
+      "send_input",
+      "spawn_agent",
+      "wait_agent",
+      "get_goal",
+      "create_goal",
+      "update_goal"
+    ]
+  },
+  {
+    "client": "claude",
+    "request": 1,
+    "rendered_tool_schema_names": [
+      "Agent",
+      "TaskOutput",
+      "Bash",
+      "Glob",
+      "Grep",
+      "ExitPlanMode",
+      "Read",
+      "Edit",
+      "Write",
+      "NotebookEdit",
+      "WebFetch",
+      "TodoWrite",
+      "WebSearch",
+      "TaskStop",
+      "AskUserQuestion",
+      "Skill",
+      "EnterPlanMode",
+      "EnterWorktree",
+      "ExitWorktree",
+      "CronCreate",
+      "CronDelete",
+      "CronList"
+    ]
+  },
+  {
+    "client": "claude",
+    "request": 2,
+    "rendered_tool_schema_names": [
+      "Agent",
+      "TaskOutput",
+      "Bash",
+      "Glob",
+      "Grep",
+      "ExitPlanMode",
+      "Read",
+      "Edit",
+      "Write",
+      "NotebookEdit",
+      "WebFetch",
+      "TodoWrite",
+      "WebSearch",
+      "TaskStop",
+      "AskUserQuestion",
+      "Skill",
+      "EnterPlanMode",
+      "EnterWorktree",
+      "ExitWorktree",
+      "CronCreate",
+      "CronDelete",
+      "CronList"
+    ]
+  }
+]

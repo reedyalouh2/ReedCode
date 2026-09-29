@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "kind": "synthetic_cost_model",
+  "description": "Revealed context revisions replace intent; cancellation discards one branch.",
+  "cache_blocks": 10,
+  "speculative_block_budget": 32,
+  "speculative_chunk_blocks": 2,
+  "prefill_block_ms": 2,
+  "horizon_ms": 100,
+  "workflows": [
+    {
+      "id": "revised",
+      "arrival_ms": 0,
+      "turns": [
+        {
+          "prompt_blocks": [
+            "original",
+            "question"
+          ],
+          "generated_blocks": [
+            "call"
+          ],
+          "decode_ms": 2,
+          "wait_ms": 0
+        },
+        {
+          "prompt_blocks": [
+            "summary",
+            "revision-two",
+            "tool"
+          ],
+          "generated_blocks": [],
+          "decode_ms": 2,
+          "wait_ms": 40,
+          "intent": [
+            "original",
+            "question",
+            "call"
+          ],
+          "updates": [
+            {
+              "at_ms": 5,
+              "prefix_blocks": [
+                "summary",
+                "revision-one"
+              ]
+            },
+            {
+              "at_ms": 15,
+              "prefix_blocks": [
+                "summary",
+                "revision-two"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cancelled",
+      "arrival_ms": 0,
+      "turns": [
+        {
+          "prompt_blocks": [
+            "other",
+            "question"
+          ],
+          "generated_blocks": [
+            "call"
+          ],
+          "decode_ms": 2,
+          "wait_ms": 0
+        },
+        {
+          "prompt_blocks": [
+            "other-summary",
+            "tool"
+          ],
+          "generated_blocks": [],
+          "decode_ms": 2,
+          "wait_ms": 40,
+          "intent": [
+            "other-summary"
+          ],
+          "updates": [
+            {
+              "at_ms": 3,
+              "cancel": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

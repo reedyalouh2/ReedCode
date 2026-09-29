@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "verdict": "weakness_confirmed_on_recorded_1.5.0_deployment",
+  "evidence": "archived_stock_gpu_execution_plus_cpu_reconstruction",
+  "new_gpu_requests": 0,
+  "deployment": {
+    "dynamo_revision": "32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653",
+    "dynamo_version": "1.5.0",
+    "reference_tag_commit": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+    "backend_version": "vllm 0.28.0",
+    "torch_version": "2.13.0+cu130",
+    "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "gpu": "1 x NVIDIA A100-SXM4-80GB (81920 MiB)",
+    "driver_version": "580.126.16",
+    "dtype": "bfloat16",
+    "context_limit": 32768,
+    "cache_policy": "vLLM prefix caching enabled; ZMQ KV events; KV routing; cache carries between conditions",
+    "thinking_mode": "disabled",
+    "launch_command": "#!/usr/bin/env bash\nset -euo pipefail\ncd /tmp/reedcode-dynamo\nexport DYN_REQUEST_TRACE=1\nexport DYN_REQUEST_TRACE_SINKS=file\nexport DYN_REQUEST_TRACE_FILE_FORMAT=jsonl\nexport DYN_REQUEST_TRACE_RECORDS=request_end,request_payload\nexport DYN_LOGGING_CONSOLE_FORMAT=jsonl\nexport DYN_EVENT_PLANE=zmq\nexport DYN_LOG=info\nexport HF_HOME=/tmp/reedcode-dynamo/hf\nDYN_SYSTEM_PORT=8081 DYN_REQUEST_TRACE_FILE_PATH=/tmp/reedcode-dynamo/backend-trace.jsonl \\\n  nohup python3 -m dynamo.vllm \\\n  --model Qwen/Qwen3-8B --revision b968826d9c46dd6066d109eabc6255188de91218 \\\n  --discovery-backend file \\\n  --dtype bfloat16 --max-model-len 32768 --gpu-memory-utilization 0.80 \\\n  --enable-prefix-caching \\\n  --kv-events-config '{\"enable_kv_cache_events\":true,\"publisher\":\"zmq\",\"topic\":\"kv-events\",\"endpoint\":\"tcp://*:5557\"}' \\\n  --dyn-tool-call-parser hermes --dyn-reasoning-parser qwen3 \\\n  --dyn-default-thinking-mode disabled \\\n  > backend.log 2>&1 < /dev/null &\necho $! > backend.pid\nDYN_SYSTEM_PORT=8082 DYN_REQUEST_TRACE_FILE_PATH=/tmp/reedcode-dynamo/frontend-trace.jsonl \\\n  nohup python3 -m dynamo.frontend --discovery-backend file \\\n  --router-mode kv --http-port 8000 > frontend.log 2>&1 < /dev/null &\necho $! > frontend.pid\n",
+    "container_image": "nvcr.io/nvidia/ai-dynamo/vllm-runtime@sha256:d18389c89eb319401fdd73f1fbbaff10d9382f634b879941dfba75bbf7260c1e",
+    "network": "local client via SSH tunnel; frontend and backend metrics have no public HTTP port"
+  },
+  "archive_sha256": "4a4650d97c06173e817e21657a651daa7d9d1be20441db92869fb42a584a1cb1",
+  "extracted_evidence": {
+    "sha256": "f0d1ca0a65f6b10d729393735baaab29c13e4ae8a85fd60c711de79ec33026ed",
+    "verified_files": 30
+  },
+  "source_sha256": {
+    "reproduce.py": "4c0bc78ceef8d323d1416b593ed7ef9f1224e722bf0b51adca6e3be078fdb45a",
+    "audit.py": "47a47d7c6c19e14e46b7dc91bbba364afa71ddb6f77aaf702ad76c3d2b56c0b0",
+    "survey.py": "663f02720fa3aaeda3261051b4642468ce9daa91db1243d93cb3870f3407b442"
+  },
+  "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+  "template_sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+  "cases": [
+    {
+      "case": "text",
+      "source": "stock_nvext_agent_hints_speculative_prefill",
+      "original_request_id": "d5360dd8-7b9b-4916-a2f2-33279b20c025",
+      "followup_request_id": "d8c6a27c-cc15-4152-b635-9f82c1750f0a",
+      "speculative_tokens": 64,
+      "followup_tokens": 78,
+      "prepared_input_matches_routing_hashes": {
+        "verified_full_blocks": 4,
+        "unhashed_trailing_tokens": 0
+      },
+      "exact_divergence_from_cpu_reconstruction": 56,
+      "runtime_first_differing_block": 3,
+      "leading_prepared_tokens_in_matching_full_blocks": 48,
+      "leading_original_tokens_in_matching_full_blocks": 48,
+      "additional_matching_full_block_tokens": 0,
+      "cached_followup_off": 48,
+      "cached_followup_on": 48,
+      "prepared_window": {
+        "start_token_index": 52,
+        "token_ids": [
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271,
+          2307,
+          13,
+          151645,
+          198
+        ],
+        "text": "\n<|im_start|>assistant\n<think>\n\n</think>\n\nready.<|im_end|>\n"
+      },
+      "followup_window": {
+        "start_token_index": 52,
+        "token_ids": [
+          198,
+          151644,
+          77091,
+          198,
+          2307,
+          13,
+          151645,
+          198,
+          151644,
+          872,
+          198,
+          7039,
+          9851,
+          448,
+          6896,
+          2814
+        ],
+        "text": "\n<|im_start|>assistant\nready.<|im_end|>\n<|im_start|>user\nNow reply with exactly done"
+      }
+    },
+    {
+      "case": "tool",
+      "source": "stock_nvext_agent_hints_speculative_prefill",
+      "original_request_id": "59fd1e70-5c6a-48a3-9642-a2305cb37fee",
+      "followup_request_id": "d5a3f0ff-0cdf-407a-ae67-207807687e79",
+      "speculative_tokens": 72,
+      "followup_tokens": 244,
+      "prepared_input_matches_routing_hashes": {
+        "verified_full_blocks": 4,
+        "unhashed_trailing_tokens": 8
+      },
+      "exact_divergence_from_cpu_reconstruction": 40,
+      "runtime_first_differing_block": 2,
+      "leading_prepared_tokens_in_matching_full_blocks": 32,
+      "leading_original_tokens_in_matching_full_blocks": 192,
+      "additional_matching_full_block_tokens": 0,
+      "cached_followup_off": 192,
+      "cached_followup_on": 192,
+      "prepared_window": {
+        "start_token_index": 36,
+        "token_ids": [
+          11112,
+          279,
+          1196,
+          7600,
+          13,
+          151645,
+          198,
+          151644,
+          872,
+          198,
+          7220,
+          3255,
+          3142,
+          6896,
+          3055,
+          448
+        ],
+        "text": " Follow the user instruction.<|im_end|>\n<|im_start|>user\nCall record_value exactly once with"
+      },
+      "followup_window": {
+        "start_token_index": 36,
+        "token_ids": [
+          11112,
+          279,
+          1196,
+          7600,
+          382,
+          2,
+          13852,
+          271,
+          2610,
+          1231,
+          1618,
+          825,
+          476,
+          803,
+          5746,
+          311
+        ],
+        "text": " Follow the user instruction.\n\n# Tools\n\nYou may call one or more functions to"
+      }
+    }
+  ],
+  "limits": [
+    "Exact speculative token IDs are reconstructed; runtime logs contain lengths and full-block local hashes.",
+    "The tool preparation has eight trailing tokens outside the recorded block hashes.",
+    "The mismatch proves a non-prefix preparation. It does not establish which blocks persisted in cache.",
+    "Zero gain means no additional full-block reuse in these two checks, not zero shared tokens.",
+    "No current-main GPU validation, latency improvement, or multi-worker claim."
+  ]
+}

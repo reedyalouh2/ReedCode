@@ -1,0 +1,288 @@
+{
+  "checked_at_utc": "2026-09-29T02:49:15.378089+00:00",
+  "status": "Passive CPU capture validated against unchanged stock runtime and mock worker",
+  "stock_revision": "32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653",
+  "model_inference_requests": 0,
+  "gpu_requests": 0,
+  "captures": [
+    {
+      "client": "codex",
+      "pcap_sha256": "3a1f0ac791d386980010e70919d778c4948251cbfbb3a1c3728b88624878cd28",
+      "packets": {
+        "captured": 44,
+        "dropped": 0
+      },
+      "callback_payloads_match": true,
+      "frontend_log_linkage": null,
+      "observer_header_preserves_token_ids": null,
+      "requests": [
+        {
+          "request_id": "e73fb2fb-a0e6-4b0f-b98b-0f7b05e240eb",
+          "input_tokens": 8696,
+          "input_tokens_sha256": "63259f02c4647851b00da09f22f06048b6de0d8c9851b02e904a49219f7a7ba5",
+          "returned_token_ids": [
+            151668,
+            198,
+            151645
+          ],
+          "complete": true,
+          "http_link": null
+        },
+        {
+          "request_id": "f7ba4922-68d8-4fc6-8d5a-5308677fc3e4",
+          "input_tokens": 8869,
+          "input_tokens_sha256": "46345f6ca2d7feb43553015cc5c1afb84bf18787d04876b945dd1cbc60cb0522",
+          "returned_token_ids": [
+            151668,
+            198,
+            151645
+          ],
+          "complete": true,
+          "http_link": null
+        }
+      ]
+    },
+    {
+      "client": "claude",
+      "pcap_sha256": "87f6c6ea3fa4bed76b2ce3229d6cc8e6ab65d707b6e7c7ff9e87bf2cab02acc1",
+      "packets": {
+        "captured": 48,
+        "dropped": 0
+      },
+      "callback_payloads_match": true,
+      "frontend_log_linkage": null,
+      "observer_header_preserves_token_ids": null,
+      "requests": [
+        {
+          "request_id": "642bb046-c57e-4ccd-999f-72e29482e595",
+          "input_tokens": 19975,
+          "input_tokens_sha256": "9fc158289bde078d05cde33b998acccbe88daa008365ed154125e9b4c865aa1a",
+          "returned_token_ids": [
+            151668,
+            198,
+            151645
+          ],
+          "complete": true,
+          "http_link": null
+        },
+        {
+          "request_id": "92d36868-88b6-4804-ac21-50ba5e437ae3",
+          "input_tokens": 20111,
+          "input_tokens_sha256": "37950c1ede90b5885b97a379f9a7518510e12c9cea6fe01580e02abbc850294c",
+          "returned_token_ids": [
+            151668,
+            198,
+            151645
+          ],
+          "complete": true,
+          "http_link": null
+        }
+      ]
+    },
+    {
+      "client": "codex-ids",
+      "pcap_sha256": "98ae2cbe47a695a09b01ee759442c9459a9d23d68160236d0e925f281201d5c3",
+      "packets": {
+        "captured": 43,
+        "dropped": 0
+      },
+      "callback_payloads_match": true,
+      "frontend_log_linkage": {
+        "matched": 2,
+        "files": {
+          "codex-ids/frontend.log": "814ff0e23d5bae1101fac611270c80e30defad32f02cce3bb1cd33cf014f7e42"
+        },
+        "unlinked_model_request_ids": []
+      },
+      "observer_header_preserves_token_ids": true,
+      "requests": [
+        {
+          "request_id": "82a57752-56ab-4a56-868e-08965e010eaa",
+          "input_tokens": 8696,
+          "input_tokens_sha256": "63259f02c4647851b00da09f22f06048b6de0d8c9851b02e904a49219f7a7ba5",
+          "returned_token_ids": [
+            151668,
+            198,
+            151645
+          ],
+          "complete": true,
+          "http_link": {
+            "http_request_id": "wire-codex-1",
+            "runtime_request_id": "82a57752-56ab-4a56-868e-08965e010eaa",
+            "frontend_log": "codex-ids/frontend.log",
+            "line": 26,
+            "row": {
+              "time": "2026-09-29T02:38:55.999213Z",
+              "level": "INFO",
+              "file": "/opt/dynamo/lib/llm/src/http/service/metrics.rs",
+              "line": 1543,
+              "target": "dynamo_llm::http::service::metrics",
+              "message": "request received",
+              "endpoint": "responses",
+              "method": "POST",
+              "model": "Qwen/Qwen3-8B",
+              "request_id": "82a57752-56ab-4a56-868e-08965e010eaa",
+              "request_type": "stream",
+              "span_id": "6ef4ef36a9afb6c3",
+              "span_name": "http-request",
+              "trace_id": "c2ac913d278839ad91357a42f441b2bb",
+              "uri": "/v1/responses",
+              "version": "HTTP/1.1",
+              "x_request_id": "wire-codex-1"
+            }
+          }
+        },
+        {
+          "request_id": "0765d038-364d-4acf-b163-bce653960888",
+          "input_tokens": 8869,
+          "input_tokens_sha256": "46345f6ca2d7feb43553015cc5c1afb84bf18787d04876b945dd1cbc60cb0522",
+          "returned_token_ids": [
+            151668,
+            198,
+            151645
+          ],
+          "complete": true,
+          "http_link": {
+            "http_request_id": "wire-codex-2",
+            "runtime_request_id": "0765d038-364d-4acf-b163-bce653960888",
+            "frontend_log": "codex-ids/frontend.log",
+            "line": 36,
+            "row": {
+              "time": "2026-09-29T02:38:56.206265Z",
+              "level": "INFO",
+              "file": "/opt/dynamo/lib/llm/src/http/service/metrics.rs",
+              "line": 1543,
+              "target": "dynamo_llm::http::service::metrics",
+              "message": "request received",
+              "endpoint": "responses",
+              "method": "POST",
+              "model": "Qwen/Qwen3-8B",
+              "request_id": "0765d038-364d-4acf-b163-bce653960888",
+              "request_type": "stream",
+              "span_id": "01112da00f1a360f",
+              "span_name": "http-request",
+              "trace_id": "eff1945a12166300855939aa3d49571d",
+              "uri": "/v1/responses",
+              "version": "HTTP/1.1",
+              "x_request_id": "wire-codex-2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "client": "claude-ids",
+      "pcap_sha256": "0b353175828032a4e634cb0a0cb5b8b967813c87e17d6516bf0d4f77b4968ed9",
+      "packets": {
+        "captured": 48,
+        "dropped": 0
+      },
+      "callback_payloads_match": true,
+      "frontend_log_linkage": {
+        "matched": 2,
+        "files": {
+          "claude-ids/frontend.log": "69641e024d2f9fb0df7d439816cf2b7778cad09143410a52b6cdf9ce18d1308d"
+        },
+        "unlinked_model_request_ids": []
+      },
+      "observer_header_preserves_token_ids": true,
+      "requests": [
+        {
+          "request_id": "bfa49c71-fcaf-48e3-8a99-90d88ffd52e2",
+          "input_tokens": 19975,
+          "input_tokens_sha256": "9fc158289bde078d05cde33b998acccbe88daa008365ed154125e9b4c865aa1a",
+          "returned_token_ids": [
+            151668,
+            198,
+            151645
+          ],
+          "complete": true,
+          "http_link": {
+            "http_request_id": "wire-claude-1",
+            "runtime_request_id": "bfa49c71-fcaf-48e3-8a99-90d88ffd52e2",
+            "frontend_log": "claude-ids/frontend.log",
+            "line": 24,
+            "row": {
+              "time": "2026-09-29T02:38:55.441924Z",
+              "level": "INFO",
+              "file": "/opt/dynamo/lib/llm/src/http/service/metrics.rs",
+              "line": 1543,
+              "target": "dynamo_llm::http::service::metrics",
+              "message": "request received",
+              "endpoint": "anthropic_messages",
+              "method": "POST",
+              "model": "Qwen/Qwen3-8B",
+              "request_id": "bfa49c71-fcaf-48e3-8a99-90d88ffd52e2",
+              "request_type": "stream",
+              "span_id": "93d7f96c3ecfa53a",
+              "span_name": "http-request",
+              "trace_id": "871b29d687c39ba54e3e5294fda2a085",
+              "uri": "/v1/messages",
+              "version": "HTTP/1.1",
+              "x_request_id": "wire-claude-1"
+            }
+          }
+        },
+        {
+          "request_id": "7b26b1e8-0779-445c-89a2-9035f4b45c38",
+          "input_tokens": 20111,
+          "input_tokens_sha256": "37950c1ede90b5885b97a379f9a7518510e12c9cea6fe01580e02abbc850294c",
+          "returned_token_ids": [
+            151668,
+            198,
+            151645
+          ],
+          "complete": true,
+          "http_link": {
+            "http_request_id": "wire-claude-2",
+            "runtime_request_id": "7b26b1e8-0779-445c-89a2-9035f4b45c38",
+            "frontend_log": "claude-ids/frontend.log",
+            "line": 34,
+            "row": {
+              "time": "2026-09-29T02:38:55.862329Z",
+              "level": "INFO",
+              "file": "/opt/dynamo/lib/llm/src/http/service/metrics.rs",
+              "line": 1543,
+              "target": "dynamo_llm::http::service::metrics",
+              "message": "request received",
+              "endpoint": "anthropic_messages",
+              "method": "POST",
+              "model": "Qwen/Qwen3-8B",
+              "request_id": "7b26b1e8-0779-445c-89a2-9035f4b45c38",
+              "request_type": "stream",
+              "span_id": "9b72ec02a949e103",
+              "span_name": "http-request",
+              "trace_id": "e8b9029c49ae861e197f4e6d93e36455",
+              "uri": "/v1/messages",
+              "version": "HTTP/1.1",
+              "x_request_id": "wire-claude-2"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "tests": {
+    "count": 12,
+    "exit_code": 0,
+    "command": [
+      "/private/tmp/reedcode-uv-cache/builds-v0/.tmpnxQr20/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/parity-run-1/wire-capture",
+      "-p",
+      "test_decode.py"
+    ]
+  },
+  "script_sha256": {
+    "capture_worker.py": "61cc46ca3442912b9e51c3daaf8aa9889a170fb9164bcf001f8f616d5e835781",
+    "check.py": "d5f93af2869e6de76be57956f204a936b4002b64a5e886281f82fe0d6814ffe6",
+    "decode.py": "b42f6a600f917b22a04cfdb5b79b0a8b4a5efb8f09944b3680a5dfa5e2652dd7",
+    "fetch_source.py": "3969fba25523aa2bb1d6cfaf933d368c03ec3d4f1a05307ab872048186517dd4",
+    "protocol_runner.py": "758c59eaf1556752614459f5c9664c7ace9ef0dbc05f864898cd4c0ecb19aa07",
+    "run_capture.py": "2c1d712f9f04c94ad5b46de8bf7b40b7b14cee9b8bedc74f9620984f5f05f0cf",
+    "test_decode.py": "dda184b3169c6df87eff07117042b727cad23e5274bc8c833aea06b6356cac34"
+  }
+}

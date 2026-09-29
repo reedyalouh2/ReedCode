@@ -1,0 +1,17 @@
+{
+  "dynamo_revision": "32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653",
+  "dynamo_version": "1.5.0",
+  "reference_tag_commit": "b83b1d9304ebfc624709ac46db32b1b6f1ff1615",
+  "backend_version": "vllm 0.28.0",
+  "torch_version": "2.13.0+cu130",
+  "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "gpu": "1 x NVIDIA A100-SXM4-80GB (81920 MiB)",
+  "driver_version": "580.126.16",
+  "dtype": "bfloat16",
+  "context_limit": 32768,
+  "cache_policy": "vLLM prefix caching enabled; ZMQ KV events; KV routing; cache carries between conditions",
+  "thinking_mode": "disabled",
+  "launch_command": "#!/usr/bin/env bash\nset -euo pipefail\ncd /tmp/reedcode-dynamo\nexport DYN_REQUEST_TRACE=1\nexport DYN_REQUEST_TRACE_SINKS=file\nexport DYN_REQUEST_TRACE_FILE_FORMAT=jsonl\nexport DYN_REQUEST_TRACE_RECORDS=request_end,request_payload\nexport DYN_LOGGING_CONSOLE_FORMAT=jsonl\nexport DYN_EVENT_PLANE=zmq\nexport DYN_LOG=info\nexport HF_HOME=/tmp/reedcode-dynamo/hf\nDYN_SYSTEM_PORT=8081 DYN_REQUEST_TRACE_FILE_PATH=/tmp/reedcode-dynamo/backend-trace.jsonl \\\n  nohup python3 -m dynamo.vllm \\\n  --model Qwen/Qwen3-8B --revision b968826d9c46dd6066d109eabc6255188de91218 \\\n  --discovery-backend file \\\n  --dtype bfloat16 --max-model-len 32768 --gpu-memory-utilization 0.80 \\\n  --enable-prefix-caching \\\n  --kv-events-config '{\"enable_kv_cache_events\":true,\"publisher\":\"zmq\",\"topic\":\"kv-events\",\"endpoint\":\"tcp://*:5557\"}' \\\n  --dyn-tool-call-parser hermes --dyn-reasoning-parser qwen3 \\\n  --dyn-default-thinking-mode disabled \\\n  > backend.log 2>&1 < /dev/null &\necho $! > backend.pid\nDYN_SYSTEM_PORT=8082 DYN_REQUEST_TRACE_FILE_PATH=/tmp/reedcode-dynamo/frontend-trace.jsonl \\\n  nohup python3 -m dynamo.frontend --discovery-backend file \\\n  --router-mode kv --http-port 8000 > frontend.log 2>&1 < /dev/null &\necho $! > frontend.pid\n",
+  "container_image": "nvcr.io/nvidia/ai-dynamo/vllm-runtime@sha256:d18389c89eb319401fdd73f1fbbaff10d9382f634b879941dfba75bbf7260c1e",
+  "network": "local client via SSH tunnel; frontend and backend metrics have no public HTTP port"
+}

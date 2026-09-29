@@ -1,0 +1,44 @@
+{
+  "kind": "offline client protocol and local tool check",
+  "model_requests_made": 0,
+  "gpu_requests_made": 0,
+  "claude": {
+    "version": "2.1.81",
+    "platform": "macOS arm64",
+    "executable_sha256": "d014162177fc18bfeb7f93d942130dd964f7424e4101f6ad569de66e6eddca03",
+    "evidence": "verified/claude/result.json"
+  },
+  "codex_arm64": {
+    "version": "0.155.1",
+    "source": "https://github.com/openai/codex/releases/download/rust-v0.155.1/codex-aarch64-unknown-linux-musl.tar.gz",
+    "archive_sha256": "d6c7e62fbd688d52ee04f3929d0613705d32a920a42db7a139e366eaf1f4a2d7",
+    "executable_sha256": "298d3d73d0bbc1367e58a370df5b6216fe30ce0a92e8b6b0afb0377a958dc335",
+    "evidence": "coding-tools-seccomp/codex/result.json"
+  },
+  "codex_amd64": {
+    "version": "0.155.1",
+    "source": "https://github.com/openai/codex/releases/download/rust-v0.155.1/codex-x86_64-unknown-linux-musl.tar.gz",
+    "archive_sha256": "a0ef8b2debc3bf747e07b1a039354de31300ac0dcc2276498ba281470b5d9115",
+    "executable_sha256": "0753dfe1d8b87a52436deb13eb1c549661ef4c84fee2c5aa688385eebeccb761"
+  },
+  "container": {
+    "docker_engine_version": "29.8.0",
+    "image": "reedcode-codex-stub-native:0.155.1",
+    "image_index_digest": "sha256:650be00c3935b74935e7293085fe0c7f02b5009331596f45d45eee079535eb2f",
+    "image_config_digest": "sha256:8d7ff5e9c3724b1b612da8ae1e896823728d6cd702c2eea8219b50b3b87eeb12",
+    "base_image": "python:3.13-slim-bookworm@sha256:2325bb286ec344af3e5898cc224b5844e2707ac6e26b1632516fd3edc84a5e26",
+    "bubblewrap_package_version": "0.8.0-2+deb12u1",
+    "network": "none",
+    "tmpfs": [
+      "/root",
+      "/tmp"
+    ],
+    "personal_mounts": false,
+    "added_capability": "SYS_ADMIN",
+    "seccomp_manifest": "container/manifest.json"
+  },
+  "approval_history": {
+    "initial_attempt": "Automatic approval review rejected the exact isolated container command because its usage limit was exhausted; the action did not run.",
+    "subsequent_attempt": "After the parent confirmed that normal approval was working again, the identical command was resubmitted through normal approval, approved, and passed."
+  }
+}

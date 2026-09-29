@@ -1,0 +1,21 @@
+{"type":"thread.started","thread_id":"01a0eac3-7805-7b71-9a1b-af61e3828433"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Model metadata for `Qwen/Qwen3-8B` not found. Defaulting to fallback metadata; this can degrade performance and cause issues."}}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_1","type":"reasoning","text":"I will read the local fixture before answering."}}
+{"type":"item.started","item":{"id":"item_2","type":"command_execution","command":"/bin/bash -c 'cat fixture.txt'","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_2","type":"command_execution","command":"/bin/bash -c 'cat fixture.txt'","aggregated_output":"bwrap: No permissions to create new namespace, likely because the kernel does not allow non-privileged user namespaces. See <https://deb.li/bubblewrap> or <file:///usr/share/doc/bubblewrap/README.Debian.gz>.\n","exit_code":1,"status":"failed"}}
+{"type":"item.completed","item":{"id":"item_3","type":"reasoning","text":"I will read the local fixture before answering."}}
+{"type":"item.completed","item":{"id":"item_4","type":"agent_message","text":"The local protocol check is complete."}}
+{"type":"turn.completed","usage":{"input_tokens":200,"cached_input_tokens":40,"cache_write_input_tokens":0,"output_tokens":24,"reasoning_output_tokens":16}}
+{"type":"thread.started","thread_id":"01a0eac3-7805-7b71-9a1b-af61e3828433"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Model metadata for `Qwen/Qwen3-8B` not found. Defaulting to fallback metadata; this can degrade performance and cause issues."}}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_1","type":"reasoning","text":"I will read the local fixture before answering."}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"The local protocol check is complete."}}
+{"type":"turn.completed","usage":{"input_tokens":300,"cached_input_tokens":60,"cache_write_input_tokens":0,"output_tokens":36,"reasoning_output_tokens":24}}
+{"type":"thread.started","thread_id":"01a0eac3-7805-7b71-9a1b-af61e3828433"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Model metadata for `Qwen/Qwen3-8B` not found. Defaulting to fallback metadata; this can degrade performance and cause issues."}}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_1","type":"reasoning","text":"I will read the local fixture before answering."}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"The local protocol check is complete."}}
+{"type":"turn.completed","usage":{"input_tokens":400,"cached_input_tokens":80,"cache_write_input_tokens":0,"output_tokens":48,"reasoning_output_tokens":32}}

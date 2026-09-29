@@ -1,0 +1,198 @@
+{
+  "scope": "epoch",
+  "valid_boundaries": false,
+  "idle_before": true,
+  "drained": true,
+  "server_restarted": false,
+  "errors": [],
+  "restart_observable": false,
+  "restart_identity_source": "process_sidecar",
+  "process_start_observable": false,
+  "identity_observations": [
+    {
+      "phase": "before",
+      "before": "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616",
+      "after": "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616"
+    },
+    {
+      "phase": "during",
+      "before": "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616",
+      "after": "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616"
+    },
+    {
+      "phase": "during",
+      "before": "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616",
+      "after": "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616"
+    },
+    {
+      "phase": "during",
+      "before": null,
+      "after": null
+    },
+    {
+      "phase": "drain",
+      "before": "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616",
+      "after": "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616"
+    },
+    {
+      "phase": "drain",
+      "before": "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616",
+      "after": "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616"
+    },
+    {
+      "phase": "drain",
+      "before": "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616",
+      "after": "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616"
+    },
+    {
+      "phase": "drain",
+      "before": "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616",
+      "after": "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616"
+    }
+  ],
+  "process_identities": {
+    "1988a072b2cc4405b931160cff7fa912396be20ea190aa149778fcc0e642f616": {
+      "schema_version": 1,
+      "boot_id": "930da0dc-fe6a-40a7-a3b9-c3e928a6528d",
+      "monitor_id": "5399b369-7726-40be-93cd-28761e85fd5a",
+      "backend_pid": 88,
+      "engine_pids": [
+        710
+      ],
+      "processes": [
+        {
+          "parent_pid": 1,
+          "pid": 88,
+          "start_ticks": 1570122788
+        },
+        {
+          "parent_pid": 88,
+          "pid": 709,
+          "start_ticks": 1570130446
+        },
+        {
+          "parent_pid": 88,
+          "pid": 710,
+          "start_ticks": 1570130446
+        }
+      ],
+      "metrics_port": 8081,
+      "metrics_socket_inodes": [
+        "1131845788"
+      ]
+    }
+  },
+  "sample_interval_seconds": 0.25,
+  "counter_deltas": {
+    "prompt_tokens": {
+      "value": null,
+      "status": "identity_unavailable"
+    },
+    "generation_tokens": {
+      "value": null,
+      "status": "identity_unavailable"
+    },
+    "prefix_cache_queries_tokens": {
+      "value": null,
+      "status": "identity_unavailable"
+    },
+    "prefix_cache_hits_tokens": {
+      "value": null,
+      "status": "identity_unavailable"
+    },
+    "requests_finished": {
+      "value": null,
+      "status": "identity_unavailable"
+    }
+  },
+  "phase_totals": {
+    "prefill": {
+      "seconds": {
+        "value": null,
+        "status": "identity_unavailable"
+      },
+      "requests": {
+        "value": null,
+        "status": "identity_unavailable"
+      }
+    },
+    "decode": {
+      "seconds": {
+        "value": null,
+        "status": "identity_unavailable"
+      },
+      "requests": {
+        "value": null,
+        "status": "identity_unavailable"
+      }
+    },
+    "queue": {
+      "seconds": {
+        "value": null,
+        "status": "identity_unavailable"
+      },
+      "requests": {
+        "value": null,
+        "status": "identity_unavailable"
+      }
+    },
+    "time_to_first_token": {
+      "seconds": {
+        "value": null,
+        "status": "identity_unavailable"
+      },
+      "requests": {
+        "value": null,
+        "status": "identity_unavailable"
+      }
+    },
+    "end_to_end": {
+      "seconds": {
+        "value": null,
+        "status": "identity_unavailable"
+      },
+      "requests": {
+        "value": null,
+        "status": "identity_unavailable"
+      }
+    }
+  },
+  "sampled_kv_max_fraction": 0.0,
+  "sampled_kv_fraction_seconds": 0.0,
+  "samples": [
+    {
+      "offset_s": 0.0,
+      "kv_max_fraction": 0.0
+    },
+    {
+      "offset_s": 1.0962168329861015,
+      "kv_max_fraction": 0.0
+    },
+    {
+      "offset_s": 1.8481592499883845,
+      "kv_max_fraction": 0.0
+    },
+    {
+      "offset_s": 2.7560316669987515,
+      "kv_max_fraction": 0.0
+    },
+    {
+      "offset_s": 3.4937752078985795,
+      "kv_max_fraction": 0.0
+    },
+    {
+      "offset_s": 4.228339207940735,
+      "kv_max_fraction": 0.0
+    },
+    {
+      "offset_s": 4.975164707982913,
+      "kv_max_fraction": 0.0
+    }
+  ],
+  "notes": [
+    "All traffic on this metrics endpoint is included.",
+    "The cache fraction is the largest engine fraction; capacities are unknown.",
+    "Three quiet intervals cannot exclude later work or unrelated clients.",
+    "A sidecar must watch every engine behind this exact metrics endpoint; tunnel binding is operator supplied."
+  ]
+}

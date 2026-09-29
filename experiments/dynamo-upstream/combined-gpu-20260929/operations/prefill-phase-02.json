@@ -1,0 +1,11 @@
+{
+  "phase": "prefill",
+  "epoch": "267e605d0db348158ba0f551f5ac87e8",
+  "directory": "/tmp/reedcode-study/prefill/epochs/267e605d0db348158ba0f551f5ac87e8",
+  "processes_file": "/tmp/reedcode-study/prefill/epochs/267e605d0db348158ba0f551f5ac87e8/processes.json",
+  "frontend_state": "/tmp/reedcode-study/prefill/frontend-state.json",
+  "status": "ready_for_live_gates",
+  "identity_fingerprint": "4389ffb402853183b24e5c825a6a18cc671678ddbc5929ca82c72178d55ded78",
+  "kv_directory": "/tmp/reedcode-study/prefill/epochs/267e605d0db348158ba0f551f5ac87e8/kv",
+  "wire_pcap": "/tmp/reedcode-study/prefill/epochs/267e605d0db348158ba0f551f5ac87e8/wire.pcap"
+}

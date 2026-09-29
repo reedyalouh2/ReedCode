@@ -1,0 +1,31 @@
+{
+  "source": "../current-code/compiled/release/output.json",
+  "source_sha256": "2662b01258dee46ddfc2cb9544bfa3dff9902c21f7f4c7960dadb0a48d5ca5f2",
+  "block_size": 16,
+  "evidence": "arithmetic_on_saved_actual_renderer_token_ids",
+  "condition": "Shared blocks would be reusable only if still present on the selected worker; no warmup cache-hit or GPU compute measurement is inferred.",
+  "cases": [
+    {
+      "case": "text",
+      "original_input_tokens": 60,
+      "prepared_input_tokens": 64,
+      "followup_input_tokens": 78,
+      "original_prepared_common_prefix_tokens": 60,
+      "original_prepared_common_full_block_tokens": 48,
+      "prepared_input_tokens_after_that_prefix": 16,
+      "prepared_followup_common_prefix_tokens": 56,
+      "prepared_followup_common_full_block_tokens": 48
+    },
+    {
+      "case": "tool",
+      "original_input_tokens": 202,
+      "prepared_input_tokens": 72,
+      "followup_input_tokens": 244,
+      "original_prepared_common_prefix_tokens": 40,
+      "original_prepared_common_full_block_tokens": 32,
+      "prepared_input_tokens_after_that_prefix": 40,
+      "prepared_followup_common_prefix_tokens": 40,
+      "prepared_followup_common_full_block_tokens": 32
+    }
+  ]
+}

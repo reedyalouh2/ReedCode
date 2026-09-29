@@ -1,0 +1,402 @@
+{
+  "schema_version": 1,
+  "kind": "synthetic_cost_model",
+  "gpu_measurements": false,
+  "workload_sha256": "33c1b82067b0c7bbee6257bfbfe0e459d071f21cf0a1cbc8366ab3f21d7f61a8",
+  "source_sha256": "6eff9964b0c48327be2a038f2a5a9433af5828e9538e3cbcf5af33fcb74bbe81",
+  "assumptions": [
+    "One serialized GPU resource; fixed synthetic service costs; no batching.",
+    "Demand has dispatch priority; running preparation chunks cannot be preempted.",
+    "Ordinary decoding populates prompt and generated full blocks.",
+    "Cache starts empty in every condition; LRU eviction; one common speculation budget.",
+    "Future timing knows tool duration and revision/cancellation times, never future block contents.",
+    "Future timing is a diagnostic heuristic, not an optimal oracle or a GPU performance bound.",
+    "Synthetic full blocks omit tokenizer boundaries; use the separate pinned prefix audit.",
+    "Reserved and resident cache blocks both count toward capacity and occupancy.",
+    "Charged compute includes the full cost of chunks admitted before the horizon."
+  ],
+  "results": [
+    {
+      "policy": "off",
+      "workflows": [
+        {
+          "workflow": "cancelled-owner",
+          "status": "cancelled",
+          "capped_completion_ms": 100,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 6,
+              "cached_blocks": 0
+            }
+          ]
+        },
+        {
+          "workflow": "consumer",
+          "status": "completed",
+          "capped_completion_ms": 56,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 10,
+              "cached_blocks": 1
+            },
+            {
+              "turn": 1,
+              "ready_ms": 50,
+              "completed_ms": 56,
+              "cached_blocks": 1
+            }
+          ]
+        }
+      ],
+      "metrics": {
+        "demand_compute_ms": 16.0,
+        "speculative_compute_ms": 0.0,
+        "speculative_blocks_computed": 0,
+        "useful_speculative_blocks": 0,
+        "ordinary_cached_blocks": 2,
+        "cache_block_ms": 588.0,
+        "peak_cache_blocks": 7,
+        "obsolete_blocks_completed": 0,
+        "late_blocks_completed": 0,
+        "unconsumed_speculative_blocks": 0
+      },
+      "mean_capped_completion_ms": 78,
+      "events": [
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "cancelled-owner",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "consumer",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_started",
+          "workflow": "cancelled-owner",
+          "turn": 0,
+          "cost_ms": 6,
+          "cached_blocks": 0
+        },
+        {
+          "at_ms": 6,
+          "event": "request_finished",
+          "workflow": "cancelled-owner",
+          "turn": 0
+        },
+        {
+          "at_ms": 6,
+          "event": "request_started",
+          "workflow": "consumer",
+          "turn": 0,
+          "cost_ms": 4,
+          "cached_blocks": 1
+        },
+        {
+          "at_ms": 10,
+          "event": "request_finished",
+          "workflow": "consumer",
+          "turn": 0
+        },
+        {
+          "at_ms": 26,
+          "event": "cancel",
+          "workflow": "cancelled-owner"
+        },
+        {
+          "at_ms": 50,
+          "event": "request_ready",
+          "workflow": "consumer",
+          "turn": 1
+        },
+        {
+          "at_ms": 50,
+          "event": "request_started",
+          "workflow": "consumer",
+          "turn": 1,
+          "cost_ms": 6,
+          "cached_blocks": 1
+        },
+        {
+          "at_ms": 56,
+          "event": "request_finished",
+          "workflow": "consumer",
+          "turn": 1
+        }
+      ],
+      "mean_difference_from_off_ms": 0
+    },
+    {
+      "policy": "eager",
+      "workflows": [
+        {
+          "workflow": "cancelled-owner",
+          "status": "cancelled",
+          "capped_completion_ms": 100,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 6,
+              "cached_blocks": 0
+            }
+          ]
+        },
+        {
+          "workflow": "consumer",
+          "status": "completed",
+          "capped_completion_ms": 54,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 10,
+              "cached_blocks": 1
+            },
+            {
+              "turn": 1,
+              "ready_ms": 50,
+              "completed_ms": 54,
+              "cached_blocks": 2
+            }
+          ]
+        }
+      ],
+      "metrics": {
+        "demand_compute_ms": 14.0,
+        "speculative_compute_ms": 2.0,
+        "speculative_blocks_computed": 1,
+        "useful_speculative_blocks": 1,
+        "ordinary_cached_blocks": 2,
+        "cache_block_ms": 628.0,
+        "peak_cache_blocks": 7,
+        "obsolete_blocks_completed": 0,
+        "late_blocks_completed": 0,
+        "unconsumed_speculative_blocks": 0
+      },
+      "mean_capped_completion_ms": 77,
+      "events": [
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "cancelled-owner",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "consumer",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_started",
+          "workflow": "cancelled-owner",
+          "turn": 0,
+          "cost_ms": 6,
+          "cached_blocks": 0
+        },
+        {
+          "at_ms": 6,
+          "event": "request_finished",
+          "workflow": "cancelled-owner",
+          "turn": 0
+        },
+        {
+          "at_ms": 6,
+          "event": "request_started",
+          "workflow": "consumer",
+          "turn": 0,
+          "cost_ms": 4,
+          "cached_blocks": 1
+        },
+        {
+          "at_ms": 10,
+          "event": "request_finished",
+          "workflow": "consumer",
+          "turn": 0
+        },
+        {
+          "at_ms": 10,
+          "event": "preparation_started",
+          "workflow": "cancelled-owner",
+          "revision": 0,
+          "blocks": 1
+        },
+        {
+          "at_ms": 12,
+          "event": "preparation_finished",
+          "workflow": "cancelled-owner",
+          "blocks": 1,
+          "obsolete": false
+        },
+        {
+          "at_ms": 26,
+          "event": "cancel",
+          "workflow": "cancelled-owner"
+        },
+        {
+          "at_ms": 50,
+          "event": "request_ready",
+          "workflow": "consumer",
+          "turn": 1
+        },
+        {
+          "at_ms": 50,
+          "event": "request_started",
+          "workflow": "consumer",
+          "turn": 1,
+          "cost_ms": 4,
+          "cached_blocks": 2
+        },
+        {
+          "at_ms": 54,
+          "event": "request_finished",
+          "workflow": "consumer",
+          "turn": 1
+        }
+      ],
+      "mean_difference_from_off_ms": -1
+    },
+    {
+      "policy": "future_timing",
+      "workflows": [
+        {
+          "workflow": "cancelled-owner",
+          "status": "cancelled",
+          "capped_completion_ms": 100,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 6,
+              "cached_blocks": 0
+            }
+          ]
+        },
+        {
+          "workflow": "consumer",
+          "status": "completed",
+          "capped_completion_ms": 54,
+          "turns": [
+            {
+              "turn": 0,
+              "ready_ms": 0,
+              "completed_ms": 10,
+              "cached_blocks": 1
+            },
+            {
+              "turn": 1,
+              "ready_ms": 50,
+              "completed_ms": 54,
+              "cached_blocks": 2
+            }
+          ]
+        }
+      ],
+      "metrics": {
+        "demand_compute_ms": 14.0,
+        "speculative_compute_ms": 2.0,
+        "speculative_blocks_computed": 1,
+        "useful_speculative_blocks": 1,
+        "ordinary_cached_blocks": 2,
+        "cache_block_ms": 590.0,
+        "peak_cache_blocks": 7,
+        "obsolete_blocks_completed": 0,
+        "late_blocks_completed": 0,
+        "unconsumed_speculative_blocks": 0
+      },
+      "mean_capped_completion_ms": 77,
+      "events": [
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "cancelled-owner",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_ready",
+          "workflow": "consumer",
+          "turn": 0
+        },
+        {
+          "at_ms": 0,
+          "event": "request_started",
+          "workflow": "cancelled-owner",
+          "turn": 0,
+          "cost_ms": 6,
+          "cached_blocks": 0
+        },
+        {
+          "at_ms": 6,
+          "event": "request_finished",
+          "workflow": "cancelled-owner",
+          "turn": 0
+        },
+        {
+          "at_ms": 6,
+          "event": "request_started",
+          "workflow": "consumer",
+          "turn": 0,
+          "cost_ms": 4,
+          "cached_blocks": 1
+        },
+        {
+          "at_ms": 10,
+          "event": "request_finished",
+          "workflow": "consumer",
+          "turn": 0
+        },
+        {
+          "at_ms": 26,
+          "event": "cancel",
+          "workflow": "cancelled-owner"
+        },
+        {
+          "at_ms": 48,
+          "event": "preparation_started",
+          "workflow": "consumer",
+          "revision": 0,
+          "blocks": 1
+        },
+        {
+          "at_ms": 50,
+          "event": "preparation_finished",
+          "workflow": "consumer",
+          "blocks": 1,
+          "obsolete": false
+        },
+        {
+          "at_ms": 50,
+          "event": "request_ready",
+          "workflow": "consumer",
+          "turn": 1
+        },
+        {
+          "at_ms": 50,
+          "event": "request_started",
+          "workflow": "consumer",
+          "turn": 1,
+          "cost_ms": 4,
+          "cached_blocks": 2
+        },
+        {
+          "at_ms": 54,
+          "event": "request_finished",
+          "workflow": "consumer",
+          "turn": 1
+        }
+      ],
+      "mean_difference_from_off_ms": -1
+    }
+  ]
+}

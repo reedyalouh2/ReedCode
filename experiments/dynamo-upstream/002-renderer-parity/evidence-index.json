@@ -1,0 +1,10 @@
+{
+  "scope": "Saved public source and issue search used for the renderer comparison",
+  "files": {
+    "known-issues.json": {
+      "bytes": 129856,
+      "sha256": "b4b97667863cc641d58c37c9857be97c5466fd769023e179c29db47413bd8bb2"
+    }
+  },
+  "runtime_evidence": "results.json records source, dependency, binary, tokenizer and template hashes."
+}

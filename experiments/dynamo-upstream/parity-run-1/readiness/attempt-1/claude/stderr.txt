@@ -1,0 +1,6 @@
+sandbox-exec: host must be * or localhost in network address
+
+Backtrace: 
+/private/tmp/reedcode-parity-stub-claude-j9icl3nx/client.sb:4:26:
+	(remote ip "127.0.0.1:*")
+

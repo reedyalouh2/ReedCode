@@ -1,0 +1,22 @@
+{
+  "decision_unix": 1790662755.750154,
+  "request_cutoff_unix": 1790666845.520226,
+  "remaining_minutes": 68.16283453305563,
+  "required_remaining_minutes": 40,
+  "proceed": true,
+  "prefill_completed_trials": 18,
+  "prefill_epoch": "267e605d0db348158ba0f551f5ac87e8",
+  "authority": "User authorized documented YaRN64K or131K retry when at least40min remain",
+  "harness_budgets": "Original8192output/4096thinking; no reduced-budget retry",
+  "context_tokens": 65536,
+  "rope_scaling": {
+    "rope_type": "yarn",
+    "factor": 2.0,
+    "original_max_position_embeddings": 32768
+  },
+  "cli_override": "--hf-overrides",
+  "model_config_cpu_check": "yarn-cpu-config-check.txt",
+  "launch_script_sha256": "04bcb70ddc4e349996a0250fbe16ce31c25b7ff8f62767565882728af37a448c",
+  "source": "https://huggingface.co/Qwen/Qwen3-8B/blob/b968826d9c46dd6066d109eabc6255188de91218/README.md",
+  "base_model_files_modified": false
+}

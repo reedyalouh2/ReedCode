@@ -1,0 +1,78 @@
+{
+  "status": "recorded_launcher_and_worker_configuration_verified",
+  "source_url": "https://docs.nvidia.com/dynamo/dev/digest/agentic-harnesses",
+  "source_date": "2026-04-30",
+  "frontend_pid": 3402,
+  "frontend_start_ticks": 1065016601,
+  "frontend_epoch": "1661b2352f704c199e748877d3a38a46",
+  "recorded_frontend_launch_argv": [
+    "bash",
+    "/tmp/reedcode-bundle/repo/experiments/dynamo-upstream/001-speculative-prefill/linux-readiness/launch-on-pod.sh",
+    "/tmp/reedcode-study",
+    "parity",
+    "image",
+    "1661b2352f704c199e748877d3a38a46"
+  ],
+  "frontend_flags_from_frozen_launcher": [
+    "--enable-anthropic-api",
+    "--strip-anthropic-preamble",
+    "--enable-streaming-tool-dispatch"
+  ],
+  "worker_observed_argv": [
+    "python3",
+    "-m",
+    "dynamo.vllm",
+    "--model",
+    "Qwen/Qwen3-8B",
+    "--revision",
+    "b968826d9c46dd6066d109eabc6255188de91218",
+    "--discovery-backend",
+    "file",
+    "--request-plane",
+    "tcp",
+    "--dtype",
+    "bfloat16",
+    "--kv-cache-dtype",
+    "auto",
+    "--tensor-parallel-size",
+    "1",
+    "--max-model-len",
+    "32768",
+    "--gpu-memory-utilization",
+    "0.80",
+    "--enable-prefix-caching",
+    "--block-size",
+    "16",
+    "--kv-events-config",
+    "{\"enable_kv_cache_events\":true,\"publisher\":\"zmq\",\"topic\":\"kv-events\",\"endpoint\":\"tcp://*:5557\"}",
+    "--dyn-tool-call-parser",
+    "hermes",
+    "--dyn-reasoning-parser",
+    "qwen3",
+    "--dyn-default-thinking-mode",
+    "enabled"
+  ],
+  "evidence": {
+    "launcher": {
+      "path": "/Users/mohamed/Documents/ChatGPT/linked/ReedCode/experiments/dynamo-upstream/001-speculative-prefill/linux-readiness/launch-on-pod.sh",
+      "sha256": "1239a84f960858288175faaf24390d3a335b021e4287a05ad231becd4efcdb34"
+    },
+    "processes": {
+      "path": "/tmp/reedcode-gpu-evidence-02/analysis-claude-04/export/parity/epochs/1661b2352f704c199e748877d3a38a46/processes.json",
+      "sha256": "748470881ae4a7c08f9e3fafe9414b2989532e903795f983c61355a48fb3b97b"
+    },
+    "backend_process_tree": {
+      "path": "/tmp/reedcode-gpu-evidence-02/analysis-claude-04/export/parity/epochs/1661b2352f704c199e748877d3a38a46/backend-process-tree.json",
+      "sha256": "19633a305ec205bbcd2d742035b3121077ee174328f9f5ea04edb7d75e55df92"
+    },
+    "stock_help": {
+      "path": "/tmp/reedcode-gpu-evidence-02/stock-frontend-help.txt",
+      "sha256": "c99362b9fbc4f122d208c3937aa8b1a9ac631eadd9b3e5a06f32bc01e16a3dfe"
+    },
+    "installed_forwarding_source": {
+      "path": "/tmp/reedcode-gpu-evidence-02/recommended-config-installed-source.json",
+      "sha256": "4c330b83166bbe2d0702eec9e4e7e2760ec2cf36c36fd248e03df821c22da481"
+    }
+  },
+  "limit": "Codex frontend had stopped before this audit. Its post-exec /proc command line was not separately captured; frontend flags are established by the recorded launch arguments and the unchanged launcher source. Worker command line was captured while live."
+}

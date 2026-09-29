@@ -1,0 +1,8 @@
+{
+  "source_repository": "https://github.com/moby/profiles",
+  "revision": "85e237f1fe229a0c61c9c7d8e743fa780d3b97ca",
+  "source_url": "https://raw.githubusercontent.com/moby/profiles/85e237f1fe229a0c61c9c7d8e743fa780d3b97ca/seccomp/default.json",
+  "default_sha256": "785b2429264afba4d594320337cb17f144f3c7d51585f9805eef72e28f4f9334",
+  "local_sha256": "b99c76bc44577610eba5b07259d8e090194f748a4a1d12ecc569851e7e063bba",
+  "only_semantic_change": "Allow pivot_root when CAP_SYS_ADMIN is explicitly present in the disposable test container."
+}

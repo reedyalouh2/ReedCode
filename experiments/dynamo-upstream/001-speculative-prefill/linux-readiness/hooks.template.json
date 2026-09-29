@@ -1,0 +1,31 @@
+{
+  "worker_reset": [
+    "python3",
+    "/tmp/reedcode-bundle/repo/experiments/dynamo-upstream/001-speculative-prefill/linux-readiness/fresh_frontend.py",
+    "--study-dir",
+    "/tmp/reedcode-study",
+    "--reset-script",
+    "/tmp/reedcode-bundle/repo/experiments/dynamo-upstream/001-speculative-prefill/gpu-readiness/reset_worker.py",
+    "--worker-python",
+    "python3",
+    "--reset-only",
+    "--execute"
+  ],
+  "fresh_frontend": [
+    "python3",
+    "/tmp/reedcode-bundle/repo/experiments/dynamo-upstream/001-speculative-prefill/linux-readiness/fresh_frontend.py",
+    "--study-dir",
+    "/tmp/reedcode-study",
+    "--reset-script",
+    "/tmp/reedcode-bundle/repo/experiments/dynamo-upstream/001-speculative-prefill/gpu-readiness/reset_worker.py",
+    "--worker-python",
+    "python3",
+    "--state",
+    "/tmp/reedcode-study/prefill/frontend-state.json",
+    "--condition",
+    "{condition}",
+    "--launch-script",
+    "/tmp/reedcode-bundle/repo/experiments/dynamo-upstream/001-speculative-prefill/linux-readiness/launch-on-pod.sh",
+    "--execute"
+  ]
+}

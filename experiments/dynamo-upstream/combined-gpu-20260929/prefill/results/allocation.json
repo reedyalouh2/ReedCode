@@ -1,0 +1,115 @@
+{
+  "epoch": "267e605d0db348158ba0f551f5ac87e8",
+  "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "model_config_sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
+  "backend_log": "prefill/epochs/267e605d0db348158ba0f551f5ac87e8/backend.log",
+  "backend_log_sha256": "890e2ffc2b765f2580d11c08a52724f2439f077776ff55e520420a9ef941c150",
+  "required_backend_configuration_evidence": [
+    "model='Qwen/Qwen3-8B'",
+    "revision=b968826d9c46dd6066d109eabc6255188de91218",
+    "dtype=torch.bfloat16",
+    "tensor_parallel_size=1",
+    "pipeline_parallel_size=1",
+    "kv_cache_dtype=auto",
+    "Using FLASH_ATTN attention backend",
+    "Using FlashAttention version 2"
+  ],
+  "cache_configuration": {
+    "labels": {
+      "_block_size_resolved": "True",
+      "block_size": "16",
+      "cache_dtype": "auto",
+      "dynamo_component": "backend",
+      "dynamo_endpoint": "generate",
+      "dynamo_namespace": "dynamo",
+      "enable_prefix_caching": "True",
+      "engine": "0",
+      "gpu_memory_utilization": "0.8",
+      "is_attention_free": "False",
+      "kv_cache_dtype_skip_layers": "[]",
+      "kv_cache_max_concurrency": "10.59130859375",
+      "kv_cache_memory_bytes": "None",
+      "kv_cache_size_tokens": "347056",
+      "kv_offloading_backend": "native",
+      "kv_offloading_size": "None",
+      "kv_sharing_fast_prefill": "False",
+      "mamba_block_size": "None",
+      "mamba_cache_dtype": "auto",
+      "mamba_cache_mode": "none",
+      "mamba_page_size_padded": "None",
+      "mamba_ssm_cache_dtype": "auto",
+      "model": "Qwen/Qwen3-8B",
+      "model_name": "Qwen/Qwen3-8B",
+      "num_cpu_blocks": "None",
+      "num_gpu_blocks": "21691",
+      "num_gpu_blocks_override": "None",
+      "prefix_caching_hash_algo": "sha256",
+      "prefix_match_unit": "None",
+      "replayssm_buffer_len": "16",
+      "skip_page_size_padded": "None",
+      "sliding_window": "None",
+      "use_replayssm": "False",
+      "user_specified_block_size": "True",
+      "user_specified_mamba_block_size": "False",
+      "worker_id": "2e68ab83e27ae081"
+    },
+    "example": "prefill/epochs/267e605d0db348158ba0f551f5ac87e8/trials/long-stock-r3/replay/prefill-long-stock-r3-04-after.metrics.txt",
+    "sha256": "7467655e8224244bb7fff04e78f91fc4bb3075dd697e638b6fd75fca830e4a98"
+  },
+  "source_manifest_sha256": "a8d52342caff030fed12d8e6fd79783265701821d8412195db515dc1d5c58e05",
+  "source_revision": "2cf0a6915ce544dc493a0990f2ea38d81601128a",
+  "source_points": [
+    {
+      "file": "vllm/utils/torch_utils.py",
+      "symbol": "kv_cache_dtype_str_to_dtype",
+      "meaning": "auto returns loaded model_config.dtype"
+    },
+    {
+      "file": "vllm/model_executor/layers/attention/attention.py",
+      "symbol": "get_kv_cache_spec",
+      "meaning": "non-sliding decoder attention produces FullAttentionSpec"
+    },
+    {
+      "file": "vllm/v1/attention/backends/flash_attn.py",
+      "symbol": "get_kv_cache_shape",
+      "meaning": "dense shape(num_blocks,num_kv_heads,block_size,2*head_size); no padding dimension"
+    },
+    {
+      "file": "vllm/v1/kv_cache_interface.py",
+      "symbol": "AttentionSpec.page_size_bytes",
+      "meaning": "dense K+V element payload or explicit padded page"
+    },
+    {
+      "file": "vllm/v1/worker/gpu_model_runner.py",
+      "symbol": "_allocate_kv_cache_tensors",
+      "meaning": "KV tensor backing is allocated from full configured pool sizes at initialization"
+    }
+  ],
+  "source_foundation_sha256": "c13a80aab60e8fea9f47e51dd6fa6a2b9572e931ec4cc067e50cc290e3329105",
+  "geometry": {
+    "layers": 36,
+    "kv_heads_per_layer_per_rank": 8,
+    "head_dim": 128,
+    "key_value_factor": 2,
+    "bytes_per_bfloat16_element": 2,
+    "tokens_per_block": 16,
+    "tensor_parallel_size": 1,
+    "attention_backend": "FLASH_ATTN version2",
+    "cache_dtype_argument": "auto",
+    "resolved_dtype_from_loaded_model_and_source": "torch.bfloat16"
+  },
+  "bytes_per_full_token": 147456,
+  "bytes_per_full_block": 2359296,
+  "MiB_per_full_block": 2.25,
+  "configured_pool_blocks": 21691,
+  "derived_configured_pool_payload_bytes": 51175489536,
+  "direct_physical_allocator_measurement": false,
+  "interpretation": "Payload represented by retained full published GPU blocks, derived from exact model geometry and selected-epoch dtype/backend/pool configuration. The pool is preallocated. This is not incremental GPU allocation, nvidia-smi growth, partial blocks, metadata or allocator overhead.",
+  "limits": [
+    "Saved records do not dump live tensor storage nbytes, CUDA allocation addresses, allocator padding, or allocator-reserved totals; exact physical allocator bytes are unmeasured.",
+    "Pinned source files are from the recorded vLLM revision; this check does not independently hash the installed GPU files against those sources.",
+    "Warming occupies slots in an already allocated pool; occupied payload bytes are not incremental nvidia-smi memory or bytes newly malloced for that request.",
+    "Published full cache blocks omit active partial blocks, request block tables, metadata, graphs and other GPU memory. Block pool capacity may include reserved/null slots.",
+    "An event publication can repeat a prior logical block. Deduplicate by valid ancestry and process epoch, and account for removal/reset; event count alone is not physical occupancy."
+  ]
+}

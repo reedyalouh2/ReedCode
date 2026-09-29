@@ -1,0 +1,1 @@
+For truncated tail output, put the truncation notice before the retained text so that the result ends with the original final characters. Add or update a test for the visible output, check that head and head_tail still behave as before, and rerun the focused suite.

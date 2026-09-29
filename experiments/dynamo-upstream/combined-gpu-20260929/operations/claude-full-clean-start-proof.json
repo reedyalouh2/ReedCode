@@ -1,0 +1,55 @@
+{
+  "status": "first_real_request_explicit_zero_cache_verified",
+  "created_unix": 1790661452.400095,
+  "client": "Claude Code 2.1.81",
+  "client_request_sequence": 1,
+  "observer_x_request_id": "parity-claude-full-364a468b780f4403b43a67667559fc51",
+  "frontend_request_id": "6fc5d44a-07ca-448f-ae92-ab239bfe33c2",
+  "trace_id": "e5bf856e705e2e8996e5cb845dd97d76",
+  "endpoint": "/v1/messages?beta=true",
+  "terminal_timestamp": "2026-09-29T05:52:08.237508Z",
+  "frontend_epoch": "f35860a24a8a42fb9b529b4d9911428e",
+  "frontend_pid": 3173,
+  "backend_prompt_tokens": 20003,
+  "backend_completion_tokens": 1027,
+  "backend_total_tokens": 21030,
+  "backend_cached_tokens": 0,
+  "backend_cache_field": "prompt_tokens_details: Some(PromptTokensDetails { audio_tokens: None, cached_tokens: Some(0) })",
+  "join": "The first admitted client request metadata records the injected observer X-Request-ID. The terminal BackendOutput trace carries that exact x_request_id and an explicit cached_tokens Some(0). The request starts after the recorded reset ended.",
+  "client_http_status": 200,
+  "evidence": {
+    "client_metadata": {
+      "path": "/tmp/reedcode-parity-run1-claude-full-02/session/capture/0001/metadata.json",
+      "sha256": "4dacf88b9afbe6db3bf1bc1673309724eeb802d423ce7a117b7f177af0f858df"
+    },
+    "client_request_body": {
+      "path": "/tmp/reedcode-parity-run1-claude-full-02/session/capture/0001/request.body",
+      "sha256": "ddcf64b0840feadc5a04a8e2e11dfbba36803ba085fe77bed2e858576394183b"
+    },
+    "client_response_body": {
+      "path": "/tmp/reedcode-parity-run1-claude-full-02/session/capture/0001/response.body",
+      "sha256": "0138fd62cd2b84b25a8331c0d300047e94f3594315d63d997271d5155f7236d9"
+    },
+    "terminal_backend_trace": {
+      "path": "/tmp/reedcode-gpu-evidence-02/claude-full-first-terminal-backend-output.json",
+      "sha256": "af76a8ba42abf06be4cb3b4185072395b321eef233828e0c580da915fb048e8d"
+    },
+    "runtime_snapshot": {
+      "path": "/tmp/reedcode-gpu-evidence-02/recommended-config-runtime.json",
+      "sha256": "73a927272e52b83c010d4dc2320977b53c3c9db91280c31233d4db102f01be36"
+    },
+    "reset": {
+      "path": "/tmp/reedcode-gpu-evidence-02/claude-full-reset.json",
+      "sha256": "313c6d0c1f74b5d9c341a9a8ad1b2ddd197e234349046693e7c629cb6bd9c8f9"
+    },
+    "recommended_config": {
+      "path": "/tmp/reedcode-gpu-evidence-02/recommended-config-manifest.json",
+      "sha256": "2db924c57a87994fa33b6fea867650359e200c2775959956f0d6224dbe26fe03"
+    }
+  },
+  "limits": [
+    "The Anthropic response omits a zero cache-read field; this proof uses the explicit backend field instead.",
+    "This is a zero-cache proof for the first full Claude request. It does not prove that the router index was globally empty.",
+    "A successful first request does not establish full-session success, which must be checked in the client session result."
+  ]
+}

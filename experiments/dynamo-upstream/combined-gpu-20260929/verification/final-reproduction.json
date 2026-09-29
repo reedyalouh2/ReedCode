@@ -1,0 +1,17 @@
+{
+  "command": "uv run --no-project --offline --cache-dir /tmp/reedcode-uv-cache --python .venv/bin/python --with msgpack==1.1.1 --with xxhash==3.5.0 python experiments/dynamo-upstream/combined-gpu-20260929/reproduce.py --output /tmp/reedcode-combined-reproduced-final-01",
+  "status": "passed",
+  "exit_code": 0,
+  "raw_files_verified": 1519,
+  "prefill_trials": 18,
+  "parity_cases": 3,
+  "saved_results_match": true,
+  "model_or_provider_requests": 0,
+  "parity_controller_tests": {
+    "executed": 4,
+    "status": "OK"
+  },
+  "broken_report_links": [],
+  "ignored_required_files": [],
+  "output_note": "Detailed regenerated files were left in the stated fresh directory. The portable command regenerates them from the packaged archives."
+}

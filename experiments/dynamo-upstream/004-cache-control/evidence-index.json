@@ -1,0 +1,166 @@
+{
+  "retrieved_at": "2026-09-28T20:07:17.991056+00:00",
+  "main_sha": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+  "release_ref": "v1.5.0",
+  "scope": "Read-only source, documentation and public report triage; no live requests",
+  "queries": [
+    {
+      "query": "repo:ai-dynamo/dynamo \"nvext.cache_control\"",
+      "url": "https://github.com/search?type=issues&q=repo%3Aai-dynamo/dynamo%20%22nvext.cache_control%22",
+      "total_count": 7,
+      "returned": 7,
+      "incomplete_results": false,
+      "complete": true
+    },
+    {
+      "query": "repo:ai-dynamo/dynamo \"cache_control\" pinning",
+      "url": "https://github.com/search?type=issues&q=repo%3Aai-dynamo/dynamo%20%22cache_control%22%20pinning",
+      "total_count": 12,
+      "returned": 12,
+      "incomplete_results": false,
+      "complete": true
+    },
+    {
+      "query": "repo:ai-dynamo/dynamo \"cache pinning\" docs",
+      "url": "https://github.com/search?type=issues&q=repo%3Aai-dynamo/dynamo%20%22cache%20pinning%22%20docs",
+      "total_count": 26,
+      "returned": 26,
+      "incomplete_results": false,
+      "complete": true
+    },
+    {
+      "query": "repo:ai-dynamo/dynamo \"cache_control\" unsupported",
+      "url": "https://github.com/search?type=issues&q=repo%3Aai-dynamo/dynamo%20%22cache_control%22%20unsupported",
+      "total_count": 5,
+      "returned": 5,
+      "incomplete_results": false,
+      "complete": true
+    }
+  ],
+  "source_files": [
+    {
+      "path": "lib/llm/src/protocols/common/extensions.rs",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/lib/llm/src/protocols/common/extensions.rs",
+      "git_blob_sha": "527e85095018e0401674b8e302cb15159b961d80",
+      "sha256": "9bd4ed00cebde395f63bc48e628fb770abecf5f357a4e23fa4d3bd8ce313f427",
+      "error": null
+    },
+    {
+      "path": "lib/llm/src/protocols/common/extensions.rs",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/lib/llm/src/protocols/common/extensions.rs",
+      "git_blob_sha": "7d48a3c228a9d2afe610c6b34fb7a623ef0530c4",
+      "sha256": "2619e3b1f78249ed42c5dd49e96d83e2c0611656de742031cc9261fc6ef3de2a",
+      "error": null
+    },
+    {
+      "path": "lib/llm/src/protocols/anthropic/mod.rs",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/lib/llm/src/protocols/anthropic/mod.rs",
+      "git_blob_sha": "38351228702751b44273328b9661aa610b28bc62",
+      "sha256": "5c445d363c84703e46536ca9d632bb06483759a395913decb68cb8faf6b26515",
+      "error": null
+    },
+    {
+      "path": "lib/llm/src/protocols/anthropic/mod.rs",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/lib/llm/src/protocols/anthropic/mod.rs",
+      "git_blob_sha": "38351228702751b44273328b9661aa610b28bc62",
+      "sha256": "5c445d363c84703e46536ca9d632bb06483759a395913decb68cb8faf6b26515",
+      "error": null
+    },
+    {
+      "path": "docs/fern/pages/use-cases/agents/agent-hints.md",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/docs/fern/pages/use-cases/agents/agent-hints.md",
+      "git_blob_sha": "085705870bb221fbf52b4044c698f4a31cb62257",
+      "sha256": "5870cad335d252c88c8fac97b52b6ad3bff6f1746acc4dc6874e8f872d3f4069",
+      "error": null
+    },
+    {
+      "path": "docs/fern/pages/use-cases/agents/agent-hints.md",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/docs/fern/pages/use-cases/agents/agent-hints.md",
+      "git_blob_sha": "bbfd963f3acacb69667b655f8815957e10c63588",
+      "sha256": "43b5424b25f64c119100f1905b8f76960ad24f15b4f2fa587b9c5a190974e208",
+      "error": null
+    },
+    {
+      "path": "docs/fern/pages/developer-guide/additional-resources/nvidia-request-extensions-nvext.md",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/docs/fern/pages/developer-guide/additional-resources/nvidia-request-extensions-nvext.md",
+      "git_blob_sha": "fcd7a1bd4d24beaecdfbd0f0fe99418e28a04e30",
+      "sha256": "89ec87f72e644110bcd0b0b2f2f7c85a79ca03536129c8289655b5363b7308f7",
+      "error": null
+    },
+    {
+      "path": "docs/fern/pages/developer-guide/additional-resources/nvidia-request-extensions-nvext.md",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/docs/fern/pages/developer-guide/additional-resources/nvidia-request-extensions-nvext.md",
+      "git_blob_sha": "28ef0272733b56a7bbb6b6da4bf0efe39bdd117f",
+      "sha256": "b7ac0ba6ab83adc3c720e2fb724a3ec1f2e7bd86e2e3941a113236217cb8377a",
+      "error": null
+    },
+    {
+      "path": "docs/fern/pages/blog/2026/agentic-inference-optimizations.mdx",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/docs/fern/pages/blog/2026/agentic-inference-optimizations.mdx",
+      "git_blob_sha": "1a320cefd14f6dd2386fb40778e9295dceadaad9",
+      "sha256": "9d2fa3890d1e9a5228c2e5413be59b1fb2bbeac3aef4c697b0643b1400ca07cb",
+      "error": null
+    },
+    {
+      "path": "docs/fern/pages/blog/2026/agentic-inference-optimizations.mdx",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/docs/fern/pages/blog/2026/agentic-inference-optimizations.mdx",
+      "git_blob_sha": "1a320cefd14f6dd2386fb40778e9295dceadaad9",
+      "sha256": "9d2fa3890d1e9a5228c2e5413be59b1fb2bbeac3aef4c697b0643b1400ca07cb",
+      "error": null
+    },
+    {
+      "path": "lib/llm/src/protocols/anthropic/types.rs",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/lib/llm/src/protocols/anthropic/types.rs",
+      "git_blob_sha": "0cc333c7d1a6239c6d0e6b93c0e36fb89b16c507",
+      "sha256": "d2d793c27c7ea5067464dc057b81dc5efde73e92facf8bcf4b9cba97c67b01ac",
+      "error": null
+    },
+    {
+      "path": "lib/llm/src/protocols/anthropic/types.rs",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/lib/llm/src/protocols/anthropic/types.rs",
+      "git_blob_sha": "e25092cc455c8cfdf99eb255d9849ce5ba0a1018",
+      "sha256": "211464ceafda8038a095559ed42577ce54801fd8f9703261185d5cb7a439d4d8",
+      "error": null
+    },
+    {
+      "path": "lib/llm/src/protocols/unified.rs",
+      "ref": "59ac36782c0f9662f1ab6123dce1559d1a3f377a",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/59ac36782c0f9662f1ab6123dce1559d1a3f377a/lib/llm/src/protocols/unified.rs",
+      "git_blob_sha": "2821e16c34582aba6b599978a4c31469aca8e8a6",
+      "sha256": "d7f74e60c05cc827be8270f9f859741b8c5bc4752242b6b0b35fb8f60c911bcb",
+      "error": null
+    },
+    {
+      "path": "lib/llm/src/protocols/unified.rs",
+      "ref": "v1.5.0",
+      "url": "https://github.com/ai-dynamo/dynamo/blob/v1.5.0/lib/llm/src/protocols/unified.rs",
+      "git_blob_sha": "410fcc41c3e9cb31fe5d4b9de4a378801b943e01",
+      "sha256": "9c779bb464f58f163882b13ad4cf8192c7c80932480acdf3a5cf2a450de29d52",
+      "error": null
+    }
+  ],
+  "archive": {
+    "name": "source-evidence.tar.gz",
+    "bytes": 260881,
+    "sha256": "191d7113d146b4eba1b8eda24c1dbcc4293c768f611e7d3800c1e8082042cbfc",
+    "contents": [
+      {
+        "name": "cache-control-evidence.json",
+        "bytes": 1440191,
+        "sha256": "35b4384c0e515e4ba5beb930ba155b18a28de1392b70a331f1f09e3da8df3542"
+      }
+    ]
+  }
+}

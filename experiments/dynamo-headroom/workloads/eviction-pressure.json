@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "kind": "synthetic_cost_model",
+  "description": "Unrelated traffic evicts known context while the agent waits for a tool.",
+  "cache_blocks": 8,
+  "speculative_block_budget": 32,
+  "speculative_chunk_blocks": 2,
+  "prefill_block_ms": 2,
+  "horizon_ms": 100,
+  "workflows": [
+    {
+      "id": "agent",
+      "arrival_ms": 0,
+      "turns": [
+        {
+          "prompt_blocks": [
+            "a0",
+            "a1",
+            "a2"
+          ],
+          "generated_blocks": [
+            "a3"
+          ],
+          "decode_ms": 2,
+          "wait_ms": 0
+        },
+        {
+          "prompt_blocks": [
+            "a0",
+            "a1",
+            "a2",
+            "a3",
+            "tool"
+          ],
+          "generated_blocks": [],
+          "decode_ms": 2,
+          "wait_ms": 32,
+          "intent": [
+            "a0",
+            "a1",
+            "a2",
+            "a3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "background",
+      "arrival_ms": 10,
+      "turns": [
+        {
+          "prompt_blocks": [
+            "b0",
+            "b1",
+            "b2",
+            "b3",
+            "b4",
+            "b5"
+          ],
+          "generated_blocks": [
+            "b6"
+          ],
+          "decode_ms": 2,
+          "wait_ms": 0
+        }
+      ]
+    }
+  ]
+}
