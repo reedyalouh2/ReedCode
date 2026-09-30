@@ -9,10 +9,19 @@ import socket
 import sys
 import time
 from urllib.parse import urlparse
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
 
 from prepare import REPO, ROOT, json_bytes, sha
 from verify import read_gzip, verify
+
+
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, request, response, code, message, headers, new_url):
+        raise ValueError("Loopback endpoints must not redirect")
+
+
+# A redirect or environment proxy would bypass the loopback URL check.
+urlopen = build_opener(ProxyHandler({}), NoRedirect()).open
 
 
 def selected(plan, condition):

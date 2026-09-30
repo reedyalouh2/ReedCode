@@ -1,1 +1,0 @@
-Read fixture.txt using a normal file or shell tool, then briefly report its contents.

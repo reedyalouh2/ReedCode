@@ -1,6 +1,6 @@
 # Client configuration and capture
 
-These are the configurations for [Parity Run 1](README.md). Both pinned CLIs completed streamed tool responses and two resumed follow-ups against the [CPU stub](readiness/README.md), then passed their live smoke tests and completed the [GPU sessions](../combined-gpu-20260929/PARITY.md). The study uses separate client configuration and session state.
+Both pinned CLIs completed the [GPU sessions](../combined-gpu-20260929/PARITY.md) with separate configuration and session state. These settings record their custom endpoints.
 
 ## Claude Code 2.1.81
 
@@ -52,25 +52,18 @@ Collect JSONL events with `codex exec --json --sandbox workspace-write --cd <cle
 
 ## Stock capture path
 
-Source was checked at the image's embedded revision. The [source manifest](source-check/manifest.json) records raw files and hashes; [source-check/README.md](source-check/README.md) records agreement with the release tag.
-
-Start stock frontend with `--enable-anthropic-api`. Responses is enabled by default. Leave `--strip-anthropic-preamble` off. [Frontend flags](https://github.com/ai-dynamo/dynamo/blob/32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653/components/src/dynamo/frontend/frontend_args.py#L537), [Responses default](https://github.com/ai-dynamo/dynamo/blob/32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653/lib/llm/src/http/service/service_v2.rs#L676).
-
-Proposed logging settings for readiness verification:
+The GPU sessions used all three recommended frontend flags:
 
 ```text
-DYN_REQUEST_TRACE=1
-DYN_REQUEST_TRACE_SINKS=file
-DYN_REQUEST_TRACE_FILE_FORMAT=jsonl
-DYN_REQUEST_TRACE_RECORDS=request_end,request_payload
-DYN_LOGGING_CONSOLE_FORMAT=jsonl
-DYN_LOG=info,dynamo_llm::preprocessor=trace,dynamo_runtime::pipeline::network::ingress::push_handler=trace
+--enable-anthropic-api
+--strip-anthropic-preamble
+--enable-streaming-tool-dispatch
 ```
 
-Give frontend and backend different trace file paths. The preprocessor trace includes the full preprocessed request and its token IDs. The CPU check found that Python worker ingress logs only `PythonPayload(<PyAny>)`; that line cannot supply backend input IDs. The CPU capture worker recorded the payload in its callback, but this is custom test instrumentation and cannot establish a stock vLLM logging path. The [passive TCP check](wire-capture/README.md) verified byte decoding and explicit HTTP-to-wire linkage on the stock runtime. Keep its frontend log bridge and raw packets in the GPU evidence. [Preprocessor trace](https://github.com/ai-dynamo/dynamo/blob/32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653/lib/llm/src/preprocessor.rs#L6987), [opaque Python representation](https://github.com/ai-dynamo/dynamo/blob/32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653/lib/bindings/python/rust/python_payload.rs#L33), [CPU evidence](../001-speculative-prefill/linux-readiness/stock-protocol-summary.json).
+The worker used `--dyn-tool-call-parser hermes`, `--dyn-reasoning-parser qwen3` and `--dyn-default-thinking-mode enabled`. The [study manifest](../combined-gpu-20260929/manifest.json) pins the image, model, actual commands and configuration captures.
 
-The HTTP recorder preserves the original bytes and streaming responses. It has no model fallback and adds no hints. Record semantic headers while omitting credentials. Capture KV events at the configured ZMQ endpoint; save process start identities independently because stock metrics alone do not establish restart continuity.
+The HTTP recorder kept request bodies and streaming responses, with credentials excluded. Passive TCP captures supplied the token IDs at the backend boundary. `join_wire.py` joins them to HTTP requests, and KV events account for inserted cache blocks. Process identity was checked separately because the metrics endpoint omitted a restart-detection counter.
 
-The final Anthropic `input_tokens` excludes cache reads. Normalize the final response before comparing clients: add uncached input, cache-read input and any separately reported cache-write input, then cross-check the backend's total prompt length. [Stock conversion](https://github.com/ai-dynamo/dynamo/blob/32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653/lib/llm/src/protocols/anthropic/types.rs#L525).
+Anthropic `input_tokens` excludes cache reads. The report adds uncached input, cache-read input and any cache-write input, then checks that total against the backend prompt length. [Stock conversion](https://github.com/ai-dynamo/dynamo/blob/32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653/lib/llm/src/protocols/anthropic/types.rs#L525).
 
-Thinking plus tool use becomes segmented reasoning in the stock Anthropic conversion, and the outgoing stream uses an `erased` thinking signature. Preserve that behavior and inspect the real client round trip. Its effect on reuse remains unmeasured. [Conversion](https://github.com/ai-dynamo/dynamo/blob/32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653/lib/llm/src/protocols/anthropic/types.rs#L351), [stream signature](https://github.com/ai-dynamo/dynamo/blob/32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653/lib/llm/src/protocols/anthropic/stream_converter.rs#L439).
+The [parity report](../combined-gpu-20260929/PARITY.md) records the reasoning and tool-call round trips, within-turn reuse and cross-turn changes.

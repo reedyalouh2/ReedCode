@@ -1,7 +1,6 @@
 import hashlib
 import json
 from pathlib import Path
-import tarfile
 import tempfile
 import unittest
 
@@ -23,6 +22,13 @@ def response(total, cached, status="completed"):
 
 
 class ReportTests(unittest.TestCase):
+    def fixture(self, name):
+        directory = ROOT / "fixtures"
+        manifest = json.loads((directory / "manifest.json").read_text())
+        raw = (directory / name).read_bytes()
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), manifest["files"][name]["sha256"])
+        return raw
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.base = Path(self.temp.name)
@@ -158,24 +164,22 @@ class ReportTests(unittest.TestCase):
         self.assertIsNone(row["usage"]["cached_tokens"])
 
     def test_saved_real_cli_stubs_parse_without_inventing_backend_evidence(self):
-        fixtures = [("verified/claude", "anthropic"), ("coding-tools-seccomp/codex", "responses")]
-        for folder, protocol in fixtures:
-            for path in (ROOT / "readiness" / folder / "capture").glob("*/response.body"):
-                with self.subTest(path=path):
-                    usage = response_usage(path.read_bytes(), protocol)
+        for client, protocol in (("claude", "anthropic"), ("codex", "responses")):
+            for index in (1, 2):
+                name = f"{client}-stub-{index}.sse"
+                with self.subTest(fixture=name):
+                    usage = response_usage(self.fixture(name), protocol)
                     self.assertEqual((usage["input_tokens"], usage["cached_tokens"]), (100, 20))
                     self.assertEqual(usage["terminal_status"], "completed")
 
     def test_actual_stock_frontend_sse_shows_omitted_anthropic_zero(self):
-        archives = ROOT.parent / "001-speculative-prefill/linux-readiness"
-        cases = [("stock-protocol-evidence.tar.gz", "protocol-attempt2/claude-1-response.body", "anthropic", None),
-                 ("stock-codex-protocol-evidence.tar.gz", "protocol-codex/codex-1-response.body", "responses", 0)]
-        for archive, filename, protocol, cached in cases:
-            with tarfile.open(archives / archive) as bundle:
-                usage = response_usage(bundle.extractfile(filename).read(), protocol)
-            self.assertEqual(usage["terminal_status"], "completed")
-            self.assertEqual(usage["cached_tokens"], cached)
-            self.assertEqual(usage["input_tokens"], 8696 if protocol == "responses" else None)
+        cases = [("claude-stock.sse", "anthropic", None), ("codex-stock.sse", "responses", 0)]
+        for name, protocol, cached in cases:
+            with self.subTest(fixture=name):
+                usage = response_usage(self.fixture(name), protocol)
+                self.assertEqual(usage["terminal_status"], "completed")
+                self.assertEqual(usage["cached_tokens"], cached)
+                self.assertEqual(usage["input_tokens"], 8696 if protocol == "responses" else None)
 
     def test_unterminated_sse_event_is_not_a_completed_capture(self):
         usage = response_usage(response(32, 0).rstrip(), "responses")

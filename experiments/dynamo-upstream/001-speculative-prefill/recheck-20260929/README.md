@@ -17,6 +17,6 @@ The saved final file lists confirm that neither merged change touches `speculati
 
 Four queries returned complete result sets: `"speculative prefill"` (74), `"speculative_prefill"` (8), `prefill "tool schema"` (25), and `"SpeculativePrefillRequest"` (5), all scoped to `ai-dynamo/dynamo`. There were 96 unique results. Comparing them with the [September 28 search](../known-issues.md) found three changed metadata records: the two PR closures and an update to #13957, whose body was unchanged.
 
-The source and merged diffs establish that the defect remains. The search provides context for filing; it cannot exclude private tracking or differently worded reports. The original wider comment audit remains in `../search-evidence.tar.gz`.
+The source and merged diffs establish that the defect remains. The search provides context for filing; it cannot exclude private tracking or differently worded reports.
 
-[manifest.json](manifest.json) hashes the API responses, current source and comparison record. No GPU run, new current-main build, issue filing or upstream code change was part of this check.
+[manifest.json](manifest.json) records the check time, query counts and hashes of the source and merged diffs.

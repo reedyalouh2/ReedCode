@@ -50,4 +50,4 @@ GitHub's issue search includes pull requests. These six queries returned complet
 | `ai-dynamo/dynamo` | `"speculative prefill" observability` | 3 / 3 |
 | `ai-dynamo/dynamo` | `"speculative prefill" "parent"` | 8 / 8 |
 
-The source pin is [`59ac36782c0f9662f1ab6123dce1559d1a3f377a`](https://github.com/ai-dynamo/dynamo/commit/59ac36782c0f9662f1ab6123dce1559d1a3f377a). [search-evidence.tar.gz](search-evidence.tar.gz) preserves raw API responses, six source/document snapshots, and pull-request merge metadata. [search-evidence-index.json](search-evidence-index.json) records retrieval times, source hashes, query coverage, and the archive SHA-256. The saved deployment evidence remains in the original archive; this search ran no GPU requests.
+The source pin is [`59ac36782c0f9662f1ab6123dce1559d1a3f377a`](https://github.com/ai-dynamo/dynamo/commit/59ac36782c0f9662f1ab6123dce1559d1a3f377a). The saved deployment evidence remains in the original [capture archive](../../dynamo-20260928/raw-records.tar.gz).

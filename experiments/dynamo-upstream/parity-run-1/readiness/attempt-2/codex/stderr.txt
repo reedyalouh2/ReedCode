@@ -1,2 +1,0 @@
-WARNING: proceeding, even though we could not create PATH aliases: File exists (os error 17)
-Error loading config.toml: unknown configuration field `model_supports_reasoning_summaries` in -c/--config override

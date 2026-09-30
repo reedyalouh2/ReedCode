@@ -4,32 +4,32 @@
   "main_date": "2026-09-29T03:05:19Z",
   "queries": [
     {
-      "file": "search-speculative.json",
       "total": 74,
       "returned": 74,
       "incomplete_results": false,
-      "complete": true
+      "complete": true,
+      "query": "repo:ai-dynamo/dynamo \"speculative prefill\""
     },
     {
-      "file": "search-symbol.json",
       "total": 8,
       "returned": 8,
       "incomplete_results": false,
-      "complete": true
+      "complete": true,
+      "query": "repo:ai-dynamo/dynamo \"speculative_prefill\""
     },
     {
-      "file": "search-schema.json",
       "total": 25,
       "returned": 25,
       "incomplete_results": false,
-      "complete": true
+      "complete": true,
+      "query": "repo:ai-dynamo/dynamo prefill \"tool schema\""
     },
     {
-      "file": "search-request.json",
       "total": 5,
       "returned": 5,
       "incomplete_results": false,
-      "complete": true
+      "complete": true,
+      "query": "repo:ai-dynamo/dynamo \"SpeculativePrefillRequest\""
     }
   ],
   "pull_requests": [
@@ -51,25 +51,9 @@
     }
   ],
   "files": {
-    "README.md": "9faf84c8e23382b8994990773424234c29e2dfccf532d99a855a164e995192ad",
-    "main.json": "d6ebf2f8812249093edee996fcab0810004c25aa2952a4a4843d7986d03e5541",
-    "pr-12109-comments.json": "ccd73d0a3fd61f0653e77f4480e7f239e407df1540df25b8a49c6670c629262c",
-    "pr-12109-files.json": "65b9e64916688e4d31eafce8038b215a7ca9e31f971f48179bffbe2b76cfe21d",
-    "pr-12109-reviews.json": "4c7f01e79d61fa15b0b4601479f40ea1f654c59f66188b04d92e287591c8e135",
-    "pr-12109.json": "ba8a7bdc6d82b29d51d0c7402530b0c4489ae76237ab7d6fb65e497307ac4ec9",
-    "pr-12204-comments.json": "1c1d1a843369ae4bc960d850762640c4b99de08fb8056236d673881262e8fe42",
-    "pr-12204-files.json": "b3e767d6c05d3c1604efb56ea5c950bb0208013aa148fd5f968ea0ccfad0510a",
-    "pr-12204-reviews.json": "08de6ad1a560c1d3350f6eda0a1eb83fb070527fb66fb4223b4842474b4a43b7",
-    "pr-12204.json": "05e0e91eacc50a451fbb833b542a75e47fd3709acb7bbce8d4d9d5c47738118b",
+    "README.md": "6392bc28b02fca8ec9c1738e3e63f2e446b8cd6a8983c794606598fc284f53a9",
     "pr-12332-files.json": "889127b1bb8676ec3499ab0bd20512373498b89694ae128b4906d5787bcf307f",
-    "pr-12332.json": "f8eb02b669272bcb2ab1c70b91cb78f6ceab1d68724e8096988f023346b1f6d7",
     "pr-12333-files.json": "56e3f7fcfb18930fca39df4dd404e8c0aa23f2f1e3017e65599c872a64096e5b",
-    "pr-12333.json": "1e43adcdce5ae9322797f17c3d49d20524732a9c813cafd745d1bca17097dc82",
-    "search-changes.json": "b0e7862d6ca646b845d317d1365f5b38251b792c5382c4c5411c1548c3425d3d",
-    "search-request.json": "8decdd77cea3d20f171cb677787fcdb364940bed1eef71c9b7c0fbab382831ac",
-    "search-schema.json": "e22f54980c1071c9c82e4f109ab1674a7a0ef06247b2b48b693a395588f61276",
-    "search-speculative.json": "9a14a99ff5f2da9f298cb906779fc29433b3305b9fb214985387abd67d44502b",
-    "search-symbol.json": "c86ad69ed0639f5c52f96aaadcc8e3c3bb1031259b5495de33fd7668db66681a",
     "speculative_prefill.rs": "d1ea24631f4d7c9e731615948bc9a128afdd70a4326bad87cf1569200b1535fb"
   }
 }

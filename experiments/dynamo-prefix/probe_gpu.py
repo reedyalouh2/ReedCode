@@ -147,8 +147,9 @@ async def main_async(args) -> bool:
                 report["status"] = "cache_mismatch"
         except Exception as error:
             report["status"] = "failed"
-            report["error"] = f"{type(error).__name__}: {error}"
-            raise
+            # HTTP header validation errors can include the authorization value.
+            report["error"] = type(error).__name__
+            raise RuntimeError("Probe failed: " + type(error).__name__) from None
         finally:
             output.write(json.dumps(report, indent=2) + "\n")
     return report["all_conditions_match_expected_cache_reuse"]

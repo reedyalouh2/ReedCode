@@ -1,8 +1,0 @@
-{
-  "archive_sha256": "9d9aa3cbbe90547c386918117ee6e91a16cd87f7b28305e2a3e118f66efb17be",
-  "regular_archive_entries": 90,
-  "decompressed_files_scanned": 1165,
-  "decompressed_bytes_scanned": 415993685,
-  "credential_pattern_matches": [],
-  "scope": "Task-specific study code, locally built Dynamo wheels, and frozen synthetic public-code fixtures; no credential/config/home directories."
-}

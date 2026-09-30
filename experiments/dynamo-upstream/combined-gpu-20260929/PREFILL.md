@@ -28,7 +28,7 @@ The selected engine used Qwen3-8B at the pinned revision, BF16, TP1, FlashAttent
 | Short | 450 MiB | 722.25 MiB | 62.31% |
 | Long | 2,463.75 MiB | 2,889 MiB | 85.28% |
 
-Just before the final tool output extended each real context, the branch reached 97.56% and 99.10% of its current full-block payload. The fixed and off conditions retained zero warmup-only blocks. [Allocation evidence](prefill/results/allocation.json) records the selected epoch, geometry, source hashes and derivation.
+Just before the final tool output extended each real context, the branch reached 97.56% and 99.10% of its current full-block payload. The fixed and off conditions retained zero warmup-only blocks. The allocation section of [summary.json](prefill/results/summary.json) records the selected epoch, geometry, source hashes and derivation.
 
 ## Timing
 
@@ -43,13 +43,13 @@ Means across three repetitions, in milliseconds:
 | Long | Stock | 435.476 | 3,676.916 | 4,050.729 |
 | Long | Fixed | 419.858 | 2,120.663 | 2,499.127 |
 
-[summary.json](prefill/results/summary.json) retains all per-repetition values, paired differences and 108 measured request rows. The separate [report.json](prefill/results/report.json) contains exact token linkage and every KV snapshot.
+[summary.json](prefill/results/summary.json) retains all per-repetition values, paired differences and 108 measured request rows. Reproduction also generates `prefill/report.json`, with exact token linkage and every KV snapshot.
 
 ## Live path check and earlier attempt
 
 A generated tool-call smoke exercised each actual hint path before the successful replay. Stock warmed 65 tokens and diverged from its real continuation at token 18. The fixed warmup's 220 tokens were an exact prefix of the 243-token continuation.
 
-The earlier engine epoch passed its generated-tool smokes. Our measurement identity endpoint then returned HTTP 503 because the backend launcher had been reparented to PID 1. No replay model request was sent and Dynamo did not return a model-request 503. It completed zero measured trials. Its raw records and [separate attempt record](prefill/results/previous-failed-attempt.json) remain included; they are excluded from the 18 successful cells.
+The earlier engine epoch passed its generated-tool smokes. The measurement identity endpoint then returned HTTP 503 because the backend launcher had been reparented to PID 1. No replay model request was sent. Its raw records and the `previous_failed_attempt` entry in [summary.json](prefill/results/summary.json) remain included, separate from the 18 successful cells.
 
 ## Limits
 
@@ -61,13 +61,4 @@ Block payload is derived from published full-prefix entries and the selected eng
 
 The selected epoch is `267e605d0db348158ba0f551f5ac87e8`. Its stopped PCAP captured 4,532 packets with zero drops. Decoder linkage uses the epoch frontend log plus the 18 individual trial frontend logs and the verified local address `172.24.0.2`. All 1,519 files in the [final raw archive](raw/pod.tar.gz) passed manifest verification. The study manifest records its archive hash.
 
-From the repository root, after extracting the final evidence:
-
-```bash
-uv run --no-project --with msgpack==1.1.1 --with xxhash==3.5.0 python \
-  experiments/dynamo-upstream/combined-gpu-20260929/prefill/reproduce.py \
-  --raw experiments/dynamo-upstream/combined-gpu-20260929/raw/pod \
-  --output /tmp/reedcode-prefill-reproduced
-```
-
-Choose a fresh output directory. This verifies every raw manifest entry, decodes the PCAP, preserves all 18 planned cells and checks the selected engine's KV geometry. The compressed decoded wire, complete report, per-repetition summaries and source hashes are saved together. Raw files are never rewritten.
+Use the [combined reproduction command](README.md#reproduce-locally). It checks every raw manifest entry, decodes the PCAP and rebuilds all 18 cells. The output includes the full report, decoded wire and KV geometry calculation.

@@ -1,2 +1,0 @@
-maturin==1.15.0
-patchelf==0.19.1.0

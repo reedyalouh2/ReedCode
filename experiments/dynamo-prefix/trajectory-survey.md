@@ -34,10 +34,6 @@ The renderer also passes a broader check against all 314 saved server requests: 
 
 The proposed contention study on these ten trajectories has been dropped. These prompts and tool waits give little reason to expect useful eviction during a wait. The traces remain available as a regression workload.
 
-The [next study](../../docs/dynamo-research-gap.md) starts with longer reasoning-enabled sessions, user boundaries, and actual context changes. It must establish a material shared-server cost before another scheduling experiment. The [study protocol](../../docs/dynamo-headroom-protocol.md) retains the measurement requirements for a later GPU comparison.
-
-Long tool results are another possible source of overlap. The current harness receives each result after execution and places the final exit code before stdout, so these captures cannot establish an early, stable tool-output prefix. Streaming input already has substantial prior work. The [research plan](../../docs/dynamo-roadmap.md#streaming-tool-results) describes the narrower question and the missing measurement.
-
 ## Limits
 
 These are ten trajectories of one easy synthetic task. All ten passed its verifier. The prompts reach at most 5,413 tokens, and the longest tool wait is 354.38 ms. They provide a small control workload for the next study.

@@ -1,0 +1,33 @@
+{
+  "source_commit": "1caea0d2d5538dd66e3e47cb4b6963e4c3ff329b",
+  "files": {
+    "claude-stub-1.sse": {
+      "sha256": "37e67c8503db1f0ae05dc1a6787efcfb3ffcef2789267e04572e2f5cbfe10572",
+      "source": "experiments/dynamo-upstream/parity-run-1/readiness/verified/claude/capture/0001/response.body"
+    },
+    "claude-stub-2.sse": {
+      "sha256": "0df49ec3ece8a460c11fb57b156d9b5f0e788860ebce3be9758b5afb20c36c6c",
+      "source": "experiments/dynamo-upstream/parity-run-1/readiness/verified/claude/capture/0002/response.body"
+    },
+    "codex-stub-1.sse": {
+      "sha256": "264300af8d3640e15f9834d3eb04b19887d10d110a6b893b59ed2cba15b443d5",
+      "source": "experiments/dynamo-upstream/parity-run-1/readiness/coding-tools-seccomp/codex/capture/0001/response.body"
+    },
+    "codex-stub-2.sse": {
+      "sha256": "258702faceefd0bae05109e32d812506e6a906adad3c6eb5d349a5794bf9c661",
+      "source": "experiments/dynamo-upstream/parity-run-1/readiness/coding-tools-seccomp/codex/capture/0002/response.body"
+    },
+    "claude-stock.sse": {
+      "sha256": "4abfb03fcd4298577e62218fedca123176233ac4e369de7badbc76ef11a996be",
+      "source": "experiments/dynamo-upstream/001-speculative-prefill/linux-readiness/stock-protocol-evidence.tar.gz",
+      "archive_sha256": "43f7d7cd6ed6ac6cd4eb4ba421de48b15004b34a549201afe24f5e585bdb6421",
+      "member": "protocol-attempt2/claude-1-response.body"
+    },
+    "codex-stock.sse": {
+      "sha256": "84b56f1250737772b0d6ecd87ce258dbca7c3a9c3a0ab7f737e686e5afb77d32",
+      "source": "experiments/dynamo-upstream/001-speculative-prefill/linux-readiness/stock-codex-protocol-evidence.tar.gz",
+      "archive_sha256": "a217e02fac439afaedf77f93b03e5e086ba0b7b8a6a030f982f5e0ca699a543f",
+      "member": "protocol-codex/codex-1-response.body"
+    }
+  }
+}

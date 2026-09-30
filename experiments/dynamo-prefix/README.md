@@ -4,7 +4,7 @@ The local audit reproduces the mismatch from the [September 28 GPU run](../dynam
 
 The candidate now preserves the completed assistant message and tool schema, renders the assistant in its next-turn position, and stops at a closed message boundary. Every prepared token matches the recorded continuation. A [follow-up GPU probe](gpu-20260928/README.md) confirmed the predicted reuse through an explicit preparation adapter. Dynamo's stock implementation remains unchanged.
 
-The [full trajectory survey](trajectory-survey.md) checks all ten captured coding runs. Across 42 tool continuations, the candidate adds a median of 80 tokens beyond the preceding input's reusable blocks. The [boundary detail](boundary-detail.md) identifies the four tokens responsible. The [research plan](../../docs/dynamo-research-gap.md) moves on to longer reasoning-enabled sessions.
+The [full trajectory survey](trajectory-survey.md) checks all ten captured coding runs. Across 42 tool continuations, the candidate adds a median of 80 tokens beyond the preceding input's reusable blocks. The [boundary detail](boundary-detail.md) identifies the four tokens responsible.
 
 ## What changed in the tool case
 

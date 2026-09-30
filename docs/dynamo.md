@@ -27,7 +27,7 @@ The included workload is a short transport fixture. Use captured coding sessions
 
 ## Set up the GPU run
 
-Use a dedicated Linux NVIDIA GPU server. Pin a Dynamo revision and a compatible backend from its deployment instructions. Record the actual launch commands and resolved model revision. The earlier direct-vLLM recipe is a separate deployment.
+The Harbor task images need Python 3 for file tools. Use a dedicated Linux NVIDIA GPU server. Pin a Dynamo revision and a compatible backend from its deployment instructions. Record the actual launch commands and resolved model revision. The earlier direct-vLLM recipe is a separate deployment.
 
 ```bash
 mkdir -p runs/dynamo-setup

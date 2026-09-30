@@ -4,7 +4,7 @@ The patched renderer produces an exact prefix for all **42 recorded tool continu
 
 The original isolated tool pilot now prepares an exact 218-token prefix of its 244-token follow-up. Its text-only control skips warmup. Both normal token sequences are unchanged. [Minimal-pilot output](pilot-native-output.json).
 
-This is a local patch for the pinned Qwen3 tool-continuation path. The [GPU comparison](../../combined-gpu-20260929/PREFILL.md) completed 18 trials and confirmed that it removes the separate warmup branch. It has not been submitted upstream.
+This is a local patch for the pinned Qwen3 tool-continuation path. The [GPU comparison](../../combined-gpu-20260929/PREFILL.md) completed 18 trials and confirmed that it removes the separate warmup branch.
 
 ## What changed
 
@@ -85,4 +85,4 @@ The runner invokes Cargo from the Dynamo checkout so its `tokio_unstable` build 
 
 The matched Linux frontends completed generated-tool smoke tests and 18 off/stock/fixed replay trials. The fix cut scheduled prefill by 37.96% and 45.96% versus stock in the two sessions. Real follow-ups gained 368 and 64 cached tokens, and the warmup-only branch disappeared. [Counts, timings, retained blocks and raw evidence](../../combined-gpu-20260929/PREFILL.md).
 
-These controlled replays leave concurrent serving and agent quality unmeasured. A fresh upstream issue/PR search and review of both patches precede filing.
+These controlled replays leave concurrent serving and agent quality unmeasured.

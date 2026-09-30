@@ -11,9 +11,9 @@ Eighteen controlled GPU trials: two saved sessions, hints off/stock/fixed, three
 | Session | Hint off | Stock hint | Fixed hint | Stock-only KV payload at end |
 | --- | ---: | ---: | ---: | ---: |
 | Short | 5,205 | 8,446 | 5,240 | 450 MiB |
-| Long | 20,580 | 38,114 | 20,595 | 2,463.75 MiB |
+| Long | 20,580 | 38,114 | 20,595 | 2.4 GiB |
 
-The fix cut prefill **37.96% and 45.96% versus stock**. Stock warmed a separate branch, reused it on later warmups, and added no cache hits to the real follow-ups. Before the final tool output extended the real context, that branch reached 97.56% and 99.10% of the real context's full-block KV payload.
+The fix cut prefill **38–46% versus stock**, bringing it close to hint-off cost. Fixed still computes 35 and 15 extra tokens; the useful gain on these tool turns is small. The main improvement is removing the wasted branch, which reached about 98–99% of the real context's full-block KV payload before the final tool output.
 
 [Per-request counts, timings and block accounting](experiments/dynamo-upstream/combined-gpu-20260929/PREFILL.md). The complete GPU study cost about $2.37, including disk and the earlier failed rental.
 
@@ -36,7 +36,7 @@ flowchart TD
     H --> F
 ```
 
-The CPU check reproduced the missing-field problem in Qwen, Nemotron and GPT-OSS templates. Restoring the fields gives exact prefixes in the tested Nemotron and GPT-OSS tool cases. Qwen also needs a renderer-level tool-continuation boundary. The full fix passes **54/54 prefix cases**, leaves ordinary request tokens unchanged, and passes all **19 Dynamo warmup-module tests**. [Scope](experiments/dynamo-upstream/001-speculative-prefill/scope/README.md) · [Implementation](experiments/dynamo-upstream/001-speculative-prefill/proposal.md)
+The CPU check reproduced the missing-field problem in Qwen, Nemotron and GPT-OSS templates. Restoring the fields gives exact prefixes in the tested Nemotron and GPT-OSS tool cases. Qwen also needs a renderer-level tool-continuation boundary. The full fix passes **54/54 prefix cases**, leaves ordinary request tokens unchanged, and passes all **19 Dynamo warmup-module tests**. [Scope](experiments/dynamo-upstream/001-speculative-prefill/scope/README.md) · [Implementation](experiments/dynamo-upstream/001-speculative-prefill/fix/README.md)
 
 ## What else I found
 
@@ -66,7 +66,7 @@ uv run python -m unittest discover -s tests
 
 ## Next
 
-Split the upstream contribution into request/assistant preservation and the renderer continuation hook. Keep the existing GPU result attached to the complete tested fix. Then test whether the extra branch displaces useful prefixes when several real agent sessions share a GPU. [Patch split](experiments/dynamo-upstream/001-speculative-prefill/upstream-split.md) · [Work queue](docs/dynamo-upstream.md)
+Split the upstream contribution into request/assistant preservation and the renderer continuation hook. Keep the existing GPU result attached to the complete tested fix. Then test whether the extra branch displaces useful prefixes when several real agent sessions share a GPU.
 
 ## Limitations
 

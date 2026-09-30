@@ -1,6 +1,0 @@
-test_explicit_dummy_credentials_are_denied_while_task_is_readable (test_profile.ProfileTests.test_explicit_dummy_credentials_are_denied_while_task_is_readable) ... ok
-
-----------------------------------------------------------------------
-Ran 1 test in 0.042s
-
-OK

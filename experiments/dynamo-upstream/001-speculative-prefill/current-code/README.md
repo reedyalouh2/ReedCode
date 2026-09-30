@@ -19,7 +19,7 @@ The stock request gets its actual trait defaults. It has no tools, no template a
 
 The prepared inputs also match the archived routing lengths and all four full-block hashes for each case. The tool preparation has eight trailing tokens that the runtime did not hash. Their exact IDs come from this compiled reproduction.
 
-Each build resolved 299 registry packages. Every package's name, version, source and checksum matches its revision's upstream lockfile. [compiled/release](compiled/release) and [compiled/main](compiled/main) retain the generated source, manifest, resolved lockfile, build log and raw output. Binary hashes are recorded; the binaries remain under `/tmp`.
+Each build resolved 299 registry packages. Every package's name, version, source and checksum matches its revision's upstream lockfile. The runner rebuilds each revision from the pinned sources. [results.json](results.json) records source, dependency and binary hashes; [compiled/main](compiled/main) retains the resolved main lockfile and output used by the fix checks.
 
 An offline rerun reproduced the input, output, generated source and lockfile bytes. Debug binary hashes changed across rebuilds; the report identifies the final recorded binaries.
 

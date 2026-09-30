@@ -91,6 +91,6 @@ This is a bounded duplicate check. It cannot exclude private tracking, descripti
 
 ## Evidence files
 
-`evidence-index.json` records query coverage, the source pin, archive contents, and SHA-256 hashes. `search-evidence.tar.gz` preserves the raw search results, selected issue and review snapshots, filtered comment audit, and source/document snapshots. Each archived JSON has a hash in the index and in the archive's manifest.
+The [September 29 check](recheck-20260929/README.md) records the later source comparison and PR status changes.
 
 The archive is for reproducing this check. The report above is the review entry point.

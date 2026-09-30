@@ -22,6 +22,55 @@ from server_metrics import ServerMetricsWindow
 from dynamo_support import finish_session
 
 
+# Open each component without following links; checking realpath before opening races.
+FILE_TOOL_SCRIPT = """
+import base64
+import os
+import shutil
+import stat
+import sys
+from contextlib import ExitStack
+
+root, relative, operation = sys.argv[1:4]
+parts = relative.split('/')
+if any(part in ('', '.', '..') for part in parts):
+    raise SystemExit('ERROR: expected a file inside the workspace')
+try:
+    with ExitStack() as stack:
+        def hold(fd):
+            stack.callback(os.close, fd)
+            return fd
+
+        directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+        parent = hold(os.open(root, directory_flags))
+        for part in parts[:-1]:
+            if operation == 'write':
+                try:
+                    os.mkdir(part, dir_fd=parent)
+                except FileExistsError:
+                    pass
+            parent = hold(os.open(part, directory_flags, dir_fd=parent))
+        flags = os.O_NOFOLLOW | os.O_NONBLOCK
+        flags |= os.O_WRONLY | os.O_CREAT if operation == 'write' else os.O_RDONLY
+        fd = hold(os.open(parts[-1], flags, 0o666, dir_fd=parent))
+        metadata = os.fstat(fd)
+        if not stat.S_ISREG(metadata.st_mode):
+            raise ValueError('file tools require a regular file')
+        if operation == 'write':
+            if metadata.st_nlink != 1:
+                raise ValueError('write_file refuses files with multiple hard links')
+            content = base64.b64decode(sys.argv[4], validate=True)
+            os.ftruncate(fd, 0)
+            with os.fdopen(os.dup(fd), 'wb') as file:
+                file.write(content)
+        else:
+            with os.fdopen(os.dup(fd), 'rb') as file:
+                shutil.copyfileobj(file, sys.stdout.buffer)
+except (OSError, ValueError) as error:
+    raise SystemExit('ERROR: ' + str(error))
+"""
+
+
 TOOLS = [
     {
         "type": "function",
@@ -83,7 +132,7 @@ class ReedCodeAgent(BaseAgent):
         return "reedcode"
 
     def version(self) -> str:
-        return "0.4.1"
+        return "0.4.2"
 
     async def setup(self, environment: BaseEnvironment) -> None:
         result = await environment.exec(
@@ -390,7 +439,7 @@ class ReedCodeAgent(BaseAgent):
 
             elif name == "read_file":
                 path = self.safe_path(args["path"])
-                command = f"cat -- {shlex.quote(path)}"
+                command = self.file_command(path, "read")
 
             elif name == "write_file":
                 path = self.safe_path(args["path"])
@@ -403,13 +452,7 @@ class ReedCodeAgent(BaseAgent):
                     content.encode("utf-8")
                 ).decode("ascii")
 
-                parent = posixpath.dirname(path)
-
-                command = (
-                    f"mkdir -p -- {shlex.quote(parent)} && "
-                    f"printf '%s' {shlex.quote(encoded)} | "
-                    f"base64 -d > {shlex.quote(path)}"
-                )
+                command = self.file_command(path, "write", encoded)
 
             else:
                 raise ValueError(f"Unknown tool: {name}")
@@ -449,7 +492,6 @@ class ReedCodeAgent(BaseAgent):
                            prefix=f"EXIT CODE: {result.return_code}\n")
 
     def safe_path(self, path: str) -> str:
-        # Symlinks and bash can bypass this lexical path check.
         if (
             not isinstance(path, str)
             or not path.strip()
@@ -466,3 +508,9 @@ class ReedCodeAgent(BaseAgent):
             raise ValueError(f"Path must stay inside {base}")
 
         return target
+
+    def file_command(self, path: str, operation: str, encoded: str = "") -> str:
+        return shlex.join([
+            "python3", "-I", "-c", FILE_TOOL_SCRIPT, self.cwd,
+            posixpath.relpath(path, self.cwd), operation, encoded,
+        ])

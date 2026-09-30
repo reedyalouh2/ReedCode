@@ -16,4 +16,4 @@ The [reproduction instructions](README.md#reproduce) and [recorded cases](result
 
 This overlaps the argument-format work in Dynamo #12109, #12204 and #12332. The last of those also discusses a native DeepSeek V3.2 regression. This example concerns R1's Jinja path. I have not established whether the current renderer or a full-server preprocessor already handles it.
 
-Would this fixture fit the existing argument-normalization regression tests? The [local fix proposal](proposal.md) describes the compatibility checks needed before changing the renderer.
+The proposed regression fixture checks R1's argument handling while keeping the Qwen and Nemotron cases unchanged.

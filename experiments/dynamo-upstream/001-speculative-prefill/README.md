@@ -28,12 +28,12 @@ The cross-template matrix runs 16 authored cases on each revision. Restoring too
 ## Review packet
 
 - [Issue draft](issue-draft.md): proposed upstream report, not filed.
-- [Local fix and regression evidence](fix/README.md), with the [support contract and remaining validation](proposal.md).
+- [Local fix and regression evidence](fix/README.md).
 - [Provenance](provenance.md): exact wire bodies, source lines, internal request IDs, and limits.
 - [Existing issues and PRs](known-issues.md): overlap and current-source inspection.
 - [Results](results.json): machine-readable reproduction with versions and hashes.
 - [Session cost](session-cost/README.md), [KV footprint](kv-footprint/README.md), [template scope](scope/README.md), and [router behavior](router/README.md): CPU evidence for impact and its limits.
-- [GPU results](../combined-gpu-20260929/PREFILL.md): all 18 replay trials, per-repetition differences, branch payload and the separate failed first epoch. The [combined plan](../combined-gpu-plan.md) records the study design.
+- [GPU results](../combined-gpu-20260929/PREFILL.md): all 18 replay trials, per-repetition differences, branch payload and the separate failed first epoch.
 - [Raw evidence](provenance-evidence.tar.gz) and [manifest](provenance-manifest.json): byte-preserving extracts of the original records.
 
 Related speculative-rendering problems are already discussed upstream. The draft identifies this reproduction's specific causes and links that work. It should be reviewed as supplemental evidence before deciding whether a separate issue is useful.

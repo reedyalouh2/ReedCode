@@ -5,7 +5,10 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import traceback
+from types import SimpleNamespace
 import unittest
+from unittest.mock import AsyncMock, patch
 
 import httpx
 
@@ -46,6 +49,32 @@ class UsageTests(unittest.TestCase):
             self.assertEqual(result.returncode, 2)
             self.assertIn("Output exists", result.stderr)
             self.assertEqual(output.read_text(), "original evidence")
+
+
+class ReportSecurityTests(unittest.IsolatedAsyncioTestCase):
+    async def test_header_errors_do_not_save_credentials(self):
+        credential = "private-probe-credential"
+        error = httpx.LocalProtocolError(f"Illegal header value b'Bearer {credential}\\n'")
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "probe.json"
+            args = SimpleNamespace(tokenizer=Path(directory) / "tokenizer.json",
+                                   server_identity="test", output=output,
+                                   base_url="http://127.0.0.1:18000/v1",
+                                   block_size=16, cases=("tool",))
+            with patch.object(probe.audit, "QwenRenderer"), \
+                 patch.object(probe, "run_probe", AsyncMock(side_effect=error)):
+                try:
+                    await probe.main_async(args)
+                except RuntimeError as caught:
+                    formatted = "".join(traceback.format_exception(caught))
+                else:
+                    self.fail("Probe did not report its failure")
+            report = json.loads(output.read_text())
+            self.assertEqual(report["status"], "failed")
+            self.assertEqual(report["error"], "LocalProtocolError")
+            self.assertNotIn(credential, output.read_text())
+            self.assertIn("Probe failed: LocalProtocolError", formatted)
+            self.assertNotIn(credential, formatted)
 
 
 @unittest.skipUnless(TOKENIZER.exists(), "Download the pinned tokenizer; set REEDCODE_QWEN_TOKENIZER")

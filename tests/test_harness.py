@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace as NS
@@ -38,6 +39,81 @@ class HarnessTests(unittest.IsolatedAsyncioTestCase):
             self.assertFalse(result.success)
             self.assertTrue(result.text.startswith("ERROR:"))
         self.env.exec.assert_not_awaited()
+
+    async def execute_file_tool(self, name, path, content=None):
+        async def run(command, cwd, timeout_sec):
+            process = await asyncio.create_subprocess_shell(
+                command, cwd=cwd, stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            stdout, stderr = await asyncio.wait_for(process.communicate(), timeout_sec)
+            return NS(stdout=stdout.decode(), stderr=stderr.decode(), return_code=process.returncode)
+
+        self.agent.cwd = str(Path(self.tmp.name) / "workspace")
+        Path(self.agent.cwd).mkdir(exist_ok=True)
+        arguments = {"path": path}
+        if content is not None:
+            arguments["content"] = content
+        return await self.agent.execute_tool(NS(exec=run), name, arguments)
+
+    async def test_file_tools_preserve_content_and_quote_paths(self):
+        path = "nested dir/$(touch escaped);'file.txt"
+        content = "hello 'quoted' $HOME\n\u00e9\n"
+        written = await self.execute_file_tool("write_file", path, content)
+        self.assertTrue(written.success, written.text)
+        read = await self.execute_file_tool("read_file", path)
+        self.assertTrue(read.success, read.text)
+        self.assertEqual(read.text, "EXIT CODE: 0\n" + content)
+        self.assertFalse((Path(self.agent.cwd) / "escaped").exists())
+
+    async def test_file_tools_reject_symlink_files_and_parents(self):
+        root = Path(self.tmp.name)
+        workspace = root / "workspace"
+        workspace.mkdir()
+        outside = root / "outside"
+        outside.mkdir()
+        target = outside / "private.txt"
+        target.write_text("private")
+        (workspace / "file-link").symlink_to(target)
+        (workspace / "directory-link").symlink_to(outside, target_is_directory=True)
+        for path in ("file-link", "directory-link/private.txt"):
+            for tool, content in (("read_file", None), ("write_file", "overwritten")):
+                result = await self.execute_file_tool(tool, path, content)
+                self.assertFalse(result.success, (path, tool, result.text))
+                self.assertNotIn("private\n", result.text)
+                self.assertEqual(target.read_text(), "private")
+        result = await self.execute_file_tool("write_file", "directory-link/new.txt", "new")
+        self.assertFalse(result.success)
+        self.assertFalse((outside / "new.txt").exists())
+
+    async def test_file_tools_reject_fifo_without_blocking(self):
+        workspace = Path(self.tmp.name) / "workspace"
+        workspace.mkdir()
+        os.mkfifo(workspace / "pipe")
+        for tool, content in (("read_file", None), ("write_file", "data")):
+            result = await asyncio.wait_for(self.execute_file_tool(tool, "pipe", content), 5)
+            self.assertFalse(result.success, result.text)
+
+    async def test_write_file_rejects_hard_links_before_truncating(self):
+        root = Path(self.tmp.name)
+        workspace = root / "workspace"
+        workspace.mkdir()
+        target = root / "private.txt"
+        target.write_text("private")
+        os.link(target, workspace / "linked.txt")
+        result = await self.execute_file_tool("write_file", "linked.txt", "overwritten")
+        self.assertFalse(result.success, result.text)
+        self.assertEqual(target.read_text(), "private")
+
+    async def test_file_helper_ignores_workspace_python_startup_files(self):
+        workspace = Path(self.tmp.name) / "workspace"
+        workspace.mkdir()
+        (workspace / "sitecustomize.py").write_text(
+            "from pathlib import Path\nPath('startup-ran').touch()\n"
+        )
+        result = await self.execute_file_tool("write_file", "plain.txt", "hello")
+        self.assertTrue(result.success, result.text)
+        self.assertFalse((workspace / "startup-ran").exists())
 
     async def test_timeout_recoverable_infrastructure_error_visible(self):
         for error in (TimeoutError(), RuntimeError("Command timed out after 120 seconds")):

@@ -23,16 +23,6 @@ trace.jsonl
 !experiments/dynamo-upstream/001-speculative-prefill/fix/integration-build.log
 !experiments/dynamo-upstream/001-speculative-prefill/fix/integration-tests.log
 !experiments/dynamo-upstream/001-speculative-prefill/fix/repository-tests.log
-!experiments/dynamo-upstream/001-speculative-prefill/gpu-readiness/test-readiness.log
-!experiments/dynamo-upstream/parity-run-1/wire-capture/tests.log
-!experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/cpu-validation/container-check/apt-install.log
-!experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/cpu-validation/container-check/apt-update.log
-!experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/cpu-validation/container-check/capture.log
-!experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/cpu-validation/pull.log
-!experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/container-check/apt-install.log
-!experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/container-check/apt-update.log
-!experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/container-check/capture.log
-!experiments/dynamo-upstream/gpu-readiness/runpod-retry-proposal/image/derived-cpu-validation/pull.log
 
 # Python / tooling / OS
 __pycache__/

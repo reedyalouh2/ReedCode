@@ -1,4 +1,0 @@
-{"type":"thread.started","thread_id":"01a0eb05-4baf-7e60-bba3-38479ec45518"}
-{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Model metadata for `Qwen/Qwen3-8B` not found. Defaulting to fallback metadata; this can degrade performance and cause issues."}}
-{"type":"turn.started"}
-{"type":"item.completed","item":{"id":"item_1","type":"reasoning","text":"I will read the local fixture before answering."}}
