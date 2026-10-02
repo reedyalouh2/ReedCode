@@ -28,7 +28,7 @@
   },
   "raw_archive": "raw/pod.tar.gz",
   "client_archive": "parity/client-captures.tar.gz",
-  "reproduction_command": "uv run --no-project --with msgpack==1.1.1 --with xxhash==3.5.0 python experiments/dynamo-upstream/combined-gpu-20260929/reproduce.py --output /tmp/reedcode-combined-reproduced",
+  "reproduction_command": "uv run --no-project --with msgpack==1.1.1 --with xxhash==3.5.0 --with httpx==0.28.1 python experiments/dynamo-upstream/combined-gpu-20260929/reproduce.py --output /tmp/reedcode-combined-reproduced",
   "repository_sources": {
     "experiments/dynamo-upstream/001-speculative-prefill/fix/dynamo.patch": "533ef5a467bc92674fa7170b954b34a295328856ca6251eeeda9bdb552bd3f39",
     "experiments/dynamo-upstream/001-speculative-prefill/fix/renderer.patch": "f6bac08a4a8ba8b72b0c2a9b3db120e5f36f2b1c3af9ca4745e22fbf4bf93f78",
@@ -74,7 +74,7 @@
     ".gitignore": "9b685398f0a74732dedfb432a8dfda0c08518a08506c0e3198023194d08c2206",
     "PARITY.md": "072799090e24ed99c9f6b58737903b9b6f655c022b3f08867215fddec996a914",
     "PREFILL.md": "b181fbd790cbe4f21afaa3637db91c4ae9c0dc7b120220f1e17c06730cb13e40",
-    "README.md": "78f2c08eeb9ac6780651c2e11fe0d12fa37885d0e28ec9da91734ec275cd4ca3",
+    "README.md": "b525f3354df2f70bfc2138c779b20335a181d1d6f07ca47ed2bf22fc5ee10cf2",
     "configuration/claude-yarn-config-manifest.json": "6eace8862f63ba34b550b3399d2cbbe7a698fd0f24f1fa3f6dadac642faaaa7c",
     "configuration/codex-recommended-config-manifest.json": "8f7af8e87bd9da00fce9215d28787375180e31a2db1bfdecaf663e069d885431",
     "configuration/launch-32k.sh": "1239a84f960858288175faaf24390d3a335b021e4287a05ad231becd4efcdb34",

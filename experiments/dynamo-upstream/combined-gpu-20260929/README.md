@@ -41,7 +41,7 @@ The study ran for 79.43 minutes and cost an estimated **$2.37**, including disk 
 From the repository root, choose a fresh output directory:
 
 ```bash
-uv run --no-project --with msgpack==1.1.1 --with xxhash==3.5.0 python \
+uv run --no-project --with msgpack==1.1.1 --with xxhash==3.5.0 --with httpx==0.28.1 python \
   experiments/dynamo-upstream/combined-gpu-20260929/reproduce.py \
   --output /tmp/reedcode-combined-reproduced
 ```

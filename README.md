@@ -65,7 +65,7 @@ The first studies used hosted models on a synthetic bugfix and Terminal-Bench ta
 From the repository root, with Python 3.12+ and [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv run --no-project --with msgpack==1.1.1 --with xxhash==3.5.0 python \
+uv run --no-project --with msgpack==1.1.1 --with xxhash==3.5.0 --with httpx==0.28.1 python \
   experiments/dynamo-upstream/combined-gpu-20260929/reproduce.py \
   --output /tmp/reedcode-combined-reproduced
 ```

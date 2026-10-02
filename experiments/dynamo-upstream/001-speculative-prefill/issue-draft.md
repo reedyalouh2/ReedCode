@@ -22,7 +22,7 @@ To verify the recorded GPU comparison locally:
 git clone https://github.com/reedyalouh2/ReedCode.git
 cd ReedCode
 git checkout 1caea0d2d5538dd66e3e47cb4b6963e4c3ff329b
-uv run --no-project --with msgpack==1.1.1 --with xxhash==3.5.0 python \
+uv run --no-project --with msgpack==1.1.1 --with xxhash==3.5.0 --with httpx==0.28.1 python \
   experiments/dynamo-upstream/combined-gpu-20260929/reproduce.py \
   --output /tmp/reedcode-combined-reproduced
 ```
