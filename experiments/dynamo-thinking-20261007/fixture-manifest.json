@@ -1,0 +1,256 @@
+{
+  "study_id": "thinking-disabled-20261007",
+  "status": "completed",
+  "model": {
+    "name": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218"
+  },
+  "selection": {
+    "archive": "../dynamo-upstream/combined-gpu-20260929/parity/client-captures.tar.gz",
+    "archive_sha256": "b9894263a7caf9274ea5a2f9e798347d2c3b349c8e2ee0f1c4a9caac3f31ac22",
+    "repo_head_read_only": "9926774e897127da9bd80967951ca61ccebd125f",
+    "population": [
+      "claude-yarn-64k/capture/0001/request.body",
+      "claude-yarn-64k/capture/0002/request.body",
+      "claude-yarn-64k/capture/0003/request.body",
+      "claude-yarn-64k/capture/0004/request.body",
+      "claude-yarn-64k/capture/0005/request.body",
+      "claude-yarn-64k/capture/0006/request.body",
+      "claude-yarn-64k/capture/0007/request.body",
+      "claude-yarn-64k/capture/0009/request.body",
+      "claude-yarn-64k/capture/0010/request.body",
+      "claude-yarn-64k/capture/0011/request.body",
+      "claude-yarn-64k/capture/0012/request.body",
+      "claude-yarn-64k/capture/0014/request.body",
+      "claude-yarn-64k/capture/0015/request.body",
+      "claude-yarn-64k/capture/0016/request.body",
+      "claude-yarn-64k/capture/0017/request.body"
+    ],
+    "zero_based_indices": [
+      0,
+      4,
+      9,
+      14
+    ],
+    "rule": "floor(i*(N-1)/3), i=0..3, from lexically ordered saved Claude64K request bodies. No response-dependent filtering.",
+    "historical_requests_enabled_thinking": true,
+    "counterfactual_change": "Explicitly disabled thinking now; original captures do not demonstrate this bug."
+  },
+  "fixtures": [
+    {
+      "fixture_id": "coding_1_mutable_default",
+      "category": "coding_correctness",
+      "body_file": "fixtures/coding_1_mutable_default.json",
+      "body_sha256": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85",
+      "source": "authored fixed Python snippet",
+      "acceptance": {
+        "rule": "concatenate all final text blocks in order; strip outer whitespace; require exact equality; do not remove fences or explanations",
+        "expected_stdout": "[1] [1, 2] [3]"
+      },
+      "tools_allowed": false,
+      "recorded_body_sha256": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85"
+    },
+    {
+      "fixture_id": "coding_2_lower_bound",
+      "category": "coding_correctness",
+      "body_file": "fixtures/coding_2_lower_bound.json",
+      "body_sha256": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9",
+      "source": "authored fixed Python snippet",
+      "acceptance": {
+        "rule": "concatenate all final text blocks in order; strip outer whitespace; require exact equality; do not remove fences or explanations",
+        "expected_stdout": "[0, 1, 3, 4]"
+      },
+      "tools_allowed": false,
+      "recorded_body_sha256": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9"
+    },
+    {
+      "fixture_id": "coding_3_regex_boundaries",
+      "category": "coding_correctness",
+      "body_file": "fixtures/coding_3_regex_boundaries.json",
+      "body_sha256": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0",
+      "source": "authored fixed Python snippet",
+      "acceptance": {
+        "rule": "concatenate all final text blocks in order; strip outer whitespace; require exact equality; do not remove fences or explanations",
+        "expected_stdout": "['12', '003']"
+      },
+      "tools_allowed": false,
+      "recorded_body_sha256": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0"
+    },
+    {
+      "fixture_id": "coding_4_generator_consumption",
+      "category": "coding_correctness",
+      "body_file": "fixtures/coding_4_generator_consumption.json",
+      "body_sha256": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1",
+      "source": "authored fixed Python snippet",
+      "acceptance": {
+        "rule": "concatenate all final text blocks in order; strip outer whitespace; require exact equality; do not remove fences or explanations",
+        "expected_stdout": "1\n2\n[9, 25]"
+      },
+      "tools_allowed": false,
+      "recorded_body_sha256": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1"
+    },
+    {
+      "fixture_id": "claude_0001",
+      "category": "captured_claude_snapshot",
+      "body_file": "fixtures/claude_0001.json",
+      "body_sha256": "e093d025f6c51c3f894e7ab1423f4f97f49972854ea59e1960421112d3c34969",
+      "source_archive_member": "claude-yarn-64k/capture/0001/request.body",
+      "source_request_sha256": "4a197e5dde95f48836095f52e40fca238622757450e7cf281019f9fbab0f0889",
+      "selection_population_index": 0,
+      "historical_input_tokens": 20006,
+      "historical_user_turn": 1,
+      "changes": {
+        "thinking": {
+          "original_present": true,
+          "original": {
+            "budget_tokens": 4096,
+            "type": "enabled"
+          },
+          "study": {
+            "type": "disabled"
+          }
+        },
+        "temperature": {
+          "original_present": false,
+          "original": null,
+          "study": 0
+        },
+        "max_tokens": {
+          "original_present": true,
+          "original": 8192,
+          "study": 2048
+        }
+      },
+      "tools_allowed": false,
+      "tool_schemas_retained": 22,
+      "acceptance": {
+        "rule": "No task-success grade. Report final-text presence, syntactically valid named tool call, empty/reasoning-only completion, errors and limits; never execute a tool."
+      },
+      "recorded_body_sha256": "5e93477c06ad2bd708bc90d23178eca750331c12791e9d03b99a3fe629db959f"
+    },
+    {
+      "fixture_id": "claude_0005",
+      "category": "captured_claude_snapshot",
+      "body_file": "fixtures/claude_0005.json",
+      "body_sha256": "209e4dfed93ac6e05a317465fb56ea0ce3769521c632cd44120926a73887d936",
+      "source_archive_member": "claude-yarn-64k/capture/0005/request.body",
+      "source_request_sha256": "e28d4de69b6fa6130e40e28d485f1feb1002ebec2e6ba5f13ff47610bf69c620",
+      "selection_population_index": 4,
+      "historical_input_tokens": 25707,
+      "historical_user_turn": 1,
+      "changes": {
+        "thinking": {
+          "original_present": true,
+          "original": {
+            "budget_tokens": 4096,
+            "type": "enabled"
+          },
+          "study": {
+            "type": "disabled"
+          }
+        },
+        "temperature": {
+          "original_present": false,
+          "original": null,
+          "study": 0
+        },
+        "max_tokens": {
+          "original_present": true,
+          "original": 8192,
+          "study": 2048
+        }
+      },
+      "tools_allowed": false,
+      "tool_schemas_retained": 22,
+      "acceptance": {
+        "rule": "No task-success grade. Report final-text presence, syntactically valid named tool call, empty/reasoning-only completion, errors and limits; never execute a tool."
+      },
+      "recorded_body_sha256": "8bdac455c5cc129a907b97b5abe5ad2d16b50b97103d857592deb85e4f338aa0"
+    },
+    {
+      "fixture_id": "claude_0011",
+      "category": "captured_claude_snapshot",
+      "body_file": "fixtures/claude_0011.json",
+      "body_sha256": "076d5ad8786aff7801d7683895ba3d64aa9a4e5b1be9408e93f8d04e27df8f99",
+      "source_archive_member": "claude-yarn-64k/capture/0011/request.body",
+      "source_request_sha256": "65f8afb39b7f7139d804b176eff490c42304dcb912aeb3edd4b643cd9ebf8a96",
+      "selection_population_index": 9,
+      "historical_input_tokens": 27989,
+      "historical_user_turn": 2,
+      "changes": {
+        "thinking": {
+          "original_present": true,
+          "original": {
+            "budget_tokens": 4096,
+            "type": "enabled"
+          },
+          "study": {
+            "type": "disabled"
+          }
+        },
+        "temperature": {
+          "original_present": false,
+          "original": null,
+          "study": 0
+        },
+        "max_tokens": {
+          "original_present": true,
+          "original": 8192,
+          "study": 2048
+        }
+      },
+      "tools_allowed": false,
+      "tool_schemas_retained": 22,
+      "acceptance": {
+        "rule": "No task-success grade. Report final-text presence, syntactically valid named tool call, empty/reasoning-only completion, errors and limits; never execute a tool."
+      },
+      "recorded_body_sha256": "87954237b57521ae51d75ff37c43c0775fa279c41546aae789710a9b4e03e60a"
+    },
+    {
+      "fixture_id": "claude_0017",
+      "category": "captured_claude_snapshot",
+      "body_file": "fixtures/claude_0017.json",
+      "body_sha256": "fb9b62dbfcd98e1d1527582d9262474eec864a60416471cf89bbfbfd0068c6ed",
+      "source_archive_member": "claude-yarn-64k/capture/0017/request.body",
+      "source_request_sha256": "4581517a9820bddc175eb1c94d8cdf31fb7e6d6ff548bc09c850c7f39ba2a991",
+      "selection_population_index": 14,
+      "historical_input_tokens": 29048,
+      "historical_user_turn": 3,
+      "changes": {
+        "thinking": {
+          "original_present": true,
+          "original": {
+            "budget_tokens": 4096,
+            "type": "enabled"
+          },
+          "study": {
+            "type": "disabled"
+          }
+        },
+        "temperature": {
+          "original_present": false,
+          "original": null,
+          "study": 0
+        },
+        "max_tokens": {
+          "original_present": true,
+          "original": 8192,
+          "study": 2048
+        }
+      },
+      "tools_allowed": false,
+      "tool_schemas_retained": 22,
+      "acceptance": {
+        "rule": "No task-success grade. Report final-text presence, syntactically valid named tool call, empty/reasoning-only completion, errors and limits; never execute a tool."
+      },
+      "recorded_body_sha256": "53dc17f24b5dd6c2571354eedddfbf1bbc0d2f0af05d138944f514fd41e08257"
+    }
+  ],
+  "schedule_sha256": "8de70a6e956837951fe9fa9fd75ad0d7f62a28cd86ed51623ee38d17405cdca6",
+  "primary_calls": 48,
+  "pairs": 24,
+  "paired_repeats_per_fixture": 3,
+  "reference_calls_primary": 0,
+  "recorded_fixture_manifest_sha256": "8cea4a655ab61c64f7ea5b8b8cadb803b62633857d6475ad25bcf76338aae7b8",
+  "publication": "Client-identifying metadata.user_id omitted. Prompt content, token IDs and measurements are unchanged. recorded_body_sha256 identifies the original body."
+}

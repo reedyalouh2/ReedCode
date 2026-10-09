@@ -1,0 +1,16 @@
+{
+  "model": "Qwen/Qwen3-8B",
+  "system": "Answer the coding question. Return only the exact standard output, with no explanation or Markdown.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "In Python 3, what is the exact standard output of this program?\n\n```python\nimport re\ntext = \"id=12 id=003 x_id=7 id=-4\"\nprint(re.findall(r\"\\bid=(\\d+)\\b\", text))\n```"
+    }
+  ],
+  "thinking": {
+    "type": "disabled"
+  },
+  "temperature": 0,
+  "max_tokens": 2048,
+  "stream": true
+}

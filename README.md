@@ -4,7 +4,7 @@ ReedCode is a coding-agent harness and a set of experiments on agent inference. 
 
 The strongest finding so far is a bug in Dynamo's `speculative_prefill` agent hint that makes tool-calling agents pay for prefill their next request cannot reuse. On Qwen3-8B on an A100, stock warmups added **62–85% more prefill per session**, with zero extra cache hits on real follow-ups and a warmup-only KV branch of up to **2.4 GiB**. My fix removes that branch.
 
-The work includes a Rust patch, regression tests, real Claude Code and Codex sessions, and captured backend token IDs and KV events. [Issue draft](experiments/dynamo-upstream/001-speculative-prefill/issue-draft.md) · [Patch and tests](experiments/dynamo-upstream/001-speculative-prefill/fix/README.md) · [GPU evidence](experiments/dynamo-upstream/combined-gpu-20260929/README.md)
+The project now includes a second GPU-verified request-control bug, concurrent coding sessions, and native cache-routing prototypes. The harness, experiments and fixes are below. [Speculative-prefill patch](experiments/dynamo-upstream/001-speculative-prefill/fix/README.md) · [GPU evidence](experiments/dynamo-upstream/combined-gpu-20260929/README.md)
 
 ## Dynamo: wasted speculative prefill
 
@@ -40,6 +40,14 @@ flowchart TD
 
 The CPU check reproduced the missing-field problem in Qwen, Nemotron and GPT-OSS templates. Restoring the fields gives exact prefixes in the tested Nemotron and GPT-OSS tool cases. Qwen also needs a renderer-level tool-continuation boundary. The full fix passes **54/54 prefix cases**, leaves ordinary request tokens unchanged, and passes all **19 Dynamo warmup-module tests**. [Scope](experiments/dynamo-upstream/001-speculative-prefill/scope/README.md) · [Implementation](experiments/dynamo-upstream/001-speculative-prefill/fix/README.md)
 
+## Dynamo: ignored thinking controls
+
+I found that Dynamo's Anthropic endpoint drops an explicit `thinking: disabled` setting. On Qwen3 with thinking enabled by default, the model keeps reasoning. The fix passes the caller's setting through to the template.
+
+Across **24 paired GPU comparisons**, stock generated reasoning in every disabled request; the fix generated none. On four long Claude Code snapshots, each repeated three times, generated tokens fell **74.2%** and summed response time fell **65.3%**.
+
+Short-question accuracy fell from **3/4 to 2/4**. Turning reasoning off changes the model's answers as well as its cost. These are controlled replays of disabled requests; the original Claude sessions enabled thinking. [Results, patch and reproduction](experiments/dynamo-thinking-20261007/README.md).
+
 ## The harness and experiments
 
 The agent reads files, edits code, and runs shell commands. Harbor creates its Docker workspace and checks the result with the task's verifier. ReedCode keeps the selected portion of each tool result in the conversation for the next model call. The study records include token use, cache hits, tool output, timing, and verifier rewards.
@@ -55,6 +63,8 @@ The first studies used hosted models on a synthetic bugfix and Terminal-Bench ta
 
 ## What else I found
 
+- **Concurrent coding sessions.** Six public-repository tasks produced 64 model calls and 447,919 input tokens, with **85.0% cached**. All 64 inputs matched the official template, with no unexplained cache shortfall. The failed coding outcomes led to fixes in workspace-path handling and empty-response detection. [Results](experiments/dynamo-concurrent-20261007/README.md)
+- **Hybrid cache routing.** I built a native selection-service prototype that accounts for attention and recurrent state together. In one CPU case, stock chose a worker credited with 3,264 tokens that the engine could not reuse. The corrected selector chose another worker with 2,720 usable tokens. The same report covers a small stale-state fix for Dynamo's draft carrier router, plus the prototype's measured CPU overhead. [Patches and results](experiments/dynamo-routing-20261007/README.md)
 - **Real harness history changes.** Qwen strips earlier-turn reasoning from Codex's rendered history. Claude Code removes reminder text on resume. Both shorten the reusable prefix. Dynamo reused every compatible full block in the two completed sessions. [Parity report](experiments/dynamo-upstream/combined-gpu-20260929/PARITY.md)
 - **A stock 1.5 startup failure.** A frontend with a fixed RPC port failed to register the model. Dynamic port selection worked. The source path has since changed on main. [Failure and source comparison](experiments/dynamo-upstream/006-fixed-rpc-registration/README.md)
 - **Missing request linkage.** Warmup requests lack a direct link to the request that triggered them, making their cost and eventual reuse harder to trace. [Observability findings](experiments/dynamo-upstream/005-observability/README.md)
@@ -77,12 +87,10 @@ uv sync --locked
 uv run python -m unittest discover -s tests
 ```
 
+[Thinking-control analysis](experiments/dynamo-thinking-20261007/README.md#reproduce) and [routing checks](experiments/dynamo-routing-20261007/README.md) have their own commands.
+
 [Dynamo setup](docs/dynamo.md) covers live serving runs. [Harness setup and settings](docs/retention-studies.md#running-it) covers Docker, credentials, task execution, and retention experiments.
-
-## Next
-
-Split the upstream contribution into request/assistant preservation and the renderer continuation hook. Keep the existing GPU result attached to the complete tested fix. Then test whether the extra branch displaces useful prefixes when several real agent sessions share a GPU.
 
 ## Limitations
 
-The retention studies cover one synthetic task and initial Terminal-Bench pilots; they do not establish a general latency or quality benefit. The GPU result is a controlled replay on one Qwen3-8B deployment, with one discarded generated token per request and instrumentation enabled. Shared-server latency, eviction pressure and model quality remain unmeasured. KV payload is calculated from full blocks and model geometry; allocator overhead is excluded. Cross-model evidence is CPU-only. The full runtime fix currently supports the pinned Qwen tool template. Codex used 32K context; Claude completed after a 64K YaRN retry. The $2.37 cost is an estimate, including reserves, rather than a settled invoice.
+The retention studies cover one synthetic task and initial Terminal-Bench pilots. The speculative-prefill comparison uses one Qwen3-8B deployment and one discarded generated token per request. KV payload excludes allocator overhead; cross-model checks are CPU-only. The full runtime fix supports the pinned Qwen tool template. Codex used 32K context; Claude completed with 64K YaRN. The thinking-control snapshots come from one session, and no proposed tools were executed. The concurrent study had failed tasks and no cache pressure. The routing prototypes have CPU validation only. Fleet throughput and quality-preserving shared-server gains remain unmeasured.

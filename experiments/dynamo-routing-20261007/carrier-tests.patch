@@ -1,0 +1,361 @@
+--- a/lib/kv-router/src/carrier_feed_client.rs
++++ b/lib/kv-router/src/carrier_feed_client.rs
+@@ -654,6 +654,129 @@
+     }
+ 
+     #[tokio::test]
++    async fn known_carrier_has_no_credit_while_gap_snapshot_is_blocked() {
++        #[derive(Clone)]
++        struct HeldSnapshot {
++            requests: Arc<AtomicUsize>,
++            entered: Arc<tokio::sync::Notify>,
++            release: Arc<tokio::sync::Semaphore>,
++        }
++
++        async fn held_snapshot(State(state): State<HeldSnapshot>) -> impl IntoResponse {
++            if state.requests.fetch_add(1, Ordering::Relaxed) == 0 {
++                return axum::body::Body::from(snapshot_bytes(0, plhs(3)));
++            }
++            state.entered.notify_one();
++            state.release.acquire().await.unwrap().forget();
++            axum::body::Body::from(snapshot_bytes(2, Vec::new()))
++        }
++
++        let state = HeldSnapshot {
++            requests: Arc::new(AtomicUsize::new(0)),
++            entered: Arc::new(tokio::sync::Notify::new()),
++            release: Arc::new(tokio::sync::Semaphore::new(0)),
++        };
++        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
++        let hub_url = format!("http://{}", listener.local_addr().unwrap());
++        let app = Router::new()
++            .route(
++                "/v1/features/indexer/config",
++                get(|| async {
++                    Json(serde_json::json!({"event_plane": "nats", "feed_endpoint": ""}))
++                }),
++            )
++            .route("/v1/features/indexer/feed/snapshot", get(held_snapshot))
++            .with_state(state.clone());
++        let server = tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
++        let (transport, sender, _) = channel_transport("nats");
++        let replica = Arc::new(CarrierFeedReplica::new(16));
++        let cancel = CancellationToken::new();
++        let session_replica = Arc::clone(&replica);
++        let session_cancel = cancel.clone();
++        let session = tokio::spawn(async move {
++            let mut last_warning = None;
++            run_session(
++                &reqwest::Client::new(),
++                &hub_url,
++                &session_replica,
++                &session_cancel,
++                SessionTiming {
++                    backoff: Duration::ZERO,
++                    idle_timeout: RECEIVE_IDLE_TIMEOUT,
++                },
++                &transport,
++                &mut last_warning,
++            )
++            .await
++        });
++        tokio::time::timeout(Duration::from_secs(2), async {
++            while replica.cursor() != Some((1, 0)) {
++                tokio::task::yield_now().await;
++            }
++        })
++        .await
++        .unwrap();
++        let query = plhs(3);
++        let before = replica
++            .deepest(&[1; 32], &query)
++            .map(|hit| hit.hash.position() + 1);
++
++        // Sequence 1 removed the holder; sequence 2 exposes that missing frame.
++        sender
++            .send(Ok(Bytes::from(
++                encode_frame(&CarrierFeedFrame {
++                    version: CARRIER_FEED_VERSION,
++                    epoch: 1,
++                    seq: 2,
++                    manifest: [1; 32],
++                    kind: crate::carrier_feed::FeedKind::Carrier,
++                    max_positions: 8,
++                    holder: 5,
++                    op: CarrierFeedOp::ReplaceHolder(Vec::new()),
++                })
++                .unwrap(),
++            )))
++            .unwrap();
++        tokio::time::timeout(Duration::from_secs(2), state.entered.notified())
++            .await
++            .unwrap();
++        let during_cursor = replica.cursor();
++        let during_kind = replica.kind(&[1; 32]);
++        let during = replica
++            .deepest(&[1; 32], &query)
++            .map(|hit| hit.hash.position() + 1);
++        let during_holders = replica.deepest_by_holder(&[1; 32], &query);
++        state.release.add_permits(1);
++        tokio::time::timeout(Duration::from_secs(2), async {
++            while replica.cursor() != Some((1, 2)) {
++                tokio::task::yield_now().await;
++            }
++        })
++        .await
++        .unwrap();
++        let after = replica
++            .deepest(&[1; 32], &query)
++            .map(|hit| hit.hash.position() + 1);
++        cancel.cancel();
++        session.await.unwrap().unwrap();
++        server.abort();
++        let _ = server.await;
++
++        println!(
++            "blocked_snapshot: before_blocks={before:?}, during_cursor={during_cursor:?}, during_kind={during_kind:?}, during_blocks={during:?}, after_blocks={after:?}"
++        );
++        assert_eq!(before, Some(3));
++        assert_eq!(during_cursor, None);
++        assert_eq!(during_kind, Some(crate::carrier_feed::FeedKind::Carrier));
++        assert_eq!(after, None);
++        assert_eq!(
++            during, None,
++            "known-invalid carrier state remains queryable"
++        );
++        assert!(during_holders.is_empty());
++    }
++
++    #[tokio::test]
+     async fn mismatched_transport_skips_subscription_and_keeps_replica_empty() {
+         let (hub_url, server) =
+             start_http_hub(Some("nats".to_string()), vec![snapshot_bytes(0, plhs(1))]).await;
+--- a/lib/kv-router/src/carrier_routing.rs
++++ b/lib/kv-router/src/carrier_routing.rs
+@@ -618,4 +618,126 @@
+         assert_eq!(matches.depth_blocks[&WorkerWithDpRank::new(7, 2)], 1);
+         assert_eq!(matches.depth_blocks[&WorkerWithDpRank::new(7, 3)], 3);
+     }
+-}
++
++    fn carrier_gap_credit_check(epoch_change: bool, incomplete_snapshot: u8) {
++        use crate::carrier_feed::{CARRIER_FEED_VERSION, CarrierFeedFrame, CarrierFeedOp};
++        use crate::scheduling::overlap::{OverlapSignals, apply_carrier_matches};
++
++        let connector = TestConnector::default();
++        let router = CarrierRouter::new(Some(Arc::new(connector.clone())));
++        router
++            .upsert_worker(
++                7,
++                0..1,
++                Some(&config("http://hub", 1, &[(0, 5)])),
++                BLOCK_SIZE,
++            )
++            .unwrap();
++        let connections = connector.connections.lock();
++        let connection = &connections[0];
++        install(connection, 1, FeedKind::Carrier, vec![(5, plhs(3))]);
++        let worker = WorkerWithDpRank::new(7, 0);
++        let credit = || {
++            let matches = router.find_matches(&plhs(4)).unwrap();
++            assert_eq!(matches.bound[&worker], Some(FeedKind::Carrier));
++            let mut signals = OverlapSignals::default();
++            signals.effective_overlap_blocks.insert(worker, 8.0);
++            signals.effective_cached_tokens.insert(worker, 32);
++            apply_carrier_matches(&mut signals, &matches, BLOCK_SIZE);
++            signals.effective_cached_tokens[&worker]
++        };
++        assert_eq!(credit(), 12);
++        let epoch = if epoch_change { 2 } else { 1 };
++        let seq = if epoch_change { 1 } else { 2 };
++        assert_eq!(
++            connection.replica.apply(CarrierFeedFrame {
++                version: CARRIER_FEED_VERSION,
++                epoch,
++                seq,
++                manifest: [1; 32],
++                kind: FeedKind::Carrier,
++                max_positions: 8,
++                holder: 5,
++                op: CarrierFeedOp::RemoveHolder,
++            }),
++            FeedApply::NeedsSnapshot
++        );
++        assert!(!connection.replica.is_synced());
++        if incomplete_snapshot != 0 {
++            assert_eq!(
++                connection.replica.install_snapshot(CarrierFeedSnapshot {
++                    version: CARRIER_FEED_VERSION,
++                    epoch,
++                    seq: 0,
++                    manifests: if incomplete_snapshot == 2 {
++                        Vec::new()
++                    } else {
++                        vec![ManifestSnapshot {
++                            manifest: [1; 32],
++                            kind: FeedKind::Carrier,
++                            max_positions: 8,
++                            holders: vec![HolderSnapshot {
++                                holder: 5,
++                                hashes: plhs(3),
++                            }],
++                        }]
++                    },
++                }),
++                Ok(FeedApply::NeedsSnapshot)
++            );
++        }
++        let during = credit();
++        println!(
++            "carrier_gap epoch_change={epoch_change} incomplete_snapshot={incomplete_snapshot} before=12 unsynced_credit={during}"
++        );
++        assert_eq!(
++            during, 0,
++            "a known carrier cannot retain positive credit while its feed is unsynced"
++        );
++        assert!(connection.replica.deepest(&[1; 32], &plhs(4)).is_none());
++        assert!(
++            connection
++                .replica
++                .deepest_by_holder(&[1; 32], &plhs(4))
++                .is_empty()
++        );
++        connection
++            .replica
++            .install_snapshot(CarrierFeedSnapshot {
++                version: CARRIER_FEED_VERSION,
++                epoch,
++                seq,
++                manifests: vec![ManifestSnapshot {
++                    manifest: [1; 32],
++                    kind: FeedKind::Carrier,
++                    max_positions: 8,
++                    holders: vec![HolderSnapshot {
++                        holder: 5,
++                        hashes: plhs(1),
++                    }],
++                }],
++            })
++            .unwrap();
++        assert!(connection.replica.is_synced());
++        assert_eq!(credit(), 4);
++    }
++
++    #[test]
++    fn carrier_gap_does_not_score_old_depth_before_snapshot() {
++        carrier_gap_credit_check(false, 0);
++    }
++
++    #[test]
++    fn carrier_gap_feed_epoch_change_does_not_score_old_depth() {
++        carrier_gap_credit_check(true, 0);
++    }
++
++    #[test]
++    fn carrier_gap_incomplete_snapshot_tail_does_not_publish_credit() {
++        carrier_gap_credit_check(false, 1);
++    }
++    #[test]
++    fn carrier_gap_incomplete_snapshot_preserves_known_kind() {
++        carrier_gap_credit_check(false, 2);
++    }
++}
+--- a/lib/kv-router/src/services/selection/core/tests.rs
++++ b/lib/kv-router/src/services/selection/core/tests.rs
+@@ -3429,3 +3429,96 @@
+             .expect("hint");
+     assert_eq!(hint.source_control_endpoint, "tcp://persistent-owner:23280");
+ }
++
++#[tokio::test]
++async fn carrier_gap_selection_uses_the_synced_worker_and_books_prefill() {
++    use crate::carrier_feed::{CarrierFeedFrame, CarrierFeedOp, FeedApply};
++
++    let connector = Arc::new(CarrierTestConnector::default());
++    let core = local_core(test_config(false));
++    core.set_carrier_connector(connector.clone());
++    let tokens: Vec<u32> = (1..=12).collect();
++    let hashes = dynamo_kv_hashing::Request::builder()
++        .tokens(tokens.clone())
++        .build()
++        .unwrap()
++        .positional_lineage_hashes(4)
++        .unwrap();
++    for (worker_id, blocks) in [(1, 3), (2, 2)] {
++        let mut request = worker(worker_id);
++        request.carrier = Some(CarrierWorkerConfig {
++            hub_url: format!("http://hub-{worker_id}"),
++            manifest: "00".repeat(32),
++            block_size: 4,
++            instance_ids: HashMap::from([(0, "5".to_string())]),
++        });
++        core.upsert_worker(request).await.unwrap();
++        let replica = connector.replicas.lock().last().unwrap().clone();
++        replica
++            .install_snapshot(CarrierFeedSnapshot {
++                version: CARRIER_FEED_VERSION,
++                epoch: 1,
++                seq: 0,
++                manifests: vec![ManifestSnapshot {
++                    manifest: [0; 32],
++                    kind: FeedKind::Carrier,
++                    max_positions: 8,
++                    holders: vec![HolderSnapshot {
++                        holder: 5,
++                        hashes: hashes[..blocks].to_vec(),
++                    }],
++                }],
++            })
++            .unwrap();
++    }
++    let before = core
++        .select(SelectRequest {
++            prompt: PromptRequest {
++                token_ids: Some(tokens.clone()),
++                ..PromptRequest::default()
++            },
++            ..select_request()
++        })
++        .await
++        .unwrap();
++    assert_eq!(before.worker_id, 1);
++    let replica = connector.replicas.lock()[0].clone();
++    assert_eq!(
++        replica.apply(CarrierFeedFrame {
++            version: CARRIER_FEED_VERSION,
++            epoch: 1,
++            seq: 2,
++            manifest: [0; 32],
++            kind: FeedKind::Carrier,
++            max_positions: 8,
++            holder: 5,
++            op: CarrierFeedOp::RemoveHolder,
++        }),
++        FeedApply::NeedsSnapshot
++    );
++    let response = core
++        .select_and_reserve(SelectAndReserveRequest {
++            prompt: PromptRequest {
++                token_ids: Some(tokens),
++                ..PromptRequest::default()
++            },
++            ..reserve_request("carrier-gap")
++        })
++        .await
++        .unwrap();
++    let loads = core.loads(Some("model"), Some("default"));
++    let booked: usize = loads[0]
++        .loads
++        .iter()
++        .map(|load| load.potential_prefill_tokens)
++        .sum();
++    println!(
++        "carrier_gap_selection: before_worker={} after_worker={} prefill={} booked_prefill={}",
++        before.worker_id, response.worker_id, response.effective_prefill_tokens, booked
++    );
++    core.free_reservation("carrier-gap").await.unwrap();
++    core.shutdown();
++    assert_eq!(response.worker_id, 2);
++    assert_eq!(response.effective_prefill_tokens, 4);
++    assert_eq!(booked, 4);
++}

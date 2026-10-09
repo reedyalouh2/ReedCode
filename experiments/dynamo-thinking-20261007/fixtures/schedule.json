@@ -1,0 +1,866 @@
+[
+  {
+    "order": 1,
+    "pair_id": "coding_1_mutable_default-repeat-1",
+    "repeat": 1,
+    "fixture_id": "coding_1_mutable_default",
+    "category": "coding_correctness",
+    "arm": "stock",
+    "body_file": "fixtures/coding_1_mutable_default.json",
+    "body_sha256": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85",
+    "request_id": "thinking-disabled-20261007-coding_1_mutable_default-repeat-1-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_1_mutable_default-repeat-1-stock",
+      "x-tenant-id": "thinking-disabled-20261007-coding_1_mutable_default-repeat-1-stock"
+    },
+    "recorded_body_sha256": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85"
+  },
+  {
+    "order": 2,
+    "pair_id": "coding_1_mutable_default-repeat-1",
+    "repeat": 1,
+    "fixture_id": "coding_1_mutable_default",
+    "category": "coding_correctness",
+    "arm": "patched",
+    "body_file": "fixtures/coding_1_mutable_default.json",
+    "body_sha256": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85",
+    "request_id": "thinking-disabled-20261007-coding_1_mutable_default-repeat-1-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_1_mutable_default-repeat-1-patched",
+      "x-tenant-id": "thinking-disabled-20261007-coding_1_mutable_default-repeat-1-patched"
+    },
+    "recorded_body_sha256": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85"
+  },
+  {
+    "order": 3,
+    "pair_id": "coding_2_lower_bound-repeat-1",
+    "repeat": 1,
+    "fixture_id": "coding_2_lower_bound",
+    "category": "coding_correctness",
+    "arm": "patched",
+    "body_file": "fixtures/coding_2_lower_bound.json",
+    "body_sha256": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9",
+    "request_id": "thinking-disabled-20261007-coding_2_lower_bound-repeat-1-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_2_lower_bound-repeat-1-patched",
+      "x-tenant-id": "thinking-disabled-20261007-coding_2_lower_bound-repeat-1-patched"
+    },
+    "recorded_body_sha256": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9"
+  },
+  {
+    "order": 4,
+    "pair_id": "coding_2_lower_bound-repeat-1",
+    "repeat": 1,
+    "fixture_id": "coding_2_lower_bound",
+    "category": "coding_correctness",
+    "arm": "stock",
+    "body_file": "fixtures/coding_2_lower_bound.json",
+    "body_sha256": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9",
+    "request_id": "thinking-disabled-20261007-coding_2_lower_bound-repeat-1-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_2_lower_bound-repeat-1-stock",
+      "x-tenant-id": "thinking-disabled-20261007-coding_2_lower_bound-repeat-1-stock"
+    },
+    "recorded_body_sha256": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9"
+  },
+  {
+    "order": 5,
+    "pair_id": "coding_3_regex_boundaries-repeat-1",
+    "repeat": 1,
+    "fixture_id": "coding_3_regex_boundaries",
+    "category": "coding_correctness",
+    "arm": "stock",
+    "body_file": "fixtures/coding_3_regex_boundaries.json",
+    "body_sha256": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0",
+    "request_id": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-1-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-1-stock",
+      "x-tenant-id": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-1-stock"
+    },
+    "recorded_body_sha256": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0"
+  },
+  {
+    "order": 6,
+    "pair_id": "coding_3_regex_boundaries-repeat-1",
+    "repeat": 1,
+    "fixture_id": "coding_3_regex_boundaries",
+    "category": "coding_correctness",
+    "arm": "patched",
+    "body_file": "fixtures/coding_3_regex_boundaries.json",
+    "body_sha256": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0",
+    "request_id": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-1-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-1-patched",
+      "x-tenant-id": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-1-patched"
+    },
+    "recorded_body_sha256": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0"
+  },
+  {
+    "order": 7,
+    "pair_id": "coding_4_generator_consumption-repeat-1",
+    "repeat": 1,
+    "fixture_id": "coding_4_generator_consumption",
+    "category": "coding_correctness",
+    "arm": "patched",
+    "body_file": "fixtures/coding_4_generator_consumption.json",
+    "body_sha256": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1",
+    "request_id": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-1-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-1-patched",
+      "x-tenant-id": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-1-patched"
+    },
+    "recorded_body_sha256": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1"
+  },
+  {
+    "order": 8,
+    "pair_id": "coding_4_generator_consumption-repeat-1",
+    "repeat": 1,
+    "fixture_id": "coding_4_generator_consumption",
+    "category": "coding_correctness",
+    "arm": "stock",
+    "body_file": "fixtures/coding_4_generator_consumption.json",
+    "body_sha256": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1",
+    "request_id": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-1-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-1-stock",
+      "x-tenant-id": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-1-stock"
+    },
+    "recorded_body_sha256": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1"
+  },
+  {
+    "order": 9,
+    "pair_id": "claude_0001-repeat-1",
+    "repeat": 1,
+    "fixture_id": "claude_0001",
+    "category": "captured_claude_snapshot",
+    "arm": "stock",
+    "body_file": "fixtures/claude_0001.json",
+    "body_sha256": "e093d025f6c51c3f894e7ab1423f4f97f49972854ea59e1960421112d3c34969",
+    "request_id": "thinking-disabled-20261007-claude_0001-repeat-1-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0001-repeat-1-stock",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0001-repeat-1-stock"
+    },
+    "recorded_body_sha256": "5e93477c06ad2bd708bc90d23178eca750331c12791e9d03b99a3fe629db959f"
+  },
+  {
+    "order": 10,
+    "pair_id": "claude_0001-repeat-1",
+    "repeat": 1,
+    "fixture_id": "claude_0001",
+    "category": "captured_claude_snapshot",
+    "arm": "patched",
+    "body_file": "fixtures/claude_0001.json",
+    "body_sha256": "e093d025f6c51c3f894e7ab1423f4f97f49972854ea59e1960421112d3c34969",
+    "request_id": "thinking-disabled-20261007-claude_0001-repeat-1-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0001-repeat-1-patched",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0001-repeat-1-patched"
+    },
+    "recorded_body_sha256": "5e93477c06ad2bd708bc90d23178eca750331c12791e9d03b99a3fe629db959f"
+  },
+  {
+    "order": 11,
+    "pair_id": "claude_0005-repeat-1",
+    "repeat": 1,
+    "fixture_id": "claude_0005",
+    "category": "captured_claude_snapshot",
+    "arm": "patched",
+    "body_file": "fixtures/claude_0005.json",
+    "body_sha256": "209e4dfed93ac6e05a317465fb56ea0ce3769521c632cd44120926a73887d936",
+    "request_id": "thinking-disabled-20261007-claude_0005-repeat-1-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0005-repeat-1-patched",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0005-repeat-1-patched"
+    },
+    "recorded_body_sha256": "8bdac455c5cc129a907b97b5abe5ad2d16b50b97103d857592deb85e4f338aa0"
+  },
+  {
+    "order": 12,
+    "pair_id": "claude_0005-repeat-1",
+    "repeat": 1,
+    "fixture_id": "claude_0005",
+    "category": "captured_claude_snapshot",
+    "arm": "stock",
+    "body_file": "fixtures/claude_0005.json",
+    "body_sha256": "209e4dfed93ac6e05a317465fb56ea0ce3769521c632cd44120926a73887d936",
+    "request_id": "thinking-disabled-20261007-claude_0005-repeat-1-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0005-repeat-1-stock",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0005-repeat-1-stock"
+    },
+    "recorded_body_sha256": "8bdac455c5cc129a907b97b5abe5ad2d16b50b97103d857592deb85e4f338aa0"
+  },
+  {
+    "order": 13,
+    "pair_id": "claude_0011-repeat-1",
+    "repeat": 1,
+    "fixture_id": "claude_0011",
+    "category": "captured_claude_snapshot",
+    "arm": "stock",
+    "body_file": "fixtures/claude_0011.json",
+    "body_sha256": "076d5ad8786aff7801d7683895ba3d64aa9a4e5b1be9408e93f8d04e27df8f99",
+    "request_id": "thinking-disabled-20261007-claude_0011-repeat-1-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0011-repeat-1-stock",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0011-repeat-1-stock"
+    },
+    "recorded_body_sha256": "87954237b57521ae51d75ff37c43c0775fa279c41546aae789710a9b4e03e60a"
+  },
+  {
+    "order": 14,
+    "pair_id": "claude_0011-repeat-1",
+    "repeat": 1,
+    "fixture_id": "claude_0011",
+    "category": "captured_claude_snapshot",
+    "arm": "patched",
+    "body_file": "fixtures/claude_0011.json",
+    "body_sha256": "076d5ad8786aff7801d7683895ba3d64aa9a4e5b1be9408e93f8d04e27df8f99",
+    "request_id": "thinking-disabled-20261007-claude_0011-repeat-1-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0011-repeat-1-patched",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0011-repeat-1-patched"
+    },
+    "recorded_body_sha256": "87954237b57521ae51d75ff37c43c0775fa279c41546aae789710a9b4e03e60a"
+  },
+  {
+    "order": 15,
+    "pair_id": "claude_0017-repeat-1",
+    "repeat": 1,
+    "fixture_id": "claude_0017",
+    "category": "captured_claude_snapshot",
+    "arm": "patched",
+    "body_file": "fixtures/claude_0017.json",
+    "body_sha256": "fb9b62dbfcd98e1d1527582d9262474eec864a60416471cf89bbfbfd0068c6ed",
+    "request_id": "thinking-disabled-20261007-claude_0017-repeat-1-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0017-repeat-1-patched",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0017-repeat-1-patched"
+    },
+    "recorded_body_sha256": "53dc17f24b5dd6c2571354eedddfbf1bbc0d2f0af05d138944f514fd41e08257"
+  },
+  {
+    "order": 16,
+    "pair_id": "claude_0017-repeat-1",
+    "repeat": 1,
+    "fixture_id": "claude_0017",
+    "category": "captured_claude_snapshot",
+    "arm": "stock",
+    "body_file": "fixtures/claude_0017.json",
+    "body_sha256": "fb9b62dbfcd98e1d1527582d9262474eec864a60416471cf89bbfbfd0068c6ed",
+    "request_id": "thinking-disabled-20261007-claude_0017-repeat-1-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0017-repeat-1-stock",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0017-repeat-1-stock"
+    },
+    "recorded_body_sha256": "53dc17f24b5dd6c2571354eedddfbf1bbc0d2f0af05d138944f514fd41e08257"
+  },
+  {
+    "order": 17,
+    "pair_id": "coding_4_generator_consumption-repeat-2",
+    "repeat": 2,
+    "fixture_id": "coding_4_generator_consumption",
+    "category": "coding_correctness",
+    "arm": "stock",
+    "body_file": "fixtures/coding_4_generator_consumption.json",
+    "body_sha256": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1",
+    "request_id": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-2-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-2-stock",
+      "x-tenant-id": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-2-stock"
+    },
+    "recorded_body_sha256": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1"
+  },
+  {
+    "order": 18,
+    "pair_id": "coding_4_generator_consumption-repeat-2",
+    "repeat": 2,
+    "fixture_id": "coding_4_generator_consumption",
+    "category": "coding_correctness",
+    "arm": "patched",
+    "body_file": "fixtures/coding_4_generator_consumption.json",
+    "body_sha256": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1",
+    "request_id": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-2-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-2-patched",
+      "x-tenant-id": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-2-patched"
+    },
+    "recorded_body_sha256": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1"
+  },
+  {
+    "order": 19,
+    "pair_id": "claude_0001-repeat-2",
+    "repeat": 2,
+    "fixture_id": "claude_0001",
+    "category": "captured_claude_snapshot",
+    "arm": "patched",
+    "body_file": "fixtures/claude_0001.json",
+    "body_sha256": "e093d025f6c51c3f894e7ab1423f4f97f49972854ea59e1960421112d3c34969",
+    "request_id": "thinking-disabled-20261007-claude_0001-repeat-2-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0001-repeat-2-patched",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0001-repeat-2-patched"
+    },
+    "recorded_body_sha256": "5e93477c06ad2bd708bc90d23178eca750331c12791e9d03b99a3fe629db959f"
+  },
+  {
+    "order": 20,
+    "pair_id": "claude_0001-repeat-2",
+    "repeat": 2,
+    "fixture_id": "claude_0001",
+    "category": "captured_claude_snapshot",
+    "arm": "stock",
+    "body_file": "fixtures/claude_0001.json",
+    "body_sha256": "e093d025f6c51c3f894e7ab1423f4f97f49972854ea59e1960421112d3c34969",
+    "request_id": "thinking-disabled-20261007-claude_0001-repeat-2-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0001-repeat-2-stock",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0001-repeat-2-stock"
+    },
+    "recorded_body_sha256": "5e93477c06ad2bd708bc90d23178eca750331c12791e9d03b99a3fe629db959f"
+  },
+  {
+    "order": 21,
+    "pair_id": "claude_0005-repeat-2",
+    "repeat": 2,
+    "fixture_id": "claude_0005",
+    "category": "captured_claude_snapshot",
+    "arm": "stock",
+    "body_file": "fixtures/claude_0005.json",
+    "body_sha256": "209e4dfed93ac6e05a317465fb56ea0ce3769521c632cd44120926a73887d936",
+    "request_id": "thinking-disabled-20261007-claude_0005-repeat-2-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0005-repeat-2-stock",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0005-repeat-2-stock"
+    },
+    "recorded_body_sha256": "8bdac455c5cc129a907b97b5abe5ad2d16b50b97103d857592deb85e4f338aa0"
+  },
+  {
+    "order": 22,
+    "pair_id": "claude_0005-repeat-2",
+    "repeat": 2,
+    "fixture_id": "claude_0005",
+    "category": "captured_claude_snapshot",
+    "arm": "patched",
+    "body_file": "fixtures/claude_0005.json",
+    "body_sha256": "209e4dfed93ac6e05a317465fb56ea0ce3769521c632cd44120926a73887d936",
+    "request_id": "thinking-disabled-20261007-claude_0005-repeat-2-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0005-repeat-2-patched",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0005-repeat-2-patched"
+    },
+    "recorded_body_sha256": "8bdac455c5cc129a907b97b5abe5ad2d16b50b97103d857592deb85e4f338aa0"
+  },
+  {
+    "order": 23,
+    "pair_id": "claude_0011-repeat-2",
+    "repeat": 2,
+    "fixture_id": "claude_0011",
+    "category": "captured_claude_snapshot",
+    "arm": "patched",
+    "body_file": "fixtures/claude_0011.json",
+    "body_sha256": "076d5ad8786aff7801d7683895ba3d64aa9a4e5b1be9408e93f8d04e27df8f99",
+    "request_id": "thinking-disabled-20261007-claude_0011-repeat-2-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0011-repeat-2-patched",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0011-repeat-2-patched"
+    },
+    "recorded_body_sha256": "87954237b57521ae51d75ff37c43c0775fa279c41546aae789710a9b4e03e60a"
+  },
+  {
+    "order": 24,
+    "pair_id": "claude_0011-repeat-2",
+    "repeat": 2,
+    "fixture_id": "claude_0011",
+    "category": "captured_claude_snapshot",
+    "arm": "stock",
+    "body_file": "fixtures/claude_0011.json",
+    "body_sha256": "076d5ad8786aff7801d7683895ba3d64aa9a4e5b1be9408e93f8d04e27df8f99",
+    "request_id": "thinking-disabled-20261007-claude_0011-repeat-2-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0011-repeat-2-stock",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0011-repeat-2-stock"
+    },
+    "recorded_body_sha256": "87954237b57521ae51d75ff37c43c0775fa279c41546aae789710a9b4e03e60a"
+  },
+  {
+    "order": 25,
+    "pair_id": "claude_0017-repeat-2",
+    "repeat": 2,
+    "fixture_id": "claude_0017",
+    "category": "captured_claude_snapshot",
+    "arm": "stock",
+    "body_file": "fixtures/claude_0017.json",
+    "body_sha256": "fb9b62dbfcd98e1d1527582d9262474eec864a60416471cf89bbfbfd0068c6ed",
+    "request_id": "thinking-disabled-20261007-claude_0017-repeat-2-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0017-repeat-2-stock",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0017-repeat-2-stock"
+    },
+    "recorded_body_sha256": "53dc17f24b5dd6c2571354eedddfbf1bbc0d2f0af05d138944f514fd41e08257"
+  },
+  {
+    "order": 26,
+    "pair_id": "claude_0017-repeat-2",
+    "repeat": 2,
+    "fixture_id": "claude_0017",
+    "category": "captured_claude_snapshot",
+    "arm": "patched",
+    "body_file": "fixtures/claude_0017.json",
+    "body_sha256": "fb9b62dbfcd98e1d1527582d9262474eec864a60416471cf89bbfbfd0068c6ed",
+    "request_id": "thinking-disabled-20261007-claude_0017-repeat-2-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0017-repeat-2-patched",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0017-repeat-2-patched"
+    },
+    "recorded_body_sha256": "53dc17f24b5dd6c2571354eedddfbf1bbc0d2f0af05d138944f514fd41e08257"
+  },
+  {
+    "order": 27,
+    "pair_id": "coding_1_mutable_default-repeat-2",
+    "repeat": 2,
+    "fixture_id": "coding_1_mutable_default",
+    "category": "coding_correctness",
+    "arm": "patched",
+    "body_file": "fixtures/coding_1_mutable_default.json",
+    "body_sha256": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85",
+    "request_id": "thinking-disabled-20261007-coding_1_mutable_default-repeat-2-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_1_mutable_default-repeat-2-patched",
+      "x-tenant-id": "thinking-disabled-20261007-coding_1_mutable_default-repeat-2-patched"
+    },
+    "recorded_body_sha256": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85"
+  },
+  {
+    "order": 28,
+    "pair_id": "coding_1_mutable_default-repeat-2",
+    "repeat": 2,
+    "fixture_id": "coding_1_mutable_default",
+    "category": "coding_correctness",
+    "arm": "stock",
+    "body_file": "fixtures/coding_1_mutable_default.json",
+    "body_sha256": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85",
+    "request_id": "thinking-disabled-20261007-coding_1_mutable_default-repeat-2-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_1_mutable_default-repeat-2-stock",
+      "x-tenant-id": "thinking-disabled-20261007-coding_1_mutable_default-repeat-2-stock"
+    },
+    "recorded_body_sha256": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85"
+  },
+  {
+    "order": 29,
+    "pair_id": "coding_2_lower_bound-repeat-2",
+    "repeat": 2,
+    "fixture_id": "coding_2_lower_bound",
+    "category": "coding_correctness",
+    "arm": "stock",
+    "body_file": "fixtures/coding_2_lower_bound.json",
+    "body_sha256": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9",
+    "request_id": "thinking-disabled-20261007-coding_2_lower_bound-repeat-2-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_2_lower_bound-repeat-2-stock",
+      "x-tenant-id": "thinking-disabled-20261007-coding_2_lower_bound-repeat-2-stock"
+    },
+    "recorded_body_sha256": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9"
+  },
+  {
+    "order": 30,
+    "pair_id": "coding_2_lower_bound-repeat-2",
+    "repeat": 2,
+    "fixture_id": "coding_2_lower_bound",
+    "category": "coding_correctness",
+    "arm": "patched",
+    "body_file": "fixtures/coding_2_lower_bound.json",
+    "body_sha256": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9",
+    "request_id": "thinking-disabled-20261007-coding_2_lower_bound-repeat-2-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_2_lower_bound-repeat-2-patched",
+      "x-tenant-id": "thinking-disabled-20261007-coding_2_lower_bound-repeat-2-patched"
+    },
+    "recorded_body_sha256": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9"
+  },
+  {
+    "order": 31,
+    "pair_id": "coding_3_regex_boundaries-repeat-2",
+    "repeat": 2,
+    "fixture_id": "coding_3_regex_boundaries",
+    "category": "coding_correctness",
+    "arm": "patched",
+    "body_file": "fixtures/coding_3_regex_boundaries.json",
+    "body_sha256": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0",
+    "request_id": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-2-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-2-patched",
+      "x-tenant-id": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-2-patched"
+    },
+    "recorded_body_sha256": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0"
+  },
+  {
+    "order": 32,
+    "pair_id": "coding_3_regex_boundaries-repeat-2",
+    "repeat": 2,
+    "fixture_id": "coding_3_regex_boundaries",
+    "category": "coding_correctness",
+    "arm": "stock",
+    "body_file": "fixtures/coding_3_regex_boundaries.json",
+    "body_sha256": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0",
+    "request_id": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-2-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-2-stock",
+      "x-tenant-id": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-2-stock"
+    },
+    "recorded_body_sha256": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0"
+  },
+  {
+    "order": 33,
+    "pair_id": "claude_0011-repeat-3",
+    "repeat": 3,
+    "fixture_id": "claude_0011",
+    "category": "captured_claude_snapshot",
+    "arm": "stock",
+    "body_file": "fixtures/claude_0011.json",
+    "body_sha256": "076d5ad8786aff7801d7683895ba3d64aa9a4e5b1be9408e93f8d04e27df8f99",
+    "request_id": "thinking-disabled-20261007-claude_0011-repeat-3-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0011-repeat-3-stock",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0011-repeat-3-stock"
+    },
+    "recorded_body_sha256": "87954237b57521ae51d75ff37c43c0775fa279c41546aae789710a9b4e03e60a"
+  },
+  {
+    "order": 34,
+    "pair_id": "claude_0011-repeat-3",
+    "repeat": 3,
+    "fixture_id": "claude_0011",
+    "category": "captured_claude_snapshot",
+    "arm": "patched",
+    "body_file": "fixtures/claude_0011.json",
+    "body_sha256": "076d5ad8786aff7801d7683895ba3d64aa9a4e5b1be9408e93f8d04e27df8f99",
+    "request_id": "thinking-disabled-20261007-claude_0011-repeat-3-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0011-repeat-3-patched",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0011-repeat-3-patched"
+    },
+    "recorded_body_sha256": "87954237b57521ae51d75ff37c43c0775fa279c41546aae789710a9b4e03e60a"
+  },
+  {
+    "order": 35,
+    "pair_id": "claude_0017-repeat-3",
+    "repeat": 3,
+    "fixture_id": "claude_0017",
+    "category": "captured_claude_snapshot",
+    "arm": "patched",
+    "body_file": "fixtures/claude_0017.json",
+    "body_sha256": "fb9b62dbfcd98e1d1527582d9262474eec864a60416471cf89bbfbfd0068c6ed",
+    "request_id": "thinking-disabled-20261007-claude_0017-repeat-3-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0017-repeat-3-patched",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0017-repeat-3-patched"
+    },
+    "recorded_body_sha256": "53dc17f24b5dd6c2571354eedddfbf1bbc0d2f0af05d138944f514fd41e08257"
+  },
+  {
+    "order": 36,
+    "pair_id": "claude_0017-repeat-3",
+    "repeat": 3,
+    "fixture_id": "claude_0017",
+    "category": "captured_claude_snapshot",
+    "arm": "stock",
+    "body_file": "fixtures/claude_0017.json",
+    "body_sha256": "fb9b62dbfcd98e1d1527582d9262474eec864a60416471cf89bbfbfd0068c6ed",
+    "request_id": "thinking-disabled-20261007-claude_0017-repeat-3-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0017-repeat-3-stock",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0017-repeat-3-stock"
+    },
+    "recorded_body_sha256": "53dc17f24b5dd6c2571354eedddfbf1bbc0d2f0af05d138944f514fd41e08257"
+  },
+  {
+    "order": 37,
+    "pair_id": "coding_1_mutable_default-repeat-3",
+    "repeat": 3,
+    "fixture_id": "coding_1_mutable_default",
+    "category": "coding_correctness",
+    "arm": "stock",
+    "body_file": "fixtures/coding_1_mutable_default.json",
+    "body_sha256": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85",
+    "request_id": "thinking-disabled-20261007-coding_1_mutable_default-repeat-3-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_1_mutable_default-repeat-3-stock",
+      "x-tenant-id": "thinking-disabled-20261007-coding_1_mutable_default-repeat-3-stock"
+    },
+    "recorded_body_sha256": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85"
+  },
+  {
+    "order": 38,
+    "pair_id": "coding_1_mutable_default-repeat-3",
+    "repeat": 3,
+    "fixture_id": "coding_1_mutable_default",
+    "category": "coding_correctness",
+    "arm": "patched",
+    "body_file": "fixtures/coding_1_mutable_default.json",
+    "body_sha256": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85",
+    "request_id": "thinking-disabled-20261007-coding_1_mutable_default-repeat-3-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_1_mutable_default-repeat-3-patched",
+      "x-tenant-id": "thinking-disabled-20261007-coding_1_mutable_default-repeat-3-patched"
+    },
+    "recorded_body_sha256": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85"
+  },
+  {
+    "order": 39,
+    "pair_id": "coding_2_lower_bound-repeat-3",
+    "repeat": 3,
+    "fixture_id": "coding_2_lower_bound",
+    "category": "coding_correctness",
+    "arm": "patched",
+    "body_file": "fixtures/coding_2_lower_bound.json",
+    "body_sha256": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9",
+    "request_id": "thinking-disabled-20261007-coding_2_lower_bound-repeat-3-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_2_lower_bound-repeat-3-patched",
+      "x-tenant-id": "thinking-disabled-20261007-coding_2_lower_bound-repeat-3-patched"
+    },
+    "recorded_body_sha256": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9"
+  },
+  {
+    "order": 40,
+    "pair_id": "coding_2_lower_bound-repeat-3",
+    "repeat": 3,
+    "fixture_id": "coding_2_lower_bound",
+    "category": "coding_correctness",
+    "arm": "stock",
+    "body_file": "fixtures/coding_2_lower_bound.json",
+    "body_sha256": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9",
+    "request_id": "thinking-disabled-20261007-coding_2_lower_bound-repeat-3-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_2_lower_bound-repeat-3-stock",
+      "x-tenant-id": "thinking-disabled-20261007-coding_2_lower_bound-repeat-3-stock"
+    },
+    "recorded_body_sha256": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9"
+  },
+  {
+    "order": 41,
+    "pair_id": "coding_3_regex_boundaries-repeat-3",
+    "repeat": 3,
+    "fixture_id": "coding_3_regex_boundaries",
+    "category": "coding_correctness",
+    "arm": "stock",
+    "body_file": "fixtures/coding_3_regex_boundaries.json",
+    "body_sha256": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0",
+    "request_id": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-3-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-3-stock",
+      "x-tenant-id": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-3-stock"
+    },
+    "recorded_body_sha256": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0"
+  },
+  {
+    "order": 42,
+    "pair_id": "coding_3_regex_boundaries-repeat-3",
+    "repeat": 3,
+    "fixture_id": "coding_3_regex_boundaries",
+    "category": "coding_correctness",
+    "arm": "patched",
+    "body_file": "fixtures/coding_3_regex_boundaries.json",
+    "body_sha256": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0",
+    "request_id": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-3-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-3-patched",
+      "x-tenant-id": "thinking-disabled-20261007-coding_3_regex_boundaries-repeat-3-patched"
+    },
+    "recorded_body_sha256": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0"
+  },
+  {
+    "order": 43,
+    "pair_id": "coding_4_generator_consumption-repeat-3",
+    "repeat": 3,
+    "fixture_id": "coding_4_generator_consumption",
+    "category": "coding_correctness",
+    "arm": "patched",
+    "body_file": "fixtures/coding_4_generator_consumption.json",
+    "body_sha256": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1",
+    "request_id": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-3-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-3-patched",
+      "x-tenant-id": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-3-patched"
+    },
+    "recorded_body_sha256": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1"
+  },
+  {
+    "order": 44,
+    "pair_id": "coding_4_generator_consumption-repeat-3",
+    "repeat": 3,
+    "fixture_id": "coding_4_generator_consumption",
+    "category": "coding_correctness",
+    "arm": "stock",
+    "body_file": "fixtures/coding_4_generator_consumption.json",
+    "body_sha256": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1",
+    "request_id": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-3-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-3-stock",
+      "x-tenant-id": "thinking-disabled-20261007-coding_4_generator_consumption-repeat-3-stock"
+    },
+    "recorded_body_sha256": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1"
+  },
+  {
+    "order": 45,
+    "pair_id": "claude_0001-repeat-3",
+    "repeat": 3,
+    "fixture_id": "claude_0001",
+    "category": "captured_claude_snapshot",
+    "arm": "stock",
+    "body_file": "fixtures/claude_0001.json",
+    "body_sha256": "e093d025f6c51c3f894e7ab1423f4f97f49972854ea59e1960421112d3c34969",
+    "request_id": "thinking-disabled-20261007-claude_0001-repeat-3-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0001-repeat-3-stock",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0001-repeat-3-stock"
+    },
+    "recorded_body_sha256": "5e93477c06ad2bd708bc90d23178eca750331c12791e9d03b99a3fe629db959f"
+  },
+  {
+    "order": 46,
+    "pair_id": "claude_0001-repeat-3",
+    "repeat": 3,
+    "fixture_id": "claude_0001",
+    "category": "captured_claude_snapshot",
+    "arm": "patched",
+    "body_file": "fixtures/claude_0001.json",
+    "body_sha256": "e093d025f6c51c3f894e7ab1423f4f97f49972854ea59e1960421112d3c34969",
+    "request_id": "thinking-disabled-20261007-claude_0001-repeat-3-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0001-repeat-3-patched",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0001-repeat-3-patched"
+    },
+    "recorded_body_sha256": "5e93477c06ad2bd708bc90d23178eca750331c12791e9d03b99a3fe629db959f"
+  },
+  {
+    "order": 47,
+    "pair_id": "claude_0005-repeat-3",
+    "repeat": 3,
+    "fixture_id": "claude_0005",
+    "category": "captured_claude_snapshot",
+    "arm": "patched",
+    "body_file": "fixtures/claude_0005.json",
+    "body_sha256": "209e4dfed93ac6e05a317465fb56ea0ce3769521c632cd44120926a73887d936",
+    "request_id": "thinking-disabled-20261007-claude_0005-repeat-3-patched",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0005-repeat-3-patched",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0005-repeat-3-patched"
+    },
+    "recorded_body_sha256": "8bdac455c5cc129a907b97b5abe5ad2d16b50b97103d857592deb85e4f338aa0"
+  },
+  {
+    "order": 48,
+    "pair_id": "claude_0005-repeat-3",
+    "repeat": 3,
+    "fixture_id": "claude_0005",
+    "category": "captured_claude_snapshot",
+    "arm": "stock",
+    "body_file": "fixtures/claude_0005.json",
+    "body_sha256": "209e4dfed93ac6e05a317465fb56ea0ce3769521c632cd44120926a73887d936",
+    "request_id": "thinking-disabled-20261007-claude_0005-repeat-3-stock",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "X-Request-ID": "thinking-disabled-20261007-claude_0005-repeat-3-stock",
+      "x-tenant-id": "thinking-disabled-20261007-claude_0005-repeat-3-stock"
+    },
+    "recorded_body_sha256": "8bdac455c5cc129a907b97b5abe5ad2d16b50b97103d857592deb85e4f338aa0"
+  }
+]

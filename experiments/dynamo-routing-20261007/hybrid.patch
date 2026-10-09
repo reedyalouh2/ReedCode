@@ -1,0 +1,3718 @@
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -2476,13 +2476,16 @@
+ name = "dynamo-custom-policy-builtin"
+ version = "1.6.0"
+ dependencies = [
++ "anyhow",
+  "async-trait",
+  "criterion",
+  "dynamo-kv-router",
+  "fastrand",
++ "flume 0.12.0",
+  "parking_lot",
+  "rustc-hash 2.1.2",
+  "serde",
++ "serde_json",
+  "tempfile",
+  "thiserror 2.0.18",
+  "tokio",
+--- /dev/null
++++ b/components/src/dynamo/vllm/group_reuse.py
+@@ -0,0 +1,179 @@
++# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
++# SPDX-License-Identifier: Apache-2.0
++
++"""Opt-in registration for local-device hybrid cache boundaries."""
++
++import asyncio
++import json
++import logging
++import os
++import urllib.request
++import uuid
++from dataclasses import dataclass
++from typing import Any
++
++ACTIVATION_ENV = "DYN_VLLM_GROUP_REUSE"
++UTILITY_NAME = "get_dynamo_group_reuse_metadata"
++SPARSE_CONTRACT = "vllm_44488_v1"
++SELECTION_URL_ENV = "DYN_VLLM_GROUP_REUSE_SELECTION_URL"
++logger = logging.getLogger(__name__)
++
++
++def get_group_reuse_metadata(engine_core: Any) -> dict[str, Any]:
++    from vllm.v1.core import block_pool
++
++    if getattr(block_pool, "DYNAMO_SPARSE_EVENT_CONTRACT", None) != SPARSE_CONTRACT:
++        raise ValueError("group reuse requires the qualified sparse-event emitter")
++    manager = engine_core.scheduler.kv_cache_manager
++    config = engine_core.vllm_config
++    parallel = config.parallel_config
++    if any(
++        getattr(parallel, name) != 1
++        for name in ("tensor_parallel_size", "pipeline_parallel_size", "data_parallel_size")
++    ):
++        raise ValueError("group reuse currently requires TP=PP=DP=1")
++    if not manager.enable_caching or not manager.enable_kv_cache_events:
++        raise ValueError("group reuse requires prefix caching and KV events")
++    if manager.use_eagle or config.speculative_config is not None:
++        raise ValueError("group reuse does not support speculative decoding")
++    if manager.mamba_fine_grained_prefix_cache:
++        raise ValueError("group reuse does not support fine-grained Mamba caching")
++    groups = engine_core.get_kv_cache_group_metadata()
++    managers = manager.coordinator.single_type_managers
++    specs = manager.kv_cache_config.kv_cache_groups
++    if not groups or len(groups) != len(managers) or len(groups) != len(specs):
++        raise ValueError("group reuse requires complete cache-group metadata")
++    hash_size = manager.block_pool.hash_block_size
++    if hash_size <= 0:
++        raise ValueError("group reuse requires a positive hash block size")
++    for index, (group, typed, spec) in enumerate(zip(groups, managers, specs, strict=True)):
++        if (
++            group["group_idx"] != index
++            or group["block_size"] != hash_size
++            or typed.block_size != hash_size
++            or group["sliding_window"] is not None
++            or typed.dcp_world_size != 1
++            or typed.pcp_world_size != 1
++        ):
++            raise ValueError("group reuse requires equal local cache/hash geometry")
++        kind = group["kind"]
++        if kind not in {"full_attention", "mamba"}:
++            raise ValueError(f"unsupported group reuse cache kind: {kind}")
++        if kind == "mamba" and spec.kv_cache_spec.mamba_cache_mode != "align":
++            raise ValueError("group reuse requires align-mode Mamba")
++    if manager.coordinator.num_reprefillable_tokens:
++        raise ValueError("group reuse does not support prefill lookahead")
++    events = config.kv_events_config
++    if events is None or not events.enable_kv_cache_events or events.publisher != "zmq":
++        raise ValueError("group reuse requires the native ZMQ publisher")
++    if not getattr(engine_core, "_dynamo_group_reuse_incarnation", None):
++        engine_core._dynamo_group_reuse_incarnation = str(uuid.uuid4())
++    return {
++        "version": 1,
++        "engine_incarnation": engine_core._dynamo_group_reuse_incarnation,
++        "hash_block_size": hash_size,
++        "sparse_ancestry": SPARSE_CONTRACT,
++        "groups": groups,
++    }
++
++
++def install_group_reuse_utility(engine_core_type: type) -> None:
++    if os.environ.get(ACTIVATION_ENV) == "1":
++        setattr(engine_core_type, UTILITY_NAME, get_group_reuse_metadata)
++
++
++def _post_worker(url: str, body: dict[str, Any], timeout: float) -> dict[str, Any]:
++    request = urllib.request.Request(
++        url.rstrip("/") + "/workers",
++        data=json.dumps(body).encode(),
++        headers={"Content-Type": "application/json"},
++        method="POST",
++    )
++    with urllib.request.urlopen(request, timeout=timeout) as response:
++        result = json.load(response)
++    expected = body["group_reuse"]
++    if (
++        result.get("group_reuse_version") != 1
++        or result.get("group_reuse_engine_incarnation") != expected["engine_incarnation"]
++        or result.get("group_reuse") != expected
++        or result.get("lifecycle") != "schedulable"
++        or result.get("not_schedulable_reasons", [])
++    ):
++        try:
++            GroupReuseRegistration(url, body["worker_id"]).close()
++        except Exception:
++            logger.exception("Failed to remove an unacknowledged group reuse worker")
++        raise ValueError("selection service did not acknowledge group reuse registration")
++    return result
++
++
++@dataclass
++class GroupReuseRegistration:
++    selection_url: str
++    worker_id: int
++
++    def close(self) -> None:
++        request = urllib.request.Request(
++            self.selection_url.rstrip("/") + f"/workers/{self.worker_id}",
++            method="DELETE",
++        )
++        with urllib.request.urlopen(request, timeout=5.0):
++            pass
++
++
++async def register_group_reuse_worker(
++    engine: Any,
++    selection_url: str,
++    worker: dict[str, Any],
++    *,
++    timeout: float = 10.0,
++) -> dict[str, Any]:
++    """Register metadata fetched from the engine, checking the service acknowledgment."""
++    metadata = await engine.engine_core.call_utility_async(UTILITY_NAME)
++    body = dict(worker)
++    if "group_reuse" in body:
++        raise ValueError("group reuse metadata must come from the engine utility")
++    if body.get("block_size") != metadata["hash_block_size"]:
++        raise ValueError("worker block size differs from engine hash block size")
++    body["group_reuse"] = metadata
++    return await asyncio.to_thread(_post_worker, selection_url, body, timeout)
++
++
++async def register_group_reuse_from_startup(
++    engine: Any,
++    vllm_config: Any,
++    config: Any,
++    worker_id: int | str,
++    *,
++    aggregated: bool,
++    restored: bool = False,
++) -> GroupReuseRegistration | None:
++    selection_url = os.environ.get(SELECTION_URL_ENV)
++    enabled = os.environ.get(ACTIVATION_ENV) == "1"
++    if not enabled and not selection_url:
++        return None
++    if not enabled or not selection_url:
++        raise ValueError("group reuse requires both activation and selection URL")
++    if restored:
++        raise ValueError("group reuse does not support restored engine snapshots")
++    worker_id = int(worker_id)
++    if not aggregated or config.route_to_encoder:
++        raise ValueError("group reuse currently requires a local aggregated worker")
++    events = vllm_config.kv_events_config
++    if events is None or not events.endpoint:
++        raise ValueError("group reuse requires a native event endpoint")
++    body = {
++        "worker_id": worker_id,
++        "model_name": config.served_model_name or config.model,
++        "endpoint": f"{config.namespace}.{config.component}.{config.endpoint}",
++        "kv_events_endpoint": events.endpoint.replace("*", "127.0.0.1"),
++        "replay_endpoint": events.replay_endpoint,
++        "block_size": vllm_config.additional_config["dynamo_kv_event_block_size"],
++        "data_parallel_start_rank": 0,
++        "data_parallel_size": 1,
++        "max_num_batched_tokens": vllm_config.scheduler_config.max_num_batched_tokens,
++        "total_kv_blocks": vllm_config.cache_config.num_gpu_blocks,
++        "is_eagle": False,
++    }
++    await register_group_reuse_worker(engine, selection_url, body)
++    return GroupReuseRegistration(selection_url, worker_id)
+--- a/components/src/dynamo/vllm/kv_cache_metadata_compat.py
++++ b/components/src/dynamo/vllm/kv_cache_metadata_compat.py
+@@ -11,6 +11,29 @@
+ _ACTIVATION_ENV = "DYN_VLLM_KV_CACHE_METADATA_COMPAT"
+ _PLUGIN_NAME = "dynamo_kv_cache_metadata"
+ _RAY_COPY_ENV = "VLLM_RAY_EXTRA_ENV_VARS_TO_COPY"
++
++
++def get_kv_cache_group_metadata(engine_core) -> list[dict[str, int | str | None]]:
++    from vllm.v1.kv_cache_interface import get_kv_cache_spec_kind
++
++    kv_cache_config = getattr(engine_core.scheduler, "kv_cache_config", None)
++    if kv_cache_config is None:
++        return []
++    managers = engine_core.scheduler.kv_cache_manager.coordinator.single_type_managers
++    metadata = []
++    for group_idx, (group, manager) in enumerate(
++        zip(kv_cache_config.kv_cache_groups, managers, strict=True)
++    ):
++        spec = group.kv_cache_spec
++        metadata.append(
++            {
++                "group_idx": group_idx,
++                "kind": get_kv_cache_spec_kind(spec).value,
++                "block_size": manager.block_size,
++                "sliding_window": getattr(spec, "sliding_window", None),
++            }
++        )
++    return metadata
+ 
+ 
+ def enable_kv_cache_metadata_compat() -> None:
+@@ -39,30 +62,11 @@
+ 
+     # General plugins must not import EngineCore before legacy activation.
+     from vllm.v1.engine.core import EngineCore
+-    from vllm.v1.kv_cache_interface import get_kv_cache_spec_kind
++    from .group_reuse import install_group_reuse_utility
++
++    install_group_reuse_utility(EngineCore)
+ 
+     if hasattr(EngineCore, "get_kv_cache_group_metadata"):
+         return
+ 
+-    def get_kv_cache_group_metadata(self) -> list[dict[str, int | str | None]]:
+-        kv_cache_config = getattr(self.scheduler, "kv_cache_config", None)
+-        if kv_cache_config is None:
+-            return []
+-
+-        managers = self.scheduler.kv_cache_manager.coordinator.single_type_managers
+-        metadata = []
+-        for group_idx, (group, manager) in enumerate(
+-            zip(kv_cache_config.kv_cache_groups, managers, strict=True)
+-        ):
+-            spec = group.kv_cache_spec
+-            metadata.append(
+-                {
+-                    "group_idx": group_idx,
+-                    "kind": get_kv_cache_spec_kind(spec).value,
+-                    "block_size": manager.block_size,
+-                    "sliding_window": getattr(spec, "sliding_window", None),
+-                }
+-            )
+-        return metadata
+-
+     setattr(EngineCore, "get_kv_cache_group_metadata", get_kv_cache_group_metadata)
+--- a/components/src/dynamo/vllm/tests/test_vllm_worker_factory.py
++++ b/components/src/dynamo/vllm/tests/test_vllm_worker_factory.py
+@@ -112,6 +112,41 @@
+         model_name="served-model",
+         component_name="backend",
+     )
++
++
++def test_group_reuse_registration_removed_before_engine_cleanup():
++    calls = []
++    registration = Mock()
++    registration.close.side_effect = lambda: calls.append("registration")
++    handler = Mock()
++    handler.cleanup.side_effect = lambda: calls.append("handler")
++    engine = Mock()
++    engine.shutdown.side_effect = lambda **_: calls.append("engine")
++    lifecycle = _DecodeWorkerLifecycle(
++        engine_client=engine,
++        vllm_config=SimpleNamespace(shutdown_timeout=5.0),
++        handler=handler,
++        group_reuse_registration=registration,
++    )
++    lifecycle.cleanup()
++    assert calls == ["registration", "handler", "engine"]
++    assert lifecycle.group_reuse_registration is None
++
++
++def test_group_reuse_cleanup_failure_still_shuts_down_engine():
++    registration = Mock()
++    registration.close.side_effect = RuntimeError("registration cleanup failed")
++    handler, engine = Mock(), Mock()
++    lifecycle = _DecodeWorkerLifecycle(
++        engine_client=engine,
++        vllm_config=SimpleNamespace(shutdown_timeout=5.0),
++        handler=handler,
++        group_reuse_registration=registration,
++    )
++    with pytest.raises(RuntimeError, match="registration cleanup failed"):
++        lifecycle.cleanup()
++    handler.cleanup.assert_called_once()
++    engine.shutdown.assert_called_once_with(timeout=5.0)
+ 
+ 
+ def test_decode_worker_lifecycle_cleanup_in_reverse_construction_order():
+@@ -1575,6 +1610,51 @@
+ def _assert_not_served(endpoint: Mock) -> None:
+     endpoint.serve_endpoint.assert_not_called()
+     endpoint.serve_bidirectional_endpoint.assert_not_called()
++
++
++def test_group_reuse_startup_precedes_model_advertisement_and_cleans_up(
++    restore_path_stubs, monkeypatch
++):
++    order = []
++    registration = Mock()
++    registration.close.side_effect = lambda: order.append("cleanup")
++
++    async def register_group(*_args, **_kwargs):
++        order.append("group")
++        return registration
++
++    def register_model(*_args, **_kwargs):
++        order.append("model")
++        raise _ReachedRegistration
++
++    monkeypatch.setitem(
++        _RESTORE_PATHS, "decode", ("_create_decode_worker", DisaggregationMode.AGGREGATED)
++    )
++    monkeypatch.setattr(
++        "dynamo.vllm.worker_factory.register_group_reuse_from_startup", register_group
++    )
++    snapshot, engine = _restore_snapshot_engine(scheduler_cls=AsyncScheduler)
++    with pytest.raises(_ReachedRegistration):
++        asyncio.run(_enter_restore_path(
++            "decode", snapshot, AsyncMock(side_effect=register_model), _restored_endpoint()
++        ))
++    assert order == ["group", "model", "cleanup"]
++    engine.shutdown.assert_called_once_with(timeout=5.0)
++
++
++def test_group_reuse_startup_failure_prevents_model_advertisement(
++    restore_path_stubs, monkeypatch
++):
++    monkeypatch.setattr(
++        "dynamo.vllm.worker_factory.register_group_reuse_from_startup",
++        AsyncMock(side_effect=ValueError("unsupported group reuse capability")),
++    )
++    snapshot, engine = _restore_snapshot_engine(scheduler_cls=AsyncScheduler)
++    register = AsyncMock()
++    with pytest.raises(ValueError, match="unsupported group reuse capability"):
++        asyncio.run(_enter_restore_path("decode", snapshot, register, _restored_endpoint()))
++    register.assert_not_awaited()
++    engine.shutdown.assert_called_once_with(timeout=5.0)
+ 
+ 
+ @pytest.mark.asyncio
+--- a/components/src/dynamo/vllm/worker_factory.py
++++ b/components/src/dynamo/vllm/worker_factory.py
+@@ -37,6 +37,7 @@
+ from .capacity import per_rank_kv_blocks
+ from .constants import DisaggregationMode
+ from .dp_topology import get_dp_range_for_worker
++from .group_reuse import GroupReuseRegistration, register_group_reuse_from_startup
+ from .handlers import (
+     BaseWorkerHandler,
+     DecodeWorkerHandler,
+@@ -740,6 +741,7 @@
+     vllm_config: Optional[VllmConfig] = None
+     handler: Optional[BaseWorkerHandler] = None
+     shutdown_event: asyncio.Event | None = None
++    group_reuse_registration: GroupReuseRegistration | None = None
+ 
+     def __enter__(self) -> "_DecodeWorkerLifecycle":
+         return self
+@@ -765,8 +767,13 @@
+         if self.shutdown_event is not None:
+             self.shutdown_event.set()
+         try:
+-            if self.handler is not None:
+-                self.handler.cleanup()
++            try:
++                if self.group_reuse_registration is not None:
++                    self.group_reuse_registration.close()
++                    self.group_reuse_registration = None
++            finally:
++                if self.handler is not None:
++                    self.handler.cleanup()
+         finally:
+             if self.engine_client is not None and self.vllm_config is not None:
+                 self.engine_client.shutdown(timeout=self.vllm_config.shutdown_timeout)
+@@ -1525,6 +1532,15 @@
+ 
+         handler._first_token_source = await generate_endpoint.first_token_source(
+             worker_type
++        )
++
++        lifecycle.group_reuse_registration = await register_group_reuse_from_startup(
++            engine_client,
++            vllm_config,
++            config,
++            generate_endpoint.connection_id(),
++            aggregated=worker_type == WorkerType.Aggregated,
++            restored=snapshot_engine is not None,
+         )
+ 
+         await self.register_vllm_model(
+--- /dev/null
++++ b/lib/kv-router/src/indexer/group_boundary.rs
+@@ -0,0 +1,559 @@
++// SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
++// SPDX-License-Identifier: Apache-2.0
++
++//! Local-device text-cache boundaries for a complete, versioned group manifest.
++//! Sparse ancestry follows vLLM #44488. Ancestry establishes identity, never residency.
++
++use crate::protocols::{
++    BlockHashOptions, WorkerWithDpRank, compute_block_hash_for_seq, compute_next_seq_hash,
++};
++use crate::scheduling::OverlapSignals;
++use serde::{Deserialize, Serialize};
++use std::collections::{HashMap, HashSet};
++
++#[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, Eq)]
++#[serde(rename_all = "snake_case")]
++pub enum GroupKind {
++    FullAttention,
++    Mamba,
++}
++
++#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
++pub struct GroupSpec {
++    pub group_idx: u32,
++    pub kind: GroupKind,
++    pub block_size: u32,
++    pub sliding_window: Option<u32>,
++}
++
++#[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq, Eq, Hash)]
++pub struct CacheIdentity {
++    #[serde(alias = "cache_salt")]
++    pub cache_namespace: Option<String>,
++    pub lora_name: Option<String>,
++}
++
++#[derive(Clone, Copy, Debug)]
++pub struct QueryOptions {
++    pub cache_reads_enabled: bool,
++    pub is_eagle: bool,
++    pub has_multimodal: bool,
++}
++
++#[derive(Clone, Debug)]
++pub struct GroupReuseQuery {
++    pub cache_reads_declared: Option<bool>,
++    pub tokens: Option<std::sync::Arc<[u32]>>,
++    pub identity: CacheIdentity,
++    pub options: QueryOptions,
++}
++
++impl QueryOptions {
++    pub fn ordinary() -> Self {
++        Self {
++            cache_reads_enabled: true,
++            is_eagle: false,
++            has_multimodal: false,
++        }
++    }
++}
++
++#[derive(Clone, Debug, Deserialize)]
++#[serde(tag = "type")]
++pub enum GroupEvent {
++    BlockStored {
++        block_hashes: Vec<u64>,
++        parent_block_hash: Option<u64>,
++        token_ids: Vec<u32>,
++        block_size: u32,
++        group_idx: Option<u32>,
++        kv_cache_spec_kind: Option<GroupKind>,
++        #[serde(flatten)]
++        identity: CacheIdentity,
++        skipped_parent_block_hash: Option<u64>,
++        skipped_token_ids: Option<Vec<u32>>,
++        skipped_extra_keys: Option<Vec<Option<serde_json::Value>>>,
++        extra_keys: Option<Vec<Option<serde_json::Value>>>,
++        is_eagle: Option<bool>,
++        lora_id: Option<u64>,
++        medium: Option<String>,
++        locality: Option<String>,
++        ownership: Option<String>,
++        block_mm_infos: Option<serde_json::Value>,
++    },
++    BlockRemoved {
++        block_hashes: Vec<u64>,
++        group_idx: Option<u32>,
++        medium: Option<String>,
++        locality: Option<String>,
++        ownership: Option<String>,
++    },
++    AllBlocksCleared {
++        ownership: Option<String>,
++    },
++}
++
++#[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, Eq)]
++#[serde(rename_all = "snake_case")]
++pub enum Unavailable {
++    NoManifest,
++    WrongGeneration,
++    SequenceGap,
++    InvalidManifest,
++    UnsupportedMetadata,
++    MissingParent,
++    InvalidSpan,
++    ConflictingIdentity,
++    AncestryLimit,
++}
++
++#[derive(Clone, Copy, Debug, Serialize, PartialEq, Eq)]
++#[serde(tag = "status", rename_all = "snake_case")]
++pub enum ReuseBoundary {
++    DenseOnly,
++    Available { tokens: usize },
++    Unavailable { reason: Unavailable },
++}
++
++#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
++struct Prefix {
++    end: usize,
++    sequence: u64,
++}
++
++#[derive(Default)]
++struct GroupState {
++    ancestry: HashMap<(CacheIdentity, u64), Prefix>,
++    resident: HashMap<(CacheIdentity, u64), Prefix>,
++    live: HashMap<(CacheIdentity, Prefix), usize>,
++}
++
++struct WorkerState {
++    generation: u64,
++    next_sequence: u64,
++    specs: Vec<GroupSpec>,
++    groups: HashMap<u32, GroupState>,
++    unavailable: Option<Unavailable>,
++}
++
++/// Single-owner state, intended to share the event/index epoch with the attention index.
++/// Reaching the explicit lineage bound discards credit until a clear or new generation.
++pub struct GroupBoundaryIndex {
++    workers: HashMap<WorkerWithDpRank, WorkerState>,
++    max_ancestry_entries: usize,
++}
++
++impl GroupBoundaryIndex {
++    pub fn new(max_ancestry_entries: usize) -> Self {
++        assert!(max_ancestry_entries > 0);
++        Self {
++            workers: HashMap::new(),
++            max_ancestry_entries,
++        }
++    }
++
++    /// A trusted registration must enumerate every required cacheable group before any events.
++    pub fn register(&mut self, worker: WorkerWithDpRank, generation: u64, specs: Vec<GroupSpec>) {
++        let mut ids = HashSet::new();
++        let valid = !specs.is_empty()
++            && specs
++                .iter()
++                .all(|g| g.block_size > 0 && g.sliding_window.is_none() && ids.insert(g.group_idx));
++        self.workers.insert(
++            worker,
++            WorkerState {
++                generation,
++                next_sequence: 0,
++                groups: specs
++                    .iter()
++                    .map(|g| (g.group_idx, GroupState::default()))
++                    .collect(),
++                specs,
++                unavailable: (!valid).then_some(Unavailable::InvalidManifest),
++            },
++        );
++    }
++
++    pub fn unavailable(&self, worker: WorkerWithDpRank, generation: u64) -> Option<Unavailable> {
++        match self.workers.get(&worker) {
++            Some(state) if state.generation == generation => state.unavailable,
++            Some(_) => Some(Unavailable::WrongGeneration),
++            None => Some(Unavailable::NoManifest),
++        }
++    }
++
++    pub fn remove(&mut self, worker: WorkerWithDpRank) {
++        self.workers.remove(&worker);
++    }
++
++    pub fn invalidate(&mut self, worker: WorkerWithDpRank, generation: u64, reason: Unavailable) {
++        if let Some(state) = self.workers.get_mut(&worker) {
++            if state.generation == generation {
++                state.fail(reason);
++            }
++        }
++    }
++
++    pub fn apply(
++        &mut self,
++        worker: WorkerWithDpRank,
++        generation: u64,
++        sequence: u64,
++        event: GroupEvent,
++    ) -> Result<(), Unavailable> {
++        let state = self
++            .workers
++            .get_mut(&worker)
++            .ok_or(Unavailable::NoManifest)?;
++        if state.generation != generation {
++            return Err(Unavailable::WrongGeneration);
++        }
++        if sequence != state.next_sequence {
++            state.fail(Unavailable::SequenceGap);
++            return Err(Unavailable::SequenceGap);
++        }
++        state.next_sequence += 1;
++        if let GroupEvent::AllBlocksCleared { ownership } = &event {
++            if ownership.is_some() {
++                state.fail(Unavailable::UnsupportedMetadata);
++                return Err(Unavailable::UnsupportedMetadata);
++            }
++            state
++                .groups
++                .values_mut()
++                .for_each(|g| *g = GroupState::default());
++            if state.unavailable != Some(Unavailable::InvalidManifest) {
++                state.unavailable = None;
++            }
++            return Ok(());
++        }
++        if let Some(reason) = state.unavailable {
++            return Err(reason);
++        }
++        let result = state.apply(event).and_then(|()| {
++            if state
++                .groups
++                .values()
++                .map(|g| g.ancestry.len())
++                .sum::<usize>()
++                > self.max_ancestry_entries
++            {
++                Err(Unavailable::AncestryLimit)
++            } else {
++                Ok(())
++            }
++        });
++        if let Err(reason) = result {
++            state.fail(reason);
++        }
++        result
++    }
++
++    pub fn lookup(
++        &self,
++        worker: WorkerWithDpRank,
++        generation: u64,
++        tokens: &[u32],
++        identity: &CacheIdentity,
++        options: QueryOptions,
++    ) -> ReuseBoundary {
++        if !options.cache_reads_enabled {
++            return ReuseBoundary::Available { tokens: 0 };
++        }
++        if options.is_eagle || options.has_multimodal {
++            return ReuseBoundary::Unavailable {
++                reason: Unavailable::UnsupportedMetadata,
++            };
++        }
++        let Some(state) = self.workers.get(&worker) else {
++            return ReuseBoundary::Unavailable {
++                reason: Unavailable::NoManifest,
++            };
++        };
++        if state.generation != generation {
++            return ReuseBoundary::Unavailable {
++                reason: Unavailable::WrongGeneration,
++            };
++        }
++        // Dense models retain the established attention path, including its reporting convention.
++        if !state.specs.is_empty()
++            && !state.specs.iter().any(|g| g.kind == GroupKind::Mamba)
++            && state.unavailable != Some(Unavailable::InvalidManifest)
++        {
++            return ReuseBoundary::DenseOnly;
++        }
++        if let Some(reason) = state.unavailable {
++            return ReuseBoundary::Unavailable { reason };
++        }
++        let mut allowed: Option<HashSet<usize>> = None;
++        for spec in &state.specs {
++            let group = &state.groups[&spec.group_idx];
++            let prefixes = prefixes(tokens, spec.block_size, identity, None);
++            let mut ends = HashSet::new();
++            for prefix in prefixes {
++                if prefix.end >= tokens.len() {
++                    break;
++                }
++                let present = group.live.contains_key(&(identity.clone(), prefix));
++                if !present && spec.kind == GroupKind::FullAttention {
++                    break;
++                }
++                if present {
++                    ends.insert(prefix.end);
++                }
++            }
++            match &mut allowed {
++                Some(current) => current.retain(|end| ends.contains(end)),
++                None => allowed = Some(ends),
++            }
++        }
++        ReuseBoundary::Available {
++            tokens: allowed.and_then(|ends| ends.into_iter().max()).unwrap_or(0),
++        }
++    }
++}
++
++impl WorkerState {
++    fn fail(&mut self, reason: Unavailable) {
++        self.unavailable = Some(reason);
++        self.groups
++            .values_mut()
++            .for_each(|g| *g = GroupState::default());
++    }
++
++    fn apply(&mut self, event: GroupEvent) -> Result<(), Unavailable> {
++        match event {
++            GroupEvent::AllBlocksCleared { .. } => unreachable!(),
++            GroupEvent::BlockRemoved {
++                block_hashes,
++                group_idx,
++                medium,
++                locality,
++                ownership,
++            } => {
++                local_device(medium.as_deref(), locality.as_deref())?;
++                if ownership.is_some() {
++                    return Err(Unavailable::UnsupportedMetadata);
++                }
++                let group = self
++                    .groups
++                    .get_mut(&group_idx.ok_or(Unavailable::InvalidManifest)?)
++                    .ok_or(Unavailable::InvalidManifest)?;
++                for hash in block_hashes {
++                    // Removal has no namespace; invalidate every local identity with this engine key.
++                    let keys: Vec<_> = group
++                        .resident
++                        .keys()
++                        .filter(|(_, h)| *h == hash)
++                        .cloned()
++                        .collect();
++                    for key in keys {
++                        if let Some(prefix) = group.resident.remove(&key) {
++                            let live_key = (key.0, prefix);
++                            let count = group.live.get_mut(&live_key).unwrap();
++                            *count -= 1;
++                            if *count == 0 {
++                                group.live.remove(&live_key);
++                            }
++                        }
++                    }
++                }
++                Ok(())
++            }
++            GroupEvent::BlockStored {
++                block_hashes,
++                parent_block_hash,
++                token_ids,
++                block_size,
++                group_idx,
++                kv_cache_spec_kind,
++                identity,
++                skipped_parent_block_hash,
++                skipped_token_ids,
++                skipped_extra_keys,
++                extra_keys,
++                is_eagle,
++                lora_id,
++                medium,
++                locality,
++                ownership,
++                block_mm_infos,
++            } => {
++                local_device(medium.as_deref(), locality.as_deref())?;
++                if is_eagle.unwrap_or(false)
++                    || (lora_id.is_some() && identity.lora_name.is_none())
++                    || ownership.is_some()
++                    || block_mm_infos.is_some()
++                {
++                    return Err(Unavailable::UnsupportedMetadata);
++                }
++                let id = group_idx.ok_or(Unavailable::InvalidManifest)?;
++                let spec = self
++                    .specs
++                    .iter()
++                    .find(|g| g.group_idx == id)
++                    .ok_or(Unavailable::InvalidManifest)?;
++                if block_size != spec.block_size
++                    || kv_cache_spec_kind.is_some_and(|kind| kind != spec.kind)
++                {
++                    return Err(Unavailable::InvalidManifest);
++                }
++                let group = self.groups.get_mut(&id).unwrap();
++                if token_ids.len()
++                    != block_hashes
++                        .len()
++                        .checked_mul(block_size as usize)
++                        .ok_or(Unavailable::InvalidSpan)?
++                {
++                    return Err(Unavailable::InvalidSpan);
++                }
++                check_extra(&extra_keys, block_hashes.len())?;
++                let base = if let Some(skipped) = skipped_token_ids {
++                    if skipped.is_empty()
++                        || skipped.len() % block_size as usize != 0
++                        || parent_block_hash.is_none()
++                    {
++                        return Err(Unavailable::InvalidSpan);
++                    }
++                    check_extra(&skipped_extra_keys, skipped.len() / block_size as usize)?;
++                    let ancestor = parent(group, &identity, skipped_parent_block_hash)?;
++                    let skipped_prefixes = prefixes(&skipped, block_size, &identity, ancestor);
++                    let end = *skipped_prefixes.last().ok_or(Unavailable::InvalidSpan)?;
++                    record_ancestry(group, &identity, parent_block_hash.unwrap(), end)?;
++                    Some(end)
++                } else {
++                    if skipped_parent_block_hash.is_some() || skipped_extra_keys.is_some() {
++                        return Err(Unavailable::InvalidSpan);
++                    }
++                    parent(group, &identity, parent_block_hash)?
++                };
++                for (hash, prefix) in block_hashes
++                    .into_iter()
++                    .zip(prefixes(&token_ids, block_size, &identity, base))
++                {
++                    record_ancestry(group, &identity, hash, prefix)?;
++                    if group
++                        .resident
++                        .insert((identity.clone(), hash), prefix)
++                        .is_none()
++                    {
++                        *group.live.entry((identity.clone(), prefix)).or_default() += 1;
++                    }
++                }
++                Ok(())
++            }
++        }
++    }
++}
++
++fn local_device(medium: Option<&str>, locality: Option<&str>) -> Result<(), Unavailable> {
++    if medium.is_some_and(|m| m != "GPU") || locality.is_some_and(|l| l != "LOCAL") {
++        Err(Unavailable::UnsupportedMetadata)
++    } else {
++        Ok(())
++    }
++}
++
++fn check_extra(
++    keys: &Option<Vec<Option<serde_json::Value>>>,
++    len: usize,
++) -> Result<(), Unavailable> {
++    if keys
++        .as_ref()
++        .is_some_and(|keys| keys.len() != len || keys.iter().any(Option::is_some))
++    {
++        return Err(Unavailable::UnsupportedMetadata);
++    }
++    Ok(())
++}
++
++fn parent(
++    group: &GroupState,
++    identity: &CacheIdentity,
++    hash: Option<u64>,
++) -> Result<Option<Prefix>, Unavailable> {
++    hash.map(|hash| {
++        group
++            .ancestry
++            .get(&(identity.clone(), hash))
++            .copied()
++            .ok_or(Unavailable::MissingParent)
++    })
++    .transpose()
++}
++
++fn record_ancestry(
++    group: &mut GroupState,
++    identity: &CacheIdentity,
++    hash: u64,
++    prefix: Prefix,
++) -> Result<(), Unavailable> {
++    let key = (identity.clone(), hash);
++    if group.ancestry.get(&key).is_some_and(|old| *old != prefix) {
++        return Err(Unavailable::ConflictingIdentity);
++    }
++    group.ancestry.insert(key, prefix);
++    Ok(())
++}
++
++fn prefixes(
++    tokens: &[u32],
++    block_size: u32,
++    identity: &CacheIdentity,
++    mut previous: Option<Prefix>,
++) -> Vec<Prefix> {
++    compute_block_hash_for_seq(
++        tokens,
++        block_size,
++        BlockHashOptions {
++            cache_namespace: identity.cache_namespace.as_deref(),
++            lora_name: identity.lora_name.as_deref(),
++            ..Default::default()
++        },
++    )
++    .into_iter()
++    .map(|hash| {
++        let prefix = Prefix {
++            end: previous.map_or(0, |p| p.end) + block_size as usize,
++            sequence: previous.map_or(hash.0, |p| compute_next_seq_hash(p.sequence, hash)),
++        };
++        previous = Some(prefix);
++        prefix
++    })
++    .collect()
++}
++
++/// Apply a local-device hybrid boundary to every overlap credit consumed by the default scorer.
++/// Host, disk and shared-cache reuse are outside this prototype's supported configuration.
++pub fn apply_device_boundary(
++    signals: &mut OverlapSignals,
++    worker: WorkerWithDpRank,
++    router_block_size: u32,
++    boundary: ReuseBoundary,
++) {
++    let tokens = match boundary {
++        ReuseBoundary::DenseOnly => return,
++        ReuseBoundary::Available { tokens } => tokens,
++        ReuseBoundary::Unavailable { .. } => 0,
++    };
++    assert!(router_block_size > 0);
++    let raw = signals
++        .tier_overlap_blocks
++        .device
++        .get(&worker)
++        .copied()
++        .unwrap_or(0);
++    let blocks = raw.min(tokens / router_block_size as usize);
++    signals.tier_overlap_blocks.device.insert(worker, blocks);
++    signals.tier_overlap_blocks.host_pinned.remove(&worker);
++    signals.tier_overlap_blocks.disk.remove(&worker);
++    signals
++        .effective_overlap_blocks
++        .insert(worker, blocks as f64);
++    signals
++        .effective_cached_tokens
++        .insert(worker, blocks * router_block_size as usize);
++}
++
++#[cfg(test)]
++mod tests;
+--- /dev/null
++++ b/lib/kv-router/src/indexer/group_boundary/tests.rs
+@@ -0,0 +1,418 @@
++// SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
++// SPDX-License-Identifier: Apache-2.0
++use super::*;
++use serde_json::{Value, json};
++
++fn worker() -> WorkerWithDpRank {
++    WorkerWithDpRank::new(1, 0)
++}
++fn manifest(block_size: u32) -> Vec<GroupSpec> {
++    vec![
++        GroupSpec {
++            group_idx: 0,
++            kind: GroupKind::FullAttention,
++            block_size,
++            sliding_window: None,
++        },
++        GroupSpec {
++            group_idx: 1,
++            kind: GroupKind::Mamba,
++            block_size,
++            sliding_window: None,
++        },
++    ]
++}
++fn index() -> GroupBoundaryIndex {
++    let mut index = GroupBoundaryIndex::new(1000);
++    index.register(worker(), 1, manifest(16));
++    index
++}
++fn tokens(n: usize) -> Vec<u32> {
++    (1000..1000 + n as u32).collect()
++}
++fn dense(group: u32, n: usize) -> Value {
++    json!({"type":"BlockStored", "group_idx":group, "block_hashes": (1..=n/16).collect::<Vec<_>>(),
++           "token_ids":tokens(n), "block_size":16, "parent_block_hash":null})
++}
++fn checkpoint(end: usize) -> Value {
++    let all = tokens(end);
++    if end == 16 {
++        json!({"type":"BlockStored","group_idx":1,"block_hashes":[1],"token_ids":all,"block_size":16})
++    } else {
++        json!({"type":"BlockStored","group_idx":1,"block_hashes":[end/16],"token_ids":all[end-16..],"block_size":16,
++            "parent_block_hash":end/16-1,"skipped_parent_block_hash":null,"skipped_token_ids":all[..end-16],
++            "skipped_extra_keys":vec![None::<u32>;end/16-1]})
++    }
++}
++fn apply(index: &mut GroupBoundaryIndex, sequence: u64, event: Value) -> Result<(), Unavailable> {
++    index.apply(
++        worker(),
++        1,
++        sequence,
++        serde_json::from_value(event).unwrap(),
++    )
++}
++fn lookup(index: &GroupBoundaryIndex, query: &[u32]) -> ReuseBoundary {
++    index.lookup(
++        worker(),
++        1,
++        query,
++        &CacheIdentity::default(),
++        QueryOptions::ordinary(),
++    )
++}
++
++#[test]
++fn complete_manifest_prevents_credit_before_first_recurrent_event() {
++    let mut index = index();
++    apply(&mut index, 0, dense(0, 128)).unwrap();
++    assert_eq!(
++        lookup(&index, &tokens(129)),
++        ReuseBoundary::Available { tokens: 0 }
++    );
++    apply(&mut index, 1, checkpoint(128)).unwrap();
++    assert_eq!(
++        lookup(&index, &tokens(129)),
++        ReuseBoundary::Available { tokens: 128 }
++    );
++    let mut branch = tokens(96);
++    branch.extend(5000..5033);
++    assert_eq!(
++        lookup(&index, &branch),
++        ReuseBoundary::Available { tokens: 0 }
++    );
++}
++
++#[test]
++fn sparse_checkpoints_use_membership_not_minimum_and_rounding() {
++    let mut index = index();
++    apply(&mut index, 0, dense(0, 96)).unwrap();
++    apply(&mut index, 1, checkpoint(32)).unwrap();
++    apply(&mut index, 2, checkpoint(128)).unwrap();
++    assert_eq!(
++        lookup(&index, &tokens(129)),
++        ReuseBoundary::Available { tokens: 32 }
++    );
++    assert_eq!(
++        lookup(&index, &tokens(32)),
++        ReuseBoundary::Available { tokens: 0 }
++    );
++}
++
++#[test]
++fn skipped_ancestry_does_not_make_attention_blocks_resident() {
++    let mut index = index();
++    let mut sparse = checkpoint(128);
++    sparse["group_idx"] = json!(0);
++    apply(&mut index, 0, sparse).unwrap();
++    apply(&mut index, 1, checkpoint(128)).unwrap();
++    assert_eq!(
++        lookup(&index, &tokens(129)),
++        ReuseBoundary::Available { tokens: 0 }
++    );
++}
++
++#[test]
++fn repeated_store_is_idempotent_and_removal_does_not_delete_sibling_group() {
++    let mut index = index();
++    apply(&mut index, 0, dense(0, 128)).unwrap();
++    apply(&mut index, 1, checkpoint(128)).unwrap();
++    apply(&mut index, 2, checkpoint(128)).unwrap();
++    apply(
++        &mut index,
++        3,
++        json!({"type":"BlockRemoved","group_idx":1,"block_hashes":[8]}),
++    )
++    .unwrap();
++    assert_eq!(
++        lookup(&index, &tokens(129)),
++        ReuseBoundary::Available { tokens: 0 }
++    );
++    assert_eq!(index.workers[&worker()].groups[&0].resident.len(), 8);
++    apply(&mut index, 4, checkpoint(128)).unwrap();
++    assert_eq!(
++        lookup(&index, &tokens(129)),
++        ReuseBoundary::Available { tokens: 128 }
++    );
++    apply(
++        &mut index,
++        5,
++        json!({"type":"BlockRemoved","group_idx":0,"block_hashes":[3]}),
++    )
++    .unwrap();
++    assert_eq!(
++        lookup(&index, &tokens(129)),
++        ReuseBoundary::Available { tokens: 0 }
++    );
++}
++
++#[test]
++fn removed_parent_lineage_can_establish_a_later_checkpoint_without_earlier_residency() {
++    let mut index = index();
++    apply(&mut index, 0, dense(0, 128)).unwrap();
++    apply(&mut index, 1, checkpoint(32)).unwrap();
++    apply(
++        &mut index,
++        2,
++        json!({"type":"BlockRemoved","group_idx":1,"block_hashes":[2]}),
++    )
++    .unwrap();
++    let all = tokens(128);
++    apply(&mut index,3,json!({"type":"BlockStored","group_idx":1,"block_size":16,"block_hashes":[8],
++        "parent_block_hash":7,"token_ids":all[112..],"skipped_parent_block_hash":2,"skipped_token_ids":all[32..112],
++        "skipped_extra_keys":vec![None::<u32>;5]})).unwrap();
++    assert_eq!(
++        lookup(&index, &tokens(129)),
++        ReuseBoundary::Available { tokens: 128 }
++    );
++    assert_eq!(
++        lookup(&index, &tokens(33)),
++        ReuseBoundary::Available { tokens: 0 }
++    );
++}
++
++#[test]
++fn missing_parent_or_unsupported_skipped_metadata_invalidates_credit() {
++    for bad in [
++        json!({"type":"BlockStored","group_idx":1,"block_size":16,"block_hashes":[8],"parent_block_hash":7,"token_ids":tokens(16)}),
++        {
++            let mut e = checkpoint(128);
++            e["skipped_extra_keys"] =
++                json!([["salt", "secret"], null, null, null, null, null, null]);
++            e
++        },
++    ] {
++        let mut index = index();
++        apply(&mut index, 0, dense(0, 128)).unwrap();
++        assert!(apply(&mut index, 1, bad).is_err());
++        assert!(matches!(
++            lookup(&index, &tokens(129)),
++            ReuseBoundary::Unavailable { .. }
++        ));
++        assert!(
++            index.workers[&worker()]
++                .groups
++                .values()
++                .all(|g| g.resident.is_empty())
++        );
++    }
++}
++
++#[test]
++fn namespaces_are_isolated_even_for_the_same_opaque_key() {
++    let mut index = index();
++    let mut a = dense(0, 128);
++    a["cache_namespace"] = json!("a");
++    apply(&mut index, 0, a).unwrap();
++    let mut b = checkpoint(128);
++    b["cache_namespace"] = json!("a");
++    apply(&mut index, 1, b).unwrap();
++    assert_eq!(
++        lookup(&index, &tokens(129)),
++        ReuseBoundary::Available { tokens: 0 }
++    );
++    let a = CacheIdentity {
++        cache_namespace: Some("a".into()),
++        lora_name: None,
++    };
++    assert_eq!(
++        index.lookup(worker(), 1, &tokens(129), &a, QueryOptions::ordinary()),
++        ReuseBoundary::Available { tokens: 128 }
++    );
++    let mut bad = checkpoint(128);
++    bad["cache_namespace"] = json!("b");
++    bad["skipped_token_ids"] = Value::Null;
++    bad["skipped_extra_keys"] = Value::Null;
++    assert_eq!(apply(&mut index, 2, bad), Err(Unavailable::MissingParent));
++}
++
++#[test]
++fn generation_reset_and_sequence_gap_remove_all_knowledge() {
++    let mut index = index();
++    apply(&mut index, 0, dense(0, 128)).unwrap();
++    apply(&mut index, 1, checkpoint(128)).unwrap();
++    assert_eq!(
++        apply(&mut index, 3, dense(0, 128)),
++        Err(Unavailable::SequenceGap)
++    );
++    assert_eq!(
++        lookup(&index, &tokens(129)),
++        ReuseBoundary::Unavailable {
++            reason: Unavailable::SequenceGap
++        }
++    );
++    index.register(worker(), 2, manifest(16));
++    assert_eq!(
++        lookup(&index, &tokens(129)),
++        ReuseBoundary::Unavailable {
++            reason: Unavailable::WrongGeneration
++        }
++    );
++    assert_eq!(
++        index.lookup(
++            worker(),
++            2,
++            &tokens(129),
++            &CacheIdentity::default(),
++            QueryOptions::ordinary()
++        ),
++        ReuseBoundary::Available { tokens: 0 }
++    );
++    assert_eq!(
++        apply(&mut index, 0, dense(0, 128)),
++        Err(Unavailable::WrongGeneration)
++    );
++}
++
++#[test]
++fn unknown_manifest_and_explicit_ancestry_limit_cannot_grant_credit() {
++    let mut index = GroupBoundaryIndex::new(2);
++    assert_eq!(
++        lookup(&index, &tokens(129)),
++        ReuseBoundary::Unavailable {
++            reason: Unavailable::NoManifest
++        }
++    );
++    index.register(worker(), 1, manifest(16));
++    assert_eq!(
++        apply(&mut index, 0, dense(0, 128)),
++        Err(Unavailable::AncestryLimit)
++    );
++    assert_eq!(
++        lookup(&index, &tokens(129)),
++        ReuseBoundary::Unavailable {
++            reason: Unavailable::AncestryLimit
++        }
++    );
++    apply(&mut index, 1, json!({"type":"AllBlocksCleared"})).unwrap();
++    assert_eq!(
++        lookup(&index, &tokens(129)),
++        ReuseBoundary::Available { tokens: 0 }
++    );
++}
++
++#[test]
++fn dense_manifest_is_a_noop_and_hybrid_correction_changes_all_credits() {
++    let mut index = index();
++    index.register(worker(), 1, vec![manifest(16).remove(0)]);
++    assert_eq!(lookup(&index, &tokens(129)), ReuseBoundary::DenseOnly);
++    let mut signals = OverlapSignals::default();
++    signals.tier_overlap_blocks.device.insert(worker(), 8);
++    signals.tier_overlap_blocks.host_pinned.insert(worker(), 2);
++    signals.tier_overlap_blocks.disk.insert(worker(), 1);
++    signals.effective_overlap_blocks.insert(worker(), 8.5);
++    signals.effective_cached_tokens.insert(worker(), 136);
++    apply_device_boundary(&mut signals, worker(), 16, ReuseBoundary::DenseOnly);
++    assert_eq!(signals.effective_cached_tokens[&worker()], 136);
++    apply_device_boundary(
++        &mut signals,
++        worker(),
++        16,
++        ReuseBoundary::Available { tokens: 32 },
++    );
++    assert_eq!(signals.tier_overlap_blocks.device[&worker()], 2);
++    assert_eq!(signals.effective_overlap_blocks[&worker()], 2.0);
++    assert_eq!(signals.effective_cached_tokens[&worker()], 32);
++    assert!(
++        !signals
++            .tier_overlap_blocks
++            .host_pinned
++            .contains_key(&worker())
++    );
++    assert!(!signals.tier_overlap_blocks.disk.contains_key(&worker()));
++    apply_device_boundary(
++        &mut signals,
++        worker(),
++        16,
++        ReuseBoundary::Unavailable {
++            reason: Unavailable::NoManifest,
++        },
++    );
++    assert_eq!(signals.effective_cached_tokens[&worker()], 0);
++    assert_eq!(signals.tier_overlap_blocks.device[&worker()], 0);
++}
++
++#[test]
++fn request_eligibility_and_unknown_owner_cannot_gain_cache_credit() {
++    let mut index = index();
++    apply(&mut index, 0, dense(0, 128)).unwrap();
++    apply(&mut index, 1, checkpoint(128)).unwrap();
++    let mut options = QueryOptions::ordinary();
++    options.cache_reads_enabled = false;
++    assert_eq!(
++        index.lookup(
++            worker(),
++            1,
++            &tokens(129),
++            &CacheIdentity::default(),
++            options
++        ),
++        ReuseBoundary::Available { tokens: 0 }
++    );
++    options = QueryOptions::ordinary();
++    options.is_eagle = true;
++    assert_eq!(
++        index.lookup(
++            worker(),
++            1,
++            &tokens(129),
++            &CacheIdentity::default(),
++            options
++        ),
++        ReuseBoundary::Unavailable {
++            reason: Unavailable::UnsupportedMetadata
++        }
++    );
++    for event in [
++        {
++            let mut e = dense(0, 128);
++            e["ownership"] = json!("kvcr");
++            e
++        },
++        json!({"type":"BlockRemoved","group_idx":1,"block_hashes":[8],"ownership":"kvcr"}),
++        json!({"type":"AllBlocksCleared","ownership":"kvcr"}),
++    ] {
++        let mut candidate = super::tests::index();
++        assert_eq!(
++            apply(&mut candidate, 0, event),
++            Err(Unavailable::UnsupportedMetadata)
++        );
++        assert!(matches!(
++            lookup(&candidate, &tokens(129)),
++            ReuseBoundary::Unavailable { .. }
++        ));
++    }
++}
++
++#[test]
++fn partial_geometry_unknown_group_and_malformed_spans_fail_closed() {
++    for event in [
++        {
++            let mut e = dense(0, 128);
++            e["block_size"] = json!(8);
++            e
++        },
++        {
++            let mut e = dense(0, 128);
++            e["group_idx"] = json!(7);
++            e
++        },
++        {
++            let mut e = checkpoint(128);
++            e["token_ids"] = json!(tokens(128));
++            e
++        },
++        {
++            let mut e = checkpoint(128);
++            e["skipped_token_ids"] = json!(tokens(111));
++            e
++        },
++    ] {
++        let mut index = index();
++        assert!(apply(&mut index, 0, event).is_err());
++        assert!(matches!(
++            lookup(&index, &tokens(129)),
++            ReuseBoundary::Unavailable { .. }
++        ));
++    }
++}
+--- a/lib/kv-router/src/indexer/mod.rs
++++ b/lib/kv-router/src/indexer/mod.rs
+@@ -76,6 +76,7 @@
+ pub mod concurrent_radix_tree_compressed;
+ pub mod cuckoo;
+ pub mod positional;
++pub mod group_boundary;
+ pub mod pruning;
+ pub mod radix_tree;
+ 
+--- a/lib/kv-router/src/scheduling/local.rs
++++ b/lib/kv-router/src/scheduling/local.rs
+@@ -82,6 +82,7 @@
+             .and_then(|cfg| cfg.track_prefill_tokens)
+             .unwrap_or(self.track_prefill_tokens_default);
+         let ScheduleRequest {
++            group_reuse_query: _,
+             mode,
+             token_seq,
+             block_hashes,
+@@ -341,6 +342,7 @@
+     ) -> Result<(AdmittedSchedulingResponse, Option<BookingHandle>), KvSchedulerError> {
+         let (resp_tx, resp_rx) = tokio::sync::oneshot::channel();
+         let (attempt_tx, attempt_rx) = tokio::sync::oneshot::channel();
++        let group_reuse_query = request.group_reuse_query.clone();
+         let (request, block_hashes) = self.make_scheduling_request(request, Some(resp_tx));
+         let tracked = request.mode.is_tracked();
+         let classified_request = self.classify_request(&request, ingress_at).await?;
+@@ -350,13 +352,14 @@
+ 
+         let lifecycle_lease = self
+             .queue
+-            .enqueue_admitted_with_block_hashes_and_lease(
++            .enqueue_admitted_with_context(
+                 request,
+                 block_hashes,
+                 lifecycle_lease,
+                 tracked.then_some(attempt_tx),
+                 classified_request,
+                 ingress_at,
++                group_reuse_query,
+             )
+             .await;
+ 
+@@ -563,6 +566,7 @@
+     ) -> Result<SchedulingResponse, KvSchedulerError> {
+         let mode = ScheduleMode::from_legacy(maybe_request_id, update_states)?;
+         self.schedule_request(ScheduleRequest {
++            group_reuse_query: None,
+             mode,
+             token_seq,
+             block_hashes,
+@@ -1079,6 +1083,7 @@
+ 
+     fn request(mode: ScheduleMode) -> ScheduleRequest {
+         ScheduleRequest {
++            group_reuse_query: None,
+             mode,
+             token_seq: Some(vec![1, 2, 3, 4]),
+             block_hashes: None,
+--- a/lib/kv-router/src/scheduling/overlap_refresh.rs
++++ b/lib/kv-router/src/scheduling/overlap_refresh.rs
+@@ -22,6 +22,8 @@
+ //! Refresh failures are non-fatal: an implementation can return `None` and the queue will
+ //! dispatch with the (stale) original scores rather than dropping the request.
+ 
++use crate::indexer::group_boundary::GroupReuseQuery;
++use std::sync::Arc;
+ use std::time::Duration;
+ 
+ use async_trait::async_trait;
+@@ -57,8 +59,26 @@
+ /// Implementations are expected to be cheap to clone (typically `Arc`-wrapped) and to never
+ /// panic. Returning `None` indicates the refresh failed; the queue will then dispatch with
+ /// the original scores.
++pub trait OverlapCorrection: Send + Sync {
++    fn required(&self) -> bool;
++    fn correct(&self, overlap: &mut OverlapSignals, query: Option<&GroupReuseQuery>);
++}
++
+ #[async_trait]
+ pub trait OverlapScoresRefresh: Send + Sync {
++    fn refresh_required(&self) -> bool {
++        false
++    }
++
++    async fn refresh_with_context(
++        &self,
++        block_hashes: &[LocalBlockHash],
++        retain_kv_transfer_chain: bool,
++        _query: Option<&GroupReuseQuery>,
++    ) -> Option<RefreshedOverlap> {
++        self.refresh(block_hashes, retain_kv_transfer_chain).await
++    }
++
+     async fn refresh(
+         &self,
+         block_hashes: &[LocalBlockHash],
+@@ -68,14 +88,21 @@
+ 
+ pub struct TieredOverlapRefresher<P> {
+     provider: P,
++    correction: Option<Arc<dyn OverlapCorrection>>,
+     config: KvRouterConfig,
+     block_size: u32,
+ }
+ 
+ impl<P> TieredOverlapRefresher<P> {
++    pub fn with_correction(mut self, correction: Arc<dyn OverlapCorrection>) -> Self {
++        self.correction = Some(correction);
++        self
++    }
++
+     pub fn new(provider: P, config: KvRouterConfig, block_size: u32) -> Self {
+         Self {
+             provider,
++            correction: None,
+             config,
+             block_size,
+         }
+@@ -84,10 +111,24 @@
+ 
+ #[async_trait]
+ impl<P: TieredMatchProvider> OverlapScoresRefresh for TieredOverlapRefresher<P> {
++    fn refresh_required(&self) -> bool {
++        self.correction.as_ref().is_some_and(|c| c.required())
++    }
++
+     async fn refresh(
+         &self,
+         block_hashes: &[LocalBlockHash],
+         retain_kv_transfer_chain: bool,
++    ) -> Option<RefreshedOverlap> {
++        self.refresh_with_context(block_hashes, retain_kv_transfer_chain, None)
++            .await
++    }
++
++    async fn refresh_with_context(
++        &self,
++        block_hashes: &[LocalBlockHash],
++        retain_kv_transfer_chain: bool,
++        query: Option<&GroupReuseQuery>,
+     ) -> Option<RefreshedOverlap> {
+         if block_hashes.is_empty() {
+             return None;
+@@ -105,11 +146,15 @@
+             Ok(tiered) => tiered,
+             Err(error) => {
+                 tracing::warn!(%error, "overlap refresh: tiered match query failed");
+-                return None;
++                return self.refresh_required().then(RefreshedOverlap::default);
+             }
+         };
+-        let overlap = OverlapAnalysis::new(&self.config, self.block_size, &tiered).signals();
+-        let kv_transfer_candidates = retain_kv_transfer_chain
++        let mut overlap = OverlapAnalysis::new(&self.config, self.block_size, &tiered).signals();
++        if let Some(correction) = &self.correction {
++            correction.correct(&mut overlap, query);
++        }
++
++        let kv_transfer_candidates = (retain_kv_transfer_chain && !self.refresh_required())
+             .then(|| tiered.kv_transfer_candidates().cloned())
+             .flatten();
+         Some(RefreshedOverlap {
+@@ -191,6 +236,37 @@
+     enqueue_at: tokio::time::Instant,
+     now: tokio::time::Instant,
+ ) -> Option<RefreshedOverlap> {
++    refresh_overlap_with_context(
++        refresher,
++        refresh_after,
++        block_hashes,
++        retain_kv_transfer_chain,
++        enqueue_at,
++        now,
++        None,
++    )
++    .await
++}
++
++#[expect(clippy::too_many_arguments)]
++pub async fn refresh_overlap_with_context<RF: OverlapScoresRefresh + ?Sized>(
++    refresher: Option<&RF>,
++    refresh_after: Option<Duration>,
++    block_hashes: Option<&[LocalBlockHash]>,
++    retain_kv_transfer_chain: bool,
++    enqueue_at: tokio::time::Instant,
++    now: tokio::time::Instant,
++    query: Option<&GroupReuseQuery>,
++) -> Option<RefreshedOverlap> {
++    let required = refresher.is_some_and(|r| r.refresh_required());
++    if required && block_hashes.is_none_or(|hashes| hashes.is_empty()) {
++        return Some(RefreshedOverlap::default());
++    }
++    let refresh_after = if required {
++        Some(Duration::ZERO)
++    } else {
++        refresh_after
++    };
+     if !should_refresh_overlap(
+         refresher.is_some(),
+         refresh_after,
+@@ -201,7 +277,7 @@
+         return None;
+     }
+     refresher?
+-        .refresh(block_hashes?, retain_kv_transfer_chain)
++        .refresh_with_context(block_hashes?, retain_kv_transfer_chain, query)
+         .await
+ }
+ 
+--- a/lib/kv-router/src/scheduling/queue.rs
++++ b/lib/kv-router/src/scheduling/queue.rs
+@@ -19,7 +19,8 @@
+ use super::filter::{RoutingEligibility, worker_config_for_rank};
+ use super::overlap::SelectedWorkerTierSnapshot;
+ use super::overlap_refresh::{
+-    NoopOverlapScoresRefresh, OverlapScoresRefresh, read_overlap_refresh_after, refresh_overlap,
++    NoopOverlapScoresRefresh, OverlapScoresRefresh, read_overlap_refresh_after,
++    refresh_overlap_with_context,
+ };
+ use super::policy_config::{PolicyClassConfig, PolicyProfile};
+ use super::policy_queue::{PolicyQueue, QueueMetadata, QueueSnapshot};
+@@ -68,6 +69,7 @@
+ }
+ 
+ struct QueuedRequest {
++    group_reuse_query: Option<Arc<crate::indexer::group_boundary::GroupReuseQuery>>,
+     request: SchedulingRequest,
+     attempt_tx: Option<oneshot::Sender<AttemptId>>,
+     lifecycle_transfer: Option<Arc<AdmissionLifecycleTransfer>>,
+@@ -142,6 +144,7 @@
+ #[allow(clippy::large_enum_variant)]
+ enum AdmissionCommand {
+     Enqueue {
++        group_reuse_query: Option<Arc<crate::indexer::group_boundary::GroupReuseQuery>>,
+         request: SchedulingRequest,
+         attempt_tx: Option<oneshot::Sender<AttemptId>>,
+         block_hashes: Option<Vec<LocalBlockHash>>,
+@@ -741,12 +744,35 @@
+ 
+     pub(crate) async fn enqueue_admitted_with_block_hashes_and_lease(
+         &self,
++        request: SchedulingRequest,
++        block_hashes: Option<Vec<LocalBlockHash>>,
++        lease: Option<Box<RequestLifecycleLease>>,
++        attempt_tx: Option<oneshot::Sender<AttemptId>>,
++        classified_request: Option<ClassifyRequest>,
++        ingress_at: Instant,
++    ) -> Option<Box<RequestLifecycleLease>> {
++        self.enqueue_admitted_with_context(
++            request,
++            block_hashes,
++            lease,
++            attempt_tx,
++            classified_request,
++            ingress_at,
++            None,
++        )
++        .await
++    }
++
++    #[expect(clippy::too_many_arguments)]
++    pub(crate) async fn enqueue_admitted_with_context(
++        &self,
+         mut request: SchedulingRequest,
+         block_hashes: Option<Vec<LocalBlockHash>>,
+         lease: Option<Box<RequestLifecycleLease>>,
+         attempt_tx: Option<oneshot::Sender<AttemptId>>,
+         classified_request: Option<ClassifyRequest>,
+         ingress_at: Instant,
++        group_reuse_query: Option<Arc<crate::indexer::group_boundary::GroupReuseQuery>>,
+     ) -> Option<Box<RequestLifecycleLease>> {
+         if self.capacity_updates.is_some()
+             && lease.is_none()
+@@ -778,10 +804,16 @@
+         }
+ 
+         let (ack_tx, ack_rx) = oneshot::channel();
++        let block_hashes = if group_reuse_query.is_some() {
++            block_hashes
++        } else {
++            self.prepare_block_hashes_for_refresh(block_hashes)
++        };
+         let command = AdmissionCommand::Enqueue {
++            group_reuse_query,
+             request,
+             attempt_tx,
+-            block_hashes: self.prepare_block_hashes_for_refresh(block_hashes),
++            block_hashes,
+             queue_metadata,
+             lease,
+             ack_tx,
+@@ -847,6 +879,7 @@
+         queue_metadata.due_at = Some(due_at);
+         let (ack_tx, ack_rx) = oneshot::channel();
+         let command = AdmissionCommand::Enqueue {
++            group_reuse_query: None,
+             request,
+             attempt_tx: None,
+             block_hashes: None,
+@@ -1112,6 +1145,7 @@
+             }
+             match command {
+                 AdmissionCommand::Enqueue {
++                    group_reuse_query,
+                     request,
+                     attempt_tx,
+                     block_hashes,
+@@ -1128,6 +1162,7 @@
+                         lifecycle_transfer,
+                         block_hashes,
+                         queue_metadata,
++                        group_reuse_query,
+                     );
+                     let cleanup_ready = drain_cleanup && self.drain_cleanup();
+                     if cleanup_ready {
+@@ -1188,6 +1223,7 @@
+         lifecycle_transfer: Option<Arc<AdmissionLifecycleTransfer>>,
+         block_hashes: Option<Vec<LocalBlockHash>>,
+         queue_metadata: QueueMetadata,
++        group_reuse_query: Option<Arc<crate::indexer::group_boundary::GroupReuseQuery>>,
+     ) -> bool {
+         let class_index = queue_metadata.class_index;
+         self.class_counters[class_index]
+@@ -1242,6 +1278,7 @@
+             .pinned_worker
+             .map_or(WorkerPlacement::Any, WorkerPlacement::Exact);
+         let queued = QueuedRequest {
++            group_reuse_query,
+             request,
+             attempt_tx,
+             lifecycle_transfer: lifecycle_transfer.clone(),
+@@ -1539,13 +1576,14 @@
+             // accept load crossing the class threshold during this await: busy
+             // thresholds guide admission, not reservation. This differs from main
+             // to avoid reversing counters, heap state, and charged DRR credit.
+-            let refreshed = refresh_overlap(
++            let refreshed = refresh_overlap_with_context(
+                 self.overlap_scores_refresh.as_deref(),
+                 self.overlap_refresh_after,
+                 queued.block_hashes.as_deref(),
+                 queued.request.retain_kv_transfer_chain,
+                 queued.enqueue_at,
+                 decay_now,
++                queued.group_reuse_query.as_deref(),
+             )
+             .await;
+             // Deadlines can pass while the refresh is awaited and the actor
+@@ -2878,6 +2916,7 @@
+         queue
+             .admission_tx
+             .send(AdmissionCommand::Enqueue {
++                group_reuse_query: None,
+                 request,
+                 attempt_tx: None,
+                 block_hashes: Some(vec![LocalBlockHash(42)]),
+@@ -3300,14 +3339,14 @@
+ 
+             let (active, mut active_rx) = make_request("active", 64);
+             let metadata = queue.default_queue_metadata(&active, Instant::now());
+-            assert!(actor.handle_enqueue(active, None, None, None, metadata));
++            assert!(actor.handle_enqueue(active, None, None, None, metadata, None));
+             actor.handle_enqueued().await;
+             assert_eq!(active_rx.try_recv().unwrap().unwrap().best_worker, worker);
+ 
+             let (mut older, mut older_rx) = make_request("older-pinned", 64);
+             older.pinned_worker = Some(worker);
+             let metadata = queue.default_queue_metadata(&older, Instant::now());
+-            assert!(actor.handle_enqueue(older, None, None, None, metadata));
++            assert!(actor.handle_enqueue(older, None, None, None, metadata, None));
+             actor.handle_enqueued().await;
+             assert!(older_rx.try_recv().is_err());
+ 
+@@ -3317,7 +3356,7 @@
+             }
+             let (later, mut later_rx) = make_request("later-shared", 64);
+             let metadata = queue.default_queue_metadata(&later, Instant::now());
+-            assert!(actor.handle_enqueue(later, None, None, None, metadata));
++            assert!(actor.handle_enqueue(later, None, None, None, metadata, None));
+             // Force enqueue processing before the capacity select branch.
+             actor.handle_enqueued().await;
+             assert_eq!(older_rx.try_recv().unwrap().unwrap().best_worker, worker);
+--- a/lib/kv-router/src/scheduling/types.rs
++++ b/lib/kv-router/src/scheduling/types.rs
+@@ -394,6 +394,7 @@
+ 
+ /// Validated request accepted by [`LocalScheduler`](super::LocalScheduler).
+ pub struct ScheduleRequest {
++    pub group_reuse_query: Option<Arc<crate::indexer::group_boundary::GroupReuseQuery>>,
+     pub mode: ScheduleMode,
+     pub token_seq: Option<Vec<SequenceHash>>,
+     pub block_hashes: Option<Vec<LocalBlockHash>>,
+--- /dev/null
++++ b/lib/kv-router/src/services/indexer/group_reuse.rs
+@@ -0,0 +1,572 @@
++// SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
++// SPDX-License-Identifier: Apache-2.0
++
++//! Opt-in local-device group reuse for the direct engine-event ingress.
++
++use std::collections::{HashMap, HashSet};
++use std::sync::Arc;
++
++use parking_lot::Mutex;
++use serde::{Deserialize, Serialize};
++
++use crate::identity::RoutingPartitionId;
++use crate::indexer::group_boundary::{
++    GroupBoundaryIndex, GroupEvent, GroupReuseQuery, GroupSpec, ReuseBoundary, Unavailable,
++    apply_device_boundary,
++};
++use crate::protocols::WorkerWithDpRank;
++use crate::scheduling::OverlapSignals;
++use crate::scheduling::overlap_refresh::OverlapCorrection;
++
++#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
++#[serde(deny_unknown_fields)]
++pub struct GroupReuseRegistration {
++    pub version: u32,
++    pub engine_incarnation: String,
++    pub hash_block_size: u32,
++    pub sparse_ancestry: String,
++    pub groups: Vec<GroupSpec>,
++}
++
++impl GroupReuseRegistration {
++    pub fn validate(&self, block_size: u32, dp_size: u32) -> Result<(), String> {
++        let mut groups = HashSet::new();
++        if self.version != 1 || self.sparse_ancestry != "vllm_44488_v1" {
++            return Err("unsupported group_reuse protocol".into());
++        }
++        if uuid::Uuid::parse_str(&self.engine_incarnation).is_err() {
++            return Err("group_reuse engine_incarnation must be a UUID".into());
++        }
++        if dp_size != 1 || block_size == 0 || self.hash_block_size != block_size {
++            return Err(
++                "group_reuse v1 requires one DP rank and equal hash/router block sizes".into(),
++            );
++        }
++        if self.groups.is_empty()
++            || self.groups.iter().any(|g| {
++                g.block_size != block_size
++                    || g.sliding_window.is_some()
++                    || !groups.insert(g.group_idx)
++            })
++        {
++            return Err(
++                "group_reuse v1 requires a complete, unique, uniform-size group roster".into(),
++            );
++        }
++        Ok(())
++    }
++}
++
++#[derive(Clone, Debug, Serialize)]
++pub struct GroupReuseStatus {
++    pub last_batch_cursor: Option<u64>,
++    pub unavailable: Option<Unavailable>,
++}
++
++struct Source {
++    key: RoutingPartitionId,
++    epoch: u64,
++    next_batch: u64,
++    next_event: u64,
++}
++
++struct State {
++    index: GroupBoundaryIndex,
++    sources: HashMap<WorkerWithDpRank, Source>,
++    next_epoch: u64,
++    endpoints: HashMap<String, (WorkerWithDpRank, GroupReuseRegistration)>,
++}
++
++#[derive(Clone)]
++pub struct GroupReuseIndex(Arc<Mutex<State>>);
++
++impl Default for GroupReuseIndex {
++    fn default() -> Self {
++        Self(Arc::new(Mutex::new(State {
++            index: GroupBoundaryIndex::new(1_000_000),
++            sources: HashMap::new(),
++            next_epoch: 0,
++            endpoints: HashMap::new(),
++        })))
++    }
++}
++
++impl GroupReuseIndex {
++    pub fn check_source(
++        &self,
++        worker: WorkerWithDpRank,
++        endpoint: &str,
++        registration: &GroupReuseRegistration,
++    ) -> Result<(), String> {
++        let state = self.0.lock();
++        if let Some((previous_worker, previous)) = state.endpoints.get(endpoint) {
++            if *previous_worker != worker || previous != registration {
++                return Err("group_reuse requires an event endpoint unique to this engine incarnation and roster".into());
++            }
++        } else if state.endpoints.len() >= 100_000 {
++            return Err("group_reuse endpoint history limit reached".into());
++        }
++        Ok(())
++    }
++
++    pub fn bind_source(
++        &self,
++        worker: WorkerWithDpRank,
++        endpoint: &str,
++        registration: &GroupReuseRegistration,
++    ) -> Result<(), String> {
++        self.check_source(worker, endpoint, registration)?;
++        self.0
++            .lock()
++            .endpoints
++            .entry(endpoint.to_string())
++            .or_insert_with(|| (worker, registration.clone()));
++        Ok(())
++    }
++
++    pub fn register(
++        &self,
++        worker: WorkerWithDpRank,
++        key: RoutingPartitionId,
++        registration: &GroupReuseRegistration,
++    ) -> u64 {
++        let mut state = self.0.lock();
++        state.next_epoch = state
++            .next_epoch
++            .checked_add(1)
++            .expect("group reuse epoch exhausted");
++        let epoch = state.next_epoch;
++        state
++            .index
++            .register(worker, epoch, registration.groups.clone());
++        state.sources.insert(
++            worker,
++            Source {
++                key,
++                epoch,
++                next_batch: 0,
++                next_event: 0,
++            },
++        );
++        epoch
++    }
++
++    pub fn retire(&self, worker: WorkerWithDpRank) {
++        // Keep the zero-credit marker until the old attention index has drained.
++        self.0.lock().index.remove(worker);
++    }
++
++    pub fn remove_worker(&self, worker_id: u64) {
++        let mut state = self.0.lock();
++        let workers: Vec<_> = state
++            .sources
++            .keys()
++            .copied()
++            .filter(|w| w.worker_id == worker_id)
++            .collect();
++        for worker in workers {
++            state.sources.remove(&worker);
++            state.index.remove(worker);
++        }
++    }
++
++    pub fn remove(&self, worker: WorkerWithDpRank) {
++        let mut state = self.0.lock();
++        state.sources.remove(&worker);
++        state.index.remove(worker);
++    }
++
++    pub fn invalidate(&self, worker: WorkerWithDpRank, epoch: u64) {
++        self.0
++            .lock()
++            .index
++            .invalidate(worker, epoch, Unavailable::SequenceGap);
++    }
++
++    /// A batch cursor belongs to the engine stream; event ordinals belong to this consumer.
++    pub fn apply_batch(&self, worker: WorkerWithDpRank, epoch: u64, cursor: u64, payload: &[u8]) {
++        let decoded = rmp_serde::from_slice::<(f64, Vec<serde_json::Value>, Option<i32>)>(payload);
++        let mut state = self.0.lock();
++        let Some(source) = state.sources.get(&worker) else {
++            return;
++        };
++        if source.epoch != epoch {
++            return;
++        }
++        if cursor < source.next_batch {
++            return;
++        }
++        if cursor != source.next_batch {
++            state
++                .index
++                .invalidate(worker, epoch, Unavailable::SequenceGap);
++        }
++        state.sources.get_mut(&worker).unwrap().next_batch = cursor.saturating_add(1);
++        let Ok((_, events, rank)) = decoded else {
++            state
++                .index
++                .invalidate(worker, epoch, Unavailable::UnsupportedMetadata);
++            return;
++        };
++        if rank.is_some_and(|rank| rank < 0 || rank as u32 != worker.dp_rank) {
++            state
++                .index
++                .invalidate(worker, epoch, Unavailable::UnsupportedMetadata);
++            return;
++        }
++        for raw in events {
++            // v1 is the named vLLM event format. Legacy positional layouts remain dense-only.
++            let unsupported = !raw.is_object()
++                || raw
++                    .get("kv_cache_spec_sliding_window")
++                    .is_some_and(|v| !v.is_null());
++            let event = serde_json::from_value::<GroupEvent>(raw);
++            if unsupported || event.is_err() {
++                state
++                    .index
++                    .invalidate(worker, epoch, Unavailable::UnsupportedMetadata);
++                continue;
++            }
++            let source = state.sources.get_mut(&worker).unwrap();
++            let ordinal = source.next_event;
++            source.next_event += 1;
++            let _ = state.index.apply(worker, epoch, ordinal, event.unwrap());
++        }
++    }
++
++    pub fn status(&self, worker: WorkerWithDpRank) -> Option<GroupReuseStatus> {
++        let state = self.0.lock();
++        let source = state.sources.get(&worker)?;
++        Some(GroupReuseStatus {
++            last_batch_cursor: source.next_batch.checked_sub(1),
++            unavailable: state.index.unavailable(worker, source.epoch),
++        })
++    }
++
++    pub fn contains_partition(&self, key: &RoutingPartitionId) -> bool {
++        self.0.lock().sources.values().any(|s| &s.key == key)
++    }
++
++    pub fn correct(
++        &self,
++        key: &RoutingPartitionId,
++        block_size: u32,
++        overlap: &mut OverlapSignals,
++        query: Option<&GroupReuseQuery>,
++    ) {
++        let state = self.0.lock();
++        for (worker, source) in &state.sources {
++            if &source.key != key {
++                continue;
++            }
++            let boundary = match query.and_then(|q| q.tokens.as_ref().map(|t| (q, t))) {
++                Some((query, tokens)) => state.index.lookup(
++                    *worker,
++                    source.epoch,
++                    tokens,
++                    &query.identity,
++                    query.options,
++                ),
++                None => ReuseBoundary::Unavailable {
++                    reason: Unavailable::UnsupportedMetadata,
++                },
++            };
++            apply_device_boundary(overlap, *worker, block_size, boundary);
++        }
++        if query.is_some_and(|q| q.cache_reads_declared == Some(false)) {
++            *overlap = OverlapSignals::default();
++        }
++    }
++
++    pub fn correction(
++        &self,
++        key: RoutingPartitionId,
++        block_size: u32,
++    ) -> Arc<dyn OverlapCorrection> {
++        Arc::new(GroupCorrection {
++            index: self.clone(),
++            key,
++            block_size,
++        })
++    }
++}
++
++struct GroupCorrection {
++    index: GroupReuseIndex,
++    key: RoutingPartitionId,
++    block_size: u32,
++}
++
++impl OverlapCorrection for GroupCorrection {
++    fn required(&self) -> bool {
++        self.index.contains_partition(&self.key)
++    }
++
++    fn correct(&self, overlap: &mut OverlapSignals, query: Option<&GroupReuseQuery>) {
++        self.index
++            .correct(&self.key, self.block_size, overlap, query);
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    use crate::indexer::group_boundary::{CacheIdentity, GroupKind, QueryOptions};
++    use serde_json::{Value, json};
++
++    fn worker() -> WorkerWithDpRank {
++        WorkerWithDpRank::new(7, 0)
++    }
++    fn key() -> RoutingPartitionId {
++        RoutingPartitionId::new("model", "default")
++    }
++    fn registration() -> GroupReuseRegistration {
++        GroupReuseRegistration {
++            version: 1,
++            engine_incarnation: "9d32136b-84c4-4ddf-9ce4-f4a6813f1b64".into(),
++            hash_block_size: 16,
++            sparse_ancestry: "vllm_44488_v1".into(),
++            groups: vec![
++                GroupSpec {
++                    group_idx: 0,
++                    kind: GroupKind::FullAttention,
++                    block_size: 16,
++                    sliding_window: None,
++                },
++                GroupSpec {
++                    group_idx: 1,
++                    kind: GroupKind::Mamba,
++                    block_size: 16,
++                    sliding_window: None,
++                },
++            ],
++        }
++    }
++    fn events() -> Vec<Value> {
++        vec![
++            json!({"type":"BlockStored","group_idx":0,"kv_cache_spec_kind":"full_attention",
++            "block_hashes":[1,2,3,4,5,6,7,8],"parent_block_hash":null,"token_ids":(0..128).collect::<Vec<u32>>(),"block_size":16}),
++            json!({"type":"BlockStored","group_idx":1,"kv_cache_spec_kind":"mamba","block_hashes":[8],
++             "parent_block_hash":7,"token_ids":(112..128).collect::<Vec<u32>>(),"block_size":16,
++             "skipped_parent_block_hash":null,"skipped_token_ids":(0..112).collect::<Vec<u32>>(),
++             "skipped_extra_keys":[null,null,null,null,null,null,null]}),
++        ]
++    }
++    fn batch(events: Vec<Value>) -> Vec<u8> {
++        rmp_serde::to_vec(&(0.0, events, Some(0_i32))).unwrap()
++    }
++    fn query(enabled: Option<bool>) -> GroupReuseQuery {
++        GroupReuseQuery {
++            cache_reads_declared: enabled,
++            tokens: Some(Arc::from((0..129).collect::<Vec<u32>>())),
++            identity: CacheIdentity::default(),
++            options: QueryOptions {
++                cache_reads_enabled: enabled == Some(true),
++                ..QueryOptions::ordinary()
++            },
++        }
++    }
++    fn corrected(index: &GroupReuseIndex, query: Option<&GroupReuseQuery>) -> usize {
++        let mut overlap = OverlapSignals::default();
++        overlap.tier_overlap_blocks.device.insert(worker(), 8);
++        overlap.effective_overlap_blocks.insert(worker(), 8.0);
++        overlap.effective_cached_tokens.insert(worker(), 128);
++        index.correct(&key(), 16, &mut overlap, query);
++        overlap
++            .effective_cached_tokens
++            .get(&worker())
++            .copied()
++            .unwrap_or(0)
++    }
++
++    #[test]
++    fn complete_roster_precedes_raw_events_and_batch_cursor_is_not_event_ordinal() {
++        let index = GroupReuseIndex::default();
++        let epoch = index.register(worker(), key(), &registration());
++        let mut both = events();
++        let recurrent = both.pop().unwrap();
++        index.apply_batch(worker(), epoch, 0, &batch(both));
++        assert_eq!(corrected(&index, Some(&query(Some(true)))), 0);
++        index.apply_batch(worker(), epoch, 1, &batch(vec![recurrent]));
++        assert_eq!(corrected(&index, Some(&query(Some(true)))), 128);
++        assert_eq!(index.status(worker()).unwrap().last_batch_cursor, Some(1));
++        index.apply_batch(worker(), epoch, 2, &batch(events()));
++        assert_eq!(corrected(&index, Some(&query(Some(true)))), 128);
++        assert_eq!(index.status(worker()).unwrap().last_batch_cursor, Some(2));
++    }
++
++    #[test]
++    fn gap_decode_and_retired_source_cannot_keep_positive_credit() {
++        for failure in ["gap", "decode", "retired"] {
++            let index = GroupReuseIndex::default();
++            let epoch = index.register(worker(), key(), &registration());
++            index.apply_batch(worker(), epoch, 0, &batch(events()));
++            assert_eq!(corrected(&index, Some(&query(Some(true)))), 128);
++            match failure {
++                "gap" => index.apply_batch(worker(), epoch, 2, &batch(vec![])),
++                "decode" => index.apply_batch(worker(), epoch, 1, b"invalid-msgpack"),
++                _ => index.retire(worker()),
++            }
++            assert_eq!(corrected(&index, Some(&query(Some(true)))), 0, "{failure}");
++            let next_epoch = index.register(worker(), key(), &registration());
++            index.apply_batch(worker(), epoch, 0, &batch(events()));
++            assert_eq!(corrected(&index, Some(&query(Some(true)))), 0);
++            index.apply_batch(worker(), next_epoch, 0, &batch(events()));
++            assert_eq!(corrected(&index, Some(&query(Some(true)))), 128);
++        }
++    }
++
++    #[test]
++    fn clear_rebuilds_after_gap_and_group_remove_revokes_credit() {
++        let index = GroupReuseIndex::default();
++        let epoch = index.register(worker(), key(), &registration());
++        index.apply_batch(worker(), epoch, 0, &batch(events()));
++        index.apply_batch(worker(), epoch, 2, &batch(vec![]));
++        let mut reset = vec![json!({"type":"AllBlocksCleared"})];
++        reset.extend(events());
++        index.apply_batch(worker(), epoch, 3, &batch(reset));
++        assert_eq!(corrected(&index, Some(&query(Some(true)))), 128);
++        index.apply_batch(
++            worker(),
++            epoch,
++            4,
++            &batch(vec![
++                json!({"type":"BlockRemoved","block_hashes":[8],"group_idx":1}),
++            ]),
++        );
++        assert_eq!(corrected(&index, Some(&query(Some(true)))), 0);
++    }
++
++    #[test]
++    fn native_cache_salt_is_preserved_and_missing_eligibility_is_conservative() {
++        let index = GroupReuseIndex::default();
++        let epoch = index.register(worker(), key(), &registration());
++        let mut salted = events();
++        for event in &mut salted {
++            event["cache_salt"] = json!("tenant-A");
++        }
++        index.apply_batch(worker(), epoch, 0, &batch(salted));
++        assert_eq!(corrected(&index, Some(&query(Some(true)))), 0);
++        let mut same_salt = query(Some(true));
++        same_salt.identity.cache_namespace = Some("tenant-A".into());
++        assert_eq!(corrected(&index, Some(&same_salt)), 128);
++        same_salt.options.cache_reads_enabled = false;
++        same_salt.cache_reads_declared = None;
++        assert_eq!(corrected(&index, Some(&same_salt)), 0);
++        assert_eq!(corrected(&index, None), 0);
++        let legacy = GroupReuseIndex::default();
++        assert_eq!(corrected(&legacy, Some(&query(None))), 128);
++        assert_eq!(corrected(&legacy, Some(&query(Some(false)))), 0);
++    }
++
++    #[test]
++    fn registration_rejects_unknown_geometry_and_reused_engine_endpoint() {
++        let index = GroupReuseIndex::default();
++        let mut registration = registration();
++        assert!(registration.validate(16, 1).is_ok());
++        assert!(registration.validate(16, 2).is_err());
++        index
++            .bind_source(worker(), "tcp://127.0.0.1:12345", &registration)
++            .unwrap();
++        registration.engine_incarnation = "1c908b48-e7ad-4821-a644-06907220101e".into();
++        assert!(
++            index
++                .bind_source(worker(), "tcp://127.0.0.1:12345", &registration)
++                .is_err()
++        );
++        registration.groups.pop();
++        registration.hash_block_size = 8;
++        assert!(registration.validate(16, 1).is_err());
++    }
++
++    struct OfflineProvider;
++    #[async_trait::async_trait]
++    impl crate::indexer::TieredMatchProvider for OfflineProvider {
++        async fn find_tiered_matches(
++            &self,
++            _hashes: &[crate::protocols::LocalBlockHash],
++        ) -> Result<crate::indexer::TieredMatchDetails, crate::indexer::KvRouterError> {
++            Err(crate::indexer::KvRouterError::IndexerOffline)
++        }
++    }
++
++    #[tokio::test]
++    async fn required_dispatch_refresh_keeps_context_and_fails_closed_on_provider_error() {
++        use crate::protocols::{BlockHashOptions, compute_block_hash_for_seq};
++        use crate::scheduling::overlap_refresh::{
++            TieredOverlapRefresher, refresh_overlap_with_context,
++        };
++        let groups = GroupReuseIndex::default();
++        let epoch = groups.register(worker(), key(), &registration());
++        groups.apply_batch(worker(), epoch, 0, &batch(events()));
++        let indexer = crate::services::indexer::backend::create_indexer(16, 1);
++        let raw = serde_json::from_value(events().remove(0)).unwrap();
++        let mut normalizer = crate::zmq_wire::ZmqEventNormalizer::new(16);
++        let event = normalizer
++            .normalize(raw, 0, worker())
++            .unwrap()
++            .into_router_event()
++            .unwrap();
++        indexer.apply_event_routed(event).await.unwrap();
++        let refresher =
++            TieredOverlapRefresher::new(indexer, crate::config::KvRouterConfig::default(), 16)
++                .with_correction(groups.correction(key(), 16));
++        let query = query(Some(true));
++        let hashes = compute_block_hash_for_seq(
++            query.tokens.as_deref().unwrap(),
++            16,
++            BlockHashOptions::default(),
++        );
++        let now = tokio::time::Instant::now();
++        let before = refresh_overlap_with_context(
++            Some(&refresher),
++            Some(std::time::Duration::from_secs(10)),
++            Some(&hashes),
++            false,
++            now,
++            now,
++            Some(&query),
++        )
++        .await
++        .unwrap();
++        assert_eq!(before.overlap.effective_cached_tokens[&worker()], 128);
++        groups.apply_batch(
++            worker(),
++            epoch,
++            1,
++            &batch(vec![
++                json!({"type":"BlockRemoved","group_idx":1,"block_hashes":[8]}),
++            ]),
++        );
++        let after = refresh_overlap_with_context(
++            Some(&refresher),
++            Some(std::time::Duration::from_secs(10)),
++            Some(&hashes),
++            false,
++            now,
++            now,
++            Some(&query),
++        )
++        .await
++        .unwrap();
++        assert_eq!(after.overlap.effective_cached_tokens[&worker()], 0);
++        let offline = TieredOverlapRefresher::new(
++            OfflineProvider,
++            crate::config::KvRouterConfig::default(),
++            16,
++        )
++        .with_correction(groups.correction(key(), 16));
++        let failed = refresh_overlap_with_context(
++            Some(&offline),
++            Some(std::time::Duration::from_secs(10)),
++            Some(&hashes),
++            false,
++            now,
++            now,
++            Some(&query),
++        )
++        .await
++        .unwrap();
++        assert!(failed.overlap.effective_cached_tokens.is_empty());
++    }
++}
+--- a/lib/kv-router/src/services/indexer/listener.rs
++++ b/lib/kv-router/src/services/indexer/listener.rs
+@@ -154,6 +154,7 @@
+     watermark: Arc<AtomicU64>,
+     normalizer: ZmqEventNormalizer,
+     messages_processed: u64,
++    group_reuse: Option<(super::group_reuse::GroupReuseIndex, u64)>,
+ }
+ 
+ impl ListenerLoop {
+@@ -178,6 +179,24 @@
+             watermark,
+             normalizer: ZmqEventNormalizer::new(block_size),
+             messages_processed: 0,
++            group_reuse: None,
++        }
++    }
++
++    fn invalidate_groups(&self) {
++        if let Some((index, epoch)) = &self.group_reuse {
++            index.invalidate(WorkerWithDpRank::new(self.worker_id, self.dp_rank), *epoch);
++        }
++    }
++
++    fn apply_group_batch(&self, seq: u64, payload: &[u8]) {
++        if let Some((index, epoch)) = &self.group_reuse {
++            index.apply_batch(
++                WorkerWithDpRank::new(self.worker_id, self.dp_rank),
++                *epoch,
++                seq,
++                payload,
++            );
+         }
+     }
+ 
+@@ -248,6 +267,7 @@
+             }
+ 
+             if seq_bytes.len() != 8 {
++                self.invalidate_groups();
+                 tracing::warn!(
+                     worker_id,
+                     dp_rank,
+@@ -258,7 +278,9 @@
+             }
+             let seq = u64::from_be_bytes(seq_bytes[..8].try_into().expect("length checked above"));
+ 
++            self.apply_group_batch(seq, payload);
+             let Ok(batch) = decode_event_batch(payload) else {
++                self.invalidate_groups();
+                 tracing::warn!(worker_id, dp_rank, seq, "Failed to decode replayed batch");
+                 continue;
+             };
+@@ -300,6 +322,7 @@
+     async fn handle_gap(&mut self, seq: u64) -> Result<(), String> {
+         match self.cursor().observe(seq) {
+             CursorObservation::Initial { got } if got > 0 => {
++                self.invalidate_groups();
+                 tracing::warn!(
+                     self.worker_id,
+                     self.dp_rank,
+@@ -310,6 +333,7 @@
+                 self.replay_gap(0, got).await?;
+             }
+             CursorObservation::Gap { expected, got } => {
++                self.invalidate_groups();
+                 tracing::warn!(
+                     self.worker_id,
+                     self.dp_rank,
+@@ -327,6 +351,7 @@
+     }
+ 
+     async fn apply_live_batch(&mut self, seq: u64, payload: &[u8]) -> Result<(), String> {
++        self.apply_group_batch(seq, payload);
+         let batch = match decode_event_batch(payload) {
+             Ok(batch) => batch,
+             Err(error) => {
+@@ -370,6 +395,7 @@
+ 
+     async fn handle_message(&mut self, msg: MultipartMessage) -> Result<(), String> {
+         if msg.len() != 3 {
++            self.invalidate_groups();
+             tracing::warn!(
+                 self.worker_id,
+                 self.dp_rank,
+@@ -381,6 +407,7 @@
+ 
+         let seq_bytes = msg.get(1).expect("frame count checked above");
+         if seq_bytes.len() != 8 {
++            self.invalidate_groups();
+             tracing::warn!(
+                 self.worker_id,
+                 self.dp_rank,
+@@ -455,6 +482,9 @@
+         .await
+         {
+             tracing::error!(worker_id, dp_rank, error = %error, "ZMQ listener failed");
++            if let Some((index, epoch)) = record.group_reuse() {
++                index.invalidate(WorkerWithDpRank::new(worker_id, dp_rank), epoch);
++            }
+             record.try_mark_failed(generation, error);
+         }
+     });
+@@ -507,7 +537,7 @@
+         return Ok(());
+     }
+ 
+-    ListenerLoop::new(
++    let mut listener = ListenerLoop::new(
+         worker_id,
+         dp_rank,
+         block_size,
+@@ -516,9 +546,9 @@
+         socket,
+         replay_socket,
+         watermark,
+-    )
+-    .run()
+-    .await
++    );
++    listener.group_reuse = record.group_reuse();
++    listener.run().await
+ }
+ 
+ async fn connect_replay_socket(
+@@ -561,6 +591,92 @@
+     use crate::protocols::compute_block_hash_for_seq;
+     use crate::services::indexer::backend::create_indexer;
+     use std::time::Duration;
++
++    #[tokio::test]
++    async fn detected_gap_revokes_group_credit_before_replay_responds() {
++        use crate::indexer::group_boundary::{CacheIdentity, GroupReuseQuery, QueryOptions};
++        use crate::scheduling::OverlapSignals;
++        use crate::services::indexer::group_reuse::{GroupReuseIndex, GroupReuseRegistration};
++        let groups = GroupReuseIndex::default();
++        let registration: GroupReuseRegistration = serde_json::from_value(serde_json::json!({
++            "version":1,"engine_incarnation":"6519c589-785d-4c0f-8394-221011013ba1",
++            "hash_block_size":16,"sparse_ancestry":"vllm_44488_v1","groups":[
++                {"group_idx":0,"kind":"full_attention","block_size":16,"sliding_window":null},
++                {"group_idx":1,"kind":"mamba","block_size":16,"sliding_window":null}]
++        }))
++        .unwrap();
++        let worker = WorkerWithDpRank::new(1, 0);
++        let key = crate::identity::RoutingPartitionId::new("test", "default");
++        let epoch = groups.register(worker, key.clone(), &registration);
++        let events: Vec<_> = [0,1].into_iter().map(|group| serde_json::json!({
++            "type":"BlockStored","group_idx":group,"block_hashes":[1],
++            "parent_block_hash":null,"token_ids":(0..16).collect::<Vec<u32>>(),"block_size":16
++        })).collect();
++        groups.apply_batch(
++            worker,
++            epoch,
++            0,
++            &rmp_serde::to_vec(&(0.0, events, Some(0_i32))).unwrap(),
++        );
++        let query = GroupReuseQuery {
++            cache_reads_declared: Some(true),
++            tokens: Some(Arc::from((0..17).collect::<Vec<u32>>())),
++            identity: CacheIdentity::default(),
++            options: QueryOptions::ordinary(),
++        };
++        let credit = || {
++            let mut overlap = OverlapSignals::default();
++            overlap.tier_overlap_blocks.device.insert(worker, 1);
++            overlap.effective_overlap_blocks.insert(worker, 1.0);
++            overlap.effective_cached_tokens.insert(worker, 16);
++            groups.correct(&key, 16, &mut overlap, Some(&query));
++            overlap.effective_cached_tokens[&worker]
++        };
++        assert_eq!(credit(), 16);
++        let context = zmq::Context::new();
++        let server = context.socket(zmq::ROUTER).unwrap();
++        server.set_linger(0).unwrap();
++        server.set_rcvtimeo(3000).unwrap();
++        server.bind("tcp://127.0.0.1:*").unwrap();
++        let replay = connect_dealer_socket(&server.get_last_endpoint().unwrap().unwrap()).unwrap();
++        let publisher = context.socket(zmq::PUB).unwrap();
++        publisher.bind("tcp://127.0.0.1:*").unwrap();
++        let live = connect_sub_socket(&publisher.get_last_endpoint().unwrap().unwrap()).unwrap();
++        let (observed_tx, observed_rx) = tokio::sync::oneshot::channel();
++        let (release_tx, release_rx) = std::sync::mpsc::channel();
++        let peer = tokio::task::spawn_blocking(move || {
++            let request = server.recv_multipart(0).unwrap();
++            assert_eq!(request[2], 1_u64.to_be_bytes());
++            observed_tx.send(()).unwrap();
++            release_rx.recv_timeout(Duration::from_secs(5)).unwrap();
++        });
++        let cancel = CancellationToken::new();
++        let mut listener = ListenerLoop::new(
++            1,
++            0,
++            16,
++            create_indexer(16, 1),
++            cancel.clone(),
++            live,
++            Some(replay),
++            Arc::new(AtomicU64::new(0)),
++        );
++        listener.group_reuse = Some((groups.clone(), epoch));
++        let waiting = tokio::spawn(async move { listener.handle_gap(2).await });
++        tokio::time::timeout(Duration::from_secs(3), observed_rx)
++            .await
++            .unwrap()
++            .unwrap();
++        assert_eq!(credit(), 0);
++        assert!(
++            !waiting.is_finished(),
++            "replay must still be awaiting a response"
++        );
++        cancel.cancel();
++        waiting.await.unwrap().unwrap();
++        release_tx.send(()).unwrap();
++        peer.await.unwrap();
++    }
+ 
+     #[rstest::rstest]
+     #[case::sglang(false)]
+--- a/lib/kv-router/src/services/indexer/mod.rs
++++ b/lib/kv-router/src/services/indexer/mod.rs
+@@ -30,6 +30,7 @@
+ //! response struct in [`server`] for the exact semantics.
+ 
+ pub mod backend;
++pub mod group_reuse;
+ pub mod listener;
+ pub mod logging;
+ pub mod lookup;
+--- a/lib/kv-router/src/services/indexer/registry.rs
++++ b/lib/kv-router/src/services/indexer/registry.rs
+@@ -19,6 +19,7 @@
+ use crate::protocols::WorkerId;
+ 
+ use super::backend::{Indexer, IndexerPolicy, create_indexer_with_policy};
++use super::group_reuse::{GroupReuseIndex, GroupReuseRegistration};
+ use super::listener::spawn_zmq_listener;
+ 
+ pub struct IndexerEntry {
+@@ -148,6 +149,7 @@
+     indexer: Indexer,
+     watermark: Arc<AtomicU64>,
+     runtime: Mutex<ListenerRuntime>,
++    group_reuse: Option<(GroupReuseIndex, u64)>,
+ }
+ 
+ impl ListenerRecord {
+@@ -164,6 +166,7 @@
+             block_size,
+             indexer,
+             watermark,
++            group_reuse: None,
+             runtime: Mutex::new(ListenerRuntime {
+                 status: ListenerStatus::Pending,
+                 last_error: None,
+@@ -171,6 +174,10 @@
+                 generation: 0,
+             }),
+         }
++    }
++
++    pub(super) fn group_reuse(&self) -> Option<(GroupReuseIndex, u64)> {
++        self.group_reuse.clone()
+     }
+ 
+     pub(super) fn endpoint(&self) -> &str {
+@@ -309,6 +316,7 @@
+ }
+ 
+ pub struct WorkerRegistry {
++    pub group_reuse: GroupReuseIndex,
+     workers: DashMap<WorkerId, WorkerEntry>,
+     indexers: DashMap<RoutingPartitionId, IndexerEntry>,
+     // Serialize indexer claims through worker publication with empty-indexer removal.
+@@ -362,6 +370,7 @@
+     ) -> Self {
+         let (ready_tx, ready_rx) = watch::channel(false);
+         Self {
++            group_reuse: GroupReuseIndex::default(),
+             workers: DashMap::new(),
+             indexers: DashMap::new(),
+             indexer_lifecycle: tokio::sync::Mutex::new(()),
+@@ -435,6 +444,34 @@
+         block_size: u32,
+         replay_endpoint: Option<String>,
+     ) -> Result<()> {
++        self.register_with_group(
++            instance_id,
++            endpoint,
++            dp_rank,
++            model_name,
++            routing_group,
++            block_size,
++            replay_endpoint,
++            None,
++        )
++        .await
++    }
++
++    #[expect(clippy::too_many_arguments)]
++    pub async fn register_with_group(
++        &self,
++        instance_id: WorkerId,
++        endpoint: String,
++        dp_rank: u32,
++        model_name: String,
++        routing_group: String,
++        block_size: u32,
++        replay_endpoint: Option<String>,
++        group: Option<GroupReuseRegistration>,
++    ) -> Result<()> {
++        if let Some(group) = &group {
++            group.validate(block_size, 1).map_err(anyhow::Error::msg)?;
++        }
+         let key = RoutingPartitionId::new(model_name, routing_group);
+         let registration = self.indexer_lifecycle.lock().await;
+ 
+@@ -491,13 +528,16 @@
+             .or_insert_with(|| Arc::new(AtomicU64::new(u64::MAX)))
+             .clone();
+ 
+-        let record = Arc::new(ListenerRecord::new(
+-            endpoint,
+-            replay_endpoint,
+-            bs,
+-            indexer,
+-            watermark,
+-        ));
++        let mut record = ListenerRecord::new(endpoint, replay_endpoint, bs, indexer, watermark);
++        if let Some(group) = &group {
++            let epoch = self.group_reuse.register(
++                crate::protocols::WorkerWithDpRank::new(instance_id, dp_rank),
++                key.clone(),
++                group,
++            );
++            record.group_reuse = Some((self.group_reuse.clone(), epoch));
++        }
++        let record = Arc::new(record);
+         let attempt = record.start_pending(&self.root_cancel_token);
+ 
+         {
+@@ -544,6 +584,11 @@
+             }
+             for &dp_rank in entry.listeners.keys() {
+                 self.watermarks.remove(&(instance_id, dp_rank));
++                self.group_reuse
++                    .retire(crate::protocols::WorkerWithDpRank::new(
++                        instance_id,
++                        dp_rank,
++                    ));
+             }
+         }
+ 
+@@ -552,6 +597,7 @@
+         if let Some(indexer) = indexer {
+             indexer.remove_worker(instance_id).await;
+         }
++        self.group_reuse.remove_worker(instance_id);
+         self.maybe_remove_indexer(&key).await;
+         Ok(())
+     }
+@@ -590,6 +636,11 @@
+             cancel_token.cancel();
+         }
+         self.watermarks.remove(&(instance_id, dp_rank));
++        self.group_reuse
++            .retire(crate::protocols::WorkerWithDpRank::new(
++                instance_id,
++                dp_rank,
++            ));
+ 
+         if remove_worker {
+             let actually_removed = self
+@@ -610,6 +661,11 @@
+             }
+         }
+ 
++        self.group_reuse
++            .remove(crate::protocols::WorkerWithDpRank::new(
++                instance_id,
++                dp_rank,
++            ));
+         Ok(())
+     }
+ 
+@@ -639,6 +695,11 @@
+             }
+             for &dp_rank in entry.listeners.keys() {
+                 self.watermarks.remove(&(instance_id, dp_rank));
++                self.group_reuse
++                    .retire(crate::protocols::WorkerWithDpRank::new(
++                        instance_id,
++                        dp_rank,
++                    ));
+             }
+         }
+ 
+@@ -646,6 +707,7 @@
+         if let Some(indexer) = indexer {
+             indexer.remove_worker(instance_id).await;
+         }
++        self.group_reuse.remove_worker(instance_id);
+         self.maybe_remove_indexer(&key).await;
+         Ok(())
+     }
+@@ -667,6 +729,12 @@
+         };
+ 
+         let cancel_token = record.pause(instance_id, dp_rank)?;
++        if let Some((index, epoch)) = record.group_reuse() {
++            index.invalidate(
++                crate::protocols::WorkerWithDpRank::new(instance_id, dp_rank),
++                epoch,
++            );
++        }
+         cancel_token.cancel();
+         tracing::info!(instance_id, dp_rank, "Paused ZMQ listener");
+         Ok(())
+@@ -713,11 +781,15 @@
+         dp_rank: u32,
+         key: &RoutingPartitionId,
+     ) {
++        self.group_reuse
++            .retire(crate::protocols::WorkerWithDpRank::new(worker_id, dp_rank));
+         // Clone the handle so the shard guard drops before the await.
+         let indexer = self.indexers.get(key).map(|ie| ie.indexer.clone());
+         if let Some(indexer) = indexer {
+             indexer.remove_worker_dp_rank(worker_id, dp_rank).await;
+         }
++        self.group_reuse
++            .remove(crate::protocols::WorkerWithDpRank::new(worker_id, dp_rank));
+     }
+ 
+     pub fn list(&self) -> Vec<WorkerInfo> {
+--- a/lib/kv-router/src/services/selection/core/queries.rs
++++ b/lib/kv-router/src/services/selection/core/queries.rs
+@@ -85,10 +85,47 @@
+             .await
+             .map_err(|error| SelectionError::Internal(error.to_string()))?;
+         let schedulable_workers = self.schedulable_worker_ranks(&key);
+-        Ok(
+-            OverlapAnalysis::new(&self.kv_router_config, entry.block_size, &tiered)
+-                .scores_response(num_blocks, schedulable_workers, false, None, None),
+-        )
++        let analysis = OverlapAnalysis::new(&self.kv_router_config, entry.block_size, &tiered);
++        let mut overlap = analysis.signals();
++        if self
++            .indexer_registry
++            .group_reuse
++            .contains_partition(&entry.key)
++            || req.prompt.cache_reads_enabled == Some(false)
++        {
++            self.indexer_registry.group_reuse.correct(
++                &entry.key,
++                entry.block_size,
++                &mut overlap,
++                Some(&req.prompt.view().group_query(entry.is_eagle)),
++            );
++        }
++        let mut response =
++            analysis.scores_response(num_blocks, schedulable_workers, false, None, None);
++        for worker in &mut response.workers {
++            let rank = WorkerWithDpRank::new(worker.worker_id, worker.dp_rank);
++            worker.device_blocks = overlap
++                .tier_overlap_blocks
++                .device
++                .get(&rank)
++                .copied()
++                .unwrap_or(0);
++            worker.host_pinned_extension_blocks = overlap
++                .tier_overlap_blocks
++                .host_pinned
++                .get(&rank)
++                .copied()
++                .unwrap_or(0);
++            worker.disk_extension_blocks = overlap
++                .tier_overlap_blocks
++                .disk
++                .get(&rank)
++                .copied()
++                .unwrap_or(0);
++            worker.host_pinned_blocks = worker.device_blocks + worker.host_pinned_extension_blocks;
++            worker.disk_blocks = worker.host_pinned_blocks + worker.disk_extension_blocks;
++        }
++        Ok(response)
+     }
+ 
+     fn schedulable_worker_ranks(&self, key: &RoutingPartitionId) -> Vec<WorkerWithDpRank> {
+--- a/lib/kv-router/src/services/selection/core/run.rs
++++ b/lib/kv-router/src/services/selection/core/run.rs
+@@ -55,6 +55,7 @@
+ const KV_HINT_FETCH_ACTION_ID: &str = "a1";
+ 
+ pub(super) struct PreparedSelectionInputs {
++    group_reuse_query: Option<Arc<crate::indexer::group_boundary::GroupReuseQuery>>,
+     pub(super) block_hashes: Vec<LocalBlockHash>,
+     pub(super) sequence_hashes: Vec<SequenceHash>,
+     pub(super) isl_tokens: usize,
+@@ -324,6 +325,7 @@
+             });
+         }
+         let PreparedSelectionInputs {
++            group_reuse_query,
+             block_hashes,
+             sequence_hashes,
+             isl_tokens,
+@@ -410,6 +412,7 @@
+             matches!(admission, SelectionAdmission::Book { .. }).then(|| sequence_hashes.clone());
+         let returned_routing_hashes = return_routing_hashes.then(|| block_hashes.clone());
+         let schedule_request = ScheduleRequest {
++            group_reuse_query,
+             mode,
+             token_seq: track_active_blocks.then_some(sequence_hashes),
+             block_hashes: Some(block_hashes),
+@@ -750,10 +753,15 @@
+             };
+             (tiered, started.elapsed())
+         };
+-        let shared_cache = query_shared_cache
+-            .then_some(self.host.cache.shared.as_deref())
+-            .flatten()
+-            .zip(prompt.token_ids);
++        let groups_active = self
++            .indexer_registry
++            .group_reuse
++            .contains_partition(&entry.key);
++        let shared_cache =
++            (query_shared_cache && !groups_active && prompt.cache_reads_enabled != Some(false))
++                .then_some(self.host.cache.shared.as_deref())
++                .flatten()
++                .zip(prompt.token_ids);
+         // `(hits, duration, failed)`; all `None`/`false` without a shared cache.
+         let shared_cache_lookup = async {
+             let Some((shared_cache, tokens)) = shared_cache else {
+@@ -788,13 +796,26 @@
+         // when the index lookup fails.
+         *lookup = Some(timings);
+         let tiered = tiered?;
+-        let overlap =
++        let mut overlap =
+             OverlapAnalysis::new(&self.kv_router_config, entry.block_size, &tiered).signals();
+-        let kv_transfer_candidates = retain_kv_transfer_chain
+-            .then(|| tiered.kv_transfer_candidates().cloned())
+-            .flatten();
++        let group_reuse_query = (groups_active || prompt.cache_reads_enabled == Some(false))
++            .then(|| Arc::new(prompt.group_query(entry.is_eagle)));
++        if let Some(query) = &group_reuse_query {
++            self.indexer_registry.group_reuse.correct(
++                &entry.key,
++                entry.block_size,
++                &mut overlap,
++                Some(query),
++            );
++        }
++        let kv_transfer_candidates = (retain_kv_transfer_chain
++            && !groups_active
++            && prompt.cache_reads_enabled != Some(false))
++        .then(|| tiered.kv_transfer_candidates().cloned())
++        .flatten();
+         drop(tiered);
+         Ok(PreparedSelectionInputs {
++            group_reuse_query,
+             block_hashes: normalized.block_hashes,
+             sequence_hashes: normalized.sequence_hashes,
+             isl_tokens: normalized.isl_tokens,
+--- a/lib/kv-router/src/services/selection/core/tests.rs
++++ b/lib/kv-router/src/services/selection/core/tests.rs
+@@ -116,6 +116,7 @@
+ 
+ fn worker(worker_id: WorkerId) -> WorkerRequest {
+     WorkerRequest {
++        group_reuse: None,
+         worker_id,
+         model_name: "model".to_string(),
+         routing_group: "default".to_string(),
+@@ -150,6 +151,7 @@
+ 
+ fn prompt() -> PromptRequest {
+     PromptRequest {
++        cache_reads_enabled: None,
+         token_ids: Some(vec![1, 2, 3, 4]),
+         mm_routing_info: None,
+         block_mm_infos: None,
+--- a/lib/kv-router/src/services/selection/core/workers.rs
++++ b/lib/kv-router/src/services/selection/core/workers.rs
+@@ -114,7 +114,17 @@
+         model_name: Option<&str>,
+         routing_group: Option<&str>,
+     ) -> Vec<WorkerCatalogRecord> {
+-        self.catalog.list(model_name, routing_group)
++        self.catalog
++            .list(model_name, routing_group)
++            .into_iter()
++            .map(|mut record| {
++                record.group_reuse_status = self
++                    .indexer_registry
++                    .group_reuse
++                    .status(WorkerWithDpRank::new(record.worker_id, record.dp_start()));
++                record
++            })
++            .collect()
+     }
+ 
+     pub fn ready(&self) -> ReadyResponse {
+@@ -128,6 +138,29 @@
+     }
+ 
+     fn prepare_worker(&self, record: &mut WorkerCatalogRecord) -> Result<(), SelectionError> {
++        if let Some(group) = &record.group_reuse {
++            group
++                .validate(record.block_size.unwrap_or(0), record.dp_size())
++                .map_err(SelectionError::BadRequest)?;
++            if !self
++                .ingress()
++                .is_some_and(|ingress| ingress.supports_group_reuse())
++            {
++                return Err(SelectionError::BadRequest(
++                    "group_reuse requires the direct engine-event ingress".into(),
++                ));
++            }
++            for (rank, endpoint) in record.listener_endpoints() {
++                self.indexer_registry
++                    .group_reuse
++                    .check_source(
++                        WorkerWithDpRank::new(record.worker_id, rank),
++                        &endpoint,
++                        group,
++                    )
++                    .map_err(SelectionError::BadRequest)?;
++            }
++        }
+         // Reject before any per-rank work so an oversized range cannot allocate per rank.
+         if record.dp_size() > MAX_DATA_PARALLEL_RANKS_PER_WORKER {
+             return Err(SelectionError::BadRequest(format!(
+@@ -201,6 +234,14 @@
+         } else {
+             WorkerLifecycle::Incomplete
+         };
++        record.group_reuse_version = None;
++        record.group_reuse_engine_incarnation = None;
++        if record.lifecycle == WorkerLifecycle::Schedulable {
++            if let Some(group) = &record.group_reuse {
++                record.group_reuse_version = Some(group.version);
++                record.group_reuse_engine_incarnation = Some(group.engine_incarnation.clone());
++            }
++        }
+         // Readers see only committed metadata. A valid capacity/topology update preserves
+         // live bookings on ranks present in both the old and new snapshots.
+         self.catalog.replace(record.clone());
+@@ -318,11 +359,18 @@
+                 let KvIndexSource::Owned(ingress) = &self.host.cache.index;
+                 let indexer = ingress.open(&self.indexer_registry, &key, block_size);
+                 let overlap_refresh = indexer.supports_overlap_refresh().then(|| {
+-                    Arc::new(TieredOverlapRefresher::new(
+-                        indexer.clone(),
+-                        self.kv_router_config.clone(),
+-                        block_size,
+-                    ))
++                    Arc::new(
++                        TieredOverlapRefresher::new(
++                            indexer.clone(),
++                            self.kv_router_config.clone(),
++                            block_size,
++                        )
++                        .with_correction(
++                            self.indexer_registry
++                                .group_reuse
++                                .correction(key.clone(), block_size),
++                        ),
++                    )
+                 });
+                 let selector = (self.worker_selection_policy_factory)(
+                     &self.kv_router_config,
+--- a/lib/kv-router/src/services/selection/ingress.rs
++++ b/lib/kv-router/src/services/selection/ingress.rs
+@@ -19,6 +19,10 @@
+ /// and treats the per-worker hooks as membership it already tracks.
+ #[async_trait]
+ pub trait KvEventIngress: Send + Sync {
++    fn supports_group_reuse(&self) -> bool {
++        false
++    }
++
+     /// The index for `key`, created on first use. Called once per partition,
+     /// before any worker attaches.
+     fn open(&self, registry: &WorkerRegistry, key: &RoutingPartitionId, block_size: u32)
+@@ -59,6 +63,10 @@
+ 
+ #[async_trait]
+ impl KvEventIngress for ZmqDirectIngress {
++    fn supports_group_reuse(&self) -> bool {
++        true
++    }
++
+     fn open(
+         &self,
+         registry: &WorkerRegistry,
+@@ -97,6 +105,16 @@
+             .ok_or_else(|| SelectionError::BadRequest("block_size is required".to_string()))?;
+         let endpoints = record.listener_endpoints();
+         for (rank, endpoint) in &endpoints {
++            if let Some(group) = &record.group_reuse {
++                registry
++                    .group_reuse
++                    .bind_source(
++                        crate::protocols::WorkerWithDpRank::new(record.worker_id, *rank),
++                        endpoint,
++                        group,
++                    )
++                    .map_err(SelectionError::BadRequest)?;
++            }
+             crate::services::common::zmq::validate_endpoint(endpoint).map_err(|error| {
+                 SelectionError::BadRequest(format!(
+                     "invalid kv_events endpoint for worker {} dp_rank {rank}: {error}",
+@@ -124,6 +142,7 @@
+                     && ranks.contains(&rank)
+                     && old_endpoints.get(&rank) == endpoints.get(&rank)
+                     && previous.replay_endpoint == record.replay_endpoint
++                    && previous.group_reuse == record.group_reuse
+                 {
+                     retained.insert(rank);
+                 } else if listener_present {
+@@ -150,7 +169,7 @@
+         endpoints.sort_by_key(|(rank, _)| *rank);
+         for (dp_rank, endpoint) in endpoints {
+             registry
+-                .register(
++                .register_with_group(
+                     record.worker_id,
+                     endpoint,
+                     dp_rank,
+@@ -158,6 +177,7 @@
+                     record.routing_group.clone(),
+                     block_size,
+                     record.replay_endpoint.clone(),
++                    record.group_reuse.clone(),
+                 )
+                 .await
+                 .map_err(|error| SelectionError::BadRequest(error.to_string()))?;
+--- a/lib/kv-router/src/services/selection/input.rs
++++ b/lib/kv-router/src/services/selection/input.rs
+@@ -30,6 +30,7 @@
+ 
+ #[derive(Debug, Clone, Default, Deserialize)]
+ pub struct PromptRequest {
++    pub cache_reads_enabled: Option<bool>,
+     pub token_ids: Option<Vec<u32>>,
+     pub mm_routing_info: Option<MmRoutingInfoRequest>,
+     pub block_mm_infos: Option<Vec<Option<BlockExtraInfo>>>,
+@@ -47,6 +48,7 @@
+     /// hold the pieces build a [`PromptView`] directly instead of allocating.
+     pub fn view(&self) -> PromptView<'_> {
+         PromptView {
++            cache_reads_enabled: self.cache_reads_enabled,
+             token_ids: self.token_ids.as_deref(),
+             mm_routing_info: self.mm_routing_info.as_ref(),
+             block_mm_infos: self.block_mm_infos.as_deref(),
+@@ -65,6 +67,7 @@
+ /// the hash-only trio).
+ #[derive(Debug, Clone, Copy)]
+ pub struct PromptView<'a> {
++    pub cache_reads_enabled: Option<bool>,
+     pub token_ids: Option<&'a [u32]>,
+     pub mm_routing_info: Option<&'a MmRoutingInfoRequest>,
+     pub block_mm_infos: Option<&'a [Option<BlockExtraInfo>]>,
+@@ -77,6 +80,26 @@
+ }
+ 
+ impl PromptView<'_> {
++    pub(super) fn group_query(
++        &self,
++        default_is_eagle: bool,
++    ) -> crate::indexer::group_boundary::GroupReuseQuery {
++        use crate::indexer::group_boundary::{CacheIdentity, GroupReuseQuery, QueryOptions};
++        GroupReuseQuery {
++            tokens: self.token_ids.map(std::sync::Arc::from),
++            cache_reads_declared: self.cache_reads_enabled,
++            identity: CacheIdentity {
++                cache_namespace: self.cache_namespace.map(str::to_owned),
++                lora_name: self.lora_name.map(str::to_owned),
++            },
++            options: QueryOptions {
++                cache_reads_enabled: self.cache_reads_enabled == Some(true),
++                is_eagle: self.is_eagle.unwrap_or(default_is_eagle),
++                has_multimodal: self.mm_routing_info.is_some() || self.block_mm_infos.is_some(),
++            },
++        }
++    }
++
+     /// `tracking` is `None` when the caller does not track active blocks; the
+     /// tracking hashes are then left empty instead of computed and discarded.
+     pub(super) fn normalize_for_selection(
+--- a/lib/kv-router/src/services/selection/mod.rs
++++ b/lib/kv-router/src/services/selection/mod.rs
+@@ -43,7 +43,7 @@
+ pub use input::{PromptRequest, PromptView};
+ pub use membership::{CatalogObserver, CatalogReconciler, WorkerCatalogSource};
+ pub use pending::SelectionCacheConfig;
+-pub use server::{AppState, run_server};
++pub use server::{AppState, run_server, run_server_on};
+ pub use service::{
+     SelectionService, SelectionServiceBuilder, warn_for_unserved_worker_selection_policies,
+ };
+--- a/lib/kv-router/src/services/selection/server.rs
++++ b/lib/kv-router/src/services/selection/server.rs
+@@ -280,6 +280,10 @@
+ pub async fn run_server(port: u16, service: SelectionService) -> anyhow::Result<()> {
+     tracing::info!(port, "Starting Dynamo selection service");
+     let listener = TcpListener::bind(("0.0.0.0", port)).await?;
++    run_server_on(listener, service).await
++}
++
++pub async fn run_server_on(listener: TcpListener, service: SelectionService) -> anyhow::Result<()> {
+     let service = Arc::new(service);
+     let app = create_router(Arc::new(AppState {
+         service: Arc::clone(&service),
+--- a/lib/kv-router/src/services/selection/tests.rs
++++ b/lib/kv-router/src/services/selection/tests.rs
+@@ -524,6 +524,7 @@
+         }],
+     })];
+     let request = PromptRequest {
++        cache_reads_enabled: None,
+         token_ids: Some(vec![1, 2, 3, 4]),
+         mm_routing_info: Some(MmRoutingInfoRequest {
+             routing_token_ids: vec![10, 11, 12, 13, 14, 15, 16, 17],
+--- a/lib/kv-router/src/services/selection/types.rs
++++ b/lib/kv-router/src/services/selection/types.rs
+@@ -18,6 +18,7 @@
+ use crate::services::overlap::MooncakeOverlapSummary;
+ 
+ use super::input::PromptRequest;
++use crate::services::indexer::group_reuse::GroupReuseRegistration;
+ 
+ pub const DEFAULT_MODEL_NAME: &str = "default";
+ pub(super) const REQUEST_BODY_LIMIT_BYTES: usize = 8 * 1024 * 1024;
+@@ -126,6 +127,13 @@
+ 
+ #[derive(Debug, Clone, Serialize)]
+ pub struct WorkerCatalogRecord {
++    #[serde(skip_serializing_if = "Option::is_none")]
++    pub group_reuse_status: Option<crate::services::indexer::group_reuse::GroupReuseStatus>,
++    #[serde(skip_serializing_if = "Option::is_none")]
++    pub group_reuse_version: Option<u32>,
++    #[serde(skip_serializing_if = "Option::is_none")]
++    pub group_reuse_engine_incarnation: Option<String>,
++    pub group_reuse: Option<GroupReuseRegistration>,
+     pub worker_id: WorkerId,
+     pub model_name: String,
+     pub routing_group: String,
+@@ -162,6 +170,10 @@
+ impl WorkerCatalogRecord {
+     pub fn new(req: WorkerRequest) -> Self {
+         Self {
++            group_reuse_status: None,
++            group_reuse_version: None,
++            group_reuse_engine_incarnation: None,
++            group_reuse: req.group_reuse,
+             worker_id: req.worker_id,
+             model_name: req.model_name,
+             routing_group: req.routing_group,
+@@ -240,6 +252,11 @@
+ 
+     pub(super) fn missing_schedulable_metadata(&self, queueing_enabled: bool) -> Vec<String> {
+         let mut missing = Vec::new();
++        if let Some(group) = &self.group_reuse {
++            if let Err(error) = group.validate(self.block_size.unwrap_or(0), self.dp_size()) {
++                missing.push(error);
++            }
++        }
+ 
+         if self.endpoint.as_deref().is_none_or(str::is_empty) {
+             missing.push("endpoint is required".to_string());
+@@ -263,6 +280,7 @@
+ impl Default for WorkerRequest {
+     fn default() -> Self {
+         Self {
++            group_reuse: None,
+             worker_id: 0,
+             model_name: default_model_name(),
+             routing_group: default_routing_group(),
+@@ -291,6 +309,7 @@
+ 
+ #[derive(Debug, Clone, PartialEq, Deserialize)]
+ pub struct WorkerRequest {
++    pub group_reuse: Option<GroupReuseRegistration>,
+     pub worker_id: WorkerId,
+     #[serde(default = "default_model_name")]
+     pub model_name: String,
+@@ -328,6 +347,7 @@
+ 
+ #[derive(Debug, Deserialize)]
+ pub struct WorkerPatchRequest {
++    pub group_reuse: Option<GroupReuseRegistration>,
+     pub endpoint: Option<String>,
+     pub kv_events_endpoint: Option<String>,
+     pub kv_events_endpoints: Option<HashMap<u32, String>>,
+@@ -354,6 +374,11 @@
+ 
+ impl WorkerCatalogRecord {
+     pub(super) fn apply_patch(&mut self, patch: WorkerPatchRequest) {
++        if let Some(registration) = patch.group_reuse {
++            self.group_reuse_version = None;
++            self.group_reuse_engine_incarnation = None;
++            self.group_reuse = Some(registration);
++        }
+         // TODO(rank-aware-kv-capacity): when the rank map is added, treat rank range, map,
+         // scalar fallback, and provenance as one replace-only snapshot. A legacy scalar/range
+         // patch must clear stale exact data rather than leave it winning lookup precedence.
+--- a/lib/llm/src/kv_router.rs
++++ b/lib/llm/src/kv_router.rs
+@@ -1356,6 +1356,7 @@
+             .run_selection(SelectionOperation {
+                 key: self.selection.partition_key().clone(),
+                 prompt: PromptView {
++                    cache_reads_enabled: None,
+                     token_ids: Some(tokens),
+                     mm_routing_info: None,
+                     block_mm_infos,
+--- a/lib/router-plugins/builtin/Cargo.toml
++++ b/lib/router-plugins/builtin/Cargo.toml
+@@ -12,6 +12,9 @@
+ description = "Router plugins shipped with Dynamo"
+ 
+ [dependencies]
++anyhow.workspace = true
++serde_json.workspace = true
++flume = "0.12.0"
+ fastrand = "2"
+ parking_lot.workspace = true
+ dynamo-kv-router = { workspace = true, features = ["standalone-selection"] }
+--- /dev/null
++++ b/lib/router-plugins/builtin/src/bin/reedcode_hybrid_fix_probe.rs
+@@ -0,0 +1,378 @@
++// SPDX-FileCopyrightText: Copyright (c) 2026
++// SPDX-License-Identifier: Apache-2.0
++
++use std::collections::HashMap;
++use std::io::{self, Read};
++use std::sync::Arc;
++
++use anyhow::{Context, ensure};
++use dynamo_custom_policy_builtin::DefaultWorkerSelector;
++use dynamo_kv_router::indexer::group_boundary::{
++    CacheIdentity, GroupBoundaryIndex, GroupEvent, GroupSpec, QueryOptions, ReuseBoundary,
++    Unavailable, apply_device_boundary,
++};
++use dynamo_kv_router::indexer::{MatchDetails, SyncIndexer, TieredMatchDetails, WorkerTask};
++use dynamo_kv_router::protocols::{
++    BlockHashOptions, RoutingConstraints, StorageTier, WorkerConfigLike, WorkerWithDpRank,
++};
++use dynamo_kv_router::scheduling::overlap::OverlapAnalysis;
++use dynamo_kv_router::scheduling::{ScheduleMode, SchedulingRequest};
++use dynamo_kv_router::zmq_wire::{RawKvEvent, ZmqEventNormalizer};
++use dynamo_kv_router::{
++    ConcurrentRadixTreeCompressed, KvRouterConfig, RadixTree, compute_block_hash_for_seq,
++};
++use dynamo_kv_router::{WorkerLoadProjection, WorkerSelectionInput, WorkerSelector};
++use serde::Deserialize;
++use serde_json::{Value, json};
++
++#[derive(Deserialize)]
++struct Input {
++    block_size: u32,
++    #[serde(default = "default_worker")]
++    worker_id: u64,
++    #[serde(default)]
++    dp_rank: u32,
++    steps: Vec<Step>,
++    manifests: Vec<Manifest>,
++    cache_reads_enabled: bool,
++    max_ancestry_entries: usize,
++}
++#[derive(Deserialize)]
++struct Manifest {
++    worker_id: u64,
++    #[serde(default)]
++    dp_rank: u32,
++    generation: u64,
++    groups: Vec<GroupSpec>,
++}
++
++fn default_worker() -> u64 {
++    1
++}
++
++#[derive(Deserialize)]
++struct Step {
++    id: String,
++    worker_id: Option<u64>,
++    dp_rank: Option<u32>,
++    #[serde(default)]
++    events: Vec<Value>,
++    #[serde(default)]
++    queries: Vec<Query>,
++}
++
++#[derive(Deserialize)]
++#[serde(deny_unknown_fields)]
++struct Query {
++    id: String,
++    token_ids: Vec<u32>,
++    cache_namespace: Option<String>,
++    lora_name: Option<String>,
++    is_eagle: Option<bool>,
++}
++
++#[derive(Clone, Copy)]
++struct ProbeWorker;
++impl WorkerConfigLike for ProbeWorker {
++    fn data_parallel_start_rank(&self) -> u32 {
++        0
++    }
++    fn data_parallel_size(&self) -> u32 {
++        1
++    }
++    fn max_num_batched_tokens(&self) -> Option<u64> {
++        None
++    }
++    fn total_kv_blocks(&self) -> Option<u64> {
++        Some(16384)
++    }
++}
++
++fn score(
++    details: MatchDetails,
++    block_size: u32,
++    prompt_tokens: usize,
++    workers: &[WorkerWithDpRank],
++    primary: WorkerWithDpRank,
++    boundaries: Option<&[(WorkerWithDpRank, ReuseBoundary)]>,
++) -> anyhow::Result<Value> {
++    let config = KvRouterConfig::default();
++    let tiered = TieredMatchDetails {
++        device: details,
++        ..Default::default()
++    };
++    let analysis = OverlapAnalysis::new(&config, block_size, &tiered);
++    let mut signals = analysis.signals();
++    if let Some(boundaries) = boundaries {
++        for (worker, boundary) in boundaries {
++            apply_device_boundary(&mut signals, *worker, block_size, *boundary);
++        }
++    }
++    let rows: Vec<_> = workers.iter().map(|worker| json!({
++        "worker_id": worker.worker_id, "dp_rank": worker.dp_rank,
++        "device_overlap_blocks": signals.tier_overlap_blocks.device.get(worker).copied().unwrap_or(0),
++        "effective_overlap_blocks": signals.effective_overlap_blocks.get(worker).copied().unwrap_or(0.0),
++        "effective_cached_tokens": signals.effective_cached_tokens.get(worker).copied().unwrap_or(0),
++    })).collect();
++    let request = SchedulingRequest {
++        mode: ScheduleMode::QueryOnly { request_id: None },
++        token_seq: None,
++        isl_tokens: prompt_tokens,
++        lora_name: None,
++        expected_output_tokens: None,
++        affinity_target: None,
++        pinned_worker: None,
++        allowed_worker_ids: None,
++        routing_constraints: RoutingConstraints::default(),
++        router_config_override: None,
++        track_prefill_tokens: true,
++        priority_jump: 0.0,
++        strict_priority: 0,
++        policy_class: None,
++        session_context: None,
++        overlap: signals,
++        kv_transfer_candidates: None,
++        retain_kv_transfer_chain: false,
++        shared_cache_hits: None,
++        worker_loads: workers
++            .iter()
++            .map(|w| (*w, WorkerLoadProjection::default()))
++            .collect(),
++        resp_tx: None,
++    };
++    let cards: HashMap<_, _> = workers.iter().map(|w| (w.worker_id, ProbeWorker)).collect();
++    let selector = DefaultWorkerSelector::new(Some(config), "prefill");
++    let selected = selector.select_worker(WorkerSelectionInput::configured(
++        &cards,
++        &request,
++        request.eligibility(),
++        block_size,
++    ))?;
++    let result = json!({
++        "device_overlap_blocks": request.overlap.tier_overlap_blocks.device.get(&primary).copied().unwrap_or(0),
++        "effective_overlap_blocks": request.overlap.effective_overlap_blocks.get(&primary).copied().unwrap_or(0.0),
++        "effective_cached_tokens": request.overlap.effective_cached_tokens.get(&primary).copied().unwrap_or(0),
++        "workers": rows,
++        "native_selection": {
++            "worker_id": selected.worker.worker_id, "dp_rank": selected.worker.dp_rank,
++            "required_blocks": selected.required_blocks,
++            "effective_overlap_blocks": selected.effective_overlap_blocks,
++            "cached_tokens": selected.cached_tokens,
++            "max_raw_cached_tokens": selected.max_raw_cached_tokens,
++            "selected_raw_cached_tokens": selected.selected_raw_cached_tokens,
++            "potential_decode_blocks": selected.potential_decode_blocks,
++        },
++    });
++    Ok(result)
++}
++
++fn main() -> anyhow::Result<()> {
++    let mut raw_input = String::new();
++    io::stdin().read_to_string(&mut raw_input)?;
++    let input: Input = serde_json::from_str(&raw_input)?;
++    ensure!(input.block_size > 0, "block_size must be positive");
++    let primary = WorkerWithDpRank::new(input.worker_id, input.dp_rank);
++    let mut workers = vec![primary];
++    for step in &input.steps {
++        let worker = WorkerWithDpRank::new(
++            step.worker_id.unwrap_or(input.worker_id),
++            step.dp_rank.unwrap_or(input.dp_rank),
++        );
++        ensure!(
++            worker.dp_rank == 0,
++            "selection probe supports one rank per worker"
++        );
++        if !workers.contains(&worker) {
++            workers.push(worker);
++        }
++    }
++    workers.sort_by_key(|w| (w.worker_id, w.dp_rank));
++    ensure!(
++        input.cache_reads_enabled,
++        "fixture must explicitly enable ordinary prefix-cache reads"
++    );
++    let mut group_index = GroupBoundaryIndex::new(input.max_ancestry_entries);
++    let mut generations = HashMap::new();
++    let mut sequences = HashMap::new();
++    for manifest in input.manifests {
++        let worker = WorkerWithDpRank::new(manifest.worker_id, manifest.dp_rank);
++        ensure!(
++            generations.insert(worker, manifest.generation).is_none(),
++            "duplicate worker manifest"
++        );
++        group_index.register(worker, manifest.generation, manifest.groups);
++        sequences.insert(worker, 0u64);
++    }
++    ensure!(
++        workers.iter().all(|w| generations.contains_key(w)),
++        "complete worker manifests must precede all events"
++    );
++    let mut normalizer = ZmqEventNormalizer::new(input.block_size);
++    let mut radix = RadixTree::new();
++    let crtc = Arc::new(ConcurrentRadixTreeCompressed::new());
++    let (tx, rx) = flume::bounded(16);
++    let crtc_worker = Arc::clone(&crtc);
++    let thread = std::thread::spawn(move || crtc_worker.worker(rx, None));
++    let mut event_id = 0u64;
++    let mut output = Vec::new();
++
++    for step in input.steps {
++        let worker = WorkerWithDpRank::new(
++            step.worker_id.unwrap_or(input.worker_id),
++            step.dp_rank.unwrap_or(input.dp_rank),
++        );
++        let mut events = Vec::new();
++        for (index, value) in step.events.into_iter().enumerate() {
++            let sequence = sequences.get_mut(&worker).unwrap();
++            let boundary_result = match serde_json::from_value::<GroupEvent>(value.clone()) {
++                Ok(event) => group_index.apply(worker, generations[&worker], *sequence, event),
++                Err(_) => {
++                    group_index.invalidate(
++                        worker,
++                        generations[&worker],
++                        Unavailable::UnsupportedMetadata,
++                    );
++                    Err(Unavailable::UnsupportedMetadata)
++                }
++            };
++            *sequence += 1;
++            let boundary_result = format!("{boundary_result:?}");
++            let raw: RawKvEvent = serde_json::from_value(value.clone())
++                .with_context(|| format!("decode event {} in {}", index, step.id))?;
++            let preprocessed = match normalizer.preprocess_with_reason(raw, worker) {
++                Ok(event) => event,
++                Err(reason) => {
++                    events.push(json!({"index": index, "raw": value, "status": "filtered", "reason": reason.as_label(), "boundary_index": boundary_result}));
++                    continue;
++                }
++            };
++            let normalized = normalizer.normalize_preprocessed(preprocessed, event_id, worker);
++            event_id += 1;
++            let Some(placement) = normalized else {
++                events.push(json!({"index": index, "raw": value, "status": "conversion_dropped"}));
++                continue;
++            };
++            // This probe measures the local device path; other tiers need their own native indexes.
++            ensure!(
++                placement.placement.tier == StorageTier::Device,
++                "probe supports device events only"
++            );
++            let normalized_json = serde_json::to_value(&placement)?;
++            let router_event = placement.into_router_event().context("non-worker event")?;
++            let radix_error = radix
++                .apply_event(router_event.clone())
++                .err()
++                .map(|e| e.to_string());
++            let (ack_tx, ack_rx) = tokio::sync::oneshot::channel();
++            tx.send(WorkerTask::EventWithAck {
++                event: router_event,
++                resp: ack_tx,
++            })?;
++            let crtc_applied = ack_rx.blocking_recv()?;
++            // Parent removal can already invalidate descendants. Native workers log later missing removes and continue.
++            let removed = value.get("type").and_then(Value::as_str) == Some("BlockRemoved")
++                || value.get(0).and_then(Value::as_str) == Some("BlockRemoved");
++            let _ = removed; // Stock attention-index errors are evidence; group-index status is recorded independently.
++            events.push(json!({"index": index, "raw": value, "status": "processed", "boundary_index": boundary_result, "radix_error": radix_error, "crtc_applied": crtc_applied, "normalized": normalized_json}));
++        }
++        let mut queries = Vec::new();
++        for query in step.queries {
++            let hashes = compute_block_hash_for_seq(
++                &query.token_ids,
++                input.block_size,
++                BlockHashOptions {
++                    cache_namespace: query.cache_namespace.as_deref(),
++                    lora_name: query.lora_name.as_deref(),
++                    is_eagle: query.is_eagle,
++                    ..Default::default()
++                },
++            );
++            let identity = CacheIdentity {
++                cache_namespace: query.cache_namespace.clone(),
++                lora_name: query.lora_name.clone(),
++            };
++            let options = QueryOptions {
++                cache_reads_enabled: input.cache_reads_enabled,
++                is_eagle: query.is_eagle.unwrap_or(false),
++                has_multimodal: false,
++            };
++            let boundaries: Vec<_> = workers
++                .iter()
++                .map(|w| {
++                    (
++                        *w,
++                        group_index.lookup(
++                            *w,
++                            generations[w],
++                            &query.token_ids,
++                            &identity,
++                            options,
++                        ),
++                    )
++                })
++                .collect();
++            let radix_details = radix.find_match_details(hashes.clone(), false);
++            let stock_radix = score(
++                radix_details.clone(),
++                input.block_size,
++                query.token_ids.len(),
++                &workers,
++                primary,
++                None,
++            )?;
++            let crtc_details = crtc.find_match_details_impl(&hashes, false);
++            let stock_crtc = score(
++                crtc_details.clone(),
++                input.block_size,
++                query.token_ids.len(),
++                &workers,
++                primary,
++                None,
++            )?;
++            let radix_score = score(
++                radix_details,
++                input.block_size,
++                query.token_ids.len(),
++                &workers,
++                primary,
++                Some(&boundaries),
++            )?;
++            let crtc_score = score(
++                crtc_details,
++                input.block_size,
++                query.token_ids.len(),
++                &workers,
++                primary,
++                Some(&boundaries),
++            )?;
++            // Equal-score worker ties are unspecified; compare the actual overlap inputs independently.
++            ensure!(
++                radix_score["workers"] == crtc_score["workers"],
++                "indexers disagree at query {} in {}",
++                query.id,
++                step.id
++            );
++            queries.push(json!({
++                "id": query.id, "input_tokens": query.token_ids.len(), "query_blocks": hashes.len(),
++                "local_block_hashes": hashes.iter().map(|hash| hash.0).collect::<Vec<_>>(),
++                "radix": radix_score, "crtc": crtc_score, "stock_radix": stock_radix, "stock_crtc": stock_crtc,
++                "group_boundaries": boundaries.iter().map(|(w,b)| json!({"worker_id":w.worker_id,"dp_rank":w.dp_rank,"boundary":b})).collect::<Vec<_>>(),
++            }));
++        }
++        output.push(json!({"id": step.id, "worker_id": worker.worker_id, "dp_rank": worker.dp_rank, "events": events, "queries": queries}));
++    }
++    drop(tx);
++    thread
++        .join()
++        .map_err(|_| anyhow::anyhow!("CRTC worker panicked"))??;
++    println!(
++        "{}",
++        serde_json::to_string_pretty(&json!({
++            "dynamo_revision": "548a010548d53ff05e76397f5f1d3a669e4678e1",
++            "scope": "local prototype: complete group manifests and sparse ancestry correction applied before native builtin selection; no live server integration",
++            "block_size": input.block_size, "worker_id": input.worker_id, "dp_rank": input.dp_rank,
++            "steps": output,
++        }))?
++    );
++    Ok(())
++}
+--- /dev/null
++++ b/lib/router-plugins/builtin/src/bin/reedcode_hybrid_service.rs
+@@ -0,0 +1,40 @@
++// SPDX-FileCopyrightText: Copyright (c) 2026
++// SPDX-License-Identifier: Apache-2.0
++
++use std::io::Write;
++use std::path::PathBuf;
++
++use anyhow::{Context, ensure};
++use dynamo_custom_policy_builtin::default_registry;
++use dynamo_kv_router::services::selection::{SelectionServiceBuilder, run_server_on};
++use dynamo_kv_router::{KvRouterConfig, WorkerType};
++use serde_json::json;
++use tokio::net::TcpListener;
++
++#[tokio::main]
++async fn main() -> anyhow::Result<()> {
++    let mut args = std::env::args().skip(1);
++    let ready_path = PathBuf::from(args.next().context("expected ready-file path")?);
++    let indexer_threads: usize = args.next().unwrap_or_else(|| "2".into()).parse()?;
++    let config: KvRouterConfig = match args.next() {
++        Some(path) => serde_json::from_slice(&std::fs::read(path)?)?,
++        None => KvRouterConfig::default(),
++    };
++    ensure!(args.next().is_none(), "unexpected argument");
++    let service = SelectionServiceBuilder::new(config, WorkerType::Aggregated, default_registry())
++        .indexer_threads(indexer_threads)
++        .build()
++        .await?;
++    let listener = TcpListener::bind(("127.0.0.1", 0)).await?;
++    let address = listener.local_addr()?;
++    let mut ready = std::fs::OpenOptions::new().write(true).create_new(true).open(ready_path)?;
++    writeln!(ready, "{}", json!({
++        "url": format!("http://{address}"),
++        "pid": std::process::id(),
++        "indexer_threads": indexer_threads,
++        "selector": "dynamo_builtin_default",
++        "scope": "standalone selection service; no model request forwarding",
++    }))?;
++    ready.sync_all()?;
++    run_server_on(listener, service).await
++}

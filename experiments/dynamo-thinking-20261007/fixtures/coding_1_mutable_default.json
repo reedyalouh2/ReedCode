@@ -1,0 +1,16 @@
+{
+  "model": "Qwen/Qwen3-8B",
+  "system": "Answer the coding question. Return only the exact standard output, with no explanation or Markdown.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "In Python 3, what is the exact standard output of this program?\n\n```python\ndef append(value, items=[]):\n    items.append(value)\n    return items[:]\n\nfirst = append(1)\nsecond = append(2)\nthird = append(3, [])\nprint(first, second, third)\n```"
+    }
+  ],
+  "thinking": {
+    "type": "disabled"
+  },
+  "temperature": 0,
+  "max_tokens": 2048,
+  "stream": true
+}

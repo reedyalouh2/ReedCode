@@ -1,0 +1,16 @@
+{
+  "model": "Qwen/Qwen3-8B",
+  "system": "Answer the coding question. Return only the exact standard output, with no explanation or Markdown.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "In Python 3, what is the exact standard output of this program?\n\n```python\ndef lower_bound(values, target):\n    lo, hi = 0, len(values)\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if values[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid\n    return lo\n\nprint([lower_bound([1, 2, 2, 4], target) for target in [0, 2, 3, 5]])\n```"
+    }
+  ],
+  "thinking": {
+    "type": "disabled"
+  },
+  "temperature": 0,
+  "max_tokens": 2048,
+  "stream": true
+}

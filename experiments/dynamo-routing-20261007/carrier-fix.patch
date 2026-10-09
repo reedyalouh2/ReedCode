@@ -1,0 +1,176 @@
+--- a/lib/kv-router/src/carrier_feed.rs
++++ b/lib/kv-router/src/carrier_feed.rs
+@@ -113,8 +113,14 @@
+ }
+ 
+ pub struct CarrierFeedReplica {
+-    manifests: ArcSwap<FxHashMap<ManifestKey, Arc<ReplicaManifest>>>,
++    view: ArcSwap<ReplicaView>,
+     state: Mutex<ReplicaCursor>,
++}
++
++#[derive(Clone, Default)]
++struct ReplicaView {
++    manifests: FxHashMap<ManifestKey, Arc<ReplicaManifest>>,
++    queryable: bool,
+ }
+ 
+ struct ReplicaCursor {
+@@ -126,7 +132,7 @@
+ impl CarrierFeedReplica {
+     pub fn new(max_pending: usize) -> Self {
+         Self {
+-            manifests: ArcSwap::from_pointee(FxHashMap::default()),
++            view: ArcSwap::from_pointee(ReplicaView::default()),
+             state: Mutex::new(ReplicaCursor {
+                 synced: None,
+                 pending: VecDeque::new(),
+@@ -156,6 +162,7 @@
+         };
+ 
+         if frame.epoch != epoch || frame.seq > seq.saturating_add(1) {
++            self.invalidate();
+             state.synced = None;
+             state.pending.clear();
+             Self::queue_pending(&mut state, frame);
+@@ -193,8 +200,6 @@
+                 }),
+             );
+         }
+-        self.manifests.store(Arc::new(manifests));
+-
+         let epoch = snapshot.epoch;
+         let snapshot_seq = snapshot.seq;
+         let mut pending = std::mem::take(&mut state.pending);
+@@ -207,25 +212,48 @@
+             let Some((cursor_epoch, cursor_seq)) = state.synced else {
+                 state.pending.push_back(frame);
+                 state.pending.append(&mut pending);
++                self.invalidate();
+                 return Ok(FeedApply::NeedsSnapshot);
+             };
+             if frame.epoch != cursor_epoch || frame.seq != cursor_seq.saturating_add(1) {
+                 state.synced = None;
+                 state.pending.push_back(frame);
+                 state.pending.append(&mut pending);
++                self.invalidate();
+                 return Ok(FeedApply::NeedsSnapshot);
+             }
+ 
+-            self.apply_frame(&frame);
++            let manifest = manifests.entry(frame.manifest).or_insert_with(|| {
++                Arc::new(ReplicaManifest {
++                    kind: frame.kind,
++                    index: PositionalCarrierIndex::new(frame.max_positions),
++                })
++            });
++            if manifest.kind != frame.kind {
++                *manifest = Arc::new(ReplicaManifest {
++                    kind: frame.kind,
++                    index: PositionalCarrierIndex::new(frame.max_positions),
++                });
++            }
++            Self::apply_op(manifest, &frame);
+             state.synced = Some((epoch, frame.seq));
+         }
+ 
++        // Publish only after the buffered tail is complete.
++        self.view.store(Arc::new(ReplicaView {
++            manifests,
++            queryable: true,
++        }));
+         Ok(FeedApply::Applied)
+     }
+ 
+     pub fn kind(&self, manifest: &ManifestKey) -> Option<FeedKind> {
+-        let manifests = self.manifests.load();
+-        manifests.get(manifest).map(|entry| entry.kind)
++        // A known carrier must not fall back to ordinary block credit during resync.
++        self.view
++            .load()
++            .manifests
++            .get(manifest)
++            .map(|entry| entry.kind)
+     }
+ 
+     /// Query hashes must be ordered by ascending `position()`.
+@@ -234,8 +262,11 @@
+         manifest: &ManifestKey,
+         hashes: &[PositionalLineageHash],
+     ) -> Option<CarrierHit<FeedHolder>> {
+-        let manifests = self.manifests.load();
+-        manifests.get(manifest)?.index.deepest(hashes)
++        let view = self.view.load();
++        if !view.queryable {
++            return None;
++        }
++        view.manifests.get(manifest)?.index.deepest(hashes)
+     }
+ 
+     /// Query hashes must be ordered by ascending `position()`.
+@@ -244,13 +275,25 @@
+         manifest: &ManifestKey,
+         hashes: &[PositionalLineageHash],
+     ) -> Vec<(FeedHolder, PositionalLineageHash)> {
+-        let manifests = self.manifests.load();
+-        manifests
++        let view = self.view.load();
++        if !view.queryable {
++            return Vec::new();
++        }
++        view.manifests
+             .get(manifest)
+             .map(|entry| entry.index.deepest_by_holder(hashes))
+             .unwrap_or_default()
+     }
+ 
++    fn invalidate(&self) {
++        self.view.rcu(|current| {
++            Arc::new(ReplicaView {
++                manifests: current.manifests.clone(),
++                queryable: false,
++            })
++        });
++    }
++
+     fn queue_pending(state: &mut ReplicaCursor, frame: CarrierFeedFrame) {
+         if state.max_pending == 0 {
+             return;
+@@ -262,27 +305,29 @@
+     }
+ 
+     fn apply_frame(&self, frame: &CarrierFeedFrame) {
+-        let manifests = self.manifests.load_full();
+-        let existing = manifests.get(&frame.manifest).cloned();
++        let view = self.view.load_full();
++        let existing = view.manifests.get(&frame.manifest).cloned();
+         let manifest = match existing {
+-            Some(manifest) if manifest.kind == frame.kind => {
+-                manifest.index.grow_to(frame.max_positions);
+-                manifest
+-            }
++            Some(manifest) if manifest.kind == frame.kind => manifest,
+             _ => {
+                 let manifest = Arc::new(ReplicaManifest {
+                     kind: frame.kind,
+                     index: PositionalCarrierIndex::new(frame.max_positions),
+                 });
+-                self.manifests.rcu(|current| {
++                self.view.rcu(|current| {
+                     let mut next = (**current).clone();
+-                    next.insert(frame.manifest, Arc::clone(&manifest));
++                    next.manifests.insert(frame.manifest, Arc::clone(&manifest));
+                     Arc::new(next)
+                 });
+                 manifest
+             }
+         };
+ 
++        Self::apply_op(&manifest, frame);
++    }
++
++    fn apply_op(manifest: &ReplicaManifest, frame: &CarrierFeedFrame) {
++        manifest.index.grow_to(frame.max_positions);
+         match &frame.op {
+             CarrierFeedOp::Insert(hashes) => manifest.index.insert(frame.holder, hashes),
+             CarrierFeedOp::Remove(hashes) => manifest.index.remove(frame.holder, hashes),

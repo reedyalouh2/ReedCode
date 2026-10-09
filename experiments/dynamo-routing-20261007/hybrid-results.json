@@ -1,0 +1,666 @@
+{
+  "scope": "Real HTTP handlers, ZMQ listener, native indexes and builtin scheduler; captured engine events",
+  "registration_scope": "Captured complete engine group metadata, fresh synthetic replay UUIDs; no live EngineCore RPC",
+  "checks": [
+    {
+      "case": "v0.30.0/lifecycle/first-store-complete/repeat",
+      "corrected": true,
+      "expected_cached_tokens": 128,
+      "actual_overlap_tokens": 128,
+      "scheduler_cached_tokens": 128,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/lifecycle/first-store-complete/earlier-branch",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/lifecycle/first-store-complete/append",
+      "corrected": true,
+      "expected_cached_tokens": 128,
+      "actual_overlap_tokens": 128,
+      "scheduler_cached_tokens": 128,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/lifecycle/full-reuse-report/full-reuse-report-query",
+      "corrected": true,
+      "expected_cached_tokens": 128,
+      "actual_overlap_tokens": 128,
+      "scheduler_cached_tokens": 128,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/lifecycle/after-append/append-repeat",
+      "corrected": true,
+      "expected_cached_tokens": 144,
+      "actual_overlap_tokens": 144,
+      "scheduler_cached_tokens": 144,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/lifecycle/after-append/branch-before-serve",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/lifecycle/after-branch-serve/branch-repeat",
+      "corrected": true,
+      "expected_cached_tokens": 128,
+      "actual_overlap_tokens": 128,
+      "scheduler_cached_tokens": 128,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/lifecycle/branch-full-report/branch-full-report-query",
+      "corrected": true,
+      "expected_cached_tokens": 128,
+      "actual_overlap_tokens": 128,
+      "scheduler_cached_tokens": 128,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/lifecycle/evict-recurrent-group/branch-after-eviction",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/lifecycle/reset/after-reset",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/salted/tenant-a-only/same-salt",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/salted/tenant-a-only/other-salt",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/salted/salted-full-report/salted-full-report-query",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/salted/both-tenants/tenant-a",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/salted/both-tenants/tenant-b",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/dense-control/ranking-query/same-query",
+      "corrected": false,
+      "expected_cached_tokens": 96,
+      "actual_overlap_tokens": 96,
+      "scheduler_cached_tokens": 96,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0/dense-control/dense-full-report/dense-full-report-query",
+      "corrected": false,
+      "expected_cached_tokens": 128,
+      "actual_overlap_tokens": 128,
+      "scheduler_cached_tokens": 128,
+      "passed": true
+    },
+    {
+      "case": "main/lifecycle/first-store-complete/repeat",
+      "corrected": true,
+      "expected_cached_tokens": 128,
+      "actual_overlap_tokens": 128,
+      "scheduler_cached_tokens": 128,
+      "passed": true
+    },
+    {
+      "case": "main/lifecycle/first-store-complete/earlier-branch",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main/lifecycle/first-store-complete/append",
+      "corrected": true,
+      "expected_cached_tokens": 128,
+      "actual_overlap_tokens": 128,
+      "scheduler_cached_tokens": 128,
+      "passed": true
+    },
+    {
+      "case": "main/lifecycle/full-reuse-report/full-reuse-report-query",
+      "corrected": true,
+      "expected_cached_tokens": 128,
+      "actual_overlap_tokens": 128,
+      "scheduler_cached_tokens": 128,
+      "passed": true
+    },
+    {
+      "case": "main/lifecycle/after-append/append-repeat",
+      "corrected": true,
+      "expected_cached_tokens": 144,
+      "actual_overlap_tokens": 144,
+      "scheduler_cached_tokens": 144,
+      "passed": true
+    },
+    {
+      "case": "main/lifecycle/after-append/branch-before-serve",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main/lifecycle/after-branch-serve/branch-repeat",
+      "corrected": true,
+      "expected_cached_tokens": 128,
+      "actual_overlap_tokens": 128,
+      "scheduler_cached_tokens": 128,
+      "passed": true
+    },
+    {
+      "case": "main/lifecycle/branch-full-report/branch-full-report-query",
+      "corrected": true,
+      "expected_cached_tokens": 128,
+      "actual_overlap_tokens": 128,
+      "scheduler_cached_tokens": 128,
+      "passed": true
+    },
+    {
+      "case": "main/lifecycle/evict-recurrent-group/branch-after-eviction",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main/lifecycle/reset/after-reset",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main/salted/tenant-a-only/same-salt",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main/salted/tenant-a-only/other-salt",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main/salted/salted-full-report/salted-full-report-query",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main/salted/both-tenants/tenant-a",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main/salted/both-tenants/tenant-b",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main/dense-control/ranking-query/same-query",
+      "corrected": false,
+      "expected_cached_tokens": 96,
+      "actual_overlap_tokens": 96,
+      "scheduler_cached_tokens": 96,
+      "passed": true
+    },
+    {
+      "case": "main/dense-control/dense-full-report/dense-full-report-query",
+      "corrected": false,
+      "expected_cached_tokens": 128,
+      "actual_overlap_tokens": 128,
+      "scheduler_cached_tokens": 128,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/lifecycle/first-store-complete/repeat",
+      "corrected": true,
+      "expected_cached_tokens": 4352,
+      "actual_overlap_tokens": 4352,
+      "scheduler_cached_tokens": 4352,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/lifecycle/first-store-complete/earlier-branch",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/lifecycle/first-store-complete/append",
+      "corrected": true,
+      "expected_cached_tokens": 4352,
+      "actual_overlap_tokens": 4352,
+      "scheduler_cached_tokens": 4352,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/lifecycle/full-reuse-report/full-reuse-report-query",
+      "corrected": true,
+      "expected_cached_tokens": 4352,
+      "actual_overlap_tokens": 4352,
+      "scheduler_cached_tokens": 4352,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/lifecycle/after-append/append-repeat",
+      "corrected": true,
+      "expected_cached_tokens": 4896,
+      "actual_overlap_tokens": 4896,
+      "scheduler_cached_tokens": 4896,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/lifecycle/after-append/branch-before-serve",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/lifecycle/after-branch-serve/branch-repeat",
+      "corrected": true,
+      "expected_cached_tokens": 4352,
+      "actual_overlap_tokens": 4352,
+      "scheduler_cached_tokens": 4352,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/lifecycle/branch-full-report/branch-full-report-query",
+      "corrected": true,
+      "expected_cached_tokens": 4352,
+      "actual_overlap_tokens": 4352,
+      "scheduler_cached_tokens": 4352,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/lifecycle/evict-recurrent-group/branch-after-eviction",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/lifecycle/reset/after-reset",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/salted/tenant-a-only/same-salt",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/salted/tenant-a-only/other-salt",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/salted/salted-full-report/salted-full-report-query",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/salted/both-tenants/tenant-a",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/salted/both-tenants/tenant-b",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/dense-control/ranking-query/same-query",
+      "corrected": false,
+      "expected_cached_tokens": 3264,
+      "actual_overlap_tokens": 3264,
+      "scheduler_cached_tokens": 3264,
+      "passed": true
+    },
+    {
+      "case": "v0.30.0-geometry/dense-control/dense-full-report/dense-full-report-query",
+      "corrected": false,
+      "expected_cached_tokens": 4352,
+      "actual_overlap_tokens": 4352,
+      "scheduler_cached_tokens": 4352,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/lifecycle/first-store-complete/repeat",
+      "corrected": true,
+      "expected_cached_tokens": 4352,
+      "actual_overlap_tokens": 4352,
+      "scheduler_cached_tokens": 4352,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/lifecycle/first-store-complete/earlier-branch",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/lifecycle/first-store-complete/append",
+      "corrected": true,
+      "expected_cached_tokens": 4352,
+      "actual_overlap_tokens": 4352,
+      "scheduler_cached_tokens": 4352,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/lifecycle/full-reuse-report/full-reuse-report-query",
+      "corrected": true,
+      "expected_cached_tokens": 4352,
+      "actual_overlap_tokens": 4352,
+      "scheduler_cached_tokens": 4352,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/lifecycle/after-append/append-repeat",
+      "corrected": true,
+      "expected_cached_tokens": 4896,
+      "actual_overlap_tokens": 4896,
+      "scheduler_cached_tokens": 4896,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/lifecycle/after-append/branch-before-serve",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/lifecycle/after-branch-serve/branch-repeat",
+      "corrected": true,
+      "expected_cached_tokens": 4352,
+      "actual_overlap_tokens": 4352,
+      "scheduler_cached_tokens": 4352,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/lifecycle/branch-full-report/branch-full-report-query",
+      "corrected": true,
+      "expected_cached_tokens": 4352,
+      "actual_overlap_tokens": 4352,
+      "scheduler_cached_tokens": 4352,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/lifecycle/evict-recurrent-group/branch-after-eviction",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/lifecycle/reset/after-reset",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/salted/tenant-a-only/same-salt",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/salted/tenant-a-only/other-salt",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/salted/salted-full-report/salted-full-report-query",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/salted/both-tenants/tenant-a",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/salted/both-tenants/tenant-b",
+      "corrected": true,
+      "expected_cached_tokens": 0,
+      "actual_overlap_tokens": 0,
+      "scheduler_cached_tokens": 0,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/dense-control/ranking-query/same-query",
+      "corrected": false,
+      "expected_cached_tokens": 3264,
+      "actual_overlap_tokens": 3264,
+      "scheduler_cached_tokens": 3264,
+      "passed": true
+    },
+    {
+      "case": "main-geometry/dense-control/dense-full-report/dense-full-report-query",
+      "corrected": false,
+      "expected_cached_tokens": 4352,
+      "actual_overlap_tokens": 4352,
+      "scheduler_cached_tokens": 4352,
+      "passed": true
+    }
+  ],
+  "rankings": [
+    {
+      "fixture": "v0.30.0",
+      "corrected": false,
+      "router_cached_tokens": [
+        96,
+        80
+      ],
+      "engine_cached_tokens": [
+        0,
+        80
+      ],
+      "selected": "A",
+      "passed": true
+    },
+    {
+      "fixture": "v0.30.0",
+      "corrected": true,
+      "router_cached_tokens": [
+        0,
+        80
+      ],
+      "engine_cached_tokens": [
+        0,
+        80
+      ],
+      "selected": "B",
+      "passed": true
+    },
+    {
+      "fixture": "main",
+      "corrected": false,
+      "router_cached_tokens": [
+        96,
+        80
+      ],
+      "engine_cached_tokens": [
+        0,
+        80
+      ],
+      "selected": "A",
+      "passed": true
+    },
+    {
+      "fixture": "main",
+      "corrected": true,
+      "router_cached_tokens": [
+        0,
+        80
+      ],
+      "engine_cached_tokens": [
+        0,
+        80
+      ],
+      "selected": "B",
+      "passed": true
+    },
+    {
+      "fixture": "v0.30.0-geometry",
+      "corrected": false,
+      "router_cached_tokens": [
+        3264,
+        2720
+      ],
+      "engine_cached_tokens": [
+        0,
+        2720
+      ],
+      "selected": "A",
+      "passed": true
+    },
+    {
+      "fixture": "v0.30.0-geometry",
+      "corrected": true,
+      "router_cached_tokens": [
+        0,
+        2720
+      ],
+      "engine_cached_tokens": [
+        0,
+        2720
+      ],
+      "selected": "B",
+      "passed": true
+    },
+    {
+      "fixture": "main-geometry",
+      "corrected": false,
+      "router_cached_tokens": [
+        3264,
+        2720
+      ],
+      "engine_cached_tokens": [
+        0,
+        2720
+      ],
+      "selected": "A",
+      "passed": true
+    },
+    {
+      "fixture": "main-geometry",
+      "corrected": true,
+      "router_cached_tokens": [
+        0,
+        2720
+      ],
+      "engine_cached_tokens": [
+        0,
+        2720
+      ],
+      "selected": "B",
+      "passed": true
+    }
+  ],
+  "wire_batches": 188,
+  "script_sha256": "7ca35237df795d710e8eac9b098fbd19fb576fc83fe024bad249a2ecef2af433"
+}

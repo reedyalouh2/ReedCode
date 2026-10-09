@@ -1,0 +1,10 @@
+The patches modify NVIDIA Dynamo, licensed under Apache-2.0.
+Copyright (c) NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+Upstream copyright and SPDX notices are retained in the patch context.
+
+Hybrid routing builds on the direction in ai-dynamo/dynamo#12169 and the sparse
+event contract in vllm-project/vllm#44488 and #57358. The carrier patch targets
+the pinned ai-dynamo/dynamo#15555 draft, stacked on #15553.
+
+The changes and experiment results in this directory are from ReedCode.
+The accompanying LICENSE contains Dynamo's upstream license and notices.

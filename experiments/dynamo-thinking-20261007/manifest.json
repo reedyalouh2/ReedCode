@@ -1,0 +1,120 @@
+{
+  "model": "Qwen/Qwen3-8B",
+  "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "expected_image": "nvcr.io/nvidia/ai-dynamo/vllm-runtime@sha256:d18389c89eb319401fdd73f1fbbaff10d9382f634b879941dfba75bbf7260c1e",
+  "native_frontend_source_pin": "6e4221b228b5e8868db17af0efde92d08c4008a6",
+  "frontend_build_profile": "Matched Linux debug native libraries, debuginfo=0; not an optimized throughput benchmark.",
+  "shared_launcher_sha256": "b8723988c8d674d1d2d5ada7f05c289566af5fd4cca2c19cf8c1fe91f344d1f9",
+  "frontend_flags": {
+    "enable_anthropic_api": true,
+    "strip_anthropic_preamble": true,
+    "enable_streaming_tool_dispatch": true
+  },
+  "router": {
+    "mode": "KV",
+    "use_kv_events": false,
+    "custom_policy": null
+  },
+  "artifacts": {
+    "stock": {
+      "path": "/tmp/thinking/bin/frontend-stock",
+      "sha256": "44594bd27f012eda7a3e158c2a592c03c82ff8462d08146f441acb421e956a2f",
+      "bytes": 300481104
+    },
+    "patched": {
+      "path": "/tmp/thinking/bin/frontend-patched",
+      "sha256": "bdc340ae1525e69df750e1a3edbbd55d49a1d228d506eca7d9af628d182c18ba",
+      "bytes": 301490024
+    },
+    "capture_worker": {
+      "path": "/tmp/thinking/telemetry-review/capture_worker.py",
+      "sha256": "4a3ead099bbbd5bb43a6e9b4bb030cfa8e35e9792137c5e8c25e9b483a8656a5",
+      "bytes": 5828
+    }
+  },
+  "server_sha256": "79575525a884d9dc9a51579734240e76a839fe0d6ef405dc7e0019b7c3849134",
+  "commands": {
+    "worker": [
+      "/usr/bin/python3",
+      "/tmp/thinking/telemetry-review/capture_worker.py",
+      "--endpoint",
+      "dyn://reedcode_thinking_oct7.backend.generate",
+      "--model",
+      "Qwen/Qwen3-8B",
+      "--revision",
+      "b968826d9c46dd6066d109eabc6255188de91218",
+      "--discovery-backend",
+      "file",
+      "--request-plane",
+      "tcp",
+      "--dtype",
+      "bfloat16",
+      "--tensor-parallel-size",
+      "1",
+      "--max-model-len",
+      "32768",
+      "--block-size",
+      "16",
+      "--max-num-seqs",
+      "8",
+      "--max-num-batched-tokens",
+      "4096",
+      "--gpu-memory-utilization",
+      "0.9",
+      "--enable-prefix-caching",
+      "--enforce-eager",
+      "--dyn-tool-call-parser",
+      "hermes",
+      "--dyn-reasoning-parser",
+      "qwen3",
+      "--dyn-default-thinking-mode",
+      "enabled",
+      "--kv-events-config",
+      "{\"enable_kv_cache_events\":false}"
+    ],
+    "stock": [
+      "/tmp/thinking/bin/frontend-stock"
+    ],
+    "patched": [
+      "/tmp/thinking/bin/frontend-patched"
+    ]
+  },
+  "packages": {
+    "ai-dynamo": "1.5.0",
+    "ai-dynamo-runtime": "1.5.0",
+    "vllm": "0.28.0",
+    "torch": "2.13.0+cu130"
+  },
+  "ports": {
+    "stock_http": 18080,
+    "worker_metrics": 18081,
+    "stock_metrics": 18082,
+    "patched_http": 18090,
+    "patched_metrics": 18092
+  },
+  "metrics_period_seconds": 1.0,
+  "capture_scope": "One worker shared by both frontends; engine clocks and remote client clocks remain separate. No KV event subscriber.",
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "dtype": "bfloat16",
+  "tensor_parallel_size": 1,
+  "context_tokens": 32768,
+  "cache_block_tokens": 16,
+  "thinking_default": "enabled",
+  "primary_calls": 48,
+  "readiness_calls_excluded": 4,
+  "paired_repeats": 3,
+  "temperature": 0,
+  "max_output_tokens": 2048,
+  "request_timeout_seconds": 75,
+  "validation": {
+    "linux_http_controls": 48,
+    "linux_fixture_requests": 16,
+    "converter_tests_stock_pass": 2,
+    "converter_tests_stock_fail": 2,
+    "converter_tests_fixed_pass": 4
+  },
+  "source_checks": {
+    "converter_identical_at": "16b2ae50032edbdde70a9e03a7e7056fac3b7c7d",
+    "handler_checked_at": "a2cae838cb3d72cfdacae620d25ebaa625671cf2"
+  }
+}

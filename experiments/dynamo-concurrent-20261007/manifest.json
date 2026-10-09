@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-07",
+  "model": "Qwen/Qwen3-8B",
+  "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "worker_image": "nvcr.io/nvidia/ai-dynamo/vllm-runtime@sha256:d18389c89eb319401fdd73f1fbbaff10d9382f634b879941dfba75bbf7260c1e",
+  "worker_packages": {
+    "ai-dynamo": "1.5.0",
+    "ai-dynamo-runtime": "1.5.0",
+    "vllm": "0.28.0",
+    "torch": "2.13.0+cu130"
+  },
+  "frontend": {
+    "source_revision": "6e4221b228b5e8868db17af0efde92d08c4008a6",
+    "profile": "unoptimized dev",
+    "binary_sha256": "c6c2d3a07c0f5ffe46ce1837c98ab1341431abe61671f93400922d563b7d6d8f",
+    "acting_token_weight": 0.5
+  },
+  "worker_settings": {
+    "dtype": "bfloat16",
+    "tensor_parallel_size": 1,
+    "max_model_len": 32768,
+    "block_size": 16,
+    "max_num_seqs": 8,
+    "max_num_batched_tokens": 4096,
+    "prefix_caching": true,
+    "enforce_eager": true,
+    "reasoning_parser": "qwen3",
+    "tool_call_parser": "hermes",
+    "thinking_mode": "enabled",
+    "cache_capacity_tokens": 415824
+  },
+  "harness_settings": {
+    "context_limit": 32768,
+    "max_output_tokens": 8192,
+    "calls_per_turn": 6,
+    "session_seconds": 1200,
+    "model_seconds": 300,
+    "tool_seconds": 60,
+    "tool_output_chars": 20000,
+    "arrival_spacing_s": 10,
+    "seed": 20261007
+  },
+  "summary": {
+    "sessions": 6,
+    "primary_requests": 64,
+    "followup_requests": 12,
+    "tool_calls": 64,
+    "prompt_tokens": 447919,
+    "cached_prompt_tokens": 380512,
+    "output_tokens": 90665,
+    "official_template_matches": 64,
+    "positive_cache_gaps": 0,
+    "preemptions": 0,
+    "output_limit_hits": 1
+  },
+  "auxiliary_requests": {
+    "count": 6,
+    "prompt_tokens": 78,
+    "output_tokens": 6,
+    "included_in_requests_csv": false
+  },
+  "kv_events": {
+    "consecutive_batches": 5243,
+    "block_removed_events": 0,
+    "all_blocks_cleared_events": 0
+  },
+  "cache_reference": "Longest block-aligned prefix from earlier completed requests with matching model, salt and worker. Excludes each earlier response's final sampled token.",
+  "source_sha256": {
+    "request_analysis": "72a5e430c577457d5c986ce16114308bb65fad7d2dc8baec3a45a0f4f9725963",
+    "task_manifest": "109674e8ce2fd8cfd1cd89f9ffc3f34cad9123e2c605192b7ae42932ec0073d7",
+    "task_evaluation_summary": "03a4a3127e282e39f4413bdad5ee0352809ad3579a645195bc4030629ad07434",
+    "task_evaluation_report": "860171809935ad427864ab8e80cf3e27129c1bd0575484794295729f4e09c4a1",
+    "runtime_manifest": "3bc601ab6058dda7e9ea6b151df35309ea5869fae7a23d90518416b8882f5578"
+  },
+  "publication_scope": "Derived request metrics, task outcomes and runtime pins. Full prompt and server-log captures are not included."
+}

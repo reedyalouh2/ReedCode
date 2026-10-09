@@ -1,0 +1,22 @@
+{
+  "README.md": "c9d7132036c762d87421a4c3eb7badef4419b4157489b4d54b494dbb5bfad221",
+  "analyze.py": "8905869c0f0249e462ae474957d82ae71ef446be0e1149f103daf7ed4057ab43",
+  "evidence.tar.gz": "c82f60b4f0becdbf80ab9ded830b482faa29b367ccbb2a3326977c8c71f2c1a3",
+  "expected-prompts.json": "05d67e1f9c1822155033ba35daccbc7b58df4b38f562e4f63818fda0bb900cd6",
+  "fixture-manifest.json": "588e9c05c98e5eb70b3137d8780f749a89ffe25f818477619be45abe0318f938",
+  "fixtures/claude_0001.json": "e093d025f6c51c3f894e7ab1423f4f97f49972854ea59e1960421112d3c34969",
+  "fixtures/claude_0005.json": "209e4dfed93ac6e05a317465fb56ea0ce3769521c632cd44120926a73887d936",
+  "fixtures/claude_0011.json": "076d5ad8786aff7801d7683895ba3d64aa9a4e5b1be9408e93f8d04e27df8f99",
+  "fixtures/claude_0017.json": "fb9b62dbfcd98e1d1527582d9262474eec864a60416471cf89bbfbfd0068c6ed",
+  "fixtures/coding_1_mutable_default.json": "a78890ae4337f070f9e92817da662fefc76f4ed0a3317cfb2f0d3f90264bdf85",
+  "fixtures/coding_2_lower_bound.json": "a267c0032dae79edea0ccd7d17e63446b6499ebc665b3b849bfe0533baa8b7c9",
+  "fixtures/coding_3_regex_boundaries.json": "e58074401b55f3bab82651a3065d72ec64569c313f9e02cd800dabf0cb7b53d0",
+  "fixtures/coding_4_generator_consumption.json": "7d59edfbb05befdc5c323267921539c9eb987262b61d242804adc70b20cdcef1",
+  "fixtures/schedule.json": "8de70a6e956837951fe9fa9fd75ad0d7f62a28cd86ed51623ee38d17405cdca6",
+  "manifest.json": "68e96da997c14217af91a65162f5da747bb1184041f19e78d8026eba41f6e8c7",
+  "reproduce.py": "19244cbb6aca7c40192b1cc5740ff9094daa8aa9ffdf1e64dd6b29671d6a7814",
+  "results.json": "2abf29b840c4ed2e25dc77fbd47eae56c660b0c7008294f0849ac2cd2491e669",
+  "rows.tsv": "7443c2358e2347d8e471d8a589ffcdd4ea1c36fdb0072e04f13c91bccdfbd413",
+  "test_analyze.py": "daa71ac51e44778ead45e0640d29b3c31ed23498857ccd3734a733075835a9c9",
+  "thinking-disabled.patch": "491e725c458fd207c7f41d368b1bc5d7f644be87cf00b831eb70191b0e992b63"
+}

@@ -1,0 +1,22 @@
+{
+  "tested_on": "2026-10-07",
+  "rust": "1.96.1",
+  "hybrid": {
+    "commit": "548a010548d53ff05e76397f5f1d3a669e4678e1",
+    "archive_sha256": "90b5ba6a1c223ccf0f470a76af8dc88a1808a9e98212524c59d322f32d1d6ae9",
+    "vllm_0_30_0": "ced6857afa0ea7b2e3f0846a62e1394e90f15607",
+    "vllm_main": "3ca00a8261c7790ba7487e2001ab9004ad8065f2",
+    "qwen3_5_0_8b_config": "2fc06364715b967f1860aea9cf38778875588b17",
+    "debug_service_sha256": "a60e5f387995e8b6157e8bb075d6bd88393da2b5073aba7db1a8f2aaab986075",
+    "release_service_sha256": "40710229852ac611d7e9122bd51e6d3508a69a8c87477b1ff7fbed28a1d767c5",
+    "archive_url": "https://codeload.github.com/ai-dynamo/dynamo/tar.gz/548a010548d53ff05e76397f5f1d3a669e4678e1"
+  },
+  "carrier": {
+    "commit": "d3b9d7726ab7b3e9662544f771f513b92d47258e",
+    "archive_sha256": "1965f3f7a9d9cb99388e522c1d4efb653b8f9141e3e0482461f3f0bb90b231a3",
+    "pull_request": "https://github.com/ai-dynamo/dynamo/pull/15555",
+    "parent_commit": "9ca65f4bbdf799c6c33cab5b6547b53f34c03d64",
+    "status_at_test": "open, unmerged draft stack",
+    "archive_url": "https://codeload.github.com/ai-dynamo/dynamo/tar.gz/d3b9d7726ab7b3e9662544f771f513b92d47258e"
+  }
+}

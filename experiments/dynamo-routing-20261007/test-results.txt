@@ -1,0 +1,11 @@
+Hybrid native suite
+test result: ok. 1284 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 16.19s
+
+Carrier original regression suite
+test result: FAILED. 31 passed; 6 failed; 0 ignored; 0 measured; 1263 filtered out; finished in 0.37s
+
+Carrier fixed regression suite
+test result: ok. 37 passed; 0 failed; 0 ignored; 0 measured; 1263 filtered out; finished in 0.38s
+
+Carrier fixed full suite
+test result: ok. 1298 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 18.53s

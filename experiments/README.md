@@ -2,6 +2,9 @@
 
 | Study | Result | Evidence |
 | --- | --- | --- |
+| October 7: thinking controls | 24 paired comparisons. Explicit disabled requests still generated reasoning on stock; the fix stopped it. Claude-snapshot output fell 74.2%, with a separate short-question accuracy trade-off. | [Results and reproduction](dynamo-thinking-20261007/README.md) |
+| October 7: concurrent coding | Six sessions, 64 calls, 85.0% cached input and no unexplained cache shortfall. Coding failures are retained. | [Request metrics and outcomes](dynamo-concurrent-20261007/README.md) |
+| October 7: native routing | CPU hybrid-cache selection prototype and a stale-credit fix against the draft carrier router. | [Patches, checks and timing](dynamo-routing-20261007/README.md) |
 | September 29: speculative prefill | 18 controlled trials. Stock added 62–85% prefill; the fix removed the separate cache branch. | [Report and reproduction](dynamo-upstream/combined-gpu-20260929/README.md) |
 | September 29: harness parity | Both completed Claude Code and Codex sessions reused every compatible full prefix block. The failed Claude 32K attempt is included. | [Parity report](dynamo-upstream/combined-gpu-20260929/PARITY.md) |
 | September 28: Dynamo baseline | Ten coding trials and 40 replay workflows exposed a prefix mismatch and missing restart metric. | [Baseline](dynamo-20260928/README.md) |

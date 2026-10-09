@@ -1,0 +1,192 @@
+[
+  {
+    "task_id": "psf__requests-6028",
+    "repo_url": "https://github.com/psf/requests",
+    "base_commit": "0192aac24123735b3eaf9b08df46429bb770c283",
+    "container_image": "sha256:49b32134c787d7aaa479b357e441e3db08be21d8fc339504674ecb12a0293368",
+    "test_commands": [
+      [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_utils.py"
+      ]
+    ],
+    "model_calls": 6,
+    "tool_calls": 3,
+    "peak_input_tokens": 10070,
+    "session_stop": "finished",
+    "output_limit_hits": 0,
+    "final_workspace_tests": {
+      "passed": 5,
+      "failed": 13,
+      "xfailed": 0
+    },
+    "heldout_status": "heldout_patch_conflict",
+    "heldout_tests": null,
+    "test_patch_sha256": "cc4b0007afd140c1737b08e14d0cbb9dbccfbee483146d5112971dd7b9bcb142"
+  },
+  {
+    "task_id": "pallets__flask-5014",
+    "repo_url": "https://github.com/pallets/flask",
+    "base_commit": "7ee9ceb71e868944a46e1ff00b506772a53a4f1d",
+    "container_image": "sha256:bbcaf1cbee8a00015cdac4033791ace3d5b49463b2cfa3416e18ab2def0e9cc1",
+    "test_commands": [
+      [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_blueprints.py"
+      ]
+    ],
+    "model_calls": 6,
+    "tool_calls": 3,
+    "peak_input_tokens": 5836,
+    "session_stop": "finished",
+    "output_limit_hits": 0,
+    "final_workspace_tests": {
+      "passed": 59,
+      "failed": 0,
+      "xfailed": 0
+    },
+    "heldout_status": "evaluated",
+    "heldout_tests": {
+      "passed": 59,
+      "failed": 1,
+      "xfailed": 0
+    },
+    "test_patch_sha256": "e16f06b260b5169a49397e9d571b5af70317cd23792e1437232fabf718fe8871"
+  },
+  {
+    "task_id": "pytest-dev__pytest-10356",
+    "repo_url": "https://github.com/pytest-dev/pytest",
+    "base_commit": "3c1534944cbd34e8a41bc9e76818018fadefc9a1",
+    "container_image": "sha256:8242626ee890f2164910cae0da42351fc5debfdbd494d0570df5154f7cd3b9c5",
+    "test_commands": [
+      [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "testing/test_mark.py"
+      ]
+    ],
+    "model_calls": 12,
+    "tool_calls": 16,
+    "peak_input_tokens": 9754,
+    "session_stop": "turn_call_limit",
+    "output_limit_hits": 0,
+    "final_workspace_tests": {
+      "passed": 88,
+      "failed": 0,
+      "xfailed": 1
+    },
+    "heldout_status": "evaluated",
+    "heldout_tests": {
+      "passed": 88,
+      "failed": 1,
+      "xfailed": 1
+    },
+    "test_patch_sha256": "547d6960987bcf7820991b7c56d3c7245275789ab0f1cb352e7d1486d2fe9d79"
+  },
+  {
+    "task_id": "sphinx-doc__sphinx-11510",
+    "repo_url": "https://github.com/sphinx-doc/sphinx",
+    "base_commit": "6cb783c0024a873722952a67ebb9f41771c8eb6d",
+    "container_image": "sha256:6e57eae39faeaa83a6489ed423141ab1a0d4281eb351134b79be7f78a8e37da0",
+    "test_commands": [
+      [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_directive_other.py"
+      ]
+    ],
+    "model_calls": 15,
+    "tool_calls": 14,
+    "peak_input_tokens": 11308,
+    "session_stop": "turn_call_limit",
+    "output_limit_hits": 0,
+    "final_workspace_tests": {
+      "passed": 7,
+      "failed": 0,
+      "xfailed": 0
+    },
+    "heldout_status": "evaluated",
+    "heldout_tests": {
+      "passed": 7,
+      "failed": 2,
+      "xfailed": 0
+    },
+    "test_patch_sha256": "0d9c5b5e39024ed66a1bb1d6edc192379c40d1100a762594823afd16e85b7edc"
+  },
+  {
+    "task_id": "sympy__sympy-21847",
+    "repo_url": "https://github.com/sympy/sympy",
+    "base_commit": "d9b18c518d64d0ebe8e35a98c2fb519938b9b151",
+    "container_image": "sha256:a08120445628bb61804c30eebb736a1a3119513d277be093feb02560b6384b7b",
+    "test_commands": [
+      [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "sympy/polys/tests/test_monomials.py"
+      ]
+    ],
+    "model_calls": 11,
+    "tool_calls": 12,
+    "peak_input_tokens": 20504,
+    "session_stop": "output_limit",
+    "output_limit_hits": 1,
+    "final_workspace_tests": {
+      "passed": 11,
+      "failed": 0,
+      "xfailed": 0
+    },
+    "heldout_status": "evaluated",
+    "heldout_tests": {
+      "passed": 10,
+      "failed": 1,
+      "xfailed": 0
+    },
+    "test_patch_sha256": "5b7f4777d3758f017525597a935d95a0516f90b653bd21ccdcc9a92e681d16e6"
+  },
+  {
+    "task_id": "django__django-15863",
+    "repo_url": "https://github.com/django/django",
+    "base_commit": "37c5b8c07be104fd5288cd87f101e48cb7a40298",
+    "container_image": "sha256:4e9d16d93977655d111aedfb5a63cac5105fcb0c897fd325ddeffc9c2c1bc47d",
+    "test_commands": [
+      [
+        "python",
+        "tests/runtests.py",
+        "template_tests.filter_tests.test_floatformat",
+        "--verbosity",
+        "2",
+        "--parallel",
+        "1"
+      ]
+    ],
+    "model_calls": 14,
+    "tool_calls": 16,
+    "peak_input_tokens": 5005,
+    "session_stop": "turn_call_limit",
+    "output_limit_hits": 0,
+    "final_workspace_tests": {
+      "passed": 10,
+      "failed": 0,
+      "xfailed": 0
+    },
+    "heldout_status": "evaluated",
+    "heldout_tests": {
+      "passed": 9,
+      "failed": 1,
+      "xfailed": 0
+    },
+    "test_patch_sha256": "bc4d2fb542281042679a69cc02a7cc34095f8fd7f6d5ea9cd93c83d010717646"
+  }
+]

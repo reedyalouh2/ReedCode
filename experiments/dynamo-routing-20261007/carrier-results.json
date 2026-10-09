@@ -1,0 +1,26 @@
+{
+  "upstream_head": "d3b9d7726ab7b3e9662544f771f513b92d47258e",
+  "gap_reproduction": {
+    "mode": "gap",
+    "head": "d3b9d7726ab7b3e9662544f771f513b92d47258e",
+    "expected_baseline_failures": [
+      "carrier_feed_client::tests::known_carrier_has_no_credit_while_gap_snapshot_is_blocked",
+      "carrier_routing::tests::carrier_gap_does_not_score_old_depth_before_snapshot",
+      "carrier_routing::tests::carrier_gap_feed_epoch_change_does_not_score_old_depth",
+      "carrier_routing::tests::carrier_gap_incomplete_snapshot_preserves_known_kind",
+      "carrier_routing::tests::carrier_gap_incomplete_snapshot_tail_does_not_publish_credit",
+      "services::selection::core::tests::carrier_gap_selection_uses_the_synced_worker_and_books_prefill"
+    ],
+    "fixed": true,
+    "full_suite": true,
+    "benchmark": false
+  },
+  "full_suite": {
+    "passed": 1298,
+    "failed": 0,
+    "ignored": 2
+  },
+  "clippy": "passed with matched Rust 1.96.1 and -D warnings",
+  "format": "passed",
+  "original_working_tree_matches_fresh_reproduction": true
+}
