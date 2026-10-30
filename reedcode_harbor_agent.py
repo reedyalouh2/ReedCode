@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import asyncio
-import base64
 from datetime import datetime, timezone
 import json
 import os
 import posixpath
 import shlex
+import tempfile
 import time
 from uuid import uuid4
 
@@ -24,7 +24,6 @@ from dynamo_support import finish_session
 
 # Open each component without following links; checking realpath before opening races.
 FILE_TOOL_SCRIPT = """
-import base64
 import os
 import shutil
 import stat
@@ -59,10 +58,12 @@ try:
         if operation == 'write':
             if metadata.st_nlink != 1:
                 raise ValueError('write_file refuses files with multiple hard links')
-            content = base64.b64decode(sys.argv[4], validate=True)
+            source = hold(os.open(sys.argv[4], os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK))
+            if not stat.S_ISREG(os.fstat(source).st_mode):
+                raise ValueError('write_file requires a regular source file')
             os.ftruncate(fd, 0)
-            with os.fdopen(os.dup(fd), 'wb') as file:
-                file.write(content)
+            with os.fdopen(os.dup(source), 'rb') as content, os.fdopen(os.dup(fd), 'wb') as file:
+                shutil.copyfileobj(content, file)
         else:
             with os.fdopen(os.dup(fd), 'rb') as file:
                 shutil.copyfileobj(file, sys.stdout.buffer)
@@ -132,7 +133,7 @@ class ReedCodeAgent(BaseAgent):
         return "reedcode"
 
     def version(self) -> str:
-        return "0.4.2"
+        return "0.4.3"
 
     async def setup(self, environment: BaseEnvironment) -> None:
         result = await environment.exec(
@@ -301,6 +302,9 @@ class ReedCodeAgent(BaseAgent):
                     history.extend(response.output)
 
                     if not tool_calls:
+                        if not (response.output_text or "").strip():
+                            stop_reason = "empty_model_response"
+                            break
                         stop_reason = "no_tool_calls"
 
                         (self.logs_dir / "final_answer.txt").write_text(
@@ -379,7 +383,7 @@ class ReedCodeAgent(BaseAgent):
                 "agent_completed": stop_reason == "no_tool_calls",
                 "output_limit_hit": (
                     stop_reason == "max_output_tokens"
-                    if stop_reason in ("no_tool_calls", "max_turns", "max_output_tokens")
+                    if stop_reason in ("no_tool_calls", "max_turns", "max_output_tokens", "empty_model_response")
                     else None
                 ),
                 "model_calls": model_calls,
@@ -447,12 +451,7 @@ class ReedCodeAgent(BaseAgent):
 
                 if not isinstance(content, str):
                     raise ValueError("content must be a string")
-
-                encoded = base64.b64encode(
-                    content.encode("utf-8")
-                ).decode("ascii")
-
-                command = self.file_command(path, "write", encoded)
+                content = content.encode("utf-8")
 
             else:
                 raise ValueError(f"Unknown tool: {name}")
@@ -461,17 +460,23 @@ class ReedCodeAgent(BaseAgent):
             return observation(f"ERROR: {type(exc).__name__}: {exc}", False, self.settings)
 
         try:
-            result = await environment.exec(
-                command=command,
-                cwd=self.cwd,
-                timeout_sec=self.settings.tool_timeout,
-            )
+            if name == "write_file":
+                result = await self.write_file(environment, path, content)
+            else:
+                result = await environment.exec(
+                    command=command,
+                    cwd=self.cwd,
+                    timeout_sec=self.settings.tool_timeout,
+                )
 
         except (TimeoutError, asyncio.TimeoutError):
             return observation(
                 f"ERROR: command timed out after {self.settings.tool_timeout} seconds",
                 False, self.settings,
             )
+
+        except OSError as exc:
+            return observation(f"ERROR: {type(exc).__name__}: {exc}", False, self.settings)
 
         except RuntimeError as exc:
             # Harbor's Docker backend can wrap timeouts in RuntimeError.
@@ -483,6 +488,49 @@ class ReedCodeAgent(BaseAgent):
         if name == "write_file" and result.return_code == 0:
             return observation(f"Successfully wrote {path}", True, self.settings)
         return self.format_result(result)
+
+    async def write_file(self, environment: BaseEnvironment, path: str, content: bytes):
+        # Harbor has no stdin argument; upload content so writes do not hit argv limits.
+        staging_dir = f"/tmp/reedcode-write-{uuid4().hex}"
+        staging_file = staging_dir + "/content"
+        created = await environment.exec(
+            command=shlex.join(["mkdir", "-m", "700", staging_dir]),
+            cwd=self.cwd,
+            timeout_sec=self.settings.tool_timeout,
+        )
+        if created.return_code != 0:
+            return created
+        try:
+            with tempfile.TemporaryDirectory(prefix="reedcode-write-") as local_dir:
+                source_path = os.path.join(local_dir, "content")
+                with open(source_path, "wb") as source:
+                    source.write(content)
+                # Docker uploads as root; private parent directories protect the readable file.
+                os.chmod(source_path, 0o644)
+                try:
+                    await asyncio.wait_for(
+                        environment.upload_file(source_path, staging_file),
+                        timeout=self.settings.tool_timeout,
+                    )
+                except RuntimeError as exc:
+                    # Docker upload failures are raised rather than returned as exit codes.
+                    raise OSError(f"write_file upload failed: {exc}") from exc
+            return await environment.exec(
+                command=self.file_command(path, "write", staging_file),
+                cwd=self.cwd,
+                timeout_sec=self.settings.tool_timeout,
+            )
+        finally:
+            try:
+                await environment.exec(
+                    command=(shlex.join(["rm", "-f", "--", staging_file])
+                             + " && " + shlex.join(["rmdir", "--", staging_dir])),
+                    cwd=self.cwd,
+                    timeout_sec=self.settings.tool_timeout,
+                )
+            except Exception:
+                # Cleanup must not replace a tool failure or task cancellation.
+                pass
 
     def format_result(self, result) -> ToolObservation:
         output = result.stdout or ""
@@ -509,8 +557,8 @@ class ReedCodeAgent(BaseAgent):
 
         return target
 
-    def file_command(self, path: str, operation: str, encoded: str = "") -> str:
+    def file_command(self, path: str, operation: str, source: str = "") -> str:
         return shlex.join([
             "python3", "-I", "-c", FILE_TOOL_SCRIPT, self.cwd,
-            posixpath.relpath(path, self.cwd), operation, encoded,
+            posixpath.relpath(path, self.cwd), operation, source,
         ])

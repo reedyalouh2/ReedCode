@@ -2,6 +2,8 @@ import asyncio
 import json
 import os
 from pathlib import Path
+import shlex
+import shutil
 import tempfile
 from types import SimpleNamespace as NS
 import unittest
@@ -9,10 +11,11 @@ from unittest.mock import AsyncMock, patch
 
 import reedcode_harbor_agent as harness
 from harbor.models.agent.context import AgentContext
+from openai.types.chat import ChatCompletion
 
 
-def response(output=(), status="completed", usage=True):
-    return NS(status=status, output=list(output), output_text="done",
+def response(output=(), status="completed", usage=True, text="done"):
+    return NS(status=status, output=list(output), output_text=text,
               usage=NS(input_tokens=10, output_tokens=2,
                        input_tokens_details=NS(cached_tokens=4)) if usage else None)
 
@@ -40,8 +43,12 @@ class HarnessTests(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(result.text.startswith("ERROR:"))
         self.env.exec.assert_not_awaited()
 
-    async def execute_file_tool(self, name, path, content=None):
+    async def execute_file_tool(self, name, path, content=None, upload_error=None):
+        self.file_commands = []
+        self.upload_sources = []
+
         async def run(command, cwd, timeout_sec):
+            self.file_commands.append(command)
             process = await asyncio.create_subprocess_shell(
                 command, cwd=cwd, stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
@@ -54,7 +61,17 @@ class HarnessTests(unittest.IsolatedAsyncioTestCase):
         arguments = {"path": path}
         if content is not None:
             arguments["content"] = content
-        return await self.agent.execute_tool(NS(exec=run), name, arguments)
+        async def upload(source_path, target_path):
+            self.upload_sources.append(Path(source_path))
+            self.assertEqual(Path(source_path).parent.stat().st_mode & 0o777, 0o700)
+            self.assertEqual(Path(source_path).stat().st_mode & 0o777, 0o644)
+            self.assertEqual(Path(target_path).parent.stat().st_mode & 0o777, 0o700)
+            if upload_error is not None:
+                raise upload_error
+            shutil.copy2(source_path, target_path)
+            self.assertEqual(Path(target_path).stat().st_mode & 0o777, 0o644)
+
+        return await self.agent.execute_tool(NS(exec=run, upload_file=upload), name, arguments)
 
     async def test_file_tools_preserve_content_and_quote_paths(self):
         path = "nested dir/$(touch escaped);'file.txt"
@@ -65,6 +82,59 @@ class HarnessTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(read.success, read.text)
         self.assertEqual(read.text, "EXIT CODE: 0\n" + content)
         self.assertFalse((Path(self.agent.cwd) / "escaped").exists())
+
+    async def test_large_file_write_uses_upload_and_cleans_staging(self):
+        content = "é\0'\n" * 100000
+        result = await self.execute_file_tool("write_file", "large.txt", content)
+        self.assertTrue(result.success, result.text)
+        self.assertEqual((Path(self.agent.cwd) / "large.txt").read_bytes(), content.encode())
+        self.assertLess(max(map(len, self.file_commands)), 8192)
+        staging_dir = shlex.split(self.file_commands[0])[-1]
+        self.assertFalse(Path(staging_dir).exists())
+        self.assertEqual(len(self.upload_sources), 1)
+        self.assertFalse(self.upload_sources[0].parent.exists())
+        empty = await self.execute_file_tool("write_file", "large.txt", "")
+        self.assertTrue(empty.success, empty.text)
+        self.assertEqual((Path(self.agent.cwd) / "large.txt").read_bytes(), b"")
+
+    async def test_failed_upload_is_a_tool_error_and_cleans_staging(self):
+        for error in (OSError("transfer failed"), RuntimeError("transfer failed")):
+            with self.subTest(error=type(error).__name__):
+                environment = NS(exec=AsyncMock(return_value=NS(return_code=0)),
+                                 upload_file=AsyncMock(side_effect=error))
+                result = await self.agent.execute_tool(environment, "write_file", {"path": "file", "content": "data"})
+                self.assertFalse(result.success)
+                self.assertIn("transfer failed", result.text)
+                self.assertEqual(environment.exec.await_count, 2)
+                self.assertTrue(environment.exec.call_args.kwargs["command"].startswith("rm -f -- "))
+                self.assertFalse(any("python3" in call.kwargs["command"] for call in environment.exec.call_args_list))
+                self.assertFalse(Path(environment.upload_file.call_args.args[0]).parent.exists())
+
+    async def test_invalid_utf8_content_is_rejected_before_upload(self):
+        result = await self.agent.execute_tool(self.env, "write_file", {"path": "file", "content": "\ud800"})
+        self.assertFalse(result.success)
+        self.assertIn("UnicodeEncodeError", result.text)
+        self.env.exec.assert_not_awaited()
+
+    async def test_cancelled_upload_cleans_staging_and_propagates(self):
+        environment = NS(exec=AsyncMock(return_value=NS(return_code=0)),
+                         upload_file=AsyncMock(side_effect=asyncio.CancelledError()))
+        with self.assertRaises(asyncio.CancelledError):
+            await self.agent.execute_tool(environment, "write_file", {"path": "file", "content": "data"})
+        self.assertEqual(environment.exec.await_count, 2)
+        self.assertTrue(environment.exec.call_args.kwargs["command"].startswith("rm -f -- "))
+        self.assertFalse(any("python3" in call.kwargs["command"] for call in environment.exec.call_args_list))
+        self.assertFalse(Path(environment.upload_file.call_args.args[0]).parent.exists())
+
+    async def test_upload_error_keeps_existing_file_and_removes_private_directory(self):
+        result = await self.execute_file_tool("write_file", "file", "original")
+        self.assertTrue(result.success, result.text)
+        for failure in (OSError("upload failed"), RuntimeError("upload failed"), TimeoutError()):
+            result = await self.execute_file_tool("write_file", "file", "replacement", upload_error=failure)
+            self.assertFalse(result.success)
+            self.assertEqual((Path(self.agent.cwd) / "file").read_text(), "original")
+            self.assertFalse(Path(shlex.split(self.file_commands[0])[-1]).exists())
+            self.assertFalse(self.upload_sources[0].parent.exists())
 
     async def test_file_tools_reject_symlink_files_and_parents(self):
         root = Path(self.tmp.name)
@@ -148,8 +218,9 @@ class HarnessTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(visible.startswith("EXIT CODE: 1"))
         self.assertEqual(event["output_bytes"], len(visible.encode()))
 
-    async def run_with_responses(self, responses):
-        client = NS(responses=NS(create=AsyncMock(side_effect=responses)))
+    async def run_with_responses(self, responses, api="responses"):
+        create = AsyncMock(side_effect=responses)
+        client = NS(responses=NS(create=create)) if api == "responses" else NS(chat=NS(completions=NS(create=create)))
         manager = AsyncMock()
         manager.__aenter__.return_value = client
         context = AgentContext()
@@ -184,6 +255,73 @@ class HarnessTests(unittest.IsolatedAsyncioTestCase):
         context, _ = await self.run_with_responses([response([call])])
         self.assertFalse(context.metadata["agent_completed"])
         self.assertEqual(context.metadata["stop_reason"], "max_turns")
+
+    async def test_empty_or_reasoning_only_responses_do_not_complete(self):
+        reasoning = NS(type="reasoning", summary=[NS(text="I should inspect the code.")])
+        for text, output in ((None, ()), ("", ()), (" \n\t", ()), ("", (reasoning,))):
+            with self.subTest(text=text, reasoning=bool(output)):
+                context, client = await self.run_with_responses([response(output, text=text)])
+                client.responses.create.assert_awaited_once()
+                self.assertEqual(context.metadata["stop_reason"], "empty_model_response")
+                self.assertFalse(context.metadata["agent_completed"])
+                self.assertFalse(context.metadata["output_limit_hit"])
+                self.assertEqual(context.metadata["total_output_tokens"], 2)
+                self.assertFalse((Path(self.tmp.name) / "final_answer.txt").exists())
+        self.env.exec.assert_not_awaited()
+
+    async def test_empty_chat_or_reasoning_only_replies_do_not_complete(self):
+        self.agent.settings = harness.Settings(model_api="chat")
+        for content in (None, "", " \n\t"):
+            with self.subTest(content=content):
+                reply = ChatCompletion.model_validate({
+                    "id": "c", "object": "chat.completion", "created": 1, "model": "test-model",
+                    "choices": [{"index": 0, "finish_reason": "stop", "message": {
+                        "role": "assistant", "content": content,
+                        "reasoning_content": '<tool_call>{"name":"bash"}</tool_call>',
+                    }}],
+                    "usage": {"prompt_tokens": 10, "completion_tokens": 2, "total_tokens": 12},
+                })
+                context, client = await self.run_with_responses([reply], api="chat")
+                client.chat.completions.create.assert_awaited_once()
+                self.assertEqual(context.metadata["stop_reason"], "empty_model_response")
+                self.assertFalse(context.metadata["agent_completed"])
+                self.assertFalse(context.metadata["output_limit_hit"])
+                self.assertEqual(context.metadata["total_output_tokens"], 2)
+                self.assertFalse((Path(self.tmp.name) / "final_answer.txt").exists())
+        self.env.exec.assert_not_awaited()
+
+    async def test_nonempty_answer_completes_and_preserves_text(self):
+        text = "  Fixed the test.\n"
+        context, _ = await self.run_with_responses([response(text=text)])
+        self.assertTrue(context.metadata["agent_completed"])
+        self.assertEqual(context.metadata["stop_reason"], "no_tool_calls")
+        self.assertEqual((Path(self.tmp.name) / "final_answer.txt").read_text(), text)
+
+    async def test_tool_calls_with_empty_text_still_execute(self):
+        call = NS(type="function_call", name="bash", arguments='{"command":"pwd"}', call_id="c")
+        context, _ = await self.run_with_responses([response([call], text=""), response()])
+        self.env.exec.assert_awaited_once()
+        self.assertEqual(context.metadata["model_calls"], 2)
+        self.assertEqual(context.metadata["tool_calls"], 1)
+        self.assertTrue(context.metadata["agent_completed"])
+
+    async def test_chat_tool_calls_with_no_text_then_final_answer(self):
+        self.agent.settings = harness.Settings(model_api="chat")
+        messages = [
+            {"role": "assistant", "content": None, "tool_calls": [{
+                "id": "t", "type": "function", "function": {"name": "bash", "arguments": '{"command":"pwd"}'},
+            }]},
+            {"role": "assistant", "content": "Done.\n"},
+        ]
+        replies = [ChatCompletion.model_validate({
+            "id": f"c{index}", "object": "chat.completion", "created": 1, "model": "test-model",
+            "choices": [{"index": 0, "finish_reason": "tool_calls" if index == 0 else "stop", "message": message}],
+        }) for index, message in enumerate(messages)]
+        context, _ = await self.run_with_responses(replies, api="chat")
+        self.env.exec.assert_awaited_once()
+        self.assertTrue(context.metadata["agent_completed"])
+        self.assertEqual(context.metadata["tool_calls"], 1)
+        self.assertEqual((Path(self.tmp.name) / "final_answer.txt").read_text(), "Done.\n")
 
     async def test_missing_usage_stays_unknown(self):
         context, _ = await self.run_with_responses([response(usage=False)])
