@@ -2,6 +2,7 @@
 
 | Study | Result | Evidence |
 | --- | --- | --- |
+| October 15: next-turn preparation | 9,024 additional cache-hit tokens across eight follow-ups in four fresh sessions. Latency and interference remain unresolved. | [Implementation, evidence and reproduction](next-turn-preparation-20261015/README.md) |
 | October 7: thinking controls | 24 paired comparisons. Explicit disabled requests still generated reasoning on stock; the fix stopped it. Claude-snapshot output fell 74.2%, with a separate short-question accuracy trade-off. | [Results and reproduction](dynamo-thinking-20261007/README.md) |
 | October 7: concurrent coding | Six sessions, 64 calls, 85.0% cached input and no unexplained cache shortfall. Coding failures are retained. | [Request metrics and outcomes](dynamo-concurrent-20261007/README.md) |
 | October 7: native routing | CPU hybrid-cache selection prototype and a stale-credit fix against the draft carrier router. | [Patches, checks and timing](dynamo-routing-20261007/README.md) |
@@ -12,7 +13,7 @@
 | September 23: output retention | 15 interleaved trials comparing 20K head, 2K head and 2K head+tail. | [Results](synthetic-20260923/README.md) |
 | September 21: initial pilots | Six synthetic runs and six Terminal-Bench runs, followed by a separate Codex profile. | [Earlier studies](../docs/retention-studies.md) |
 
-The [speculative-prefill patch](dynamo-upstream/001-speculative-prefill/fix/README.md) includes CPU regressions and pinned source. Other source checks cover [rendering](dynamo-upstream/002-renderer-parity/README.md), [priority](dynamo-upstream/003-priority/README.md), [cache control](dynamo-upstream/004-cache-control/README.md), [observability](dynamo-upstream/005-observability/README.md) and [frontend registration](dynamo-upstream/006-fixed-rpc-registration/README.md).
+The thinking-control fix merged in [Dynamo PR #16608](https://github.com/ai-dynamo/dynamo/pull/16608). The [speculative-prefill patch](dynamo-upstream/001-speculative-prefill/fix/README.md) includes CPU regressions and pinned source; the focused field fix is proposed in [contribution request #16601](https://github.com/ai-dynamo/dynamo/issues/16601). Other source checks cover [rendering](dynamo-upstream/002-renderer-parity/README.md), [priority](dynamo-upstream/003-priority/README.md), [cache control](dynamo-upstream/004-cache-control/README.md), [observability](dynamo-upstream/005-observability/README.md) and [frontend registration](dynamo-upstream/006-fixed-rpc-registration/README.md).
 
 ## Recompute the retention reports
 

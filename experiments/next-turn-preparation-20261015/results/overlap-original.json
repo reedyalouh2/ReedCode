@@ -1,0 +1,613 @@
+{
+  "worker_capture": {
+    "valid_capture": true,
+    "capture_process_id": "65f3c31125ec4307901c4db867727ba6",
+    "event_records": 126477,
+    "events_path": "evidence/backend/engine.jsonl",
+    "close_status_path": "evidence/backend/engine.jsonl.close.json"
+  },
+  "cohort": "evidence/original",
+  "clock_domains": {
+    "native": "EngineCore monotonic seconds, converted to nanoseconds; native/native comparison only within this single-engine run",
+    "lifetime": "Capture-worker Python monotonic nanoseconds; lifetime/lifetime comparison only"
+  },
+  "meaning": "Native windows span first scheduling through last observed token. They include decode gaps and do not prove simultaneous GPU kernels or causal interference. Lifetime windows cover the Python request only; abort acknowledgement does not establish when GPU execution stopped. Missing native windows remain unknown; reported overlap uses only observed background windows. The two timestamp domains are never compared or subtracted.",
+  "trials": [
+    {
+      "trial": "load0-pair0-off",
+      "condition": "off",
+      "background_configured": false,
+      "trial_id": "live-2daf5106f1614500afde9abbcaa52500",
+      "rows": [
+        {
+          "request_id": "96dcffdb-88f9-4853-9a4c-6608e85088b2",
+          "session_id": "live-2daf5106f1614500afde9abbcaa52500-psf__requests-6028",
+          "role": "target",
+          "client_status": null,
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3140948936298748,
+            3140986708117199
+          ],
+          "request_lifetime_ns": [
+            3140948933344766,
+            3140986710116003
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "0c679df1-5295-47fc-960b-2c05844596b4",
+          "session_id": "live-2daf5106f1614500afde9abbcaa52500-psf__requests-6028",
+          "role": "target",
+          "client_status": null,
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3140998150837003,
+            3141003808234935
+          ],
+          "request_lifetime_ns": [
+            3140998146122046,
+            3141003809634621
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "feae9807-b280-449c-93f5-a3d94a13f78f",
+          "session_id": "live-2daf5106f1614500afde9abbcaa52500-psf__requests-6028",
+          "role": "target",
+          "client_status": null,
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141004736884677,
+            3141005101916772
+          ],
+          "request_lifetime_ns": [
+            3141004731473972,
+            3141005112986410
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        }
+      ],
+      "summary": {
+        "target_native": {
+          "request_count": 3,
+          "known_window_count": 3,
+          "missing_window_count": 0,
+          "background_request_count": 0,
+          "background_known_window_count": 0,
+          "requests_with_observed_overlap": 0,
+          "summed_known_window_ms": 43794.248478,
+          "summed_observed_overlap_ms": 0.0,
+          "observed_overlap_fraction": 0.0,
+          "all_background_windows_known": true
+        },
+        "target_preparation_native": {
+          "request_count": 0,
+          "known_window_count": 0,
+          "missing_window_count": 0,
+          "background_request_count": 0,
+          "background_known_window_count": 0,
+          "requests_with_observed_overlap": 0,
+          "summed_known_window_ms": 0.0,
+          "summed_observed_overlap_ms": 0,
+          "observed_overlap_fraction": null,
+          "all_background_windows_known": true
+        },
+        "target_lifetime": {
+          "request_count": 3,
+          "known_window_count": 3,
+          "missing_window_count": 0,
+          "background_request_count": 0,
+          "background_known_window_count": 0,
+          "requests_with_observed_overlap": 0,
+          "summed_known_window_ms": 43821.79625,
+          "summed_observed_overlap_ms": 0.0,
+          "observed_overlap_fraction": 0.0,
+          "all_background_windows_known": true
+        },
+        "target_preparation_lifetime": {
+          "request_count": 0,
+          "known_window_count": 0,
+          "missing_window_count": 0,
+          "background_request_count": 0,
+          "background_known_window_count": 0,
+          "requests_with_observed_overlap": 0,
+          "summed_known_window_ms": 0.0,
+          "summed_observed_overlap_ms": 0,
+          "observed_overlap_fraction": null,
+          "all_background_windows_known": true
+        }
+      },
+      "sessions": [
+        {
+          "session_id": "live-2daf5106f1614500afde9abbcaa52500-psf__requests-6028",
+          "task_id": "psf__requests-6028",
+          "outcome": "empty_response",
+          "turns": [
+            {
+              "turn": 0,
+              "calls": 3,
+              "outcome": "call_limit"
+            }
+          ],
+          "model_calls": 3,
+          "tool_calls": 2,
+          "foreground_elapsed_s": 56.39503454207443
+        }
+      ]
+    },
+    {
+      "trial": "load0-pair0-rolling",
+      "condition": "rolling",
+      "background_configured": false,
+      "trial_id": "live-e9b96f73e3cb4f79b865fb9d358a5660",
+      "rows": [
+        {
+          "request_id": "42f72098-bfe5-4183-a234-9960e0917fa0",
+          "session_id": "live-e9b96f73e3cb4f79b865fb9d358a5660-psf__requests-6028",
+          "role": "target",
+          "client_status": null,
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141010995635720,
+            3141048794313026
+          ],
+          "request_lifetime_ns": [
+            3141010992766768,
+            3141048796374050
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "16734fb7-a8c7-4b15-a1e7-338ac7fa3ceb",
+          "session_id": "live-e9b96f73e3cb4f79b865fb9d358a5660-psf__requests-6028",
+          "role": "target",
+          "client_status": null,
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141060159535118,
+            3141066176166341
+          ],
+          "request_lifetime_ns": [
+            3141060153793354,
+            3141066178332474
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "f0be9cda-570b-49dc-ac01-afee22eb63d4",
+          "session_id": "live-e9b96f73e3cb4f79b865fb9d358a5660-psf__requests-6028",
+          "role": "target",
+          "client_status": null,
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141068240609963,
+            3141068621150854
+          ],
+          "request_lifetime_ns": [
+            3141068234376400,
+            3141068623165168
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "39188f6f-b96c-42b5-b795-1adcf24baf50",
+          "session_id": "live-e9b96f73e3cb4f79b865fb9d358a5660-psf__requests-6028",
+          "role": "target_preparation",
+          "client_status": "completed",
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141048900051559,
+            3141048918553447
+          ],
+          "request_lifetime_ns": [
+            3141048896335629,
+            3141048919880383
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "7e1cfee9-8462-4977-b266-a64fb50c568b",
+          "session_id": "live-e9b96f73e3cb4f79b865fb9d358a5660-psf__requests-6028",
+          "role": "target_preparation",
+          "client_status": "completed",
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141066314582692,
+            3141066367453203
+          ],
+          "request_lifetime_ns": [
+            3141066310718093,
+            3141066369074559
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        }
+      ],
+      "summary": {
+        "target_native": {
+          "request_count": 3,
+          "known_window_count": 3,
+          "missing_window_count": 0,
+          "background_request_count": 0,
+          "background_known_window_count": 0,
+          "requests_with_observed_overlap": 0,
+          "summed_known_window_ms": 44195.84942,
+          "summed_observed_overlap_ms": 0.0,
+          "observed_overlap_fraction": 0.0,
+          "all_background_windows_known": true
+        },
+        "target_preparation_native": {
+          "request_count": 2,
+          "known_window_count": 2,
+          "missing_window_count": 0,
+          "background_request_count": 0,
+          "background_known_window_count": 0,
+          "requests_with_observed_overlap": 0,
+          "summed_known_window_ms": 71.372399,
+          "summed_observed_overlap_ms": 0.0,
+          "observed_overlap_fraction": 0.0,
+          "all_background_windows_known": true
+        },
+        "target_lifetime": {
+          "request_count": 3,
+          "known_window_count": 3,
+          "missing_window_count": 0,
+          "background_request_count": 0,
+          "background_known_window_count": 0,
+          "requests_with_observed_overlap": 0,
+          "summed_known_window_ms": 44216.93517,
+          "summed_observed_overlap_ms": 0.0,
+          "observed_overlap_fraction": 0.0,
+          "all_background_windows_known": true
+        },
+        "target_preparation_lifetime": {
+          "request_count": 2,
+          "known_window_count": 2,
+          "missing_window_count": 0,
+          "background_request_count": 0,
+          "background_known_window_count": 0,
+          "requests_with_observed_overlap": 0,
+          "summed_known_window_ms": 81.90122,
+          "summed_observed_overlap_ms": 0.0,
+          "observed_overlap_fraction": 0.0,
+          "all_background_windows_known": true
+        }
+      },
+      "sessions": [
+        {
+          "session_id": "live-e9b96f73e3cb4f79b865fb9d358a5660-psf__requests-6028",
+          "task_id": "psf__requests-6028",
+          "outcome": "empty_response",
+          "turns": [
+            {
+              "turn": 0,
+              "calls": 3,
+              "outcome": "call_limit"
+            }
+          ],
+          "model_calls": 3,
+          "tool_calls": 2,
+          "foreground_elapsed_s": 57.73477250011638
+        }
+      ]
+    },
+    {
+      "trial": "load0-pair1-rolling",
+      "condition": "rolling",
+      "background_configured": false,
+      "trial_id": "live-0bae6f47a0624cf8aec619ca58816f97",
+      "rows": [
+        {
+          "request_id": "85425dbb-9ad9-4419-b5ee-12aa8b655ed8",
+          "session_id": "live-0bae6f47a0624cf8aec619ca58816f97-psf__requests-6028",
+          "role": "target",
+          "client_status": null,
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141071645306611,
+            3141109429422638
+          ],
+          "request_lifetime_ns": [
+            3141071643362377,
+            3141109431088623
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "d1fea518-b685-4ef8-b647-9a185b8ca80e",
+          "session_id": "live-0bae6f47a0624cf8aec619ca58816f97-psf__requests-6028",
+          "role": "target",
+          "client_status": null,
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141124954610467,
+            3141132231521080
+          ],
+          "request_lifetime_ns": [
+            3141124951117006,
+            3141132233488644
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "ebb9362b-8b39-4728-b637-7ef2a61e432a",
+          "session_id": "live-0bae6f47a0624cf8aec619ca58816f97-psf__requests-6028",
+          "role": "target",
+          "client_status": null,
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141133001615977,
+            3141133393546066
+          ],
+          "request_lifetime_ns": [
+            3141132996896061,
+            3141133395233992
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "42cc2752-4d53-4fc9-af5d-e511c0566656",
+          "session_id": "live-0bae6f47a0624cf8aec619ca58816f97-psf__requests-6028",
+          "role": "target",
+          "client_status": null,
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141136060100708,
+            3141138220167811
+          ],
+          "request_lifetime_ns": [
+            3141136054649293,
+            3141138221770947
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "47825a6c-e577-45cd-b451-e05d5fc9065b",
+          "session_id": "live-0bae6f47a0624cf8aec619ca58816f97-psf__requests-6028",
+          "role": "target",
+          "client_status": null,
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141138344699782,
+            3141171258691356
+          ],
+          "request_lifetime_ns": [
+            3141138341447801,
+            3141171260237312
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "5a5618ac-60c3-4138-afb4-417376a42bb5",
+          "session_id": "live-0bae6f47a0624cf8aec619ca58816f97-psf__requests-6028",
+          "role": "target",
+          "client_status": null,
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141171973404989,
+            3141181736631270
+          ],
+          "request_lifetime_ns": [
+            3141171969744359,
+            3141181739064063
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "89f8bc92-2524-45b3-b713-9a4e32e45d09",
+          "session_id": "live-0bae6f47a0624cf8aec619ca58816f97-psf__requests-6028",
+          "role": "target",
+          "client_status": null,
+          "client_error": "CancelledError",
+          "response_issue": null,
+          "backend_terminal": "consumer_closed",
+          "native_window_ns": [
+            3141181872430648,
+            3141204552709873
+          ],
+          "request_lifetime_ns": [
+            3141181866513465,
+            3141204565883936
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "9ed1eba3-1583-404a-9edc-7346ff886792",
+          "session_id": "live-0bae6f47a0624cf8aec619ca58816f97-psf__requests-6028",
+          "role": "target_preparation",
+          "client_status": "completed",
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141171391466603,
+            3141171434214073
+          ],
+          "request_lifetime_ns": [
+            3141171388055893,
+            3141171435380680
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "6bd0fd7d-6094-4256-84c5-314e4e0a350a",
+          "session_id": "live-0bae6f47a0624cf8aec619ca58816f97-psf__requests-6028",
+          "role": "target_preparation",
+          "client_status": "completed",
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141133471810567,
+            3141133487922041
+          ],
+          "request_lifetime_ns": [
+            3141133469622883,
+            3141133489014578
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "a98bf1e7-12e9-4aec-bbb0-e7d6dfcc890b",
+          "session_id": "live-0bae6f47a0624cf8aec619ca58816f97-psf__requests-6028",
+          "role": "target_preparation",
+          "client_status": "completed",
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141132445812348,
+            3141132498053152
+          ],
+          "request_lifetime_ns": [
+            3141132441788479,
+            3141132499203638
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        },
+        {
+          "request_id": "12dfb8b3-05d8-4fa8-8462-32e2a342c5f3",
+          "session_id": "live-0bae6f47a0624cf8aec619ca58816f97-psf__requests-6028",
+          "role": "target_preparation",
+          "client_status": "completed",
+          "client_error": null,
+          "response_issue": null,
+          "backend_terminal": "finished",
+          "native_window_ns": [
+            3141109531380631,
+            3141109547373726
+          ],
+          "request_lifetime_ns": [
+            3141109528300530,
+            3141109548295094
+          ],
+          "native_background_overlap_ms": 0.0,
+          "lifetime_background_overlap_ms": 0.0
+        }
+      ],
+      "summary": {
+        "target_native": {
+          "request_count": 7,
+          "known_window_count": 7,
+          "missing_window_count": 0,
+          "background_request_count": 0,
+          "background_known_window_count": 0,
+          "requests_with_observed_overlap": 0,
+          "summed_known_window_ms": 112970.520912,
+          "summed_observed_overlap_ms": 0.0,
+          "observed_overlap_fraction": 0.0,
+          "all_background_windows_known": true
+        },
+        "target_preparation_native": {
+          "request_count": 4,
+          "known_window_count": 4,
+          "missing_window_count": 0,
+          "background_request_count": 0,
+          "background_known_window_count": 0,
+          "requests_with_observed_overlap": 0,
+          "summed_known_window_ms": 127.092843,
+          "summed_observed_overlap_ms": 0.0,
+          "observed_overlap_fraction": 0.0,
+          "all_background_windows_known": true
+        },
+        "target_lifetime": {
+          "request_count": 7,
+          "known_window_count": 7,
+          "missing_window_count": 0,
+          "background_request_count": 0,
+          "background_known_window_count": 0,
+          "requests_with_observed_overlap": 0,
+          "summed_known_window_ms": 113023.037155,
+          "summed_observed_overlap_ms": 0.0,
+          "observed_overlap_fraction": 0.0,
+          "all_background_windows_known": true
+        },
+        "target_preparation_lifetime": {
+          "request_count": 4,
+          "known_window_count": 4,
+          "missing_window_count": 0,
+          "background_request_count": 0,
+          "background_known_window_count": 0,
+          "requests_with_observed_overlap": 0,
+          "summed_known_window_ms": 144.126205,
+          "summed_observed_overlap_ms": 0.0,
+          "observed_overlap_fraction": 0.0,
+          "all_background_windows_known": true
+        }
+      },
+      "sessions": [
+        {
+          "session_id": "live-0bae6f47a0624cf8aec619ca58816f97-psf__requests-6028",
+          "task_id": "psf__requests-6028",
+          "outcome": "controller_stop",
+          "turns": [
+            {
+              "turn": 0,
+              "calls": 4,
+              "outcome": "assistant_finished"
+            },
+            {
+              "turn": 1,
+              "calls": 2,
+              "outcome": "assistant_finished"
+            },
+            {
+              "turn": 2,
+              "calls": 1,
+              "outcome": "call_limit"
+            }
+          ],
+          "model_calls": 7,
+          "tool_calls": 4,
+          "foreground_elapsed_s": 132.96136775007471
+        }
+      ]
+    }
+  ]
+}

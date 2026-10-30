@@ -1,0 +1,146 @@
+{
+  "source/controller.py": {
+    "recorded_path": "live-v2/controller.py",
+    "recorded_sha256": "2c320be23768e06a6b4a770d50df70ac4ea50776f28f7511900bdd7ac822fe52",
+    "published_sha256": "d368455e094daab6f0b6ff219aef011cba6719b4f829d3dac5b9c236ff31fd26",
+    "changes": "Import paths and standalone packaging only."
+  },
+  "source/prepare.py": {
+    "recorded_path": "prefix/prepare.py",
+    "recorded_sha256": "51402aff9f5e4b0e6ad6a4476cd1eb9b291b28a3c40093235cd8cea0ddfe7cb7",
+    "published_sha256": "51402aff9f5e4b0e6ad6a4476cd1eb9b291b28a3c40093235cd8cea0ddfe7cb7",
+    "changes": null
+  },
+  "source/http_capture.py": {
+    "recorded_path": "http_capture.py",
+    "recorded_sha256": "99899c54a71c7355fa7b568297443d1cf9b16c89f6c0e3e11ed5e07068733771",
+    "published_sha256": "99899c54a71c7355fa7b568297443d1cf9b16c89f6c0e3e11ed5e07068733771",
+    "changes": null
+  },
+  "source/sandbox.py": {
+    "recorded_path": "live-v2/sandbox.py",
+    "recorded_sha256": "4585729d021b320b1d4dba56ad7fd3c3505826d88c45c17aff66fb79d13d3925",
+    "published_sha256": "4585729d021b320b1d4dba56ad7fd3c3505826d88c45c17aff66fb79d13d3925",
+    "changes": null
+  },
+  "source/file_tool.py": {
+    "recorded_path": "live-v2/file_tool.py",
+    "recorded_sha256": "fb786c4a989f1adc062202294dc1d2d6c1263deea978fa6b2dcf0f50892e8f88",
+    "published_sha256": "fb786c4a989f1adc062202294dc1d2d6c1263deea978fa6b2dcf0f50892e8f88",
+    "changes": null
+  },
+  "source/scripted.py": {
+    "recorded_path": "live-v2/scripted.py",
+    "recorded_sha256": "0f7d50399caeacadc7b63b1254a83242dce035fd7ece593cfdd292fb84d1affe",
+    "published_sha256": "0f7d50399caeacadc7b63b1254a83242dce035fd7ece593cfdd292fb84d1affe",
+    "changes": null
+  },
+  "source/tools.json": {
+    "recorded_path": "live-v2/tools.json",
+    "recorded_sha256": "bb06b894b8cb3e1a250269185c323b8187b6ee0f21f83259f8fc87217142ff13",
+    "published_sha256": "bb06b894b8cb3e1a250269185c323b8187b6ee0f21f83259f8fc87217142ff13",
+    "changes": null
+  },
+  "source/capture_worker.py": {
+    "recorded_path": "export/nextturn-runtime/capture_worker_next_turn.py",
+    "recorded_sha256": "524bfd67a033cd12b63703e68f77affa4209ff6591883bced08ff2d6a9babe8c",
+    "published_sha256": "524bfd67a033cd12b63703e68f77affa4209ff6591883bced08ff2d6a9babe8c",
+    "changes": null
+  },
+  "source/source-pins.json": {
+    "recorded_path": "backend/source-pins.json",
+    "recorded_sha256": "fa93b197334db8eb1db14ef2fa5b99e670be449fcb948163b2bffeeb2845b027",
+    "published_sha256": "fa93b197334db8eb1db14ef2fa5b99e670be449fcb948163b2bffeeb2845b027",
+    "changes": null
+  },
+  "source/validate_capture.py": {
+    "recorded_path": "backend/validate_capture.py",
+    "recorded_sha256": "d3807c06daafc027572bdad04ec05b33c5385e8493109443b9faa0fb347689be",
+    "published_sha256": "d3807c06daafc027572bdad04ec05b33c5385e8493109443b9faa0fb347689be",
+    "changes": null
+  },
+  "source/analyze.py": {
+    "recorded_path": "live/analysis/analyze.py",
+    "recorded_sha256": "84b33b4c36bbe3dbc3e4390182b10624b3223aea9c2f58b9abe7def90f7c6137",
+    "published_sha256": "4fda7ba3cc8a8d465554bbd26e0cbffb729740459a61a1a9b18107faea2cf234",
+    "changes": "Import paths and standalone packaging only."
+  },
+  "source/overlap.py": {
+    "recorded_path": "final-review/overlap.py",
+    "recorded_sha256": "e694a5a334517e274c3c0da50f1056539b8614ea917f8cb41e981076b9f1c11c",
+    "published_sha256": "e6ed8151f0c92adaffeb43f3cbfbe624aa7c816209aae2c939ec802934f31e57",
+    "changes": "Import paths and standalone packaging only."
+  },
+  "source/credit_audit.py": {
+    "recorded_path": "final-review/credit_audit.py",
+    "recorded_sha256": "c2173ee0740b9bb5d83c54726262914f873e4ca123bd435c3ec27c1acda38394",
+    "published_sha256": "c2173ee0740b9bb5d83c54726262914f873e4ca123bd435c3ec27c1acda38394",
+    "changes": null
+  },
+  "source/support.py": {
+    "recorded_path": "capture/live_capture.py",
+    "recorded_sha256": "811f16df357900b9f11567ea7cb0e77a8a8e2f24824bed9939442686014901d8",
+    "published_sha256": "703bcf50a50bca89f4c3c318f11910b7144c010684318e3d6c05793e00f8a2ac",
+    "changes": "Extracted unchanged SYSTEM, sha, Stream, TokenBudget and observation definitions. Imports and tool-file lookup are local."
+  },
+  "tests/test_live.py": {
+    "recorded_path": "live-v2/test_live.py",
+    "recorded_sha256": "0c9aea067ee32154fd3345a5606ab7452e7954e07bc6a5623281840ce19edd2c",
+    "published_sha256": "d49ee5b3c247550e6b438b3d8abbc9e1c2b5c33ba551628c91ad7cdd5df3d29e",
+    "changes": "Removed three deployment/readiness/schedule tests; localized module and tokenizer paths. Session, cancellation, parser, sandbox and predictor tests are unchanged."
+  },
+  "tests/test_prepare.py": {
+    "recorded_path": "prefix/test_prepare.py",
+    "recorded_sha256": "22f803859d1dc615f9f41cc37acd7c201051a8821649bc722416c8c5edc9e8c5",
+    "published_sha256": "344f942ab3cdcb9c8ece0e93de2f51d7518b8c66056276db88eb188d65766ebd",
+    "changes": "Localized tokenizer path; omitted two historical-corpus tests from the earlier CPU survey. The eight predictor contract regressions are unchanged."
+  },
+  "tests/test_analysis.py": {
+    "recorded_path": "live/analysis/test_analysis.py",
+    "recorded_sha256": "8c8565565ec0c29892e7fa59c80d18427e2b93cd589a06b5aaaeeb95252fb1c5",
+    "published_sha256": "8c8565565ec0c29892e7fa59c80d18427e2b93cd589a06b5aaaeeb95252fb1c5",
+    "changes": null
+  },
+  "tests/test_overlap.py": {
+    "recorded_path": "final-review/test_overlap.py",
+    "recorded_sha256": "f0abe8c64f67f2924500e50155d46b1c009f86cbbf4cfaf29250ac99e9f5fbb4",
+    "published_sha256": "f0abe8c64f67f2924500e50155d46b1c009f86cbbf4cfaf29250ac99e9f5fbb4",
+    "changes": null
+  },
+  "tests/test_capture_worker.py": {
+    "recorded_path": "backend/test_capture_worker.py",
+    "recorded_sha256": "ef4629124d59f5b55c6ccfbd5e3d6291676d7adffd6a70255bb10c0c391a1a3d",
+    "published_sha256": "ef4629124d59f5b55c6ccfbd5e3d6291676d7adffd6a70255bb10c0c391a1a3d",
+    "changes": null
+  },
+  "tests/test_writer.py": {
+    "recorded_path": "backend/test_writer.py",
+    "recorded_sha256": "7c6b9ad094da69fa0adc6721a1d89a6699f7fe9e86987fcea6cb6de311382342",
+    "published_sha256": "7c6b9ad094da69fa0adc6721a1d89a6699f7fe9e86987fcea6cb6de311382342",
+    "changes": null
+  },
+  "tests/test_validate_capture.py": {
+    "recorded_path": "backend/test_validate_capture.py",
+    "recorded_sha256": "8e31dec608dcb05d1e7253f5d4962270eda0ac7d2042e32de7c7d2ede5bee4f4",
+    "published_sha256": "8e31dec608dcb05d1e7253f5d4962270eda0ac7d2042e32de7c7d2ede5bee4f4",
+    "changes": null
+  },
+  "tests/test_http_capture.py": {
+    "recorded_path": "test_http_capture.py",
+    "recorded_sha256": "9e76048578cdd41005873e0f5b5d7ca5f02e471518ed91323f3e0226236fc997",
+    "published_sha256": "5e64173e55f917aeb508b1a55cd3ced54d92d75eaee6a5e7ef36c7a87ad007b1",
+    "changes": "Removed the deadline-replay integration test from an earlier experiment. Transport tests are unchanged."
+  },
+  "source/original-cohort.patch": {
+    "recorded_path": "live/controller.py",
+    "recorded_sha256": "2463d06037e4faefcd164eaafc22fc02793e8277ffd1242e9eba41d9cb868f03",
+    "published_sha256": "d026ae42c16980cf6660d9153e27dbd775ac8c3ea79979221ccc9845f3aacaa8",
+    "changes": "Reverse patch from the published amended controller to the original controller, with the same localized imports."
+  },
+  "source/request_table.py": {
+    "recorded_path": null,
+    "recorded_sha256": null,
+    "published_sha256": "25548c075705aa77af8a51eaf86a73277fe933c95972826a39c2a4f05bca1313",
+    "changes": "Publication helper projects existing report fields to requests.tsv; it does not change the analysis."
+  }
+}

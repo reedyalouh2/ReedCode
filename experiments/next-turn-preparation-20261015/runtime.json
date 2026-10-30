@@ -1,0 +1,158 @@
+{
+  "model": "Qwen/Qwen3-8B",
+  "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "reset_endpoint": "dyn://reedcode_nextturn.backend.clear_kv_blocks",
+  "placement": {
+    "model_and_capture": "GPU pod",
+    "controller_and_task_containers": "Mac",
+    "transport": "SSH loopback tunnel"
+  },
+  "environment": {
+    "HF_HOME": "/workspace/hf",
+    "HF_HUB_DISABLE_TELEMETRY": "1",
+    "DYN_DISCOVERY_BACKEND": "file",
+    "DYN_FILE_KV": "/workspace/nextturn-run/discovery",
+    "DYN_REQUEST_PLANE": "tcp",
+    "DYN_EVENT_PLANE": "zmq",
+    "DYN_TOKENIZER_BACKEND": "default",
+    "DYN_TOKENIZER_CACHE": "0",
+    "DYN_TOKEN_IDS_AS_BYTES": "0",
+    "DYN_DISABLE_FRONTEND_NVEXT": "false",
+    "DYN_SELF_HOST_METADATA": "0",
+    "DYN_TCP_RESPONSE_STREAM_HOST": "lo",
+    "DYN_SYSTEM_HOST": "127.0.0.1",
+    "DYN_LOGGING_CONSOLE_FORMAT": "jsonl",
+    "DYN_LOG": "info",
+    "DYN_SDK_DISABLE_ANSI_LOGGING": "true"
+  },
+  "commands": {
+    "kv": [
+      "/usr/bin/python3",
+      "/workspace/nextturn-runtime/capture_kv.py",
+      "--output",
+      "/workspace/nextturn-run/kv.jsonl",
+      "--seconds",
+      "4800"
+    ],
+    "worker": [
+      "/usr/bin/python3",
+      "/workspace/nextturn-runtime/capture_worker_next_turn.py",
+      "--endpoint",
+      "dyn://reedcode_nextturn.backend.generate",
+      "--model",
+      "Qwen/Qwen3-8B",
+      "--revision",
+      "b968826d9c46dd6066d109eabc6255188de91218",
+      "--discovery-backend",
+      "file",
+      "--request-plane",
+      "tcp",
+      "--dtype",
+      "bfloat16",
+      "--kv-cache-dtype",
+      "auto",
+      "--tensor-parallel-size",
+      "1",
+      "--max-model-len",
+      "32768",
+      "--gpu-memory-utilization",
+      "0.80",
+      "--enable-prefix-caching",
+      "--block-size",
+      "16",
+      "--kv-events-config",
+      "{\"enable_kv_cache_events\": true, \"publisher\": \"zmq\", \"topic\": \"kv-events\", \"endpoint\": \"tcp://*:5557\"}",
+      "--dyn-tool-call-parser",
+      "hermes",
+      "--dyn-reasoning-parser",
+      "qwen3",
+      "--dyn-default-thinking-mode",
+      "enabled"
+    ],
+    "frontend": [
+      "/usr/bin/python3",
+      "-m",
+      "dynamo.frontend",
+      "--discovery-backend",
+      "file",
+      "--request-plane",
+      "tcp",
+      "--router-mode",
+      "kv",
+      "--http-host",
+      "127.0.0.1",
+      "--http-port",
+      "18080",
+      "--enable-anthropic-api",
+      "--strip-anthropic-preamble",
+      "--enable-streaming-tool-dispatch"
+    ]
+  },
+  "component_environment": {
+    "worker": {
+      "DYN_SYSTEM_PORT": "18081",
+      "DYN_TCP_RPC_PORT": "20000",
+      "DYN_TCP_RESPONSE_STREAM_PORT": "20001",
+      "REEDCODE_ENGINE_CAPTURE": "/workspace/nextturn-run/engine.jsonl"
+    },
+    "frontend": {
+      "DYN_SYSTEM_PORT": "18082",
+      "DYN_TCP_RPC_PORT": "0",
+      "DYN_TCP_RESPONSE_STREAM_PORT": "20003",
+      "DYN_REQUEST_TRACE": "1",
+      "DYN_REQUEST_TRACE_SINKS": "file",
+      "DYN_REQUEST_TRACE_FILE_FORMAT": "jsonl",
+      "DYN_REQUEST_TRACE_RECORDS": "request_end,request_payload",
+      "DYN_REQUEST_TRACE_FILE_PATH": "/workspace/nextturn-run/frontend-trace.jsonl"
+    }
+  },
+  "runtime_identity": {
+    "environment": {
+      "DYNAMO_COMMIT_SHA": "32b8b2f8c63fa3531c34b64c1cf2cbe39a6f9653",
+      "CUDA_VERSION": "13.0.2"
+    },
+    "packages": {
+      "ai-dynamo": "1.5.0",
+      "ai-dynamo-runtime": "1.5.0",
+      "vllm": "0.28.0",
+      "torch": "2.13.0+cu130"
+    },
+    "files": {
+      "dynamo/frontend/main.py": "4896b27c3b484bc10cbf4d7dae6cd62aeee2958307139252864c6935be49dbd2",
+      "dynamo/frontend/frontend_args.py": "d27c2bf029bf1581ead621531cce3ea77ff23215348b434c210bdf8cd46e4e15",
+      "dynamo/vllm/main.py": "6db973a37e10d1d6667a5943591c3a8af0be054b94ea497b77b304575d155439",
+      "dynamo/vllm/args.py": "72c4812187b157cd0d8845bb749cd715b2786453c0bf0fc4633fe6a3406d9042"
+    }
+  },
+  "started_unix_ns": 1792111388977433318,
+  "processes": {
+    "kv": 565,
+    "worker": 566,
+    "frontend": 567
+  },
+  "finished_unix_ns": 1792114873439721808,
+  "returncodes": {
+    "kv": -15,
+    "worker": 0,
+    "frontend": 0
+  },
+  "capture_validation": {
+    "exit_code": 0,
+    "stdout": "{\"capture_process_id\": \"65f3c31125ec4307901c4db867727ba6\", \"close_status_path\": \"/workspace/nextturn-run/engine.jsonl.close.json\", \"event_records\": 126477, \"events_path\": \"/workspace/nextturn-run/engine.jsonl\", \"valid_capture\": true}\n",
+    "stderr": ""
+  },
+  "image": "nvcr.io/nvidia/ai-dynamo/vllm-runtime@sha256:d18389c89eb319401fdd73f1fbbaff10d9382f634b879941dfba75bbf7260c1e",
+  "gpu": {
+    "name": "NVIDIA A100-SXM4-80GB",
+    "count": 1,
+    "reported_kv_capacity_tokens": 339824
+  },
+  "published_evidence": {
+    "startup_excerpt": {
+      "path": "runtime-startup.log",
+      "original_log_sha256": "979f5107f5556c9ad1e973861f5dce63658b17e1493713e7655eeed3d9ffa1e8",
+      "selection": "Complete lines containing Available KV cache memory or GPU KV cache size."
+    },
+    "commands_note": "Recorded launch configuration. The worker wrapper is published as source/capture_worker.py. Process supervision and the KV collector launcher are excluded; saved KV events are included in the evidence archive."
+  }
+}

@@ -27,7 +27,7 @@ The cross-template matrix runs 16 authored cases on each revision. Restoring too
 
 ## Review packet
 
-- [Issue draft](issue-draft.md): proposed upstream report, not filed.
+- [Contribution request #16601](https://github.com/ai-dynamo/dynamo/issues/16601): filed upstream; the focused field-preservation PR awaits maintainer agreement on scope.
 - [Local fix and regression evidence](fix/README.md).
 - [Provenance](provenance.md): exact wire bodies, source lines, internal request IDs, and limits.
 - [Existing issues and PRs](known-issues.md): overlap and current-source inspection.
@@ -36,7 +36,7 @@ The cross-template matrix runs 16 authored cases on each revision. Restoring too
 - [GPU results](../combined-gpu-20260929/PREFILL.md): all 18 replay trials, per-repetition differences, branch payload and the separate failed first epoch.
 - [Raw evidence](provenance-evidence.tar.gz) and [manifest](provenance-manifest.json): byte-preserving extracts of the original records.
 
-Related speculative-rendering problems are already discussed upstream. The draft identifies this reproduction's specific causes and links that work. It should be reviewed as supplemental evidence before deciding whether a separate issue is useful.
+The contribution request separates field preservation from the Qwen-specific continuation boundary. The GPU reductions above used the broader prototype, including both changes. The [original report draft](issue-draft.md) preserves that study's full scope.
 
 ## Reproduce the saved finding on CPU
 

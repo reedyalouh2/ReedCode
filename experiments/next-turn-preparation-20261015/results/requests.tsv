@@ -1,0 +1,105 @@
+cohort	trial	condition	background	task	request_id	user_turn	input_tokens	cached_tokens	foreground_ceiling_tokens	preparation_credit_tokens	native_output_tokens	native_ttft_ms	client_total_ms	finish_reason	response_issue	client_error	turn_outcome	session_outcome
+original	load0-pair0-off	off	False	psf__requests-6028	96dcffdb-88f9-4853-9a4c-6608e85088b2	0	794	0	0	0	3277	82.60297775268555	37956.356167	tool_calls			call_limit	empty_response
+original	load0-pair0-off	off	False	psf__requests-6028	0c679df1-5295-47fc-960b-2c05844596b4	0	4525	4032	4032	0	477	66.52379035949707	5838.06025	tool_calls			call_limit	empty_response
+original	load0-pair0-off	off	False	psf__requests-6028	feae9807-b280-449c-93f5-a3d94a13f78f	0	5024	4896	4896	0	30	29.607295989990234	524.786167	stop	empty_response		call_limit	empty_response
+original	load0-pair0-rolling	rolling	False	psf__requests-6028	42f72098-bfe5-4183-a234-9960e0917fa0	0	794	0	0	0	3277	84.65147018432617	37892.589542	tool_calls			call_limit	empty_response
+original	load0-pair0-rolling	rolling	False	psf__requests-6028	16734fb7-a8c7-4b15-a1e7-338ac7fa3ceb	0	4524	4032	4032	0	508	63.2472038269043	6153.215791	tool_calls			call_limit	empty_response
+original	load0-pair0-rolling	rolling	False	psf__requests-6028	f0be9cda-570b-49dc-ac01-afee22eb63d4	0	5055	4864	4864	0	30	40.80629348754883	503.870167	stop	empty_response		call_limit	empty_response
+original	load0-pair1-rolling	rolling	False	psf__requests-6028	85425dbb-9ad9-4419-b5ee-12aa8b655ed8	0	794	0	0	0	3277	82.061767578125	37862.717083	tool_calls			assistant_finished	controller_stop
+original	load0-pair1-rolling	rolling	False	psf__requests-6028	d1fea518-b685-4ef8-b647-9a185b8ca80e	0	4525	4032	4032	0	615	60.06908416748047	7488.223875	tool_calls			assistant_finished	controller_stop
+original	load0-pair1-rolling	rolling	False	psf__requests-6028	ebb9362b-8b39-4728-b637-7ef2a61e432a	0	5163	4976	4976	0	32	31.74138069152832	484.836166	tool_calls			assistant_finished	controller_stop
+original	load0-pair1-rolling	rolling	False	psf__requests-6028	42cc2752-4d53-4fc9-af5d-e511c0566656	0	5268	5152	5152	0	180	30.65037727355957	2276.868667	stop			assistant_finished	controller_stop
+original	load0-pair1-rolling	rolling	False	psf__requests-6028	47825a6c-e577-45cd-b451-e05d5fc9065b	1	1779	1472	784	688	2834	34.685373306274414	33017.429042	tool_calls			assistant_finished	controller_stop
+original	load0-pair1-rolling	rolling	False	psf__requests-6028	5a5618ac-60c3-4138-afb4-417376a42bb5	1	4635	4144	4144	0	826	51.253318786621094	9874.215042	stop			assistant_finished	controller_stop
+original	load0-pair1-rolling	rolling	False	psf__requests-6028	89f8bc92-2524-45b3-b713-9a4e32e45d09	2	2850	2240	1776	464	1939	64.4388198852539	22738.314125		controller_cancelled	CancelledError	call_limit	controller_stop
+amended	load0-pair0-off	off	False	psf__requests-6028	d259d6ec-8676-426f-b6f5-266e44ebf549	0	794	0	0	0	3277	85.14285087585449	37891.235916	tool_calls			assistant_finished	finished
+amended	load0-pair0-off	off	False	psf__requests-6028	f0196918-6191-4215-a82c-fb1c4a063139	0	4525	4032	4032	0	617	68.9542293548584	7547.693875	tool_calls			assistant_finished	finished
+amended	load0-pair0-off	off	False	psf__requests-6028	7f9eb595-204b-469b-968f-61731fec1c48	0	5164	5024	5024	0	32	32.499074935913086	518.037042	tool_calls			assistant_finished	finished
+amended	load0-pair0-off	off	False	psf__requests-6028	ed93d821-ae20-4e77-8fa5-542508541374	0	5269	5152	5152	0	66	27.862548828125	878.764417	stop			assistant_finished	finished
+amended	load0-pair0-off	off	False	psf__requests-6028	3f8ed42a-bf33-4827-9b36-07e2775c390f	1	1614	784	784	0	794	71.65312767028809	9242.038209	tool_calls			assistant_finished	finished
+amended	load0-pair0-off	off	False	psf__requests-6028	311cdcab-3d84-4bbc-9daa-5b42df1cc3f1	1	2430	2016	2016	0	377	49.25990104675293	4462.780625	stop			assistant_finished	finished
+amended	load0-pair0-off	off	False	psf__requests-6028	efecea5b-3ba7-4112-b77e-ee0e1f6ea6e8	2	2224	1600	1600	0	2182	54.560184478759766	25436.28625	tool_calls			assistant_finished	finished
+amended	load0-pair0-off	off	False	psf__requests-6028	a3da22a3-3ee4-46b1-8db7-3ca724b8c031	2	4428	3792	3792	0	458	71.10738754272461	5524.929542	stop			assistant_finished	finished
+amended	load0-pair0-rolling	rolling	False	psf__requests-6028	40c983c3-49e1-4d72-8ffe-86e242282767	0	794	0	0	0	3277	86.8988037109375	37868.71525	tool_calls			assistant_finished	finished
+amended	load0-pair0-rolling	rolling	False	psf__requests-6028	5045881b-6385-431a-ae7d-cdd11789a661	0	4524	4032	4032	0	1203	65.05918502807617	14320.923792	tool_calls			assistant_finished	finished
+amended	load0-pair0-rolling	rolling	False	psf__requests-6028	04057e56-3bbb-4885-8c7d-1b5c8793236a	0	5749	5552	5552	0	32	37.541866302490234	491.828542	tool_calls			assistant_finished	finished
+amended	load0-pair0-rolling	rolling	False	psf__requests-6028	7b7eec48-eb9c-4ec6-92a2-04ec0eaf7374	0	5854	5744	5744	0	152	31.77809715270996	1906.63075	stop			assistant_finished	finished
+amended	load0-pair0-rolling	rolling	False	psf__requests-6028	ee2644b0-8643-4f64-a31e-467240a71017	1	1762	1488	784	704	4044	36.539554595947266	47253.618083	tool_calls			assistant_finished	finished
+amended	load0-pair0-rolling	rolling	False	psf__requests-6028	5a09bd3a-f311-4530-bcfb-2f1c0c31fcfc	1	5825	5296	5296	0	629	66.01810455322266	7633.949417	stop			assistant_finished	finished
+amended	load0-pair0-rolling	rolling	False	psf__requests-6028	eb4e8163-7365-42f0-bd28-90b648b368a0	2	2541	2256	1760	496	1350	39.39318656921387	15874.997334	tool_calls			assistant_finished	finished
+amended	load0-pair0-rolling	rolling	False	psf__requests-6028	34577145-d421-45e7-826f-99707358f36a	2	3910	3392	3392	0	525	59.752702713012695	6280.758792	stop			assistant_finished	finished
+amended	load0-pair1-off	off	False	psf__requests-6028	c2330bb5-2f4b-427f-a0d2-52b3383b76ce	0	794	0	0	0	3277	81.40969276428223	37855.864875	tool_calls			assistant_finished	finished
+amended	load0-pair1-off	off	False	psf__requests-6028	48b8ea1a-57bf-458a-92dc-e9c09ad9618c	0	4523	4032	4032	0	729	69.488525390625	8724.407375	tool_calls			assistant_finished	finished
+amended	load0-pair1-off	off	False	psf__requests-6028	b31070d2-3a69-4211-a62f-e964eedf3e0b	0	5275	5136	5136	0	32	34.744977951049805	489.561416	tool_calls			assistant_finished	finished
+amended	load0-pair1-off	off	False	psf__requests-6028	162534f7-8104-46e3-a3c3-c4a3f1f0a820	0	5380	5264	5264	0	104	31.59809112548828	1352.213791	stop			assistant_finished	finished
+amended	load0-pair1-off	off	False	psf__requests-6028	7d5255eb-f5fc-41df-8703-40ec69b25359	1	1659	784	784	0	4001	73.92764091491699	46728.079	tool_calls			assistant_finished	finished
+amended	load0-pair1-off	off	False	psf__requests-6028	9bd8d14a-e313-4d09-b41b-78ff8ce58997	1	5682	5136	5136	0	619	70.74928283691406	7508.280459	stop			assistant_finished	finished
+amended	load0-pair1-off	off	False	psf__requests-6028	fff1aa4b-8749-41dc-b42c-fc8ec3cca9c3	2	2454	1648	1648	0	1437	76.32303237915039	16822.994375	tool_calls			assistant_finished	finished
+amended	load0-pair1-off	off	False	psf__requests-6028	37d68a19-b868-41d5-84df-6a5a8f3af162	2	3913	2976	2976	0	515	88.49692344665527	6199.941417	stop			assistant_finished	finished
+amended	load0-pair1-rolling	rolling	False	psf__requests-6028	aca188e3-dea4-4b6a-8840-4166ffb44f6c	0	794	0	0	0	3277	84.85007286071777	37900.413167	tool_calls			empty_response	finished_with_turn_failures
+amended	load0-pair1-rolling	rolling	False	psf__requests-6028	92f46ea4-9817-4bbd-bcf1-fe62896a81a9	0	4524	4032	4032	0	572	67.82913208007812	6875.498625	tool_calls			empty_response	finished_with_turn_failures
+amended	load0-pair1-rolling	rolling	False	psf__requests-6028	cb66e653-6c0d-49f8-9d05-bd8d45250e5c	0	5117	4896	4896	0	32	38.416385650634766	496.226666	tool_calls			empty_response	finished_with_turn_failures
+amended	load0-pair1-rolling	rolling	False	psf__requests-6028	f0e5557f-74e3-4f19-9df1-28541ccb644a	0	5222	5104	5104	0	30	38.125038146972656	575.090917	stop	empty_response		empty_response	finished_with_turn_failures
+amended	load0-pair1-rolling	rolling	False	psf__requests-6028	b66955e2-ca15-44e6-bace-40ce959fdfbc	1	1644	1504	784	720	2799	26.35979652404785	32732.740334	tool_calls			assistant_finished	finished_with_turn_failures
+amended	load0-pair1-rolling	rolling	False	psf__requests-6028	595b1437-4ee0-4030-b23a-022711190bc3	1	4465	3664	3664	0	378	80.34253120422363	4595.316042	stop			assistant_finished	finished_with_turn_failures
+amended	load0-pair1-rolling	rolling	False	psf__requests-6028	f5a58d3d-0569-4785-aaff-45ba3b2001e5	2	2607	2400	1632	768	1783	30.9603214263916	20852.946791	tool_calls			assistant_finished	finished_with_turn_failures
+amended	load0-pair1-rolling	rolling	False	psf__requests-6028	16fbf263-37e0-4d59-9db6-9c7786e19a12	2	4412	3376	3376	0	499	92.93723106384277	6027.92625	stop			assistant_finished	finished_with_turn_failures
+amended	load1-pair0-off	off	True	pallets__flask-5014	0e1ab44e-d03a-4556-abda-5ebe667d5792	0	452	368	368	0	927	98.13308715820312	10995.447625	tool_calls			empty_response	model_error
+amended	load1-pair0-off	off	True	pallets__flask-5014	4539e0ec-1f75-421d-8803-18122ae70afb	0	1420	1344	1344	0	135	37.30463981628418	1695.462708	tool_calls			empty_response	model_error
+amended	load1-pair0-off	off	True	pallets__flask-5014	533c7599-bf54-469c-b448-cddebf5789ba	0	6466	1520	1520	0	1424	410.9787940979004	19139.520291	tool_calls			empty_response	model_error
+amended	load1-pair0-off	off	True	pallets__flask-5014	16a36748-65a5-4486-bb6e-11ad53928497	0	7930	7856	7856	0	389	46.97680473327637	5683.695208	tool_calls			empty_response	model_error
+amended	load1-pair0-off	off	True	pallets__flask-5014	ed2cd770-4108-4fc2-a9a8-0ad08118d937	0	8341	8240	8240	0	31	45.20440101623535	548.227167	stop	empty_response		empty_response	model_error
+amended	load1-pair0-off	off	True	pallets__flask-5014	9e6eed1d-326a-453b-b0c9-46c6c4622fed	1	5640	448	448	0	4509	409.27600860595703	60000.413875		model_error	TimeoutError: 	call_limit	model_error
+amended	load1-pair0-off	off	True	psf__requests-6028	252b735f-87ea-4fca-89fe-aaba90361764	0	794	0	368	0	1530	83.82129669189453	18656.62975	tool_calls			assistant_finished	model_error
+amended	load1-pair0-off	off	True	psf__requests-6028	c0087a9b-306f-4065-9359-113eceead60e	0	7719	2288	2288	0	25	461.01880073547363	869.533042	tool_calls			assistant_finished	model_error
+amended	load1-pair0-off	off	True	psf__requests-6028	144071f1-1e44-4034-be3d-b782ae4f1023	0	8742	7712	7712	0	795	127.1820068359375	10570.868584	tool_calls			assistant_finished	model_error
+amended	load1-pair0-off	off	True	psf__requests-6028	13227b21-3549-4f64-ae6e-a135daed72d6	0	9610	9504	9504	0	209	49.38030242919922	2891.078959	stop			assistant_finished	model_error
+amended	load1-pair0-off	off	True	psf__requests-6028	128a65b6-5ad5-4e6e-878a-6b73f422abfa	1	7590	784	784	0	4216	560.145378112793	56171.577416	tool_calls			assistant_finished	model_error
+amended	load1-pair0-off	off	True	psf__requests-6028	264d394f-ec8d-4745-a94f-d57c0e1343cf	1	11817	9152	9152	0	576	304.07094955444336	8201.461666	stop			assistant_finished	model_error
+amended	load1-pair0-off	off	True	psf__requests-6028	3dfeeaf9-9ef7-4fe0-8272-0aaecc097ca0	2	9094	7584	7584	0	1987	153.75828742980957	24683.223875	tool_calls			call_limit	model_error
+amended	load1-pair0-off	off	True	psf__requests-6028	f1f0dd5b-6558-4523-8406-18990b11bf75	2	11103	9696	9696	0	4738	163.2406711578369	60003.341416		model_error	TimeoutError: 	call_limit	model_error
+amended	load1-pair0-rolling	rolling	True	pallets__flask-5014	88dfdbf2-45d7-45dc-855f-439874b9e16a	0	452	368	368	0	927	99.20573234558105	10995.53425	tool_calls			call_limit	model_error
+amended	load1-pair0-rolling	rolling	True	pallets__flask-5014	f6ce50e5-e8fd-4308-961d-71ac76bb2deb	0	1420	1344	1344	0	135	33.14375877380371	1689.871291	tool_calls			call_limit	model_error
+amended	load1-pair0-rolling	rolling	True	pallets__flask-5014	4171b723-d235-4bb6-bedf-fe2b8b1f7b3c	0	6466	1520	1520	0	1064	407.78613090515137	13651.245125	tool_calls			call_limit	model_error
+amended	load1-pair0-rolling	rolling	True	pallets__flask-5014	3ee07f6f-7fd9-4ddc-91f7-bbb757cf9218	0	7571	7504	7504	0	639	47.155141830444336	8069.758458	tool_calls			call_limit	model_error
+amended	load1-pair0-rolling	rolling	True	pallets__flask-5014	88af9cc9-63d2-4d1f-83ff-8f1c636ac9c6	0	8232	8144	8144	0	575	49.429893493652344	7363.909417	tool_calls			call_limit	model_error
+amended	load1-pair0-rolling	rolling	True	pallets__flask-5014	fbf81c60-0094-4a31-a484-c1056697017b	1	5709	448	448	0	4722	407.73940086364746	60001.649042		model_error	TimeoutError: 	call_limit	model_error
+amended	load1-pair0-rolling	rolling	True	psf__requests-6028	53a192b4-e9ef-4239-b307-591a4fd44174	0	794	0	368	0	1504	99.34830665588379	18344.941875	tool_calls			assistant_finished	finished
+amended	load1-pair0-rolling	rolling	True	psf__requests-6028	22238f97-c299-4f53-8cb2-c7afe4a504fa	0	2371	2256	2256	0	414	41.04256629943848	5233.317042	stop			assistant_finished	finished
+amended	load1-pair0-rolling	rolling	True	psf__requests-6028	77a69bbd-4ac0-45cb-9353-19966420fad0	1	1103	816	784	32	3570	58.96162986755371	44805.071541	tool_calls			assistant_finished	finished
+amended	load1-pair0-rolling	rolling	True	psf__requests-6028	af33490a-824d-4914-a3ad-6b63d0f42824	1	4695	4368	4368	0	546	58.3193302154541	7077.208209	stop			assistant_finished	finished
+amended	load1-pair0-rolling	rolling	True	psf__requests-6028	e7d32b8d-b193-4d52-a6bd-7ddd39444142	2	1771	1392	1088	304	1465	55.79948425292969	18574.427708	tool_calls			assistant_finished	finished
+amended	load1-pair0-rolling	rolling	True	psf__requests-6028	09d8273f-719b-43a3-b9ef-e666c24be115	2	3258	2640	2640	0	714	79.14090156555176	9217.988	stop			assistant_finished	finished
+amended	load1-pair1-off	off	True	psf__requests-6028	deb205e0-201f-4772-ae9c-43746655f15b	0	794	368	368	0	2464	85.09588241577148	29292.646916	tool_calls			assistant_finished	finished
+amended	load1-pair1-off	off	True	psf__requests-6028	3cabc060-0496-4804-9f95-a5e09a4df020	0	3724	3232	3232	0	467	68.01986694335938	6214.766583	tool_calls			assistant_finished	finished
+amended	load1-pair1-off	off	True	psf__requests-6028	7b587177-0f9f-44d3-9f44-65f668c8090f	0	4264	4160	4160	0	206	39.43800926208496	2730.709458	stop			assistant_finished	finished
+amended	load1-pair1-off	off	True	psf__requests-6028	9441a8a8-6d8b-4ae0-84e4-a918b6509c6d	1	1640	784	784	0	1507	89.02812004089355	21628.4505	tool_calls			assistant_finished	finished
+amended	load1-pair1-off	off	True	psf__requests-6028	4ec971c6-c142-4ea7-bfa1-f51e21af7d58	1	3169	2896	2896	0	505	72.63779640197754	8162.076125	stop			assistant_finished	finished
+amended	load1-pair1-off	off	True	psf__requests-6028	4d83a888-a68c-4034-8a1b-3cd232cb7499	2	2142	1632	1632	0	1053	70.06669044494629	13775.709834	tool_calls			assistant_finished	finished
+amended	load1-pair1-off	off	True	psf__requests-6028	d3716165-b388-414c-983a-f7b663af6910	2	3217	2768	2768	0	552	73.95195960998535	7351.992833	stop			assistant_finished	finished
+amended	load1-pair1-off	off	True	pallets__flask-5014	5bf81397-bae7-46bb-b9bc-1a36f3f0c5e9	0	452	0	368	0	837	85.5872631072998	9920.555666	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-off	off	True	pallets__flask-5014	0d8a0b0e-575a-40ae-850d-ba6f64297816	0	1330	1264	1264	0	170	33.64849090576172	2114.475	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-off	off	True	pallets__flask-5014	521a385d-8994-40bc-aa11-54a35da5d5aa	0	1541	1472	1472	0	575	36.633968353271484	6942.921834	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-off	off	True	pallets__flask-5014	36487614-b5d8-4e84-8be0-348b8939f56f	0	2156	2080	2080	0	484	37.02974319458008	5903.968334	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-off	off	True	pallets__flask-5014	c0aa4af8-dcff-4c8e-b326-6a993931403b	0	2681	2608	2608	0	171	34.25288200378418	2158.954834	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-off	off	True	pallets__flask-5014	4364aa40-33b6-495f-ac29-59a2c3dba345	1	807	448	448	0	1102	48.22278022766113	12855.416792	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-off	off	True	pallets__flask-5014	62805719-ef7b-4ad3-bfb6-8113bcd04251	1	6820	1872	1872	0	943	415.3637886047363	12269.6885	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-off	off	True	pallets__flask-5014	c0990918-2b9f-46e5-b1de-0f924f52886d	1	7804	7728	7728	0	374	40.33613204956055	4792.817041	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-off	off	True	pallets__flask-5014	f969581a-4725-4d36-b07e-e7798cd9b387	1	8219	8144	8144	0	388	45.4411506652832	5008.477416	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-off	off	True	pallets__flask-5014	109af1a2-5c79-4f4c-b5e3-bb9d4b5e5af9	1	8637	8560	8560	0	145	41.810035705566406	5225.903875	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-off	off	True	pallets__flask-5014	6c3c9918-a230-4b19-bc58-017785d64206	2	10305	800	800	0	3015	842.3030376434326	39579.973958	stop	empty_response		empty_response	finished_with_turn_failures
+amended	load1-pair1-rolling	rolling	True	pallets__flask-5014	9f7997de-8d10-450f-96d2-e31f53e3b210	0	452	368	368	0	927	97.92828559875488	10996.995291	tool_calls			call_limit	model_error
+amended	load1-pair1-rolling	rolling	True	pallets__flask-5014	0e12fd19-43dc-433a-8489-c838f6b78659	0	1420	1344	1344	0	135	30.463218688964844	1686.979541	tool_calls			call_limit	model_error
+amended	load1-pair1-rolling	rolling	True	pallets__flask-5014	c869fd8c-e6e0-436b-8e36-9186a8346b3f	0	6466	1520	1520	0	1706	413.3574962615967	23483.9635	tool_calls			call_limit	model_error
+amended	load1-pair1-rolling	rolling	True	pallets__flask-5014	5f6bfcbb-59af-46ae-ba07-22ab594dcf69	0	8213	8144	8144	0	332	49.4234561920166	4592.6815	tool_calls			call_limit	model_error
+amended	load1-pair1-rolling	rolling	True	pallets__flask-5014	1e3ba9a5-fcbf-4a2f-bd17-fb833ecdb8b9	0	8585	8512	8512	0	319	61.04326248168945	4882.905083	tool_calls			call_limit	model_error
+amended	load1-pair1-rolling	rolling	True	pallets__flask-5014	c365b2db-cdf8-4547-9d6c-7803046275de	1	5698	448	448	0	4364	434.3383312225342	60001.412833		model_error	TimeoutError: 	call_limit	model_error
+amended	load1-pair1-rolling	rolling	True	psf__requests-6028	11c9f8fb-9498-4aa4-9ef4-a2fc90c3b3a5	0	794	0	368	0	1475	84.8994255065918	17967.777333	tool_calls			empty_response	finished_with_turn_failures
+amended	load1-pair1-rolling	rolling	True	psf__requests-6028	1199c535-fb82-419c-a36b-dc3c190a7177	0	7664	2240	2240	0	30	457.1499824523926	929.639083	stop	empty_response		empty_response	finished_with_turn_failures
+amended	load1-pair1-rolling	rolling	True	psf__requests-6028	7399dadb-c10f-4753-bd73-6ce45d8e158b	1	6266	816	784	32	1076	439.53752517700195	14304.55825	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-rolling	rolling	True	psf__requests-6028	dfaadb3a-58fe-4f92-8444-60bb022ac068	1	11898	7072	7072	0	766	482.82766342163086	10856.71175	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-rolling	rolling	True	psf__requests-6028	7d26d2f6-758f-4ffc-a1d1-cfee11a86832	1	12686	12400	12400	0	32	178.13849449157715	731.6555	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-rolling	rolling	True	psf__requests-6028	5dbe2348-5d65-46f0-b1fb-a7bf3995a1ce	1	13477	12672	12672	0	267	133.35895538330078	4157.783042	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-rolling	rolling	True	psf__requests-6028	393e1253-5759-418f-a428-e93b9c8e528b	1	13766	13472	13472	0	32	61.01846694946289	587.993792	tool_calls			call_limit	finished_with_turn_failures
+amended	load1-pair1-rolling	rolling	True	psf__requests-6028	18460f0e-dd5f-4134-a38d-f6fd57dacc94	2	12777	12224	6256	5968	4365	99.92194175720215	59515.283792	tool_calls			assistant_finished	finished_with_turn_failures
+amended	load1-pair1-rolling	rolling	True	psf__requests-6028	f4779717-167e-48ff-b33d-4045e33af361	2	17164	16720	16720	0	613	89.01357650756836	8116.281417	stop			assistant_finished	finished_with_turn_failures

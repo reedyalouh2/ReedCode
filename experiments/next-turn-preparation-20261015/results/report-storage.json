@@ -1,0 +1,16 @@
+{
+  "original.json": {
+    "stored_as": "original.json.gz",
+    "uncompressed_bytes": 194587,
+    "uncompressed_sha256": "4f96f54bc0f59bf25f1cd27cf97b6dc1eab2dbc282417374f469e03e2bd42fe3",
+    "compressed_bytes": 15510,
+    "compressed_sha256": "ba29ba8adafee3c9ab9a8f7c05766ebb71b4b211abbe0e3891873984ebdfbf76"
+  },
+  "amended.json": {
+    "stored_as": "amended.json.gz",
+    "uncompressed_bytes": 2272827,
+    "uncompressed_sha256": "fdc2c8727253a830d580556bcabfb3c98cf275d990d3192322b6473fbafe24cc",
+    "compressed_bytes": 182565,
+    "compressed_sha256": "16f7473e13eb6f3e022011c205e075e4ec73228ee43472ea11ee290f26cbaaa7"
+  }
+}

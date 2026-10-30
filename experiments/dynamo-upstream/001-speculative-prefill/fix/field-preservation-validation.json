@@ -1,0 +1,40 @@
+{
+  "source_sha": "b9c8f75d967bd5d841f556721e4892ea40dcf388",
+  "patch_sha256": "4d31b2c071952b033c966b80e7257d41418f00608e0f9cced39e041b1898035b",
+  "patch_additions": 528,
+  "patch_deletions": 61,
+  "files": [
+    "lib/llm/src/preprocessor/speculative_prefill.rs",
+    "lib/llm/src/preprocessor/speculative_prefill/assistant.rs"
+  ],
+  "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)",
+  "required_toolchain": "1.96.1",
+  "format_command": [
+    "rustfmt",
+    "--edition",
+    "2024",
+    "--check",
+    "lib/llm/src/preprocessor/speculative_prefill.rs",
+    "lib/llm/src/preprocessor/speculative_prefill/assistant.rs"
+  ],
+  "format_exit": 0,
+  "native_test_command": [
+    "cargo",
+    "test",
+    "--locked",
+    "--offline",
+    "-p",
+    "dynamo-llm",
+    "--no-default-features",
+    "--lib",
+    "preprocessor::speculative_prefill::",
+    "--",
+    "--nocapture"
+  ],
+  "native_test_exit": 101,
+  "native_test_status": "not run: offline dependency cache missing anyhow; required toolchain is also absent",
+  "stock_sha256": "d2abcd9d3045b4e0c3baef1af1280724d90b7c7a641f387b7ec621f813e5abd1",
+  "upstream_issue": "https://github.com/ai-dynamo/dynamo/issues/16601",
+  "checked_date": "2026-10-29",
+  "scope": "Rendering fields and full assistant message; excludes the Qwen continuation renderer."
+}

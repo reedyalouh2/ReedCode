@@ -1,0 +1,152 @@
+{
+  "source_report": "results/amended.json",
+  "trials": [
+    {
+      "trial": "load0-pair0-off",
+      "requests_checked": 8,
+      "partial_predecessor_sensitive_comparisons": 0,
+      "credit": 0,
+      "credited_requests": []
+    },
+    {
+      "trial": "load0-pair0-rolling",
+      "requests_checked": 8,
+      "partial_predecessor_sensitive_comparisons": 0,
+      "credit": 1200,
+      "credited_requests": [
+        {
+          "request_id": "ee2644b0-8643-4f64-a31e-467240a71017",
+          "user_turn": 1,
+          "cached_tokens": 1488,
+          "ordinary_history_ceiling": 784,
+          "matching_preparation_tokens": 1488,
+          "matching_preparation_id": "da4eb94b-91dc-401f-b19e-ef931984c866",
+          "credit": 704,
+          "client_error": null
+        },
+        {
+          "request_id": "eb4e8163-7365-42f0-bd28-90b648b368a0",
+          "user_turn": 2,
+          "cached_tokens": 2256,
+          "ordinary_history_ceiling": 1760,
+          "matching_preparation_tokens": 2256,
+          "matching_preparation_id": "be3edc23-ebd8-4e2f-8da1-53664aa52ba2",
+          "credit": 496,
+          "client_error": null
+        }
+      ]
+    },
+    {
+      "trial": "load0-pair1-off",
+      "requests_checked": 8,
+      "partial_predecessor_sensitive_comparisons": 0,
+      "credit": 0,
+      "credited_requests": []
+    },
+    {
+      "trial": "load0-pair1-rolling",
+      "requests_checked": 8,
+      "partial_predecessor_sensitive_comparisons": 0,
+      "credit": 1488,
+      "credited_requests": [
+        {
+          "request_id": "b66955e2-ca15-44e6-bace-40ce959fdfbc",
+          "user_turn": 1,
+          "cached_tokens": 1504,
+          "ordinary_history_ceiling": 784,
+          "matching_preparation_tokens": 1504,
+          "matching_preparation_id": "5de5b29d-6ae4-4e3a-8f8f-39b04464e89b",
+          "credit": 720,
+          "client_error": null
+        },
+        {
+          "request_id": "f5a58d3d-0569-4785-aaff-45ba3b2001e5",
+          "user_turn": 2,
+          "cached_tokens": 2400,
+          "ordinary_history_ceiling": 1632,
+          "matching_preparation_tokens": 2400,
+          "matching_preparation_id": "7e277e64-f04d-45ec-9b23-9ef9743ef07f",
+          "credit": 768,
+          "client_error": null
+        }
+      ]
+    },
+    {
+      "trial": "load1-pair0-off",
+      "requests_checked": 14,
+      "partial_predecessor_sensitive_comparisons": 0,
+      "credit": 0,
+      "credited_requests": []
+    },
+    {
+      "trial": "load1-pair0-rolling",
+      "requests_checked": 12,
+      "partial_predecessor_sensitive_comparisons": 0,
+      "credit": 336,
+      "credited_requests": [
+        {
+          "request_id": "77a69bbd-4ac0-45cb-9353-19966420fad0",
+          "user_turn": 1,
+          "cached_tokens": 816,
+          "ordinary_history_ceiling": 784,
+          "matching_preparation_tokens": 816,
+          "matching_preparation_id": "8083235b-dab4-494c-9764-db42addd1b70",
+          "credit": 32,
+          "client_error": null
+        },
+        {
+          "request_id": "e7d32b8d-b193-4d52-a6bd-7ddd39444142",
+          "user_turn": 2,
+          "cached_tokens": 1392,
+          "ordinary_history_ceiling": 1088,
+          "matching_preparation_tokens": 1392,
+          "matching_preparation_id": "d13e046f-1ed5-491d-b560-e40cca1ad72f",
+          "credit": 304,
+          "client_error": null
+        }
+      ]
+    },
+    {
+      "trial": "load1-pair1-off",
+      "requests_checked": 18,
+      "partial_predecessor_sensitive_comparisons": 0,
+      "credit": 0,
+      "credited_requests": []
+    },
+    {
+      "trial": "load1-pair1-rolling",
+      "requests_checked": 15,
+      "partial_predecessor_sensitive_comparisons": 0,
+      "credit": 6000,
+      "credited_requests": [
+        {
+          "request_id": "7399dadb-c10f-4753-bd73-6ce45d8e158b",
+          "user_turn": 1,
+          "cached_tokens": 816,
+          "ordinary_history_ceiling": 784,
+          "matching_preparation_tokens": 816,
+          "matching_preparation_id": "c08f8f01-a345-4703-9570-8f0215812605",
+          "credit": 32,
+          "client_error": null
+        },
+        {
+          "request_id": "18460f0e-dd5f-4134-a38d-f6fd57dacc94",
+          "user_turn": 2,
+          "cached_tokens": 12224,
+          "ordinary_history_ceiling": 6256,
+          "matching_preparation_tokens": 12224,
+          "matching_preparation_id": "12a6146f-7729-4fe1-8d18-71c2c0679295",
+          "credit": 5968,
+          "client_error": null
+        }
+      ]
+    }
+  ],
+  "requests_checked": 91,
+  "credit": 9024,
+  "source_sha256": {
+    "evidence/backend/engine.jsonl": "19cf3bbb3d5ed6cd273a968b43939b5574bc9a8b2ad7fe1ffdff801f6d889b68",
+    "results/amended.json": "fdc2c8727253a830d580556bcabfb3c98cf275d990d3192322b6473fbafe24cc",
+    "./source/credit_audit.py": "c2173ee0740b9bb5d83c54726262914f873e4ca123bd435c3ec27c1acda38394"
+  }
+}

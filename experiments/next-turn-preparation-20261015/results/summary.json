@@ -1,0 +1,12 @@
+{
+  "original": {
+    "trials": 3,
+    "foreground_requests": 13,
+    "additional_cached_tokens": 1152
+  },
+  "amended": {
+    "trials": 8,
+    "foreground_requests": 91,
+    "additional_cached_tokens": 9024
+  }
+}

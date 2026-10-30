@@ -1,6 +1,8 @@
 # Thinking disabled, but still running
 
-Dynamo's Anthropic request converter drops `thinking: {"type":"disabled"}`. With Qwen3's thinking-enabled default, the model keeps reasoning. My patch carries the explicit false value into the chat template.
+Dynamo's Anthropic request converter dropped `thinking: {"type":"disabled"}`. With Qwen3's thinking-enabled default, the model kept reasoning. My patch carries the explicit false value into the chat template.
+
+The fix merged into Dynamo on October 16 in [PR #16608](https://github.com/ai-dynamo/dynamo/pull/16608), closing [issue #16600](https://github.com/ai-dynamo/dynamo/issues/16600). The patch and GPU evidence below preserve the original study revision; the merged PR includes the updated converter and HTTP regression tests.
 
 I tested eight fixed inputs with three paired repeats on an A100. Stock generated reasoning in all 24 disabled requests; the fix generated none. All 48 calls passed token-accounting and cache-isolation checks.
 

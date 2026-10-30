@@ -1,0 +1,12 @@
+{
+  "vllm_version": "0.28.0",
+  "image": "nvcr.io/nvidia/ai-dynamo/vllm-runtime@sha256:d18389c89eb319401fdd73f1fbbaff10d9382f634b879941dfba75bbf7260c1e",
+  "files": {
+    "vllm/v1/engine/async_llm.py": "bceed0b3f5f0c834fef79525f2462a092f082390f0070526280abc95945837dd",
+    "vllm/v1/engine/output_processor.py": "c310a768931ab46ec9ac14ccbb433f07253b65553b7c859d1ca10f453efcb37c",
+    "vllm/v1/engine/input_processor.py": "f9a7946a16acc2374ff2bdfc22f212cb43461d9ef4d99c5e19a536339f11212f",
+    "vllm/v1/metrics/stats.py": "7682d3086bf5395f163f423677485432ee2c035aada2f370c0f82b291e53ca47",
+    "vllm/outputs.py": "54c21778c544e78509420817ab53d7b91a2beec6d7ca11a65e32458dc2cf3058",
+    "vllm/sampling_params.py": "73e5bf250cb13803e4ce390407ae059b497898c8b81f9985d2b5c055d4db8f7d"
+  }
+}

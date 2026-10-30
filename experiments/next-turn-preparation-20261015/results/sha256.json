@@ -1,0 +1,11 @@
+{
+  "amended.json.gz": "16f7473e13eb6f3e022011c205e075e4ec73228ee43472ea11ee290f26cbaaa7",
+  "credit-audit-amended.json": "ccadbfd04d30dcfe2c7df66c2f58d60fa47845ca667cec5a89640111f3cb2dbf",
+  "credit-audit-original.json": "402bc0441aa536368d7624e3bd6b1a8311d717be31407b129e14892cdef5a5fe",
+  "original.json.gz": "ba29ba8adafee3c9ab9a8f7c05766ebb71b4b211abbe0e3891873984ebdfbf76",
+  "overlap-amended.json": "290561853b4923a318390bbdeb2a843ee62230732b941dd0b74ab2242b47aa65",
+  "overlap-original.json": "d56137b764e139ad780a6e02c3952b1e1e77bd5042f88caecbe31d6f67954b32",
+  "report-storage.json": "a46a9f6bf20dcc48592016bc13a4437dd3975561f040cad8926691caf8bc443c",
+  "requests.tsv": "87211f652c5c5cc295471ebca9251941628931bc92deeb3fa567127e58e64f81",
+  "summary.json": "2c5fdfacfc9af8420098826cee71ee47f1d5836e366a6920af488af9507a7be1"
+}

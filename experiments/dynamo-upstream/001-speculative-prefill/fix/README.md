@@ -6,6 +6,12 @@ The original isolated tool pilot now prepares an exact 218-token prefix of its 2
 
 This is a local patch for the pinned Qwen3 tool-continuation path. The [GPU comparison](../../combined-gpu-20260929/PREFILL.md) completed 18 trials and confirmed that it removes the separate warmup branch.
 
+## Focused upstream patch
+
+[Contribution request #16601](https://github.com/ai-dynamo/dynamo/issues/16601) proposes field preservation first. The [two-file patch](field-preservation.patch) keeps rendering inputs, reasoning and structured tool calls. It excludes the Qwen continuation renderer used in the GPU study below.
+
+On October 29, the patch applied cleanly to Dynamo `b9c8f75d967bd5d841f556721e4892ea40dcf388`; scoped formatting and whitespace checks passed. Current-main compilation and native tests remain pending. [Check details](field-preservation-validation.json).
+
 ## What changed
 
 The old builder loses tool definitions, template settings and the completed assistant tool call. It also renders the final assistant differently from the historical assistant that a tool result follows.

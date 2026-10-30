@@ -1,0 +1,43 @@
+--- controller.py
++++ controller.py
+@@ -395,19 +395,11 @@
+                 turn_result["calls"] += 1
+                 issue = response_issue(response)
+                 if (
+-                    issue in (None, "empty_response")
++                    not issue
+                     and (response.get("usage") or {}).get("prompt_tokens") != count
+                 ):
+                     issue = "renderer_count_mismatch"
+-                response["response_issue"] = issue
+                 policy.after_response(body, response, issue, deadline)
+-                if (
+-                    issue == "empty_response"
+-                    and response.get("finish_reason") == "stop"
+-                ):
+-                    history.append(deepcopy(response["message"]))
+-                    turn_result["outcome"] = "empty_response"
+-                    break
+                 if issue:
+                     result["outcome"] = issue
+                     return result
+@@ -464,14 +456,11 @@
+                         result["outcome"] = tool_result["failure"]
+                         return result
+             events.emit("user_turn_end", session_id=session_id, **turn_result)
+-        if any(t["outcome"] == "empty_response" for t in result["turns"]):
+-            result["outcome"] = "finished_with_turn_failures"
+-        else:
+-            result["outcome"] = (
+-                "finished"
+-                if all(t["outcome"] == "assistant_finished" for t in result["turns"])
+-                else "turn_call_limit"
+-            )
++        result["outcome"] = (
++            "finished"
++            if all(t["outcome"] == "assistant_finished" for t in result["turns"])
++            else "turn_call_limit"
++        )
+         return result
+     except asyncio.CancelledError:
+         result["outcome"] = "controller_stop"

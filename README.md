@@ -6,6 +6,8 @@ The strongest finding so far is a bug in Dynamo's `speculative_prefill` agent hi
 
 The project now includes a second GPU-verified request-control bug, concurrent coding sessions, and native cache-routing prototypes. The harness, experiments and fixes are below. [Speculative-prefill patch](experiments/dynamo-upstream/001-speculative-prefill/fix/README.md) · [GPU evidence](experiments/dynamo-upstream/combined-gpu-20260929/README.md)
 
+**Upstream:** the thinking-control fix merged into Dynamo in [PR #16608](https://github.com/ai-dynamo/dynamo/pull/16608) on October 16. The speculative-prefill field fix is proposed in [contribution request #16601](https://github.com/ai-dynamo/dynamo/issues/16601); its PR awaits maintainer agreement on scope.
+
 ## Dynamo: wasted speculative prefill
 
 Eighteen controlled GPU trials: two saved sessions, hints off/stock/fixed, three repetitions with rotated order. These whole-session prefill counts repeated exactly in each condition.
@@ -23,7 +25,7 @@ The fix cut prefill **38–46% versus stock**, bringing it close to hint-off cos
 
 The warmup builder copies only the message history. It drops the tool definitions and template settings, then reconstructs the new assistant response from text alone. Its prompt diverges from the real continuation before most of the agent's context.
 
-The same builder is [still on main as of September 29](experiments/dynamo-upstream/001-speculative-prefill/recheck-20260929/README.md).
+Both field-loss paths remain in the [October 29 source](https://github.com/ai-dynamo/dynamo/blob/b9c8f75d967bd5d841f556721e4892ea40dcf388/lib/llm/src/preprocessor/speculative_prefill.rs).
 
 ```mermaid
 flowchart TD
@@ -42,11 +44,17 @@ The CPU check reproduced the missing-field problem in Qwen, Nemotron and GPT-OSS
 
 ## Dynamo: ignored thinking controls
 
-I found that Dynamo's Anthropic endpoint drops an explicit `thinking: disabled` setting. On Qwen3 with thinking enabled by default, the model keeps reasoning. The fix passes the caller's setting through to the template.
+I found that Dynamo's Anthropic endpoint dropped an explicit `thinking: disabled` setting. On Qwen3 with thinking enabled by default, the model kept reasoning. The [merged fix](https://github.com/ai-dynamo/dynamo/pull/16608) passes the caller's setting through to the template.
 
 Across **24 paired GPU comparisons**, stock generated reasoning in every disabled request; the fix generated none. On four long Claude Code snapshots, each repeated three times, generated tokens fell **74.2%** and summed response time fell **65.3%**.
 
 Short-question accuracy fell from **3/4 to 2/4**. Turning reasoning off changes the model's answers as well as its cost. These are controlled replays of disabled requests; the original Claude sessions enabled thinking. [Results, patch and reproduction](experiments/dynamo-thinking-20261007/README.md).
+
+## Preparing the next user turn
+
+I then tested whether the harness could prepare conversation history before the next user message arrived. On stock Dynamo, rolling preparation supplied **9,024 additional cached tokens across eight follow-ups** in four fresh coding sessions, without seeing the next user message. One boundary contributed 5,968 tokens, following a call-limited turn in a session that began with an empty reply.
+
+The pilot establishes useful cache reuse. Different trajectories, unequal background activity and incomplete accounting for one canceled preparation leave latency, interference and net compute savings unresolved. [Implementation, results and CPU reproduction](experiments/next-turn-preparation-20261015/README.md).
 
 ## The harness and experiments
 
